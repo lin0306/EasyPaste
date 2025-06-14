@@ -1,6 +1,6 @@
 # EasyPaste - 高效剪贴板管理工具
 
-![EasyPaste Logo](./public/logo.png)
+<img src="./public/logo.png" width="100px" alt="EasyPaste Logo">
 
 ## 项目简介
 
