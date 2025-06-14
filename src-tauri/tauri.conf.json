@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "EasyPaste",
+  "version": "0.0.1",
+  "identifier": "com.lin.EasyPaste",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:23000",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "main",
+        "width": 350,
+        "height": 550,
+        "minWidth": 350,
+        "minHeight": 550,
+        "url": "/list",
+        "alwaysOnTop": true,
+        "decorations": false,
+        "visible": false,
+        "skipTaskbar": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "active": false,
+      "endpoints": [
+        "https://github.com/lin0306/EasyPaste/releases/tag/v0.0.1-beta/latest.yml"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2NjYxRjI1NDc2QzgwNUYKUldSZmdHeEhKUjltSnBEdGk2eGZHdjhnck1SaEFCaDl4MmpOMXFqNE81K2x3dmY3b1N2U0N5SjMK"
+    }
+  }
+}

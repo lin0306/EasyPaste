@@ -1,0 +1,162 @@
+export interface LanguageConfig {
+    id: string;
+    name: string;
+    locale: any;
+    dateLocale: any;
+    pages: PageConfig;
+}
+
+export interface PageConfig {
+    settings: {
+        [x: string]: string;
+        // 设置页面标题
+        title: string;
+        // 设置页面左侧菜单文字
+        generalMenu: string;
+        storageMenu: string;
+        shortcutMenu: string;
+        // 设置页面右侧页面标题
+        generalTitle: string;
+        storageTitle: string;
+        shortcutTitle: string;
+        // 通用设置页面文字
+        powerOnSelfStart: string;
+        replaceGlobalHotkey: string;
+        fixedWindowSize: string;
+        windowHeight: string;
+        windowWidth: string;
+        languages: string;
+        devTools: string;
+        // 存储设置页面文字
+        maxHistoryItems: string,
+        maxHistoryItemsHint: string,
+        maxStorageSize: string,
+        maxStorageSizeHint: string,
+        dataRetentionDays: string,
+        dataRetentionDaysHint: string,
+        maxItemSize: string,
+        maxItemSizeHint: string,
+        // 快捷键设置页面文字
+        search: string;
+        wakeUpRoutine: string;
+        emptyShortcutConfig: string;
+        // 设置页面底部按钮
+        resetBtn: string;
+        saveBtn: string;
+        // 确认重启弹窗内容
+        restartModalTitle: string;
+        restartModalContent: string;
+        restartModalCancelBtn: string;
+        restartModalConfirmBtn: string;
+        // 硬件加速设置对话框内容
+        hardwareAccelerationDialogTitle: string;
+        hardwareAccelerationDialogContent: string;
+        hardwareAccelerationDialogRestartNow: string;
+        hardwareAccelerationDialogRestartLater: string;
+        // 快捷键编辑弹窗内容
+        editHotkeyModalTitle: string;
+        editHotkeyModalHint: string;
+        editHotkeyModalContent: string;
+        editHotkeyModalCancelBtn: string;
+        editHotkeyModalConfirmBtn: string;
+
+        // 提示信息
+        saveSuccessMsg: string;
+        saveFailedMsg: string;
+        shortcutSaveErrorMsg: string;
+        resetSuccessMsg: string;
+    },
+    list: {
+        title: string;
+        copyFailedMsg: string;
+        searchHint: string;
+        deleteBtn: string;
+        bindTagBtn: string;
+        dataLoading: string;
+        allLoaded: string;
+        menu: {
+            [x: string]: string;
+            program: string;
+            settings: string;
+            reload: string;
+            exit: string;
+            data: string;
+            tagManger: string;
+            dataView: string;
+            dataImport: string;
+            dataExport: string;
+            clearData: string;
+            clearDataSuccessMsg: string;
+            clearDataFailedMsg: string;
+            themes: string;
+            light: string;
+            dark: string;
+            blue: string;
+            pink: string;
+            help: string;
+            instructions: string;
+            updateLog: string;
+            checkForUpdate: string;
+            about: string;
+        },
+    },
+    tags: {
+        title: string;
+        addTitle: string;
+        editTitle: string;
+        tagName: string;
+        tagNameHint: string;
+        tagColor: string;
+        saveBtn: string;
+        cancelBtn: string;
+        loadFailedMsg: string;
+        tageNameIsNullWarnMsg: string;
+        saveSuccessMsg: string;
+        editSuccessMsg: string;
+        saveFailedMsg: string;
+        editFailedMsg: string;
+        deleteSuccessMsg: string;
+        deleteFailedMsg: string;
+    },
+    about: {
+        title: string;
+        appName: string;
+        version: string;
+        problemFeedback: string;
+    },
+    update: {
+        title: string;
+        versionName: string;
+        updateNotes: string;
+        notUpdateBtn: string;
+        reminderText: string;
+        days: string;
+        downloadNowBtn: string;
+        restartLaterBtn: string;
+        restartImmediatelyBtn: string;
+        viewMoreBtn: string;
+        downloadingTitle: string;
+        backupTitle: string;
+        backupCompleted: string;
+    },
+    restore: {
+        title: string;
+        description: string;
+        readyText: string;
+        startingText: string;
+        restartCountdown: string;
+        setp1: string;
+        setp2: string;
+        setp3: string;
+        setp4: string;
+        restoreSuccess: string;
+        toRestart: string;
+    },
+    tray: {
+        settings: string,
+        checkUpdate: string,
+        about: string,
+        restart: string,
+        exit: string,
+    }
+}

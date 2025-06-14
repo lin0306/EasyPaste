@@ -1,0 +1,90 @@
+<script setup lang="ts">
+import {open} from '@tauri-apps/plugin-shell';
+import TitleBar from '../components/TitleBar.vue';
+
+import {getVersion} from '@tauri-apps/api/app';
+import {onMounted, ref} from 'vue';
+import {useLanguage} from '../configs/LanguageConfig';
+
+const {currentLanguage} = useLanguage();
+
+// @ts-ignore
+const appVersion = ref<string>("");
+
+// 打开外部链接
+function openLink(url: string) {
+  open(url);
+}
+
+onMounted(async () => {
+  appVersion.value = await getVersion();
+});
+
+</script>
+<template>
+  <TitleBar :title="currentLanguage.pages.about.title" :showFixedBtn="true" :showClostBtn="true"
+            :dev-tool="`about`"/>
+
+  <div class="about-container">
+    <img src="../../public/logo.png" class="logo">
+    <div class="app-name">{{ currentLanguage.pages.about.appName }}</div>
+    <div class="version-info">{{ currentLanguage.pages.about.version }}: {{ appVersion }}</div>
+    <div class="links-container">
+      <!-- <a href="#" @click="openLink('https://example.com/service')">服务协议</a> -->
+      <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste/issues')">{{
+          currentLanguage.pages.about.problemFeedback
+        }}</a>
+      <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste')">GitHub</a>
+      <!-- <a href="#" @click="openLink('https://gitee.com/your-repo/clipboard')">Gitee</a> -->
+    </div>
+  </div>
+</template>
+<style scoped>
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100vh - 25px);
+  position: relative;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+.logo {
+  margin-top: 20px;
+  width: 100px;
+  margin-bottom: 20px;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
+}
+
+.app-name {
+  font-size: 24px;
+}
+
+.version-info {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.links-container {
+  margin-top: 14px;
+  display: flex;
+  gap: 15px;
+}
+
+.links-container a {
+  color: #1890ff;
+  text-decoration: none;
+  font-size: 14px;
+  -webkit-user-drag: none;
+}
+
+.links-container a:hover {
+  text-decoration: underline;
+}
+</style>
