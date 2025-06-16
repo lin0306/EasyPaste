@@ -172,8 +172,7 @@ jobs:
       # 使用正确的 Tauri 构建命令
       - name: Build Tauri application
         run: |
-          cd src-tauri
-          cargo tauri build --verbose --release
+          pnpm tauri build
         env:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
