@@ -101,9 +101,6 @@ jobs:
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*
             src-tauri/target/release/bundle/**/*
 
-      - name: List downloaded files
-        run: ls -R artifacts
-
   # 代码发布
   release:
     needs: [ setup, build ]
