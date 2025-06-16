@@ -7,23 +7,96 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-release:
+  setup:
+    name: Setup environment
+    runs-on: ubuntu-22.04
+    outputs:
+      node-modules-cache-key: ${{ steps.node-modules-cache.outputs.cache-key }}
+      rust-cache-key: ${{ steps.rust-cache.outputs.cache-key }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm globally
+        run: npm install -g pnpm@8
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Verify lockfile
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "pnpm-lock.yaml exists"
+          else
+            echo "Generating new pnpm-lock.yaml"
+            pnpm install --lockfile-only
+          fi
+
+      - name: Install frontend dependencies
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            pnpm install --frozen-lockfile || pnpm install
+          else
+            pnpm install
+          fi
+
+      - name: Build frontend
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache Rust dependencies
+        id: rust-cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-tauri -> target
+            src-tauri/target
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version 2.5.0
+
+  build:
+    needs: setup
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-22.04, windows-latest]
+        platform: [macos-latest, windows-latest]
         include:
-          - platform: ubuntu-22.04
-            rust-target: x86_64-unknown-linux-gnu
-            system-deps: |
-              sudo apt-get update
-              sudo apt-get install -y \
-                libgtk-3-dev \
-                libwebkit2gtk-4.1-dev \
-                librsvg2-dev \
-                libayatana-appindicator3-dev
           - platform: macos-latest
             rust-target: aarch64-apple-darwin
             system-deps: |
@@ -51,94 +124,29 @@ jobs:
           toolchain: stable
           targets: ${{ matrix.rust-target }}
 
-      - name: Cache Rust dependencies
+      - name: Restore Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: |
-            src-tauri -> target
-            src-tauri/target
+          key: ${{ needs.setup.outputs.rust-cache-key }}
 
-      # 直接安装特定版本的 Tauri CLI
       - name: Install Tauri CLI
-        run: |
-          echo "Installing tauri-cli@2.5.0"
-          cargo install tauri-cli --version 2.5.0
-          
-          # 验证安装
-          echo "Tauri CLI version:"
-          cargo tauri --version
-        shell: bash
+        run: cargo install tauri-cli --version 2.5.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install pnpm globally
-        run: |
-          npm install -g pnpm@8
-          echo "PNPM_VERSION=$(pnpm --version)" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Configure pnpm store
-        id: pnpm-cache
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Cache node_modules
+      - name: Restore node_modules cache
         uses: actions/cache@v3
         with:
           path: |
             node_modules
             **/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+          key: ${{ needs.setup.outputs.node-modules-cache-key }}
 
-      # 解决 macOS 和 Windows 的 lockfile 问题
-      - name: Verify lockfile
-        run: |
-          echo "Checking lockfile..."
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "pnpm-lock.yaml exists"
-          else
-            echo "pnpm-lock.yaml does not exist - generating a new one"
-            pnpm install --lockfile-only
-          fi
-        shell: bash
-
-      # 修复的依赖安装命令
-      - name: Install frontend dependencies
-        run: |
-          # 使用更安全的安装方式
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "Installing with existing lockfile"
-            pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
-          else
-            echo "Installing without lockfile"
-            pnpm install
-          fi
-        shell: bash
-
-      - name: Build frontend
-        run: pnpm build
-        env:
-          NODE_ENV: production
-
-      # 使用正确的 Tauri 构建命令
       - name: Build Tauri application
-        run: |
-          pnpm tauri build
+        run: pnpm tauri build
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -153,12 +161,18 @@ jobs:
             src-tauri/target/release/bundle/*.tar.gz
             src-tauri/target/release/bundle/*.msi
             src-tauri/target/release/bundle/*.exe
-            src-tauri/target/release/bundle/*.AppImage
-            src-tauri/target/release/bundle/*.deb
+
+  release:
+    needs: [setup, build]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
-        if: matrix.platform == 'ubuntu-22.04'
         with:
           tag_name: ${{ github.ref_name }}
           name: "App v${{ github.ref_name }}"
