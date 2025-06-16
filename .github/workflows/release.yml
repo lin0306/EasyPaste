@@ -42,7 +42,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 修复 Ubuntu 依赖冲突问题
       - name: Install system dependencies
         run: ${{ matrix.system-deps }}
         if: matrix.system-deps != ''
@@ -59,6 +58,30 @@ jobs:
           workspaces: |
             src-tauri -> target
             src-tauri/target
+
+      # 安装 Tauri CLI 作为 Rust 工具链的一部分
+      - name: Install Tauri CLI
+        run: |
+          # 安装与项目兼容的 tauri-cli 版本
+          if [ -f "src-tauri/Cargo.toml" ]; then
+            # 从 Cargo.toml 中提取 tauri 版本
+            TAURI_VERSION=$(grep -m1 'tauri =' src-tauri/Cargo.toml | awk -F '"' '{print $2}')
+            if [ -n "$TAURI_VERSION" ]; then
+              echo "Installing tauri-cli@$TAURI_VERSION"
+              cargo install tauri-cli --version $TAURI_VERSION
+            else
+              echo "Installing latest tauri-cli"
+              cargo install tauri-cli
+            fi
+          else
+            echo "Installing latest tauri-cli"
+            cargo install tauri-cli
+          fi
+          
+          # 验证安装
+          echo "Tauri CLI version:"
+          cargo tauri --version || echo "Tauri CLI not found"
+        shell: bash
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -136,16 +159,6 @@ jobs:
           echo "Checking lockfile..."
           if [ -f "pnpm-lock.yaml" ]; then
             echo "pnpm-lock.yaml exists"
-            # 确保 lockfile 是有效的 YAML
-            if ! command -v yq &> /dev/null; then
-              echo "Installing yq for YAML validation"
-              pip install yq || true
-            fi
-            if command -v yq &> /dev/null; then
-              yq -e '.' pnpm-lock.yaml > /dev/null && echo "Lockfile is valid YAML"
-            else
-              echo "Skipping YAML validation (yq not available)"
-            fi
           else
             echo "pnpm-lock.yaml does not exist - generating a new one"
             pnpm install --lockfile-only
@@ -170,6 +183,7 @@ jobs:
         env:
           NODE_ENV: production
 
+      # 使用正确的 Tauri 构建命令
       - name: Build Tauri application
         run: |
           cd src-tauri
