@@ -28,58 +28,6 @@ jobs:
         with:
           node-version: 20
 
-      # 全局安装 pnpm
-      - name: Install pnpm globally
-        run: npm install -g pnpm@8
-
-      # 换成pnpm store
-      - name: Get pnpm store path
-        id: pnpm-store
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      # 缓存 node_modules
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      # 缓存 node_modules
-      - name: Cache node_modules
-        id: node-modules-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
-
-      # 安装 Rust
-      - name: Setup Rust
-        uses: actions-rust-lang/setup-rust@v1
-        with:
-          rust-version: stable  # 或指定版本如 "1.75.0"
-          targets: |
-            aarch64-apple-darwin
-            x86_64-pc-windows-msvc
-
-      # 缓存 Rust 依赖
-      - name: Cache Rust dependencies
-        id: rust-cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            src-tauri -> target
-            src-tauri/target
-
-      # 安装 Tauri CLI
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --version 2.5.0
-
   # 项目打包
   build:
     needs: setup
@@ -107,49 +55,41 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 恢复 pnpm store 缓存
-      - name: Restore pnpm store cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store  # 或 ${{ steps.pnpm-store.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      # 恢复 node_modules 缓存
-      - name: Restore node_modules cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
-
-      # 安装 Node.js
-      - name: Setup Node.js
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      # 安装 pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: latest
 
-      # 安装依赖包
-      - name: Install dependencies
-        run: pnpm install
+      - name: Install rust target
+        run: rustup target add ${{ matrix.target }}
 
-      # 安装系统依赖包
-      - name: Install system dependencies
-        run: ${{ matrix.system-deps }}
-        if: matrix.system-deps != ''
+      # 安装 Rust
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      # 使用 Rust 缓存，加快安装速度
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: target
+
+      # 获取 pnpm 缓存
+      - name: Sync node version and setup cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # 安装依赖, 前端打包
+      - name: Install app dependencies and build web
+        run: pnpm install --frozen-lockfile
 
       # 构建 Tauri 应用
       - name: Build Tauri application
+        uses: tauri-apps/tauri-action@v0
         run: pnpm tauri build --target ${{ matrix.rust-target }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
