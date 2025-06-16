@@ -1,84 +1,109 @@
-name: Release CI
+name: Tauri 2 Release
 
 on:
-    push:
-        # Sequence of patterns matched against refs/tags
-        tags:
-            - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-    workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
-    release:
-        permissions:
-            contents: write
-        strategy:
-            fail-fast: false
-            matrix:
-                # 选择编译平台
-                platform: [macos-latest, ubuntu-20.04, windows-latest]
-        runs-on: ${{ matrix.platform }}
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+  build-release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-22.04, windows-latest]
+        include:
+          - platform: ubuntu-22.04
+            rust-target: x86_64-unknown-linux-gnu
+            system-deps: |
+              sudo apt-get update
+              sudo apt-get install -y \
+                libgtk-3-dev \
+                libwebkit2gtk-4.1-dev \
+                libayatana-appindicator3-dev \
+                librsvg2-dev \
+                libappindicator3-dev
+          - platform: macos-latest
+            rust-target: aarch64-apple-darwin
+            system-deps: |
+              brew install create-dmg
+          - platform: windows-latest
+            rust-target: x86_64-pc-windows-msvc
+            system-deps: |
+              choco install -y wixtoolset
 
-            - name: Install dependencies (ubuntu only)
-              if: matrix.platform == 'ubuntu-20.04'
-              # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
- 
-            - name: Rust setup
-              uses: dtolnay/rust-toolchain@stable
- 
-            - name: Rust cache
-              uses: swatinem/rust-cache@v2
-              with:
-                  workspaces: './src-tauri -> target'
- 
-            - name: Sync node version and insatll nodejs
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16
- 
-            # 使用 pnpm 作为包管理器
-            - name: Install pnpm
-              uses: pnpm/action-setup@v2
-              id: pnpm-install
-              with:
-                  version: 8
-                  run_install: false
- 
-            - name: Get pnpm store directory
-              id: pnpm-cache
-              shell: bash
-              run: |
-                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
- 
-            - uses: actions/cache@v3
-              name: Setup pnpm cache
-              with:
-                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pnpm-store-
- 
-            - name: Install app dependencies and build it
-              run: pnpm i && pnpm bundle
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-                  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-            
-            - name: Tauri Action
-              uses: tauri-apps/tauri-action@v0.3
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-                  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-              with:
-                  tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
-                  releaseName: 'App Name v__VERSION__' # 自定义 release 名称，__VERSION__ 将自动填写为版本信息
-                  releaseBody: 'See the assets to download and install this version.'
-                  releaseDraft: true
-                  prerelease: false
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install system dependencies
+        run: ${{ matrix.system-deps }}
+        if: matrix.system-deps != ''
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{ matrix.rust-target }}
+
+      - name: Cache Rust dependencies
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-tauri -> target
+            src-tauri/target
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Build Tauri application
+        run: |
+          cd src-tauri
+          cargo tauri build --verbose --release
+        env:
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            src-tauri/target/release/bundle
+            src-tauri/target/release/*.msi
+            src-tauri/target/release/*.dmg
+            src-tauri/target/release/*.AppImage
+            src-tauri/target/release/*.deb
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        if: matrix.platform == 'ubuntu-22.04'  # 只在单个runner上执行发布
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "App v${{ github.ref_name }}"
+          body: "Built with Tauri 2 | See assets to download"
+          draft: true
+          prerelease: false
+          files: |
+            src-tauri/target/release/bundle/**/*
