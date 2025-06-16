@@ -59,9 +59,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - uses: pnpm/action-setup@v3
-        with:
-          version: latest
+          cache: 'pnpm'
+
+      # 安装 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
 
       - name: Install rust target
         run: rustup target add ${{ matrix.target }}
@@ -75,13 +77,6 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: target
-
-      # 获取 pnpm 缓存
-      - name: Sync node version and setup cache
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
 
       # 安装依赖, 前端打包
       - name: Install app dependencies and build web
