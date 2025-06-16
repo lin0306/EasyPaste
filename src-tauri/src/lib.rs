@@ -1,6 +1,6 @@
+// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod clipboard_monitor;
 mod log;
 mod tray;
@@ -29,6 +29,7 @@ pub fn run() {
         .plugin(tray::init())
         .plugin(clipboard_monitor::init())
         .invoke_handler(tauri::generate_handler![
+            #[cfg(debug_assertions)]
             open_dev_tool,
             tray::reload_tray_menu
         ])
@@ -36,6 +37,7 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
+#[cfg(debug_assertions)]
 #[tauri::command]
 fn open_dev_tool(app_handle: tauri::AppHandle, window_name: &str) {
     if let Some(window) = app_handle.get_webview_window(&window_name) {
