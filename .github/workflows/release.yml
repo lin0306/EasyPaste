@@ -50,28 +50,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-
 
-      - name: Verify lockfile
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "pnpm-lock.yaml exists"
-          else
-            echo "Generating new pnpm-lock.yaml"
-            pnpm install --lockfile-only
-          fi
-
-      - name: Install frontend dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile || pnpm install
-          else
-            pnpm install
-          fi
-
-      - name: Build frontend
-        run: pnpm build
-        env:
-          NODE_ENV: production
-
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -95,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, windows-latest]
+        platform: [ macos-latest, windows-latest ]
         include:
           - platform: macos-latest
             rust-target: aarch64-apple-darwin
@@ -129,22 +107,6 @@ jobs:
         with:
           key: ${{ needs.setup.outputs.rust-cache-key }}
 
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --version 2.5.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: ${{ needs.setup.outputs.node-modules-cache-key }}
-
       - name: Build Tauri application
         run: pnpm tauri build
         env:
@@ -163,7 +125,7 @@ jobs:
             src-tauri/target/release/bundle/*.exe
 
   release:
-    needs: [setup, build]
+    needs: [ setup, build ]
     runs-on: ubuntu-22.04
     steps:
       - name: Download artifacts
@@ -175,9 +137,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          name: "App v${{ github.ref_name }}"
+          name: "App ${{ github.ref_name }}"
           body: "Built with Tauri 2 | See assets to download"
-          draft: true
-          prerelease: false
+          draft: true # 是否生成release草稿
+          prerelease: false # 是否生成预发布包
           files: |
             src-tauri/target/release/bundle/**/*
