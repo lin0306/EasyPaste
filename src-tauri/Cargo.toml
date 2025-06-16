@@ -4,6 +4,7 @@ version = "0.0.1"
 description = "简易的剪贴板管理工具"
 authors = ["linweijia"]
 edition = "2024"
+license = "Apache License 2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
