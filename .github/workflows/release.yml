@@ -98,8 +98,11 @@ jobs:
         with:
           name: release-${{ matrix.platform }}
           path: |
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*
-            src-tauri/target/release/bundle/**/*
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.exe
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.msi
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.zip
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.dmg
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.tar.gz
 
   # 代码发布
   release:
