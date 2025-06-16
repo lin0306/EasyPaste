@@ -98,11 +98,11 @@ jobs:
         with:
           name: release-${{ matrix.platform }}
           path: |
-            src-tauri/target/release/bundle/*.app
-            src-tauri/target/release/bundle/*.dmg
-            src-tauri/target/release/bundle/*.tar.gz
-            src-tauri/target/release/bundle/*.msi
-            src-tauri/target/release/bundle/*.exe
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*
+            src-tauri/target/release/bundle/**/*
+
+      - name: List downloaded files
+        run: ls -R artifacts
 
   # 代码发布
   release:
@@ -124,4 +124,4 @@ jobs:
           draft: true # 是否生成release草稿
           prerelease: false # 是否生成预发布包
           files: |
-            src-tauri/target/release/bundle/**/*
+            artifacts/**/*
