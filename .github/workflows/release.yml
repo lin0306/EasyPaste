@@ -59,28 +59,34 @@ jobs:
             src-tauri -> target
             src-tauri/target
 
-      # 安装 Tauri CLI 作为 Rust 工具链的一部分
+      # 修复 Tauri CLI 安装问题
       - name: Install Tauri CLI
         run: |
-          # 安装与项目兼容的 tauri-cli 版本
+          # 改进版本提取逻辑
           if [ -f "src-tauri/Cargo.toml" ]; then
-            # 从 Cargo.toml 中提取 tauri 版本
-            TAURI_VERSION=$(grep -m1 'tauri =' src-tauri/Cargo.toml | awk -F '"' '{print $2}')
+            # 使用更健壮的版本提取方法
+            TAURI_VERSION=$(grep -E '^tauri\s*=' src-tauri/Cargo.toml | sed -E 's/.*version\s*=\s*"([^"]+)".*/\1/; t; d')
+          
+            # 如果版本提取失败，尝试另一种方法
+            if [ -z "$TAURI_VERSION" ]; then
+              TAURI_VERSION=$(grep -E '^tauri\s*=' src-tauri/Cargo.toml | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/; t; d')
+            fi
+          
             if [ -n "$TAURI_VERSION" ]; then
               echo "Installing tauri-cli@$TAURI_VERSION"
               cargo install tauri-cli --version $TAURI_VERSION
             else
-              echo "Installing latest tauri-cli"
+              echo "Using default tauri-cli installation"
               cargo install tauri-cli
             fi
           else
-            echo "Installing latest tauri-cli"
+            echo "src-tauri/Cargo.toml not found, using default installation"
             cargo install tauri-cli
           fi
           
           # 验证安装
           echo "Tauri CLI version:"
-          cargo tauri --version || echo "Tauri CLI not found"
+          cargo tauri --version || (echo "Tauri CLI not found, installing latest"; cargo install tauri-cli)
         shell: bash
 
       - name: Setup Node.js
