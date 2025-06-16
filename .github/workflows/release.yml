@@ -28,6 +28,7 @@ jobs:
           - platform: macos-latest
             rust-target: aarch64-apple-darwin
             system-deps: |
+              brew update
               brew install create-dmg
           - platform: windows-latest
             rust-target: x86_64-pc-windows-msvc
@@ -58,21 +59,43 @@ jobs:
             src-tauri -> target
             src-tauri/target
 
+      # 完全重写的 Node.js/pnpm 安装流程
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'  # 启用 pnpm 缓存
+          # 不再使用 cache: 'pnpm'，手动处理所有缓存
 
-      # 修复 pnpm 安装问题
-      - name: Install pnpm
-        run: npm install -g pnpm@8
-        if: runner.os != 'Windows'  # Windows 通过 setup-node 自动处理
+      - name: Install pnpm globally
+        run: |
+          npm install -g pnpm@8
+          echo "PNPM_VERSION=$(pnpm --version)" >> $GITHUB_ENV
+        shell: bash
 
-      # 仅在 Windows 上需要显式设置 PATH
-      - name: Add Windows pnpm to PATH
-        if: runner.os == 'Windows'
-        run: echo "$(npm prefix -g)" >> $GITHUB_PATH
+      - name: Configure pnpm store
+        id: pnpm-cache
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
@@ -81,6 +104,9 @@ jobs:
         run: pnpm build
         env:
           NODE_ENV: production
+
+      - name: Verify pnpm
+        run: pnpm --version && which pnpm
 
       - name: Build Tauri application
         run: |
@@ -103,7 +129,7 @@ jobs:
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
-        if: matrix.platform == 'ubuntu-22.04'  # 只在单个runner上执行发布
+        if: matrix.platform == 'ubuntu-22.04'
         with:
           tag_name: ${{ github.ref_name }}
           name: "App v${{ github.ref_name }}"
