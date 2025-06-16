@@ -56,7 +56,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
 
       # 安装 pnpm
       - name: Setup pnpm
@@ -74,6 +73,13 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: target
+
+      # 获取 pnpm 缓存
+      - name: Sync node version and setup cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
       # 安装依赖, 前端打包
       - name: Install app dependencies and build web
