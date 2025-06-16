@@ -87,7 +87,6 @@
   },
   "plugins": {
     "updater": {
-      "active": false,
       "endpoints": [
         "https://github.com/lin0306/EasyPaste/releases/tag/v0.0.1-beta/latest.yml"
       ],
