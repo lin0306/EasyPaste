@@ -62,12 +62,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          cache: 'pnpm'  # 启用 pnpm 缓存
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+      # 修复 pnpm 安装问题
+      - name: Install pnpm
+        run: npm install -g pnpm@8
+        if: runner.os != 'Windows'  # Windows 通过 setup-node 自动处理
+
+      # 仅在 Windows 上需要显式设置 PATH
+      - name: Add Windows pnpm to PATH
+        if: runner.os == 'Windows'
+        run: echo "$(npm prefix -g)" >> $GITHUB_PATH
 
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
