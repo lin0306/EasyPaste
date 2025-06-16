@@ -11,10 +11,7 @@ jobs:
   # 设置运行环境
   setup:
     name: Setup environment
-    runs-on: ubuntu-22.04
-    outputs:
-      node-modules-cache-key: ${{ steps.node-modules-cache.outputs.cache-key }}
-      rust-cache-key: ${{ steps.rust-cache.outputs.cache-key }}
+    runs-on: ubuntu-latest
     steps:
       # 拉取项目代码
       - name: Checkout repository
@@ -84,7 +81,6 @@ jobs:
 
       # 构建 Tauri 应用
       - name: Build Tauri application
-        uses: tauri-apps/tauri-action@v0
         run: pnpm tauri build --target ${{ matrix.rust-target }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
@@ -114,7 +110,7 @@ jobs:
 
       # 创建 GitHub release
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: "App ${{ github.ref_name }}"
