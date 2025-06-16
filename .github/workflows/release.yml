@@ -59,12 +59,10 @@ jobs:
             src-tauri -> target
             src-tauri/target
 
-      # 完全重写的 Node.js/pnpm 安装流程
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # 不再使用 cache: 'pnpm'，手动处理所有缓存
 
       - name: Install pnpm globally
         run: |
@@ -96,6 +94,40 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
+
+      # 修复 pnpm 工作区配置
+      - name: Fix pnpm workspace configuration
+        run: |
+          # 检查 pnpm-workspace.yaml 是否存在
+          if [ -f "pnpm-workspace.yaml" ]; then
+            echo "Current pnpm-workspace.yaml content:"
+            cat pnpm-workspace.yaml
+          
+            # 确保文件包含有效的 packages 配置
+            if ! grep -q "packages:" pnpm-workspace.yaml; then
+              echo "Fixing pnpm-workspace.yaml by adding packages field"
+              echo "packages:" >> pnpm-workspace.yaml
+              echo "  - 'packages/*'" >> pnpm-workspace.yaml
+            fi
+          
+            # 保留原有的 ignoredBuiltDependencies 配置
+            if ! grep -q "ignoredBuiltDependencies:" pnpm-workspace.yaml; then
+              echo "Adding ignoredBuiltDependencies to pnpm-workspace.yaml"
+              echo "ignoredBuiltDependencies:" >> pnpm-workspace.yaml
+              echo "  - esbuild" >> pnpm-workspace.yaml
+            fi
+          
+            echo "Updated pnpm-workspace.yaml content:"
+            cat pnpm-workspace.yaml
+          else
+            # 如果文件不存在，则创建正确的配置文件
+            echo "Creating pnpm-workspace.yaml"
+            echo "packages:" > pnpm-workspace.yaml
+            echo "  - 'packages/*'" >> pnpm-workspace.yaml
+            echo "ignoredBuiltDependencies:" >> pnpm-workspace.yaml
+            echo "  - esbuild" >> pnpm-workspace.yaml
+          fi
+        shell: bash
 
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
