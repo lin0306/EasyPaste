@@ -54,9 +54,6 @@
         "silent": true,
         "type": "downloadBootstrapper"
       },
-      "wix": {
-        "language": "zh-CN"
-      },
       "nsis": {
         "languages": [
           "SimpChinese",
@@ -88,7 +85,7 @@
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/lin0306/EasyPaste/releases/tag/v0.0.1-beta/latest.yml"
+        "https://github.com/lin0306/EasyPaste/blob/master/latest.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2NjYxRjI1NDc2QzgwNUYKUldSZmdHeEhKUjltSnBEdGk2eGZHdjhnck1SaEFCaDl4MmpOMXFqNE81K2x3dmY3b1N2U0N5SjMK"
     }

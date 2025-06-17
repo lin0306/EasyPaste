@@ -99,10 +99,7 @@ jobs:
           name: release-${{ matrix.platform }}
           path: |
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.exe
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.msi
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.zip
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.dmg
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.tar.gz
 
   # 代码发布
   release:
@@ -125,3 +122,87 @@ jobs:
           prerelease: false # 是否生成预发布包
           files: |
             artifacts/**/*
+
+  update_latest_json:
+    needs: [setup, build, release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Get latest release info
+        id: get_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            return {
+              version: response.data.tag_name.replace(/^v/, ''), // 移除v前缀
+              notes: response.data.body,
+              pub_date: new Date().toISOString()
+            };
+
+      - name: Find release assets
+        id: find_assets
+        run: |
+          # 查找不同平台的构建产物
+          AARCH64_DARWIN=$(find artifacts/release-macos-latest/ -name "*.dmg" | grep -i "aarch64" || echo '')
+          WIN64_DARWIN=$(find artifacts/release-windows-latest/ -name "*.exe" | grep -i "x64" || echo '')
+          
+          # 获取下载URL（假设你已经上传到release）
+          AARCH64_DARWIN_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename $AARCH64_DARWIN)"
+          WIN64_DARWIN_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename $WIN64_DARWIN)"
+          
+          # 获取签名（假设签名文件与安装包同名但扩展名为.sig）
+          AARCH64_DARWIN_SIG=$(cat $(find artifacts/release-macos-latest/ -name "*.sig" | grep -i "aarch64") || echo '')
+          WIN64_DARWIN_SIG=$(cat $(find artifacts/release-windows-latest/ -name "*.sig" | grep -i "x64") || echo '')
+          
+          # 生成platforms JSON
+          PLATFORMS_JSON=$(jq -n \
+            --arg aarch64_darwin_url "$AARCH64_DARWIN_URL" \
+            --arg win64_darwin_url "$WIN64_DARWIN_URL" \
+            --arg aarch64_darwin_sig "$AARCH64_DARWIN_SIG" \
+            --arg win64_darwin_sig "$WIN64_DARWIN_SIG" \
+            '{
+              "darwin-aarch64": if $aarch64_darwin_url != "" then {
+                signature: $aarch64_darwin_sig,
+                url: $aarch64_darwin_url
+              } else null end,
+              "windows-x86_64": if $win64_darwin_url != "" then {
+                signature: $win64_darwin_sig,
+                url: $win64_darwin_url
+              } else null end
+            }')
+          
+          echo "PLATFORMS_JSON=$PLATFORMS_JSON" >> $GITHUB_OUTPUT
+
+      - name: Update latest.json
+        run: |
+          # 合并所有信息到latest.json
+          jq -n \
+            --arg version "${{ steps.get_release.outputs.version }}" \
+            --arg notes "${{ steps.get_release.outputs.notes }}" \
+            --arg pub_date "${{ steps.get_release.outputs.pub_date }}" \
+            --argjson platforms "${{ steps.find_assets.outputs.PLATFORMS_JSON }}" \
+            '{
+              version: $version,
+              notes: $notes,
+              pub_date: $pub_date,
+              platforms: $platforms
+            }' > latest.json
+          
+          cat latest.json
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add latest.json
+          git commit -m "Update latest.json for release ${{ steps.get_release.outputs.version }}"
+          git push
