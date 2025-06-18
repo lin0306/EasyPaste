@@ -100,6 +100,7 @@ jobs:
           path: |
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.exe
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.dmg
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.sig
 
   # 代码发布
   release:
@@ -143,25 +144,41 @@ jobs:
               repo: context.repo.repo
             });
             return {
-              version: response.data.tag_name.replace(/^v/, ''), // 移除v前缀
+              version: response.data.tag_name,
               notes: response.data.body,
               pub_date: new Date().toISOString()
             };
 
-      - name: Find release assets
+      - name: Find release assets and signatures
         id: find_assets
         run: |
           # 查找不同平台的构建产物
-          AARCH64_DARWIN=$(find artifacts/release-macos-latest/ -name "*.dmg" | grep -i "aarch64" || echo '')
-          WIN64_DARWIN=$(find artifacts/release-windows-latest/ -name "*.exe" | grep -i "x64" || echo '')
+          AARCH64_DARWIN=$(find artifacts/release-macos-latest/ -name "*.dmg" | head -1 || echo '')
+          WIN64_DARWIN=$(find artifacts/release-windows-latest/ -name "*.exe" | head -1 || echo '')
           
-          # 获取下载URL（假设你已经上传到release）
-          AARCH64_DARWIN_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename $AARCH64_DARWIN)"
-          WIN64_DARWIN_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename $WIN64_DARWIN)"
+          # 获取下载URL（使用gh-proxy.com镜像）
+          AARCH64_DARWIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$AARCH64_DARWIN")"
+          WIN64_DARWIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$WIN64_DARWIN")"
           
-          # 获取签名（假设签名文件与安装包同名但扩展名为.sig）
-          AARCH64_DARWIN_SIG=$(cat $(find artifacts/release-macos-latest/ -name "*.sig" | grep -i "aarch64") || echo '')
-          WIN64_DARWIN_SIG=$(cat $(find artifacts/release-windows-latest/ -name "*.sig" | grep -i "x64") || echo '')
+          # 获取签名内容（查找对应的.sig文件并读取内容）
+          AARCH64_DARWIN_SIG=""
+          WIN64_DARWIN_SIG=""
+          
+          # 查找并读取macOS签名文件
+          if [ -n "$AARCH64_DARWIN" ]; then
+            SIG_FILE=$(find artifacts/release-macos-latest/ -name "*.sig" | head -1)
+            if [ -n "$SIG_FILE" ]; then
+              AARCH64_DARWIN_SIG=$(cat "$SIG_FILE" | tr -d '\n')
+            fi
+          fi
+          
+          # 查找并读取Windows签名文件
+          if [ -n "$WIN64_DARWIN" ]; then
+            SIG_FILE=$(find artifacts/release-windows-latest/ -name "*.sig" | head -1)
+            if [ -n "$SIG_FILE" ]; then
+              WIN64_DARWIN_SIG=$(cat "$SIG_FILE" | tr -d '\n')
+            fi
+          fi
           
           # 生成platforms JSON
           PLATFORMS_JSON=$(jq -n \

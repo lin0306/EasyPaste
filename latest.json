@@ -1,0 +1,15 @@
+{
+	"version": "0.0.1",
+	"notes": "",
+	"pub_date": "2025-06-18T08:51:34.498Z",
+	"platforms": {
+		"darwin-aarch64": {
+			"signature": "",
+			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.1/EasyPaste_0.0.1_arrch64.dmg"
+		},
+		"windows-x86_64": {
+			"signature": "",
+			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.1/EasyPaste_0.0.1_x64-setup.dmg"
+		}
+	}
+}
