@@ -100,6 +100,8 @@ jobs:
           path: |
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.exe
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.dmg
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.gz
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.app
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.sig
 
   # 代码发布
@@ -118,34 +120,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: "App ${{ github.ref_name }}"
-          body: "## 版本 0.0.3 🚀
-### 核心功能实现 🛠️
-- 自动监控剪贴板 📊：实现了基于 Rust 的高性能剪贴板监控机制，能够实时捕获文本和图片内容变化
-- 多媒体支持 🖼️：完善了对文本和图片内容的处理，图片内容自动保存为本地文件并建立索引
-- 数据持久化 💾：使用 SQLite 数据库实现了剪贴板历史记录的本地存储和管理
-- 标签管理系统 🏷️：实现了标签创建、分配和管理功能，支持为剪贴板内容添加自定义标签
-- 拖拽交互 👆：支持通过拖拽为剪贴板内容分配标签，提升用户体验
-### 用户界面优化 🎨
-- 响应式布局 📱：优化了应用窗口的响应式布局，支持窗口大小调整
-- 主题系统 🌓：实现了明暗主题切换功能，适应不同使用环境
-- 多语言支持 🌍：完成了国际化框架搭建，当前支持中文界面
-- 搜索功能 🔍：实现了剪贴板内容的快速搜索功能
-### 系统集成 ⚙️
-- 系统托盘 🖥️：实现了系统托盘功能，支持快速访问和基本操作
-- 全局快捷键 ⌨️：支持自定义全局快捷键，快速调用应用
-- 自启动支持 🚀：实现了开机自启动功能，提升用户便利性
-- 窗口状态管理 🪟：支持窗口状态保存和恢复
-### 技术架构 🏗️
-- 前端 🖌️：使用 Vue 3 + TypeScript + Naive UI 构建现代化用户界面
-- 后端 🔧：基于 Tauri + Rust 实现高性能的跨平台支持
-- 数据存储 📁：使用 SQLite 实现本地数据管理
-- 插件系统 🧩：集成多个 Tauri 插件，提供丰富的系统功能支持
-### 开发与构建 👨‍💻
-- 开发环境 💻：完善了开发环境配置，支持快速启动开发
-- 构建流程 📦：实现了跨平台应用打包和发布流程
-- 更新机制 🔄：初步实现了应用自动更新框架
-
-感谢使用 EasyPaste，我们将持续改进产品体验！🙏"
+          body: "Built with Tauri 2 | See assets to download"
           draft: false # 是否生成release草稿
           prerelease: false # 是否生成预发布包
           files: |
@@ -161,6 +136,16 @@ jobs:
           ref: master
           fetch-depth: 0
 
+      - name: Download artifacts again
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: release-*
+          merge-multiple: true
+
+      - name: List downloaded artifacts
+        run: ls -R artifacts
+
       - name: Get latest release info
         id: get_release
         uses: actions/github-script@v7
@@ -171,7 +156,7 @@ jobs:
               repo: context.repo.repo
             });
             return {
-              version: response.data.tag_name,
+              version: response.data.tag_name.replace(/^v/, ''),
               notes: response.data.body,
               pub_date: new Date().toISOString()
             };
@@ -179,67 +164,64 @@ jobs:
       - name: Find release assets and signatures
         id: find_assets
         run: |
-          # 查找不同平台的构建产物
-          AARCH64_DARWIN=$(find artifacts/release-macos-latest/ -name "*.dmg" | head -1 || echo '')
-          WIN64_DARWIN=$(find artifacts/release-windows-latest/ -name "*.exe" | head -1 || echo '')
-          
-          # 获取下载URL（使用gh-proxy.com镜像）
-          AARCH64_DARWIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$AARCH64_DARWIN")"
-          WIN64_DARWIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$WIN64_DARWIN")"
-          
-          # 获取签名内容（查找对应的.sig文件并读取内容）
-          AARCH64_DARWIN_SIG=""
-          WIN64_DARWIN_SIG=""
-          
-          # 查找并读取macOS签名文件
-          if [ -n "$AARCH64_DARWIN" ]; then
-            SIG_FILE=$(find artifacts/release-macos-latest/ -name "*.sig" | head -1)
-            if [ -n "$SIG_FILE" ]; then
-              AARCH64_DARWIN_SIG=$(cat "$SIG_FILE" | tr -d '\n')
+          # 调试：查看artifact目录结构
+          echo "Artifacts directory structure:"
+          find artifacts -type d -print
+
+          # 查找构建产物（调整路径匹配逻辑）
+          MACOS_ARTIFACT=$(find artifacts -name "*.tar.gz" | head -1 || echo '')
+          WIN_ARTIFACT=$(find artifacts -name "*.exe" | head -1 || echo '')
+
+          # 获取下载URL
+          MACOS_URL=""
+          WIN_URL=""
+          if [ -n "$MACOS_ARTIFACT" ]; then
+            MACOS_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$MACOS_ARTIFACT")"
+          fi
+          if [ -n "$WIN_ARTIFACT" ]; then
+            WIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$WIN_ARTIFACT")"
+          fi
+
+          # 获取签名内容
+          MACOS_SIG=""
+          WIN_SIG=""
+          if [ -n "$MACOS_ARTIFACT" ]; then
+            SIG_FILE="${MACOS_ARTIFACT}.sig"
+            if [ -f "$SIG_FILE" ]; then
+              MACOS_SIG=$(cat "$SIG_FILE" | tr -d '\n')
             fi
           fi
-          
-          # 查找并读取Windows签名文件
-          if [ -n "$WIN64_DARWIN" ]; then
-            SIG_FILE=$(find artifacts/release-windows-latest/ -name "*.sig" | head -1)
-            if [ -n "$SIG_FILE" ]; then
-              WIN64_DARWIN_SIG=$(cat "$SIG_FILE" | tr -d '\n')
+          if [ -n "$WIN_ARTIFACT" ]; then
+            SIG_FILE="${WIN_ARTIFACT}.sig"
+            if [ -f "$SIG_FILE" ]; then
+              WIN_SIG=$(cat "$SIG_FILE" | tr -d '\n')
             fi
           fi
-          
-          # 生成platforms JSON
+
+          # 使用更安全的JSON生成方式
           PLATFORMS_JSON=$(jq -n \
-            --arg aarch64_darwin_url "$AARCH64_DARWIN_URL" \
-            --arg win64_darwin_url "$WIN64_DARWIN_URL" \
-            --arg aarch64_darwin_sig "$AARCH64_DARWIN_SIG" \
-            --arg win64_darwin_sig "$WIN64_DARWIN_SIG" \
+            --arg macos_url "$MACOS_URL" \
+            --arg win_url "$WIN_URL" \
+            --arg macos_sig "$MACOS_SIG" \
+            --arg win_sig "$WIN_SIG" \
             '{
-              "darwin-aarch64": if $aarch64_darwin_url != "" then {
-                signature: $aarch64_darwin_sig,
-                url: $aarch64_darwin_url
-              } else null end,
-              "windows-x86_64": if $win64_darwin_url != "" then {
-                signature: $win64_darwin_sig,
-                url: $win64_darwin_url
-              } else null end
+              "darwin-aarch64": ($macos_url | if . != "" then {signature: $macos_sig, url: $macos_url} else null end),
+              "windows-x86_64": ($win_url | if . != "" then {signature: $win_sig, url: $win_url} else null end)
             }')
           
           echo "PLATFORMS_JSON=$PLATFORMS_JSON" >> $GITHUB_OUTPUT
 
       - name: Update latest.json
         run: |
-          # 合并所有信息到latest.json
-          jq -n \
-            --arg version "${{ steps.get_release.outputs.version }}" \
-            --arg notes "${{ steps.get_release.outputs.notes }}" \
-            --arg pub_date "${{ steps.get_release.outputs.pub_date }}" \
-            --argjson platforms "${{ steps.find_assets.outputs.PLATFORMS_JSON }}" \
-            '{
-              version: $version,
-              notes: $notes,
-              pub_date: $pub_date,
-              platforms: $platforms
-            }' > latest.json
+          # 使用更安全的JSON生成方式
+          cat <<EOF > latest.json
+          {
+            "version": "${{ fromJson(steps.get_release.outputs.result).version }}",
+            "notes": "${{ fromJson(steps.get_release.outputs.result).notes }}",
+            "pub_date": "${{ fromJson(steps.get_release.outputs.result).pub_date }}",
+            "platforms": ${{ steps.find_assets.outputs.PLATFORMS_JSON }}
+          }
+          EOF
           
           cat latest.json
 
@@ -248,5 +230,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add latest.json
-          git commit -m "Update latest.json for release ${{ steps.get_release.outputs.version }}"
+          git commit -m "Update latest.json for release ${{ fromJson(steps.get_release.outputs.result).version }}"
           git push
