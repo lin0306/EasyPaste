@@ -1,15 +1,15 @@
 {
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"notes": "",
 	"pub_date": "2025-06-18T08:51:34.498Z",
 	"platforms": {
 		"darwin-aarch64": {
 			"signature": "",
-			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.1/EasyPaste_0.0.1_arrch64.dmg"
+			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.3-beta/EasyPaste_0.0.3_aarch64.dmg"
 		},
 		"windows-x86_64": {
-			"signature": "",
-			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.1/EasyPaste_0.0.1_x64-setup.dmg"
+			"signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnQ5ekppbG5hU0I4OE1aWHZEMmt1KzVpOGJ1czVCVTh2ZjNtQ0dPZmdtOVM2Z2Mva1JLaFpSZUF5WlpzK0ZZdDJYWlRDNGlUYkJybXVCekxyMG1qS1FZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwMjQxNzUwCWZpbGU6RWFzeVBhc3RlXzAuMC4zX3g2NC1zZXR1cC5leGUKcExkMXlKa0t5WkxCM0U2ZXJQSDc0Y1cxdFUrZzNiZGUzeVg4M0dlWDlNTmFhdjF6WEVBQi9PN053OS9MY1dvNFpPN2I0WkRyaVBrSFN2OWFyV2cyQ3c9PQo=",
+			"url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.3-beta/EasyPaste_0.0.3_x64-setup.exe"
 		}
 	}
 }
