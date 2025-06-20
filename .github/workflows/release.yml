@@ -101,8 +101,8 @@ jobs:
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.exe
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.dmg
             src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.gz
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.app
-            src-tauri/target/${{ matrix.rust-target }}/release/bundle/**/*.sig
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/macos/*.sig
+            src-tauri/target/${{ matrix.rust-target }}/release/bundle/nsis/*.sig
 
   # 代码发布
   release:
@@ -169,7 +169,7 @@ jobs:
           find artifacts -type d -print
 
           # 查找构建产物（调整路径匹配逻辑）
-          MACOS_ARTIFACT=$(find artifacts -name "*.tar.gz" | head -1 || echo '')
+          MACOS_ARTIFACT=$(find artifacts -name "*.gz" | head -1 || echo '')
           WIN_ARTIFACT=$(find artifacts -name "*.exe" | head -1 || echo '')
 
           # 获取下载URL
