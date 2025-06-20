@@ -168,9 +168,9 @@ jobs:
           echo "Artifacts directory structure:"
           find artifacts -type d -print
 
-          # 查找构建产物（调整路径匹配逻辑）
-          MACOS_ARTIFACT=$(find artifacts -name "*.gz" | head -1 || echo '')
-          WIN_ARTIFACT=$(find artifacts -name "*.exe" | head -1 || echo '')
+          # 查找构建产物
+          MACOS_ARTIFACT=$(find artifacts -type f -name "*.gz" | head -1 || echo '')
+          WIN_ARTIFACT=$(find artifacts -type f -name "*.exe" | head -1 || echo '')
 
           # 获取下载URL
           MACOS_URL=""
@@ -198,8 +198,8 @@ jobs:
             fi
           fi
 
-          # 修改 jq 部分，加上 -c 参数，并用 @sh 转义成 shell 字符串
-          PLATFORMS_JSON=$(jq -c -n \
+          # 一次性生成JSON字符串
+          PLATFORMS_JSON=$(jq -n \
             --arg macos_url "$MACOS_URL" \
             --arg win_url "$WIN_URL" \
             --arg macos_sig "$MACOS_SIG" \
@@ -209,10 +209,11 @@ jobs:
               "windows-x86_64": ($win_url | if . != "" then {signature: $win_sig, url: $win_url} else null end)
             }')
 
-          # 使用 @sh 来安全地转义 JSON 内容为 shell 字符串
-          ESCAPED_PLATFORMS_JSON=$(jq -c '@sh' <<< "$PLATFORMS_JSON" | tr -d "'")
+          # 控制台打印json内容
+          echo $PLATFORMS_JSON
+          
+          ESCAPED_PLATFORMS_JSON=$(echo "$PLATFORMS_JSON" | jq -c '.')
 
-          # 写入 GITHUB_OUTPUT
           echo "PLATFORMS_JSON=$ESCAPED_PLATFORMS_JSON" >> $GITHUB_OUTPUT
 
       - name: Update latest.json
