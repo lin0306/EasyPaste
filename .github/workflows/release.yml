@@ -198,8 +198,8 @@ jobs:
             fi
           fi
 
-          # 使用更安全的JSON生成方式
-          PLATFORMS_JSON=$(jq -n \
+          # 修改 jq 部分，加上 -c 参数，并用 @sh 转义成 shell 字符串
+          PLATFORMS_JSON=$(jq -c -n \
             --arg macos_url "$MACOS_URL" \
             --arg win_url "$WIN_URL" \
             --arg macos_sig "$MACOS_SIG" \
@@ -208,8 +208,12 @@ jobs:
               "darwin-aarch64": ($macos_url | if . != "" then {signature: $macos_sig, url: $macos_url} else null end),
               "windows-x86_64": ($win_url | if . != "" then {signature: $win_sig, url: $win_url} else null end)
             }')
-          
-          echo "PLATFORMS_JSON=$PLATFORMS_JSON" >> $GITHUB_OUTPUT
+
+          # 使用 @sh 来安全地转义 JSON 内容为 shell 字符串
+          ESCAPED_PLATFORMS_JSON=$(jq -c '@sh' <<< "$PLATFORMS_JSON" | tr -d "'")
+
+          # 写入 GITHUB_OUTPUT
+          echo "PLATFORMS_JSON=$ESCAPED_PLATFORMS_JSON" >> $GITHUB_OUTPUT
 
       - name: Update latest.json
         run: |
