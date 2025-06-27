@@ -111,4 +111,16 @@ export function openAboutWindow() {
     })
 }
 
+/**
+ * 打开更新窗口
+ */
+export function openUpdaterWindow() {
+    Windows.createWin({
+        label: 'updater',
+        url: '/updater',
+        width: 600,
+        height: 500
+    })
+}
+
 export default Windows

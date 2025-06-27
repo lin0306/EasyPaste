@@ -97,7 +97,9 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
                 app.emit("open-settings", "".to_string()).unwrap();
                 println!("打开设置窗口");
             }
-            "check_update" => println!("触发检查更新逻辑"),
+            "check_update" => {
+                app.emit("check-update", "".to_string()).unwrap();
+            }
             "about" => {
                 app.emit("open-about", "".to_string()).unwrap();
                 info!("打开关于窗口");

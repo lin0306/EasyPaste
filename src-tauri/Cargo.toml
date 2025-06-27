@@ -41,6 +41,7 @@ tauri-plugin-store = "2"
 # 文件操作
 dirs = "4.0.0"
 tauri-plugin-shell = "2"
+tauri-plugin-notification = "2"
 
 [dependencies.tauri-plugin-sql]
 features = ["sqlite"] # or "postgres", or "mysql"

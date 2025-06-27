@@ -6,7 +6,8 @@
     "main",
     "settings",
     "tags",
-    "about"
+    "about",
+    "updater"
   ],
   "permissions": [
     "core:default",
@@ -127,14 +128,13 @@
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
-    
     "shell:default",
     "shell:allow-open",
-
     "updater:default",
     "updater:allow-check",
     "updater:allow-download",
     "updater:allow-download-and-install",
-    "updater:allow-install"
+    "updater:allow-install",
+    "notification:default"
   ]
 }

@@ -18,7 +18,8 @@ import TitleBar from '../components/TitleBar.vue';
 import { getShortcutKeys } from '../configs/FileConfig';
 import { useLanguage } from '../configs/LanguageConfig';
 import { themes, useTheme } from '../configs/ThemeConfig';
-import { copyToClipboard, initClipboardListener } from '../services/clipboardService';
+import { copyToClipboard, initClipboardListener } from '../services/ClipboardService';
+import UpdaterService from '../services/UpdaterService';
 import { clipboardListenStore } from '../store/copyStatus';
 import { listFixedStore } from '../store/fixed';
 import { CopyState } from '../types/CopyState';
@@ -51,7 +52,10 @@ let openSettingsListener: any = null;
 let openAboutListener: any = null;
 
 // 加载标签事件监听
-let loadTagsUnlistener: any = null;
+let loadTagsUnListener: any = null;
+
+// 加载标签事件监听
+let checkUpdateUnListener: any = null;
 
 // 将MenuItems改为计算属性，这样当currentTheme变化时会自动更新
 const MenuItems = computed((): NavBarItem[] => [
@@ -176,9 +180,10 @@ const MenuItems = computed((): NavBarItem[] => [
       {
         key: '检查更新',
         label: currentLanguage.value.pages.list.menu.checkForUpdate,
-        onClick: () => {
+        onClick: async () => {
           // 调用检查更新接口
-          // window.ipcRenderer.invoke('check-for-updates');
+          const update = UpdaterService.getInstance();
+          await update.checkForUpdates();
         },
       },
       {
@@ -578,6 +583,16 @@ async function initLoadTagsListener() {
 }
 
 /**
+ * 初始化加载标签事件监听
+ */
+async function initCheckUpdateListener() {
+  return await listen('check-update', async (_event: any) => {
+     const update = UpdaterService.getInstance();
+          await update.checkForUpdates();
+  });
+}
+
+/**
  * 注册快捷键打开当前窗口
  */
 async function registerShortcutKeysOpenWindow() {
@@ -619,11 +634,14 @@ onMounted(async () => {
     // 添加打开关于窗口事件监听
     openAboutListener = await initOpenAboutListener();
 
+    // 添加检查更新事件监听
+    checkUpdateUnListener = await initCheckUpdateListener();
+
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
 
     // 添加加载标签事件监听
-    loadTagsUnlistener = await initLoadTagsListener();
+    loadTagsUnListener = await initLoadTagsListener();
 
     // 增加事件监听
     document.addEventListener('click', handleClickOutside);
@@ -654,9 +672,13 @@ onUnmounted(() => {
   if (openAboutListener) {
     openAboutListener();
   }
+  // 清除检查更新事件监听
+  if (checkUpdateUnListener) {
+    checkUpdateUnListener();
+  }
   // 清除加载标签事件监听
-  if (loadTagsUnlistener) {
-    loadTagsUnlistener();
+  if (loadTagsUnListener) {
+    loadTagsUnListener();
   }
 
   document.removeEventListener('click', handleClickOutside);
