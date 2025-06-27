@@ -4,7 +4,7 @@ use serde_json::{from_reader, from_slice};
 use std::fs::File;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tauri::menu::{Menu, MenuItem};
+use tauri::menu::{CheckMenuItem, Menu, MenuItem};
 use tauri::plugin::{Builder, TauriPlugin};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager, Runtime};
@@ -38,16 +38,13 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
 
     // 创建菜单项
     let settings = MenuItem::with_id(app, "settings", &language.settings, true, None::<&str>)?;
-    // 创建菜单项
-    let mut monitor_enabled_text = &language.monitorDisabled;
-    if !is_clipboard_monitor_enabled(app.clone()) {
-        monitor_enabled_text = &language.monitorEnabled;
-    }
-    let monitor_enabled = MenuItem::with_id(
+
+    let clipboard_monitor = CheckMenuItem::with_id(
         app,
-        "monitor_enabled",
-        &monitor_enabled_text,
+        "clipboard_monitor",
+        &language.clipboardMonitor,
         true,
+        is_clipboard_monitor_enabled(app.clone()),
         None::<&str>,
     )?;
     let check_update = MenuItem::with_id(
@@ -60,11 +57,13 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let about = MenuItem::with_id(app, "about", &language.about, true, None::<&str>)?;
     let restart = MenuItem::with_id(app, "restart", &language.restart, true, None::<&str>)?;
     let exit = MenuItem::with_id(app, "exit", &language.exit, true, None::<&str>)?;
+    // let transverse = CheckMenuItem::;
 
     // 创建菜单
     let items: Vec<&dyn tauri::menu::IsMenuItem<R>> = vec![
         &settings,
-        &monitor_enabled,
+        &clipboard_monitor,
+        // &transverse,
         &check_update,
         &about,
         &restart,
@@ -117,11 +116,9 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
                 app.emit("open-settings", "".to_string()).unwrap();
                 println!("打开设置窗口");
             }
-            "monitor_enabled" => {
+            "clipboard_monitor" => {
                 let current = is_clipboard_monitor_enabled(app.clone());
                 set_clipboard_monitor_enabled(app.clone(), !current);
-                // 重新加载托盘菜单语言
-                reload_tray_menu(app.clone());
             }
             "check_update" => {
                 app.emit("check-update", "".to_string()).unwrap();
@@ -174,8 +171,7 @@ fn load_language() -> Tray {
         info!("使用默认托盘语言配置");
         let default_json = r#"{
             "settings": "设置",
-            "monitorEnabled": "开始监听",
-            "monitorDisabled": "暂停监听",
+            "clipboardMonitor": "剪贴板监听",
             "checkUpdate": "检查更新",
             "about": "关于",
             "restart": "重启",
@@ -197,6 +193,5 @@ pub struct Tray {
     about: String,
     restart: String,
     exit: String,
-    monitorEnabled: String,
-    monitorDisabled: String,
+    clipboardMonitor: String,
 }

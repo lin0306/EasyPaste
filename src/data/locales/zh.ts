@@ -139,7 +139,6 @@ export const chinesePageConfig: PageConfig = {
         about: '关于',
         restart: '重启',
         exit: '退出',
-        monitorEnabled: '开始监听',
-        monitorDisabled: '暂停监听',
+        clipboardMonitor: "剪贴板监听",
     },
 }
