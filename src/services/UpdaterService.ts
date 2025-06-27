@@ -9,7 +9,7 @@ import { openUpdaterWindow } from '../utils/window';
  */
 export default class UpdaterService {
   private updateInterval: NodeJS.Timeout | null = null;
-  private intervalTime: number = 1000 * 60 * 60 * 60; // 默认1小时检查一次更新
+  private intervalTime: number = 1000 * 60 * 60; // 默认1小时检查一次更新
   private static instance: UpdaterService; // 声明单例，避免重复创建定时任务
 
   private constructor() {
