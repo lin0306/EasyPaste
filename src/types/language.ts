@@ -158,5 +158,7 @@ export interface PageConfig {
         about: string,
         restart: string,
         exit: string,
+        monitorEnabled: string,
+        monitorDisabled: string,
     }
 }

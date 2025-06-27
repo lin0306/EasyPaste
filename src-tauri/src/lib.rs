@@ -27,8 +27,8 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_sql::Builder::default().build())
-        .plugin(tray::init())
         .plugin(clipboard_monitor::init())
+        .plugin(tray::init())
         .invoke_handler(tauri::generate_handler![
             #[cfg(debug_assertions)]
             open_dev_tool,

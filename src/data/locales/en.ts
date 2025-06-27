@@ -138,5 +138,7 @@ export const englishPageConfig: PageConfig = {
         about: 'About',
         restart: 'Restart',
         exit: 'Exit',
+        monitorEnabled: 'Monitoring Enabled',
+        monitorDisabled: 'Monitoring Disabled',
     },
 }

@@ -9,6 +9,8 @@ use tauri::plugin::{Builder, TauriPlugin};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager, Runtime};
 
+use crate::clipboard_monitor::{is_clipboard_monitor_enabled, set_clipboard_monitor_enabled};
+
 // 状态结构体，用于保存托盘图标
 struct TrayState<R: Runtime> {
     tray: Mutex<Option<tauri::tray::TrayIcon<R>>>,
@@ -36,6 +38,18 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
 
     // 创建菜单项
     let settings = MenuItem::with_id(app, "settings", &language.settings, true, None::<&str>)?;
+    // 创建菜单项
+    let mut monitor_enabled_text = &language.monitorDisabled;
+    if !is_clipboard_monitor_enabled(app.clone()) {
+        monitor_enabled_text = &language.monitorEnabled;
+    }
+    let monitor_enabled = MenuItem::with_id(
+        app,
+        "monitor_enabled",
+        &monitor_enabled_text,
+        true,
+        None::<&str>,
+    )?;
     let check_update = MenuItem::with_id(
         app,
         "check_update",
@@ -48,8 +62,14 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let exit = MenuItem::with_id(app, "exit", &language.exit, true, None::<&str>)?;
 
     // 创建菜单
-    let items: Vec<&dyn tauri::menu::IsMenuItem<R>> =
-        vec![&settings, &check_update, &about, &restart, &exit];
+    let items: Vec<&dyn tauri::menu::IsMenuItem<R>> = vec![
+        &settings,
+        &monitor_enabled,
+        &check_update,
+        &about,
+        &restart,
+        &exit,
+    ];
     let menu = Menu::with_items(app, &items)?;
 
     // 获取状态
@@ -96,6 +116,12 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
             "settings" => {
                 app.emit("open-settings", "".to_string()).unwrap();
                 println!("打开设置窗口");
+            }
+            "monitor_enabled" => {
+                let current = is_clipboard_monitor_enabled(app.clone());
+                set_clipboard_monitor_enabled(app.clone(), !current);
+                // 重新加载托盘菜单语言
+                reload_tray_menu(app.clone());
             }
             "check_update" => {
                 app.emit("check-update", "".to_string()).unwrap();
@@ -148,6 +174,8 @@ fn load_language() -> Tray {
         info!("使用默认托盘语言配置");
         let default_json = r#"{
             "settings": "设置",
+            "monitorEnabled": "开始监听",
+            "monitorDisabled": "暂停监听",
             "checkUpdate": "检查更新",
             "about": "关于",
             "restart": "重启",
@@ -169,4 +197,6 @@ pub struct Tray {
     about: String,
     restart: String,
     exit: String,
+    monitorEnabled: String,
+    monitorDisabled: String,
 }
