@@ -587,8 +587,8 @@ async function initLoadTagsListener() {
  */
 async function initCheckUpdateListener() {
   return await listen('check-update', async (_event: any) => {
-     const update = UpdaterService.getInstance();
-          await update.checkForUpdates();
+    const update = UpdaterService.getInstance();
+    await update.checkForUpdates();
   });
 }
 
@@ -646,6 +646,10 @@ onMounted(async () => {
     // 增加事件监听
     document.addEventListener('click', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
+
+    // 开启自动检查更新
+    const update = UpdaterService.getInstance();
+    update.startAutoCheck();
   } catch (err: any) {
     error('初始化失败:' + err.message);
   }
@@ -680,6 +684,10 @@ onUnmounted(() => {
   if (loadTagsUnListener) {
     loadTagsUnListener();
   }
+
+  // 关闭自动检查更新操作
+  const update = UpdaterService.getInstance();
+  update.stopAutoCheck();
 
   document.removeEventListener('click', handleClickOutside);
   document.removeEventListener('keydown', handleKeyDown);
