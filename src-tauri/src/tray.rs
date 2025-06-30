@@ -4,7 +4,7 @@ use serde_json::{from_reader, from_slice};
 use std::fs::File;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tauri::menu::{CheckMenuItem, Menu, MenuItem};
+use tauri::menu::{CheckMenuItem, Menu, MenuItem, MenuItemKind, PredefinedMenuItem};
 use tauri::plugin::{Builder, TauriPlugin};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager, Runtime};
@@ -57,15 +57,16 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let about = MenuItem::with_id(app, "about", &language.about, true, None::<&str>)?;
     let restart = MenuItem::with_id(app, "restart", &language.restart, true, None::<&str>)?;
     let exit = MenuItem::with_id(app, "exit", &language.exit, true, None::<&str>)?;
-    // let transverse = CheckMenuItem::;
+    let separator = PredefinedMenuItem::separator(app)?;
 
     // 创建菜单
     let items: Vec<&dyn tauri::menu::IsMenuItem<R>> = vec![
         &settings,
         &clipboard_monitor,
-        // &transverse,
+        &separator,
         &check_update,
         &about,
+        &separator,
         &restart,
         &exit,
     ];
