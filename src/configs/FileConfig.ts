@@ -11,6 +11,7 @@ let defaultSettings: Settings = {
     maxStorageSize: 5000,
     dataRetentionDays: 30,
     maxItemSize: 50,
+    autoCheckUpdate: true,
 }
 let defaultShortcutKeys = {
     search: {

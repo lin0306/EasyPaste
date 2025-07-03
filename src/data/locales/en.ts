@@ -11,11 +11,9 @@ export const englishPageConfig: PageConfig = {
         shortcutTitle: 'Shortcut Settings',
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey (Windows Applicable)',
-        fixedWindowSize: 'Fixed Window Size',
-        windowHeight: 'Height:',
-        windowWidth: 'Width:',
         languages: 'Languages',
-        devTools: 'Developer Tools',
+        autoCheckUpdate: 'Automatically Check Updates',
+
         maxHistoryItems: 'Max History Items',
         maxHistoryItemsHint: 'Limit the upper limit of data storage, exceeding the limit will automatically clean up old data',
         maxStorageSize: 'Max Storage Size (MB)',

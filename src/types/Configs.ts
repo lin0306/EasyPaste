@@ -7,6 +7,7 @@ interface Settings {
     maxStorageSize: number,
     dataRetentionDays: number,
     maxItemSize: number,
+    autoCheckUpdate: boolean,
 }
 
 interface ShortcutKeys {

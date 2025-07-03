@@ -22,11 +22,8 @@ export interface PageConfig {
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;
-        fixedWindowSize: string;
-        windowHeight: string;
-        windowWidth: string;
         languages: string;
-        devTools: string;
+        autoCheckUpdate: string;
         // 存储设置页面文字
         maxHistoryItems: string,
         maxHistoryItemsHint: string,

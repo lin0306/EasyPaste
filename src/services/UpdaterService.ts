@@ -43,6 +43,7 @@ export default class UpdaterService {
   startAutoCheck() {
     if (this.updateInterval === null) {
       this.updateInterval = setInterval(() => this.checkForUpdates(), this.intervalTime);
+      info('初始化自动检查更新任务')
     }
   }
 
@@ -53,6 +54,7 @@ export default class UpdaterService {
     if (this.updateInterval !== null) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
+      info('停止自动检查更新任务')
     }
   }
 

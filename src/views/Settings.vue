@@ -20,6 +20,7 @@ import {
 } from '../configs/FileConfig';
 import {getTray, languages, useLanguage} from '../configs/LanguageConfig';
 import {convertRegistKey, convertShow, formatKeyDisplay} from '../utils/ShortcutKeys';
+import {emit} from '@tauri-apps/api/event';
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -134,6 +135,8 @@ const saveConfig = async () => {
     const isUpdateReplaceGlobalHotkey = currentConfig.replaceGlobalHotkey !== originalConfig.replaceGlobalHotkey;
     // 是否修改了【语言】
     const isUpdateLanguages = currentConfig.languages !== originalConfig.languages;
+    // 是否修改了【自动检查更新】
+    const isUpdateAutoCheckUpdate = currentConfig.autoCheckUpdate !== originalConfig.autoCheckUpdate;
     // 是否修改了【最大存储条数】
     const isUpdateMaxHistoryItems = currentConfig.maxHistoryItems !== originalConfig.maxHistoryItems;
     // 是否修改了【最大存储大小】
@@ -176,6 +179,10 @@ const saveConfig = async () => {
             await disable();
           }
         }
+      }
+      if (isUpdateAutoCheckUpdate) {
+        // 发送更新了自动检查更新状态消息
+        await emit('update-auto-check-update', {data: currentConfig.autoCheckUpdate});
       }
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
@@ -290,6 +297,10 @@ onMounted(async () => {
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.languages }}</span>
             <n-select class="select" v-model:value="currentConfig.languages" :options="languageOptions"/>
+          </div>
+          <div class="form-item">
+            <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
+            <n-switch v-model:value="currentConfig.autoCheckUpdate"/>
           </div>
         </div>
 

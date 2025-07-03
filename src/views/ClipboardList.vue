@@ -15,7 +15,7 @@ import TrashIcon from '../assets/icons/TrashIcon.vue';
 import UntopIcon from '../assets/icons/UntopIcon.vue';
 import NavBar from '../components/NavBar.vue';
 import TitleBar from '../components/TitleBar.vue';
-import { getShortcutKeys } from '../configs/FileConfig';
+import { getSettings, getShortcutKeys } from '../configs/FileConfig';
 import { useLanguage } from '../configs/LanguageConfig';
 import { themes, useTheme } from '../configs/ThemeConfig';
 import { copyToClipboard, initClipboardListener } from '../services/ClipboardService';
@@ -54,8 +54,11 @@ let openAboutListener: any = null;
 // 加载标签事件监听
 let loadTagsUnListener: any = null;
 
-// 加载标签事件监听
+// 加载更新事件监听
 let checkUpdateUnListener: any = null;
+
+// 加载更新自动更新任务状态事件监听
+let autoCheckUpdateUnListener: any = null;
 
 // 将MenuItems改为计算属性，这样当currentTheme变化时会自动更新
 const MenuItems = computed((): NavBarItem[] => [
@@ -556,7 +559,6 @@ function initBlueListener() {
 
 /**
  * 初始化打开设置窗口事件监听
-
  */
 function initOpenSettingsListener() {
   return listen('open-settings', (_event: any) => {
@@ -613,9 +615,28 @@ async function registerShortcutKeysOpenWindow() {
   }
 }
 
+/**
+ * 初始化更新自动检查更新任务状态监听
+ */
+async function initUpdateAutoCheckUpdateListener() {
+  return await listen('update-auto-check-update', (event: any) => {
+    const autoCheckUpdate = event.payload.data;
+    if (autoCheckUpdate) {
+      info('打开自动更新任务');
+      const update = UpdaterService.getInstance();
+      update.startAutoCheck();
+    } else {
+      info('关闭自动更新任务');
+      const update = UpdaterService.getInstance();
+      update.stopAutoCheck();
+    }
+  });
+}
+
 // 组件挂载时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
+    const settings = await getSettings();
     // 加载剪贴板项目列表
     await loadClipboardItems(true);
 
@@ -637,6 +658,9 @@ onMounted(async () => {
     // 添加检查更新事件监听
     checkUpdateUnListener = await initCheckUpdateListener();
 
+    // 添加更新自动检查更新任务状态事件监听
+    autoCheckUpdateUnListener = await initUpdateAutoCheckUpdateListener();
+
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
 
@@ -648,8 +672,10 @@ onMounted(async () => {
     document.addEventListener('keydown', handleKeyDown);
 
     // 开启自动检查更新
-    const update = UpdaterService.getInstance();
-    update.startAutoCheck();
+    if (settings.autoCheckUpdate) {
+      const update = UpdaterService.getInstance();
+      update.startAutoCheck();
+    }
   } catch (err: any) {
     error('初始化失败:' + err.message);
   }
@@ -680,6 +706,10 @@ onUnmounted(() => {
   if (checkUpdateUnListener) {
     checkUpdateUnListener();
   }
+  // 清除更新自动检查更新任务状态事件监听
+  if (autoCheckUpdateUnListener) {
+    autoCheckUpdateUnListener();
+  }
   // 清除加载标签事件监听
   if (loadTagsUnListener) {
     loadTagsUnListener();
@@ -689,6 +719,7 @@ onUnmounted(() => {
   const update = UpdaterService.getInstance();
   update.stopAutoCheck();
 
+  // 移除事件监听
   document.removeEventListener('click', handleClickOutside);
   document.removeEventListener('keydown', handleKeyDown);
 });
@@ -696,7 +727,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.list.title" :showHideBtn="true" :showFixedBtn="true"
+  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true"
     :fixed="`listFixedListen`" :dev-tool="`main`" />
   <NavBar :menuItems="MenuItems" />
 
