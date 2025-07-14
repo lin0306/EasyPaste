@@ -1,7 +1,5 @@
 use std::sync::{Arc, Mutex};
-use clipboard_rs::{
-    Clipboard, ClipboardContext, ClipboardHandler, ClipboardWatcher, ClipboardWatcherContext,
-};
+use clipboard_rs::{Clipboard, ClipboardContext, ClipboardHandler, ClipboardWatcher, ClipboardWatcherContext, WatcherShutdown};
 use serde_json::Map;
 use std::thread;
 use tauri::{AppHandle, Emitter};
@@ -49,6 +47,7 @@ impl ClipboardHandler for Manager {
 #[derive(Default)]
 struct ListenerState {
     watcher_thread: Option<thread::JoinHandle<()>>,
+    watcher_shutdown: Option<WatcherShutdown>,
     is_listening: bool,
 }
 
@@ -70,11 +69,13 @@ pub fn start_listening(app: AppHandle) {
 
     let mut watcher = ClipboardWatcherContext::new().unwrap();
 
+    let shutdown = watcher.add_handler(manager).get_shutdown_channel();
     let handle = thread::spawn(move || {
         println!("开始监听剪贴板变化...");
-        watcher.add_handler(manager).start_watch();
+        watcher.start_watch();
     });
 
+    state.watcher_shutdown = Some(shutdown);
     state.watcher_thread = Some(handle);
     state.is_listening = true;
 }
@@ -92,6 +93,7 @@ pub fn stop_listening() {
     // 并且当线程被 drop 时自动退出（或你可以在 `Manager` 中实现 drop 逻辑）。
     // 如果你的 `watcher` 支持主动关闭，请在这里添加关闭逻辑。
 
+    state.watcher_shutdown.take().unwrap().stop();
     drop(state.watcher_thread.take()); // 等待线程结束
     state.is_listening = false;
     println!("已停止监听剪贴板");
