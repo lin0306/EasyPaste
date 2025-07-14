@@ -10,26 +10,21 @@ import {invoke} from '@tauri-apps/api/core';
 export async function initClipboardListener() {
     // 监听剪贴板内容变化事件
     const unListen = await listen('clipboard-change', async (event) => {
-        info('剪贴板内容发生变化');
         const clipboardListen = clipboardListenStore();
         try {
             clipboardListen.coping();
             const payload: any = event.payload;
-            info('剪贴板内容变化事件:' + JSON.stringify(event.payload));
 
             if (payload.type === 'text') {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    info('检测到新的剪贴板文本内容');
                     const db = await ClipboardDB.getInstance();
-                    const result = await db.saveClipboardItem(content, 'text');
-                    info("文本内容保存到数据库：" + result);
+                    await db.saveClipboardItem(content, 'text');
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
                 if (fileName) {
-                    info('检测到新的剪贴板文件内容，文件路径:' + fileName);
 
                     // 直接将文件路径保存到数据库
                     const db = await ClipboardDB.getInstance();
