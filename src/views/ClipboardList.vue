@@ -1028,11 +1028,11 @@ onUnmounted(() => {
   text-overflow: ellipsis;
   line-clamp: 3;
   overflow: hidden;
-  height: 5.6em;
+  height: 5.7em;
   width: 100%;
   word-wrap: break-word;
   word-break: break-all;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .text-line {
@@ -1042,7 +1042,7 @@ onUnmounted(() => {
 
 .code-line {
   overflow: auto;
-  height: 5.6em;
+  height: 5.7em;
 }
 
 .code-line::-webkit-scrollbar {
