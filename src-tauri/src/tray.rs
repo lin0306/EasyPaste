@@ -15,7 +15,7 @@ use tauri::{AppHandle, Emitter, Manager};
 pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
     let mut state = LOAD_STATE.lock().unwrap();
     // 获取语言配置
-    let language = load_language();
+    let language = load_language(&app);
 
     // 创建菜单项
     let settings = MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>)?;
@@ -40,26 +40,31 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
     let separator = PredefinedMenuItem::separator(&app)?;
 
     // 创建菜单
-    let menu = Menu::with_items(&app, &[
-        &settings,
-        &clipboard_monitor,
-        &separator,
-        &check_update,
-        &about,
-        &separator,
-        &restart,
-        &exit,
-    ])?;
+    let menu = Menu::with_items(
+        &app,
+        &[
+            &settings,
+            &clipboard_monitor,
+            &separator,
+            &check_update,
+            &about,
+            &separator,
+            &restart,
+            &exit,
+        ],
+    )?;
 
     // 如果已有托盘图标，更新其菜单
     if state.is_loaded {
-        state
-            .tray
-            .take()
-            .unwrap()
-            .set_menu(Some(menu))
-            .expect("菜单重新加载失败");
-        return Ok(());
+        match state.tray.take() {
+            Some(tray) => {
+                tray.set_menu(Some(menu))?;
+                // 重新设置托盘
+                state.tray = Some(tray);
+                return Ok(());
+            }
+            None => {}
+        }
     }
 
     // 创建新的托盘图标
@@ -145,11 +150,11 @@ pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
 /**
  * 加载语言配置
  */
-fn load_language() -> Tray {
+fn load_language(app: &AppHandle) -> Tray {
     let appdata_dir = dirs::data_dir().expect("未找到数据目录");
     let mut path = PathBuf::new();
     path.push(appdata_dir);
-    path.push("com.easyclip.app");
+    path.push(&app.app_handle().config().identifier);
     path.push("language.json");
 
     info!("语言配置文件路径：{}", path.display());
@@ -198,5 +203,5 @@ struct LoadState {
 
 // 使用 Arc + Mutex 实现线程安全共享
 lazy_static::lazy_static! {
-    static ref LOAD_STATE: Arc<Mutex<LoadState >> = Arc::new(Mutex::new(LoadState::default()));
+    static ref LOAD_STATE: Arc<Mutex<LoadState>> = Arc::new(Mutex::new(LoadState::default()));
 }
