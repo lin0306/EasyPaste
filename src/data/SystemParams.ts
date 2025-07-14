@@ -4,3 +4,6 @@ const env = process.env.NODE_ENV;
 export function isDev() {
     return env === 'development';
 };
+
+// 判断当前是否为Mac操作系统
+export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);

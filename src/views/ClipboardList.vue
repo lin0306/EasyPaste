@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { listen } from '@tauri-apps/api/event';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { exists } from '@tauri-apps/plugin-fs';
 import { isRegistered, register } from '@tauri-apps/plugin-global-shortcut';
 import { error, info } from '@tauri-apps/plugin-log';
 import { exit, relaunch } from '@tauri-apps/plugin-process';
 import { NEmpty, NImage, NTag, useMessage } from 'naive-ui';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import DragIcon from '../assets/icons/DragIcon.vue';
+import FileDeleteIcon from '../assets/icons/FileDeleteIcon.vue';
+import FileIcon from '../assets/icons/FileIcon.vue';
 import ImageFiledIcon from '../assets/icons/ImageFiledIcon.vue';
 import MoreIcon from '../assets/icons/MoreIcon.vue';
 import SearchIcon from '../assets/icons/SearchIcon.vue';
@@ -18,7 +21,7 @@ import TitleBar from '../components/TitleBar.vue';
 import { getSettings, getShortcutKeys } from '../configs/FileConfig';
 import { useLanguage } from '../configs/LanguageConfig';
 import { themes, useTheme } from '../configs/ThemeConfig';
-import { copyToClipboard, initClipboardListener } from '../services/ClipboardService';
+import { copyFileToClipboard, copyToClipboard, initClipboardListener } from '../services/ClipboardService';
 import UpdaterService from '../services/UpdaterService';
 import { clipboardListenStore } from '../store/copyStatus';
 import { listFixedStore } from '../store/fixed';
@@ -29,6 +32,7 @@ import convertType from '../utils/convert';
 import ClipboardDB from '../utils/db';
 import FileSystem from '../utils/fileSystem';
 import { convertRegistKey } from '../utils/ShortcutKeys';
+import { filePathConverFileName } from '../utils/strUtil';
 import Windows, { openAboutWindow, openSettingsWindow, openTagsWindow } from '../utils/window';
 
 // 获取语言上下文
@@ -157,7 +161,7 @@ const MenuItems = computed((): NavBarItem[] => [
       label: currentLanguage.value.pages.list.menu[theme.id],
       type: 'theme',
       onClick: async () => {
-        info('切换主题:' + theme);
+        info('切换主题:' + JSON.stringify(theme));
         await toggleTheme(theme.id);
       },
       // 使用函数返回值，确保每次访问时都重新计算
@@ -230,6 +234,7 @@ const scrollState = reactive({
 
 // 图片缓存，用于存储图片的base64数据
 const imageCache = reactive(new Map<string, string>())
+const fileExist = reactive(new Map<string, boolean>());
 
 // 下拉菜单状态
 const dropdownState = reactive({
@@ -292,6 +297,9 @@ async function loadClipboardItems(reset: boolean = true) {
       if (item.type === 'image' && item.file_path && !imageCache.has(item.file_path)) {
         loadImageFromPath(item.file_path);
       }
+      if (item.type === 'file') {
+        checkFileExist(item.file_path);
+      }
     }
   } catch (err: any) {
     error('加载剪贴板项目失败:' + err.message);
@@ -303,8 +311,7 @@ async function loadClipboardItems(reset: boolean = true) {
 // 加载所有标签
 async function loadTags() {
   const db = await ClipboardDB.getInstance();
-  const tags = await db.getAllTags();
-  TagItems.value = tags;
+  TagItems.value = await db.getAllTags();
 }
 
 /**
@@ -390,7 +397,7 @@ function handleClickOutside(event: MouseEvent) {
 async function bindTag(itemId: number, tagId: number) {
   const db = await ClipboardDB.getInstance();
   await db.bindItemToTag(itemId, tagId);
-  loadClipboardItems(true);
+  await loadClipboardItems(true);
   dropdownState.visible = false;
 }
 
@@ -404,14 +411,43 @@ async function removeItem(id: number) {
 // 将内容复制到系统剪贴板
 async function onCopy(item: ClipboardItem) {
   if (item) {
-    if (item.type === 'text') {
-      copyToClipboard(item.content, item.type);
+    let isSuccess;
+    if (item.type === 'file') {
+      const filePaths: Array<string> = JSON.parse(item.file_path);
+      // 过滤出系统存在的文件
+      const paths = filePaths.filter(async path => {
+        return fileExist.get(path) && await exists(path);
+      });
+      item.file_path = JSON.stringify(paths);
+      isSuccess = await copyToClipboard(item);
+    } else {
+      isSuccess = await copyToClipboard(item);
     }
-    if (item.type === 'image') {
-      copyToClipboard(item.file_path, item.type);
+    if (isSuccess) {
+      message.success(currentLanguage.value.pages.list.copySuccessMsg);
+      // 隐藏窗口
+      await hideWindow();
+    } else {
+      message.error(currentLanguage.value.pages.list.copyFailedMsg);
     }
-    // 隐藏窗口
-    hideWindow();
+  }
+}
+
+// 将单个文件复制到系统剪贴板
+async function onCopyFile(filePath: string) {
+  if (filePath) {
+    if (fileExist.get(filePath) && await exists(filePath)) {
+      const isSuccess = await copyFileToClipboard([filePath]);
+      if (isSuccess) {
+        message.success(currentLanguage.value.pages.list.copySuccessMsg);
+        // 隐藏窗口
+        await hideWindow();
+      } else {
+        message.error(currentLanguage.value.pages.list.copyFailedMsg);
+      }
+    } else {
+      message.error(currentLanguage.value.pages.list.fileNotExistCopyFailedMsg);
+    }
   }
 }
 
@@ -496,15 +532,59 @@ async function loadImageFromPath(filePath: string | null) {
   if (imageCache.get(filePath)) {
     return;
   }
+  console.log('图片未缓存', filePath);
   try {
     const fileSystem = await FileSystem.getInstance();
+    console.log('获取1', filePath);
     const base64Image = await fileSystem.readImageAsBase64(filePath);
+    console.log('文件路径转base64', filePath, base64Image);
     if (base64Image) {
       imageCache.set(filePath, base64Image);
+      console.log('图片缓存成功', filePath);
     }
   } catch (err: any) {
     error('加载图片失败:' + err.message);
+    throw err;
   }
+}
+
+// 支持展示的图片格式
+const imageSuffix = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
+
+// 检查文件是否存在
+async function checkFileExist(filePaths: string) {
+  if (!filePaths) {
+    return;
+  }
+  const filePathList: Array<string> = JSON.parse(filePaths);
+  if (filePathList.length === 1) {
+    const filePath: string = filePathList[0];
+    fileExist.set(filePath, await exists(filePath));
+    // 处理图片类型的文件
+    if (isImage(filePath)) {
+      loadImageFromPath(filePath);
+    }
+  } else {
+    filePathList.forEach(async filePath => {
+      // 处理图片类型的文件
+      if (isImage(filePath)) {
+        loadImageFromPath(filePath);
+      }
+      if (!fileExist.get(filePath)) {
+        info('系统文件路径:' + filePath);
+        try {
+          fileExist.set(filePath, await exists(filePath));
+        } catch (e) {
+          console.error('检查文件是否存在失败:', e);
+        }
+      }
+    });
+  }
+}
+
+function isImage(filePath: string) {
+  const isImage = filePath.includes(".") && imageSuffix.includes(filePath.split(".")[1].toLowerCase());
+  return isImage;
 }
 
 /**
@@ -727,8 +807,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true"
-    :fixed="`listFixedListen`" :dev-tool="`main`" />
+  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :fixed="`listFixedListen`"
+    :dev-tool="`main`" />
   <NavBar :menuItems="MenuItems" />
 
   <!-- 搜索框 -->
@@ -775,9 +855,34 @@ onUnmounted(() => {
                   object-fit="cover" lazy width="100%" :show-toolbar="false" />
                 <ImageFiledIcon v-else />
               </p>
-              <p v-else-if="item.type === 'file'">
-                <i class="fas fa-file"></i>
-                <span>{{ item.content }}</span>
+              <p v-else-if="item.type === 'file'" class="file-line">
+              <div class="file-item" v-if="JSON.parse(item.file_path).length === 1"
+                :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(JSON.parse(item.file_path)[0])">
+                <n-image v-if="isImage(JSON.parse(item.file_path)[0])
+                  && imageCache.get(JSON.parse(item.file_path)[0])"
+                  :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
+                  :show-toolbar="false" />
+                <ImageFiledIcon v-else-if="isImage(JSON.parse(item.file_path)[0])
+                  && !imageCache.get(JSON.parse(item.file_path)[0])" />
+                <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])" />
+                <FileDeleteIcon class="file-not-exist-icon" v-else />
+                <span :class="!fileExist.get(JSON.parse(item.file_path)[0]) ? 'file-not-exist-text' : ''">{{
+                  filePathConverFileName(JSON.parse(item.file_path)[0])
+                }}</span>
+              </div>
+              <div class="file-item" v-else v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
+                @dblclick="onCopyFile(filePath)">
+                <n-image v-if="isImage(filePath)
+                  && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" lazy width="100%"
+                  :show-toolbar="false" />
+                <ImageFiledIcon v-else-if="isImage(filePath)
+                  && !imageCache.get(filePath)" />
+                <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)" />
+                <FileDeleteIcon class="file-not-exist-icon" v-else />
+                <span :class="!fileExist.get(filePath) ? 'file-not-exist-text' : ''">{{
+                  filePathConverFileName(filePath)
+                }}</span>
+              </div>
               </p>
               <p v-else></p>
               <div class="card-actions">
@@ -810,7 +915,8 @@ onUnmounted(() => {
           <div class="card-tags" v-if="item.tags && item.tags.length > 0">
             <div class="item-tags">
               <div v-for="tag in item.tags" :key="tag.id" class="item-tag" :style="{ backgroundColor: tag.color }">
-                <span class="item-tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name
+                <span class="item-tag-name" :style="{ color: getContrastColor(tag.color) }">{{
+                  tag.name
                 }}</span>
               </div>
             </div>
@@ -1223,5 +1329,52 @@ onUnmounted(() => {
 
 .fade-in {
   animation: fadeIn 0.3s ease-in forwards;
+}
+
+.file-line {
+  overflow: auto !important;
+}
+
+.file-line::-webkit-scrollbar {
+  border-radius: 10px;
+  height: 6px;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 2px;
+  padding: 3px;
+  border: 1px solid var(--theme-border);
+  border-radius: 5px;
+  font-size: 9px;
+  width: 50px;
+}
+
+.file-item span {
+  width: 48px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  /* 显示一行 */
+  overflow: hidden;
+  text-align: center;
+}
+
+.file-exist-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.file-not-exist-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.file-not-exist-text {
+  color: var(--theme-textDelete);
+  text-decoration: line-through;
 }
 </style>

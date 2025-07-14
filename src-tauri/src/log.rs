@@ -18,7 +18,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         .timezone_strategy(TimezoneStrategy::UseLocal) // 日志时区使用本地时区
         .format(|out, message, record| {
             out.finish(format_args!(
-                "[{} {}] {}",
+                "{} [{} {}] {}",
+                chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"),
                 record.level(),
                 record.target(),
                 message

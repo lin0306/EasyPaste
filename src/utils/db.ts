@@ -250,10 +250,6 @@ class ClipboardDB {
     clearAll(): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
-                // 删除所有图片文件
-                info('[数据库进程] 开始删除文件...');
-                const fileSystem = await FileSystem.getInstance();
-                await fileSystem.removeImageFolder();
                 // 清空数据库记录
                 info('[数据库进程] 正在清空数据库记录...');
                 await this.db?.execute('DELETE FROM clipboard_items');

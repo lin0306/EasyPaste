@@ -3,22 +3,22 @@
     <div class="window-title">{{ title }}</div>
     <div class="window-controls">
       <div v-if="isShow && devTool" class="control-button" @click="openDevTool">
-        <DevToolIcon class="program-btn" id="devtool-button-img"/>
+        <DevToolIcon class="program-btn" id="devtool-button-img" />
       </div>
       <div v-if="fixed && !isFixed" class="control-button fixation-button" @click="onFixWindow">
-        <FixedIcon class="program-btn" id="fixation-button-img"/>
+        <FixedIcon class="program-btn" id="fixation-button-img" />
       </div>
       <div v-if="fixed && isFixed" class="control-button unfixation-button" @click="onUnfixWindow">
-        <UnFixedIcon class="program-btn" id="unfixation-button-img"/>
+        <UnFixedIcon class="program-btn" id="unfixation-button-img" />
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
-        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
+        <MinimizeIcon class="program-btn" id="minimize-button-img" />
       </div>
       <div v-if="showClostBtn" class="control-button close-button" @click="onClose">
-        <CloseIcon class="program-btn" id="close-button-img"/>
+        <CloseIcon class="program-btn" id="close-button-img" />
       </div>
       <div v-if="showHideBtn" class="control-button close-button" @click="onHide">
-        <HideIcon class="program-btn" id="hide-button-img"/>
+        <HideIcon class="program-btn" id="hide-button-img" />
       </div>
     </div>
   </div>
@@ -32,11 +32,11 @@ import HideIcon from '../assets/icons/HideIcon.vue'
 import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
-import {invoke} from '@tauri-apps/api/core'
-import {getCurrentWindow} from '@tauri-apps/api/window'
-import {ref} from 'vue'
-import {listFixedStore} from '../store/fixed'
-import {isDev} from "../data/SystemParams.ts";
+import { invoke } from '@tauri-apps/api/core'
+import { getCurrentWindow } from '@tauri-apps/api/window'
+import { onMounted, ref } from 'vue'
+import { isDev } from "../data/SystemParams.ts"
+import { listFixedStore } from '../store/fixed'
 
 const props = withDefaults(defineProps<{
   title: string;
@@ -94,7 +94,7 @@ function onHide() {
 
 async function openDevTool() {
   if (props.devTool) {
-    await invoke('open_dev_tool', {windowName: props.devTool});
+    await invoke('open_dev_tool', { windowName: props.devTool });
   }
 }
 
@@ -113,6 +113,10 @@ function getFixedListener(): any {
   height: 25px;
   width: 100%;
   -webkit-app-region: drag;
+  user-select: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   display: flex;
   justify-content: space-between;
   align-items: center;

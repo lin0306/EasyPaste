@@ -1,9 +1,9 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 
-mod clipboard_monitor;
 mod log;
 mod tray;
+mod listener;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -17,6 +17,8 @@ pub fn run() {
                 tauri_plugin_autostart::MacosLauncher::LaunchAgent,
                 Some(vec!["--flag1", "--flag2"]), /* arbitrary number of args to pass to your app */
             ));
+            listener::start_listening(app.handle().clone());
+            tray::create_tray(app.handle().clone());
             Ok(())
         })
         .plugin(tauri_plugin_store::Builder::new().build())
@@ -27,12 +29,11 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_sql::Builder::default().build())
-        .plugin(clipboard_monitor::init())
-        .plugin(tray::init())
         .invoke_handler(tauri::generate_handler![
             #[cfg(debug_assertions)]
             open_dev_tool,
-            tray::reload_tray_menu
+            tray::reload_tray_menu,
+            listener::write_to_clipboard,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

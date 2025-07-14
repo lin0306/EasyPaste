@@ -10,6 +10,7 @@ export const blueTheme: ThemeConfig = {
       background: 'rgba(240,248,255,1)',
       text: 'rgba(24,51,93,1)',
       textHint: 'rgba(24,51,93,0.6)',
+      textDelete: 'rgb(209, 85, 85)',
       border: 'rgba(41, 98, 255, 0.1)',
       titleBarBackground: 'rgba(210, 230, 250, 0.1)',
       titleBarIconColor: '#4B89DC',

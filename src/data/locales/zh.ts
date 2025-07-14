@@ -47,7 +47,9 @@ export const chinesePageConfig: PageConfig = {
     },
     list: {
         title: '剪贴板',
+        copySuccessMsg: '复制成功',
         copyFailedMsg: '复制失败',
+        fileNotExistCopyFailedMsg: '文件不存在，复制失败',
         searchHint: '输入关键词搜索',
         deleteBtn: '删除',
         bindTagBtn: '绑定标签',

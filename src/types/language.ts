@@ -65,7 +65,9 @@ export interface PageConfig {
     },
     list: {
         title: string;
+        copySuccessMsg: string;
         copyFailedMsg: string;
+        fileNotExistCopyFailedMsg: string;
         searchHint: string;
         deleteBtn: string;
         bindTagBtn: string;

@@ -13,6 +13,7 @@ export interface ThemeConfigColors {
     background: string;                     // 背景色
     text: string;                           // 文字色
     textHint: string;                       // 提示文字色
+    textDelete: string;                     // 删除文字色
     border: string;                         // 边框色
     titleBarBackground: string;             // 标题栏背景色
     titleBarIconColor: string;              // 标题栏图标色

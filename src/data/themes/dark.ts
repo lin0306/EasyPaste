@@ -10,6 +10,7 @@ export const darkTheme: ThemeConfig = {
       background: 'rgba(20,20,20,1)',
       text: 'rgba(230,230,230,1)',
       textHint: 'rgba(230,230,230,0.6)',
+      textDelete: 'rgb(243, 57, 57)',
       border: 'rgba(253, 253, 253, 0.12)',
       titleBarBackground: 'rgba(40, 40, 40, 0.1)',
       titleBarIconColor: '#ffffff',

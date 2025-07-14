@@ -1,66 +1,46 @@
+use crate::listener::{is_listening, start_listening, stop_listening};
 use log::info;
 use serde::Deserialize;
 use serde_json::{from_reader, from_slice};
 use std::fs::File;
 use std::path::PathBuf;
-use std::sync::Mutex;
-use tauri::menu::{CheckMenuItem, Menu, MenuItem, MenuItemKind, PredefinedMenuItem};
-use tauri::plugin::{Builder, TauriPlugin};
-use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Emitter, Manager, Runtime};
-
-use crate::clipboard_monitor::{is_clipboard_monitor_enabled, set_clipboard_monitor_enabled};
-
-// 状态结构体，用于保存托盘图标
-struct TrayState<R: Runtime> {
-    tray: Mutex<Option<tauri::tray::TrayIcon<R>>>,
-}
-
-// 初始化插件
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("tray_manager")
-        .setup(|app, _| {
-            // 初始化托盘状态
-            app.manage(TrayState::<R> {
-                tray: Mutex::new(None),
-            });
-
-            // 创建初始托盘
-            create_tray(app)?;
-            Ok(())
-        })
-        .build()
-}
+use std::sync::{Arc, Mutex};
+use std::thread::sleep;
+use std::time::Duration;
+use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
+use tauri::{AppHandle, Emitter, Manager};
 
 // 创建/更新托盘的函数
-fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
+pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
+    let mut state = LOAD_STATE.lock().unwrap();
+    // 获取语言配置
     let language = load_language();
 
     // 创建菜单项
-    let settings = MenuItem::with_id(app, "settings", &language.settings, true, None::<&str>)?;
-
+    let settings = MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>)?;
     let clipboard_monitor = CheckMenuItem::with_id(
-        app,
+        &app,
         "clipboard_monitor",
         &language.clipboardMonitor,
         true,
-        is_clipboard_monitor_enabled(app.clone()),
+        is_listening(),
         None::<&str>,
     )?;
     let check_update = MenuItem::with_id(
-        app,
+        &app,
         "check_update",
         &language.checkUpdate,
         true,
         None::<&str>,
     )?;
-    let about = MenuItem::with_id(app, "about", &language.about, true, None::<&str>)?;
-    let restart = MenuItem::with_id(app, "restart", &language.restart, true, None::<&str>)?;
-    let exit = MenuItem::with_id(app, "exit", &language.exit, true, None::<&str>)?;
-    let separator = PredefinedMenuItem::separator(app)?;
+    let about = MenuItem::with_id(&app, "about", &language.about, true, None::<&str>)?;
+    let restart = MenuItem::with_id(&app, "restart", &language.restart, true, None::<&str>)?;
+    let exit = MenuItem::with_id(&app, "exit", &language.exit, true, None::<&str>)?;
+    let separator = PredefinedMenuItem::separator(&app)?;
 
     // 创建菜单
-    let items: Vec<&dyn tauri::menu::IsMenuItem<R>> = vec![
+    let menu = Menu::with_items(&app, &[
         &settings,
         &clipboard_monitor,
         &separator,
@@ -69,16 +49,16 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
         &separator,
         &restart,
         &exit,
-    ];
-    let menu = Menu::with_items(app, &items)?;
-
-    // 获取状态
-    let state = app.state::<TrayState<R>>();
-    let mut tray_guard = state.tray.lock().unwrap();
+    ])?;
 
     // 如果已有托盘图标，更新其菜单
-    if let Some(tray) = tray_guard.as_ref() {
-        tray.set_menu(Some(menu))?;
+    if state.is_loaded {
+        state
+            .tray
+            .take()
+            .unwrap()
+            .set_menu(Some(menu))
+            .expect("菜单重新加载失败");
         return Ok(());
     }
 
@@ -102,13 +82,19 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
                 match win.is_visible() {
                     Ok(visible) if !visible => {
                         win.show().unwrap();
-                        win.set_focus().unwrap();
+                        // win.set_focus();
+                        // 异步延迟后再设置焦点
+                        tauri::async_runtime::spawn(async move {
+                            info!("显示窗口前");
+                            sleep(Duration::from_millis(200));
+                            let _ = win.set_focus();
+                            info!("显示窗口后");
+                        });
                     }
                     Ok(visible) if visible => win.hide().unwrap(),
                     Err(e) => eprintln!("窗口可见性错误: {}", e),
                     _ => (),
                 };
-                win.set_focus().unwrap();
             }
             _ => {}
         })
@@ -118,8 +104,13 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
                 println!("打开设置窗口");
             }
             "clipboard_monitor" => {
-                let current = is_clipboard_monitor_enabled(app.clone());
-                set_clipboard_monitor_enabled(app.clone(), !current);
+                if is_listening() {
+                    stop_listening();
+                    println!("停止监听剪贴板")
+                } else {
+                    start_listening(app.app_handle().clone());
+                    println!("开始监听剪贴板")
+                }
             }
             "check_update" => {
                 app.emit("check-update", "".to_string()).unwrap();
@@ -135,18 +126,19 @@ fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
             "exit" => app.exit(0),
             _ => println!("菜单项 {:?} 未处理", event.id),
         })
-        .build(app)?;
+        .build(&app)?;
 
     // 保存新的托盘实例到状态
-    *tray_guard = Some(tray);
+    state.is_loaded = true;
+    state.tray = Some(tray);
     Ok(())
 }
 
 // 重新加载托盘菜单的命令
 #[tauri::command]
-pub fn reload_tray_menu<R: Runtime>(app: AppHandle<R>) -> tauri::Result<()> {
+pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
     info!("重新加载托盘菜单语言");
-    create_tray(&app)?;
+    create_tray(app)?;
     Ok(())
 }
 
@@ -195,4 +187,16 @@ pub struct Tray {
     restart: String,
     exit: String,
     clipboardMonitor: String,
+}
+
+// 全局状态管理结构体
+#[derive(Default)]
+struct LoadState {
+    tray: Option<TrayIcon>,
+    is_loaded: bool,
+}
+
+// 使用 Arc + Mutex 实现线程安全共享
+lazy_static::lazy_static! {
+    static ref LOAD_STATE: Arc<Mutex<LoadState >> = Arc::new(Mutex::new(LoadState::default()));
 }

@@ -47,7 +47,9 @@ export const englishPageConfig: PageConfig = {
     },
     list: {
         title: 'Clipboard',
+        copySuccessMsg: 'Copy Success',
         copyFailedMsg: 'Copy Failed',
+        fileNotExistCopyFailedMsg: 'File Not Exist, Copy Failed',
         searchHint: 'Input keywords to search',
         deleteBtn: 'Delete',
         bindTagBtn: 'Bind Tag',

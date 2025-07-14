@@ -1,5 +1,4 @@
-// 判断当前是否为Mac操作系统
-const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+import { isMac } from "../data/SystemParams";
 
 /**
  * 转换快捷键显示，将 meta 根据系统替换为对应的键位，Windows系统为 ’Win‘，Mac系统为 ‘⌘’
