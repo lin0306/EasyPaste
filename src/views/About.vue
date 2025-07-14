@@ -46,10 +46,6 @@ onMounted(async () => {
   align-items: center;
   height: calc(100vh - 25px);
   position: relative;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer 10+ */
-  user-select: none; /* Standard syntax */
 }
 
 .logo {
