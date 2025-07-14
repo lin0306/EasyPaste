@@ -73,6 +73,9 @@ export interface PageConfig {
         bindTagBtn: string;
         dataLoading: string;
         allLoaded: string;
+        typeText: string;
+        typeCode: string;
+        typeFile: string;
         menu: {
             [x: string]: string;
             program: string;

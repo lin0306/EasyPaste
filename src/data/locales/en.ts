@@ -55,6 +55,9 @@ export const englishPageConfig: PageConfig = {
         bindTagBtn: 'Bind Tag',
         dataLoading: 'Data Loading...',
         allLoaded: 'All Loaded',
+        typeText: 'Text',
+        typeCode: 'Code',
+        typeFile: 'File',
         menu: {
             program: 'Program',
             settings: 'Settings',

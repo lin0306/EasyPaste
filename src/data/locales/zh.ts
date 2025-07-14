@@ -55,6 +55,9 @@ export const chinesePageConfig: PageConfig = {
         bindTagBtn: '绑定标签',
         dataLoading: '数据加载中...',
         allLoaded: '数据加载完毕',
+        typeText: '文本',
+        typeCode: '代码',
+        typeFile: '文件',
         menu: {
             program: '程序',
             settings: '偏好设置',
