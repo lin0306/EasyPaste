@@ -28,7 +28,6 @@ export function useTheme() {
     try {
       // 从用户设置中获取主题
       const settings = await getSettings();
-      info('加载用户主题配置：' + settings.theme);
 
       // 设置当前主题
       currentThemeId.value = settings.theme;

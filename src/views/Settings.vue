@@ -127,7 +127,6 @@ const saveConfig = async () => {
     return; // 如果没有修改，不做任何处理
   }
   if (selectedKey.value === 'general' || selectedKey.value === 'storage') {
-    info('保存设置:' + JSON.stringify(currentConfig));
 
     // 是否修改了【开机自启】
     const isUpdatePowerOnSelfStart = currentConfig.powerOnSelfStart !== originalConfig.powerOnSelfStart;
@@ -192,7 +191,6 @@ const saveConfig = async () => {
     }
   }
   if (selectedKey.value === 'shortcut') {
-    info('保存快捷键设置:' + JSON.stringify(currentShortcutKeys));
     //  // 是否修改了【唤醒程序】快捷键
     const isUpdateWakeUpRoutine = originalShortcutKeys.wakeUpRoutine.key !== currentShortcutKeys.wakeUpRoutine.key;
     const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
@@ -258,13 +256,11 @@ const handleRestart = async () => {
 onMounted(async () => {
   // 初始化用户配置
   const settings = await getSettings();
-  info('[渲染进程] 初始化用户配置:' + JSON.stringify(settings));
   Object.assign(originalConfig, settings);
   Object.assign(currentConfig, settings);
 
   // 初始化快捷键配置
   const shortcutKeys = await getShortcutKeys();
-  info('[渲染进程] 初始化快捷键配置' + JSON.stringify(shortcutKeys));
   // 使用深拷贝，避免更新一个后另外一个也会同时更新
   Object.assign(originalShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));
   Object.assign(currentShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));

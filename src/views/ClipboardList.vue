@@ -160,7 +160,6 @@ const MenuItems = computed((): NavBarItem[] => [
       label: currentLanguage.value.pages.list.menu[theme.id],
       type: 'theme',
       onClick: async () => {
-        info('切换主题:' + JSON.stringify(theme));
         await toggleTheme(theme.id);
       },
       // 使用函数返回值，确保每次访问时都重新计算
@@ -256,7 +255,6 @@ const selectedTagState = reactive({
 
 // 加载剪贴板项目列表
 async function loadClipboardItems(reset: boolean = true) {
-  info('加载剪贴板数据，是否重新获取全部：' + reset);
   if (reset) {
     // 重置列表和分页状态
     clipboardItems.value = [];
@@ -272,11 +270,8 @@ async function loadClipboardItems(reset: boolean = true) {
     // 使用选中的标签ID进行过滤
     const tagId = selectedTagState.selectedTagId;
 
-    // info('查询条件' + JSON.stringify([searchText.value, tagId, scrollState.page, scrollState.pageSize]));
-
     const db = await ClipboardDB.getInstance();
     const {total, items} = await db.searchItemsPaged(searchText.value, tagId, scrollState.page, scrollState.pageSize);
-    // info('total: ' + total + '，items: ' + JSON.stringify(items));
 
     // 更新数据列表和分页信息
     if (reset) {
@@ -510,12 +505,9 @@ async function loadImageFromPath(filePath: string | null) {
   if (imageCache.get(filePath)) {
     return;
   }
-  console.log('图片未缓存', filePath);
   try {
     const fileSystem = await FileSystem.getInstance();
-    console.log('获取1', filePath);
     const base64Image = await fileSystem.readImageAsBase64(filePath);
-    console.log('文件路径转base64', filePath, base64Image);
     if (base64Image) {
       imageCache.set(filePath, base64Image);
       console.log('图片缓存成功', filePath);
@@ -526,36 +518,44 @@ async function loadImageFromPath(filePath: string | null) {
   }
 }
 
+async function loadFileExist(filePath: string) {
+  if (!filePath) {
+    return;
+  }
+  if (fileExist.get(filePath)) {
+  }
+  try {
+    fileExist.set(filePath, await exists(filePath));
+  } catch (e) {
+    console.error('检查文件是否存在失败:', e);
+  }
+}
+
 // 支持展示的图片格式
 const imageSuffix = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
 
 // 检查文件是否存在
-async function checkFileExist(filePaths: string) {
+function checkFileExist(filePaths: string) {
   if (!filePaths) {
     return;
   }
   const filePathList: Array<string> = JSON.parse(filePaths);
   if (filePathList.length === 1) {
     const filePath: string = filePathList[0];
-    fileExist.set(filePath, await exists(filePath));
     // 处理图片类型的文件
     if (isImage(filePath)) {
       // 这里不需要等待结果，避免处理慢
       loadImageFromPath(filePath);
+    } else {
+      loadFileExist(filePath);
     }
   } else {
-    filePathList.forEach(async filePath => {
+    filePathList.forEach(filePath => {
       // 处理图片类型的文件
       if (isImage(filePath)) {
         loadImageFromPath(filePath);
-      }
-      if (!fileExist.get(filePath)) {
-        info('系统文件路径:' + filePath);
-        try {
-          fileExist.set(filePath, await exists(filePath));
-        } catch (e) {
-          console.error('检查文件是否存在失败:', e);
-        }
+      } else {
+        loadFileExist(filePath);
       }
     });
   }
@@ -606,16 +606,13 @@ watch(() => clipboardListen.state, (newValue, oldValue) => {
       && newValue === CopyState.SUCCESS
       && oldValue === CopyState.COPING
   ) {
-    info('监听复制状态变化');
     loadClipboardItems(true);
   }
 });
 
 // 初始化窗口失焦事件监听
 function initBlueListener() {
-  info('初始化失焦监听');
   return getCurrentWindow().listen('tauri://blur', async () => {
-    info('窗口失焦自动隐藏');
     await hideWindow();
   })
 }
@@ -664,12 +661,10 @@ async function registerShortcutKeysOpenWindow() {
   const keys = await getShortcutKeys();
   if (keys.wakeUpRoutine && keys.wakeUpRoutine.key && keys.wakeUpRoutine.key.length > 0) {
     const shortcutKeys = convertRegistKey(keys.wakeUpRoutine.key);
-    info('注册快捷键：' + shortcutKeys);
     const registered = await isRegistered(shortcutKeys);
     if (registered) {
       info('快捷键已注册');
     } else {
-      info('快捷键未注册，注册快捷键');
       await register(shortcutKeys, async () => {
         await getCurrentWindow().show();
         await getCurrentWindow().setFocus();
@@ -685,11 +680,9 @@ async function initUpdateAutoCheckUpdateListener() {
   return await listen('update-auto-check-update', (event: any) => {
     const autoCheckUpdate = event.payload.data;
     if (autoCheckUpdate) {
-      info('打开自动更新任务');
       const update = UpdaterService.getInstance();
       update.startAutoCheck();
     } else {
-      info('关闭自动更新任务');
       const update = UpdaterService.getInstance();
       update.stopAutoCheck();
     }

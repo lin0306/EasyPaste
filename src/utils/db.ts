@@ -65,8 +65,6 @@ class ClipboardDB {
                     PRIMARY KEY (item_id, tag_id)
                 )
             `);
-
-            info('[数据库进程] 数据库表初始化成功');
         } catch (er: any) {
             error('[数据库进程] 数据库表初始化失败:' + er.message);
             throw er;
@@ -81,12 +79,9 @@ class ClipboardDB {
      * @param filePath 文件路径
      */
     async saveClipboardItem(content: string, type: string = 'text', filePath: string | null = null) {
-        // info("[数据库进程] 剪贴板内容添加开始" + JSON.stringify([content, type, filePath]));
-
         try {
             // 覆盖相同内容的旧记录的复制时间
             if (type === 'text') {
-                info("[数据库进程] 查询相同文本内容的旧记录");
                 const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ? AND type = ?', [content, type]) as [{ id: number }];
                 if (row && row.length > 0) {
                     await this.updateItemTime(row[0].id, Date.now());
@@ -94,7 +89,6 @@ class ClipboardDB {
                     return;
                 }
             } else if (filePath) {
-                info("[数据库进程] 查询相同文件路径的旧记录");
                 const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, filePath]) as [{ id: number }];
                 if (row && row.length > 0) {
                     await this.updateItemTime(row[0].id, Date.now());
@@ -103,7 +97,6 @@ class ClipboardDB {
                 }
             }
 
-            info("[数据库进程] 准备插入新的剪贴板记录");
             await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [content, Date.now(), type, filePath]);
             info("[数据库进程] 剪贴板内容添加成功");
         } catch (err: any) {
@@ -177,7 +170,6 @@ class ClipboardDB {
         // 获取总条数
         const countResult = await this.db?.select(countSql, countParams) as any[];
         const total = countResult[0].total;
-        // info('[数据库进程] 查总条数sql：' + countSql + '，参数：' + JSON.stringify(countParams) + '，查询结果：' + total);
         if (!total || total <= 0) {
             return { total: 0, items: [] };
         }
@@ -195,8 +187,6 @@ class ClipboardDB {
                 item.tags = [];
             }
         }
-
-        // info('[数据库进程] 查明细数sql：' + itemsSql + '，参数：' + JSON.stringify(itemsParams));
 
         return { total, items };
     }

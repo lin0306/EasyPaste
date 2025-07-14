@@ -82,7 +82,6 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
                 button_state: MouseButtonState::Up,
             } => {
                 // 打开主窗口
-                info!("触发系统托盘图标单击事件，打开主窗口");
                 let win = tray.app_handle().get_window("main").expect("主窗口不存在");
                 match win.is_visible() {
                     Ok(visible) if !visible => {
@@ -90,10 +89,8 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
                         // win.set_focus();
                         // 异步延迟后再设置焦点
                         tauri::async_runtime::spawn(async move {
-                            info!("显示窗口前");
                             sleep(Duration::from_millis(200));
                             let _ = win.set_focus();
-                            info!("显示窗口后");
                         });
                     }
                     Ok(visible) if visible => win.hide().unwrap(),
@@ -122,7 +119,6 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
             }
             "about" => {
                 app.emit("open-about", "".to_string()).unwrap();
-                info!("打开关于窗口");
             }
             "restart" => {
                 app.exit(0);
@@ -142,7 +138,6 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
 // 重新加载托盘菜单的命令
 #[tauri::command]
 pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
-    info!("重新加载托盘菜单语言");
     create_tray(app)?;
     Ok(())
 }
@@ -157,10 +152,8 @@ fn load_language(app: &AppHandle) -> Tray {
     path.push(&app.app_handle().config().identifier);
     path.push("language.json");
 
-    info!("语言配置文件路径：{}", path.display());
 
     if path.exists() {
-        info!("使用缓存托盘语言配置");
         // 文件存在，读取文件内容
         let file = File::open(path).unwrap();
         let json: LanguageConfig = from_reader(file).unwrap();

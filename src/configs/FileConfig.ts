@@ -169,7 +169,6 @@ async function loadUserSettings() {
     const userSettingsExists = await exists(userSettingsPath, {
         baseDir: BaseDirectory.AppData,
     })
-    info('[渲染进程] 用户设置文件存在:' + JSON.stringify(userSettingsExists));
     if (!userSettingsExists) {
         info('[渲染进程] 用户设置文件不存在, 创建默认用户设置');
         saveUserSettings(JSON.stringify(defaultSettings));
@@ -184,7 +183,6 @@ async function loadUserSettings() {
     const settings = { ...defaultSettings, ...JSON.parse(userSettingsString) };
     // 重新保存配置
     saveUserSettings(JSON.stringify(settings));
-    info('[渲染进程] 加载用户设置:' + JSON.stringify(settings));
     settingsCache = settings;
 }
 
@@ -195,7 +193,6 @@ async function loadUserShortcutKeys() {
     const userShortcutKeysExists = await exists(userShortcutKeysPath, {
         baseDir: BaseDirectory.AppData,
     })
-    info('[渲染进程] 用户快捷键文件存在:' + userShortcutKeysExists);
     if (!userShortcutKeysExists) {
         info('[渲染进程] 用户快捷键文件不存在, 创建默认用户快捷键');
         saveUserShortcutKeys(JSON.stringify(defaultShortcutKeys));
@@ -210,6 +207,5 @@ async function loadUserShortcutKeys() {
     const shortcutKeys = { ...defaultShortcutKeys, ...JSON.parse(userShortcutKeysString) };
     // 重新保存快捷键
     saveUserShortcutKeys(JSON.stringify(shortcutKeys));
-    info('[渲染进程] 加载用户快捷键:' + JSON.stringify(shortcutKeys));
     shortcutKeysCache = shortcutKeys;
 }

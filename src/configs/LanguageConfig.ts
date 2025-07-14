@@ -41,7 +41,6 @@ export function useLanguage() {
         try {
             // 从用户设置中获取主题
             const settings = await getSettings();
-            info('加载用户主题配置：' + settings.languages);
 
             // 设置当前主题
             currentLanguageId.value = settings.languages;
