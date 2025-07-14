@@ -33,6 +33,7 @@ import ClipboardDB from '../utils/db';
 import FileSystem from '../utils/fileSystem';
 import { convertRegistKey } from '../utils/ShortcutKeys';
 import { filePathConverFileName } from '../utils/strUtil';
+import { isCode } from '../utils/TextType';
 import Windows, { openAboutWindow, openSettingsWindow, openTagsWindow } from '../utils/window';
 
 // 获取语言上下文
@@ -839,79 +840,87 @@ onUnmounted(() => {
     </div>
   </div>
 
+  <!-- 数据列表 -->
   <div :class="searchBoxState.visible ? `clipboard-container-search` : `clipboard-container`">
     <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems">
+      <!-- 列表内容 -->
       <div v-for="item in clipboardItems" :key="item.id" class="clipboard-item" @dblclick="onCopy(item)">
         <div class="clipboard-card">
+          <!-- 头部 -->
           <div class="card-header">
             <div class="card-title">{{ new Date(item.copy_time).toLocaleString() }}</div>
             <n-tag size="small" round>{{ convertType(item.type) }}</n-tag>
           </div>
+          <!-- 内容 -->
           <div class="card-content">
             <div class="content-wrapper">
-              <p v-if="item.type === 'text'">{{ item.content }}</p>
-              <p v-else-if="item.type === 'image'">
-                <n-image v-if="item.file_path && imageCache.get(item.file_path)" :src="imageCache.get(item.file_path)"
-                  object-fit="cover" lazy width="100%" :show-toolbar="false" />
-                <ImageFiledIcon v-else />
-              </p>
-              <p v-else-if="item.type === 'file'" class="file-line">
-              <div class="file-item" v-if="JSON.parse(item.file_path).length === 1"
-                :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(JSON.parse(item.file_path)[0])">
-                <n-image v-if="isImage(JSON.parse(item.file_path)[0])
-                  && imageCache.get(JSON.parse(item.file_path)[0])"
-                  :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
-                  :show-toolbar="false" />
-                <ImageFiledIcon v-else-if="isImage(JSON.parse(item.file_path)[0])
-                  && !imageCache.get(JSON.parse(item.file_path)[0])" />
-                <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])" />
-                <FileDeleteIcon class="file-not-exist-icon" v-else />
-                <span :class="!fileExist.get(JSON.parse(item.file_path)[0]) ? 'file-not-exist-text' : ''">{{
-                  filePathConverFileName(JSON.parse(item.file_path)[0])
-                }}</span>
+              <!-- 普通文本 -->
+              <div v-if="item.type === 'text' && !isCode(item.content)" class="text-line item-line">
+                {{ item.content }}
               </div>
-              <div class="file-item" v-else v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
-                @dblclick="onCopyFile(filePath)">
-                <n-image v-if="isImage(filePath)
-                  && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" lazy width="100%"
-                  :show-toolbar="false" />
-                <ImageFiledIcon v-else-if="isImage(filePath)
-                  && !imageCache.get(filePath)" />
-                <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)" />
-                <FileDeleteIcon class="file-not-exist-icon" v-else />
-                <span :class="!fileExist.get(filePath) ? 'file-not-exist-text' : ''">{{
-                  filePathConverFileName(filePath)
-                }}</span>
+              <!-- 代码 -->
+              <div v-else-if="item.type === 'text' && isCode(item.content)" class="code-line item-line">
+                <n-code :code="item.content" language="html" show-line-numbers />
               </div>
-              </p>
-              <p v-else></p>
-              <div class="card-actions">
-                <div class="action-buttons">
-                  <!-- 置顶/取消置顶按钮 -->
-                  <div class="action-button" @click="item.is_topped ? onUnTop(item.id) : onTop(item.id)">
-                    <TopIcon v-if="!item.is_topped" />
-                    <UntopIcon v-else />
+              <!-- 文件 -->
+              <div v-else-if="item.type === 'file'" class="file-line item-line">
+                <div class="file-item" v-if="JSON.parse(item.file_path).length === 1"
+                  :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(JSON.parse(item.file_path)[0])">
+                  <n-image v-if="isImage(JSON.parse(item.file_path)[0])
+                    && imageCache.get(JSON.parse(item.file_path)[0])"
+                    :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
+                    :show-toolbar="false" />
+                  <ImageFiledIcon v-else-if="isImage(JSON.parse(item.file_path)[0])
+                    && !imageCache.get(JSON.parse(item.file_path)[0])" />
+                  <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])" />
+                  <FileDeleteIcon class="file-not-exist-icon" v-else />
+                  <span :class="!fileExist.get(JSON.parse(item.file_path)[0]) ? 'file-not-exist-text' : ''">{{
+                    filePathConverFileName(JSON.parse(item.file_path)[0])
+                  }}</span>
+                </div>
+                <div class="file-item" v-else v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
+                  @dblclick="onCopyFile(filePath)">
+                  <n-image v-if="isImage(filePath)
+                    && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" lazy width="100%"
+                    :show-toolbar="false" />
+                  <ImageFiledIcon v-else-if="isImage(filePath)
+                    && !imageCache.get(filePath)" />
+                  <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)" />
+                  <FileDeleteIcon class="file-not-exist-icon" v-else />
+                  <span :class="!fileExist.get(filePath) ? 'file-not-exist-text' : ''">{{
+                    filePathConverFileName(filePath)
+                  }}</span>
+                </div>
+              </div>
+              <!-- 空 -->
+              <div v-else class="item-line"></div>
+              <!-- 右侧按钮 -->
+              <div class="action-buttons">
+                <!-- 置顶/取消置顶按钮 -->
+                <div class="action-button" @click="item.is_topped ? onUnTop(item.id) : onTop(item.id)">
+                  <TopIcon v-if="!item.is_topped" />
+                  <UntopIcon v-else />
+                </div>
+                <!-- 更多按钮 -->
+                <div class="action-button" @click="toggleDropdown(item.id)">
+                  <MoreIcon />
+                </div>
+                <!-- 下拉菜单 -->
+                <div v-if="dropdownState.visible && dropdownState.currentItemId === item.id" class="dropdown-menu">
+                  <div class="dropdown-item" @click="removeItem(item.id)">
+                    <TrashIcon class="dropdown-icon" />
+                    <span>{{ currentLanguage.pages.list.deleteBtn }}</span>
                   </div>
-                  <!-- 更多按钮 -->
-                  <div class="action-button" @click="toggleDropdown(item.id)">
-                    <MoreIcon />
-                  </div>
-                  <!-- 下拉菜单 -->
-                  <div v-if="dropdownState.visible && dropdownState.currentItemId === item.id" class="dropdown-menu">
-                    <div class="dropdown-item" @click="removeItem(item.id)">
-                      <TrashIcon class="dropdown-icon" />
-                      <span>{{ currentLanguage.pages.list.deleteBtn }}</span>
-                    </div>
-                    <div class="dropdown-item drag" draggable="true" @dragstart="handleDragStart(item.id, $event)"
-                      @dragend="handleDragEnd">
-                      <DragIcon class="dropdown-icon" />
-                      <span>{{ currentLanguage.pages.list.bindTagBtn }}</span>
-                    </div>
+                  <div class="dropdown-item drag" draggable="true" @dragstart="handleDragStart(item.id, $event)"
+                    @dragend="handleDragEnd">
+                    <DragIcon class="dropdown-icon" />
+                    <span>{{ currentLanguage.pages.list.bindTagBtn }}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <!-- 标签展示 -->
           <div class="card-tags" v-if="item.tags && item.tags.length > 0">
             <div class="item-tags">
               <div v-for="tag in item.tags" :key="tag.id" class="item-tag" :style="{ backgroundColor: tag.color }">
@@ -923,6 +932,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
+      <!-- 最底部内容展示 -->
       <div v-if="scrollState.isLoading" class="loading-indicator">
         <n-spin :description="currentLanguage.pages.list.dataLoading" />
       </div>
@@ -930,6 +940,7 @@ onUnmounted(() => {
         {{ currentLanguage.pages.list.allLoaded }}
       </div>
     </n-infinite-scroll>
+    <!-- 无数据展示 -->
     <n-empty v-else description="暂无剪贴板记录" class="empty" />
   </div>
 
@@ -1002,19 +1013,13 @@ onUnmounted(() => {
   font-size: 0.9rem;
 }
 
-.card-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: fit-content;
-}
-
 .action-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
   position: relative;
+  height: 5.6em;
+  justify-content: space-around;
 }
 
 .action-button {
@@ -1067,7 +1072,6 @@ onUnmounted(() => {
   word-break: break-all;
   font-size: 0.9rem;
   line-height: 1.4;
-  max-height: 200px;
 }
 
 .content-wrapper {
@@ -1076,37 +1080,85 @@ onUnmounted(() => {
   align-items: flex-start;
 }
 
-.content-wrapper p {
-  flex: 1;
-  margin: 0px 10px 0px 0px;
+.item-line {
+  margin-right: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   text-overflow: ellipsis;
   line-clamp: 3;
   overflow: hidden;
-  height: 4em;
+  height: 5.6em;
+  width: 100%;
   word-wrap: break-word;
   word-break: break-all;
   font-size: 14px;
 }
 
-/* 为图片预览添加样式 */
-.image-item {
-  max-width: 100%;
-  height: 4em;
-  object-fit: contain;
-  border-radius: 6px;
+.text-line {
+  white-space: pre-wrap;
+  overflow: auto;
 }
 
-/* 包含图片的段落需要特殊处理 */
-.content-wrapper p:has(img) {
-  height: auto;
-  height: 4em;
-  -webkit-line-clamp: initial;
-  line-clamp: initial;
+.code-line {
+  overflow: auto;
+  height: 5.6em;
+}
+
+.code-line::-webkit-scrollbar {
+  border-radius: 10px;
+  height: 6px;
+}
+
+.file-line {
+  overflow: auto !important;
+}
+
+.file-line::-webkit-scrollbar {
+  border-radius: 10px;
+  height: 6px;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 2px;
+  padding: 3px;
+  border: 1px solid var(--theme-border);
+  border-radius: 5px;
+  font-size: 12px;
+  width: 50px;
+}
+
+.file-item span {
+  width: 48px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  /* 显示一行 */
+  overflow: hidden;
+  text-align: center;
+}
+
+.file-exist-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.file-not-exist-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.file-not-exist-text {
+  color: var(--theme-textDelete);
+  text-decoration: line-through;
 }
 
 .card-tags {
+  border-top: 1px solid var(--theme-border);
+  padding-top: 5px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -1282,99 +1334,5 @@ onUnmounted(() => {
 
 .search-container :deep(.n-input__input) {
   color: var(--theme-textHint);
-}
-
-/* 底部加载状态指示器样式 */
-.loading-more-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 0;
-  margin-top: 10px;
-  background-color: var(--theme-cardBackground);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.loading-text {
-  margin-left: 10px;
-  color: var(--theme-text);
-  font-size: 14px;
-}
-
-.no-more-data {
-  display: flex;
-  justify-content: center;
-  padding: 16px 0;
-  font-size: 14px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    filter: blur(10px);
-  }
-
-  to {
-    opacity: 1;
-    filter: blur(0px);
-  }
-}
-
-.image-loading {
-  background-color: var(--theme-border);
-  min-height: 50px;
-  border-radius: 6px;
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-in forwards;
-}
-
-.file-line {
-  overflow: auto !important;
-}
-
-.file-line::-webkit-scrollbar {
-  border-radius: 10px;
-  height: 6px;
-}
-
-.file-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  margin: 2px;
-  padding: 3px;
-  border: 1px solid var(--theme-border);
-  border-radius: 5px;
-  font-size: 9px;
-  width: 50px;
-}
-
-.file-item span {
-  width: 48px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  /* 显示一行 */
-  overflow: hidden;
-  text-align: center;
-}
-
-.file-exist-icon {
-  width: 30px;
-  height: 30px;
-}
-
-.file-not-exist-icon {
-  width: 30px;
-  height: 30px;
-}
-
-.file-not-exist-text {
-  color: var(--theme-textDelete);
-  text-decoration: line-through;
 }
 </style>

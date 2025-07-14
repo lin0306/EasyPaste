@@ -5,6 +5,10 @@ import { computed, onMounted } from 'vue';
 import { error, info } from '@tauri-apps/plugin-log';
 import { useLanguage } from './configs/LanguageConfig.ts';
 import { useTheme } from './configs/ThemeConfig.ts';
+import hljs from 'highlight.js/lib/core';
+import html from "highlight.js/lib/languages/vbscript-html";
+
+hljs.registerLanguage('html', html)
 
 const env = process.env.NODE_ENV;
 
@@ -171,7 +175,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="theme" :locale="locale" :date-locale="dateLocale">
+  <n-config-provider :theme-overrides="theme" :locale="locale" :date-locale="dateLocale" :hljs="hljs">
     <n-message-provider>
       <router-view />
     </n-message-provider>

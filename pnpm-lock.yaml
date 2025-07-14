@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@highlightjs/vue-plugin':
+        specifier: ^2.1.0
+        version: 2.1.0(highlight.js@11.11.1)(vue@3.5.16(typescript@5.6.3))
       '@tauri-apps/api':
         specifier: ^2
         version: 2.5.0
@@ -50,6 +53,9 @@ importers:
       '@tauri-apps/plugin-window-state':
         specifier: ~2
         version: 2.2.2
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
       pinia:
         specifier: ^3.0.2
         version: 3.0.3(typescript@5.6.3)(vue@3.5.16(typescript@5.6.3))
@@ -266,6 +272,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@highlightjs/vue-plugin@2.1.0':
+    resolution: {integrity: sha512-E+bmk4ncca+hBEYRV2a+1aIzIV0VSY/e5ArjpuSN9IO7wBJrzUE2u4ESCwrbQD7sAy+jWQjkV5qCCWgc+pu7CQ==}
+    peerDependencies:
+      highlight.js: ^11.0.1
+      vue: ^3
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
@@ -942,6 +954,11 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.5':
     optional: true
+
+  '@highlightjs/vue-plugin@2.1.0(highlight.js@11.11.1)(vue@3.5.16(typescript@5.6.3))':
+    dependencies:
+      highlight.js: 11.11.1
+      vue: 3.5.16(typescript@5.6.3)
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
