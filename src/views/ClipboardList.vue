@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {listen} from '@tauri-apps/api/event';
-import {getCurrentWindow} from '@tauri-apps/api/window';
-import {exists} from '@tauri-apps/plugin-fs';
-import {isRegistered, register} from '@tauri-apps/plugin-global-shortcut';
-import {error, info} from '@tauri-apps/plugin-log';
-import {exit, relaunch} from '@tauri-apps/plugin-process';
-import {NEmpty, NImage, useMessage} from 'naive-ui';
-import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
-import DragIcon from '../assets/icons/DragIcon.vue';
+import { listen } from '@tauri-apps/api/event';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { exists } from '@tauri-apps/plugin-fs';
+import { isRegistered, register } from '@tauri-apps/plugin-global-shortcut';
+import { error, info } from '@tauri-apps/plugin-log';
+import { exit, relaunch } from '@tauri-apps/plugin-process';
+import { NEmpty, NImage, useMessage } from 'naive-ui';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import AddTagIcon from '../assets/icons/AddTagIcon.vue';
 import FileDeleteIcon from '../assets/icons/FileDeleteIcon.vue';
 import FileIcon from '../assets/icons/FileIcon.vue';
 import ImageFiledIcon from '../assets/icons/ImageFiledIcon.vue';
@@ -17,29 +17,30 @@ import TrashIcon from '../assets/icons/TrashIcon.vue';
 import UntopIcon from '../assets/icons/UntopIcon.vue';
 import NavBar from '../components/NavBar.vue';
 import TitleBar from '../components/TitleBar.vue';
-import {getSettings, getShortcutKeys} from '../configs/FileConfig';
-import {useLanguage} from '../configs/LanguageConfig';
-import {themes, useTheme} from '../configs/ThemeConfig';
-import {copyFileToClipboard, copyToClipboard, initClipboardListener} from '../services/ClipboardService';
+import { getSettings, getShortcutKeys } from '../configs/FileConfig';
+import { useLanguage } from '../configs/LanguageConfig';
+import { themes, useTheme } from '../configs/ThemeConfig';
+import { copyFileToClipboard, copyToClipboard, initClipboardListener } from '../services/ClipboardService';
 import UpdaterService from '../services/UpdaterService';
-import {clipboardListenStore} from '../store/copyStatus';
-import {listFixedStore} from '../store/fixed';
-import {CopyState} from '../types/CopyState';
-import {NavBarItem} from '../types/NavBarItem';
-import {getContrastColor} from '../utils/color';
+import { clipboardListenStore } from '../store/copyStatus';
+import { listFixedStore } from '../store/fixed';
+import { CopyState } from '../types/CopyState';
+import { NavBarItem } from '../types/NavBarItem';
+import { getContrastColor } from '../utils/color';
 import ClipboardDB from '../utils/db';
 import FileSystem from '../utils/fileSystem';
-import {convertRegistKey} from '../utils/ShortcutKeys';
-import {filePathConverFileName} from '../utils/strUtil';
-import {isCode} from '../utils/TextType';
-import Windows, {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
+import { convertRegistKey } from '../utils/ShortcutKeys';
+import { filePathConverFileName } from '../utils/strUtil';
+import { isCode } from '../utils/TextType';
+import Windows, { openAboutWindow, openSettingsWindow, openTagsWindow } from '../utils/window';
 
 // 获取语言上下文
-const {currentLanguage} = useLanguage();
+const { currentLanguage } = useLanguage();
 
 // 获取主题上下文
-const {currentThemeId, toggleTheme} = useTheme();
+const { currentThemeId, toggleTheme } = useTheme();
 
+// Naive UI 框架的消息组件
 const message = useMessage();
 
 // 窗口失焦自动关闭监听
@@ -63,7 +64,7 @@ let checkUpdateUnListener: any = null;
 // 加载更新自动更新任务状态事件监听
 let autoCheckUpdateUnListener: any = null;
 
-// 将MenuItems改为计算属性，这样当currentTheme变化时会自动更新
+// 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
   {
     key: '程序',
@@ -210,17 +211,19 @@ const MenuItems = computed((): NavBarItem[] => [
     ],
   },
 ]);
-
+// 监听系统复制状态
 const clipboardListen = clipboardListenStore();
+// 监听当前窗口是否固定
 const listFixedListen = listFixedStore();
-
+// 内容列表
 const clipboardItems = ref<ClipboardItem[]>([]);
+// 标签列表
 const TagItems = ref<TagItem[]>();
 // 搜索框状态
 const searchBoxState = reactive({
-  visible: false
+  visible: false,
+  text: ''
 })
-let searchText = ref('')
 // 无限滚动相关状态
 const scrollState = reactive({
   page: 1,
@@ -231,14 +234,9 @@ const scrollState = reactive({
 })
 
 // 图片缓存，用于存储图片的base64数据
-const imageCache = reactive(new Map<string, string>())
+const imageCache = reactive(new Map<string, string>());
+// 文件是否存在缓存，用于存储文件是否存在状态
 const fileExist = reactive(new Map<string, boolean>());
-
-// 下拉菜单状态
-const dropdownState = reactive({
-  visible: false,
-  currentItemId: -1
-});
 
 // 拖拽状态
 const dragState = reactive({
@@ -252,6 +250,9 @@ const selectedTagState = reactive({
   selectedTagId: undefined as number | undefined,
   isTopmost: false // 控制是否置顶显示
 })
+
+// 选中的内容id
+const selectedItemId = ref<number | undefined>();
 
 // 加载剪贴板项目列表
 async function loadClipboardItems(reset: boolean = true) {
@@ -271,7 +272,7 @@ async function loadClipboardItems(reset: boolean = true) {
     const tagId = selectedTagState.selectedTagId;
 
     const db = await ClipboardDB.getInstance();
-    const {total, items} = await db.searchItemsPaged(searchText.value, tagId, scrollState.page, scrollState.pageSize);
+    const { total, items } = await db.searchItemsPaged(searchBoxState.text, tagId, scrollState.page, scrollState.pageSize);
 
     // 更新数据列表和分页信息
     if (reset) {
@@ -327,11 +328,11 @@ async function handleKeyDown(event: KeyboardEvent) {
   let isMeta = keys.includes("meta");
   let character = keys[keys.length - 1];
   if (
-      event.key.toLowerCase() === character.toLowerCase()
-      && event.ctrlKey === isCtrl
-      && event.altKey === isAlt
-      && event.shiftKey === isShift
-      && event.metaKey === isMeta
+    event.key.toLowerCase() === character.toLowerCase()
+    && event.ctrlKey === isCtrl
+    && event.altKey === isAlt
+    && event.shiftKey === isShift
+    && event.metaKey === isMeta
   ) {
     event.preventDefault(); // 阻止默认行为
     toggleSearchBox();
@@ -354,16 +355,20 @@ function loadMoreItems() {
 
 // 置顶项目
 async function onTop(id: number) {
+  selectedItemId.value = id;
   const db = await ClipboardDB.getInstance();
   await db.toggleTopClipboardItem(id, true);
   await loadClipboardItems(true);
+  selectedItemId.value = undefined;
 }
 
 // 取消置顶项目
 async function onUnTop(id: number) {
+  selectedItemId.value = id;
   const db = await ClipboardDB.getInstance();
   await db.toggleTopClipboardItem(id, false);
   await loadClipboardItems(true);
+  selectedItemId.value = undefined;
 }
 
 // 绑定标签
@@ -371,18 +376,22 @@ async function bindTag(itemId: number, tagId: number) {
   const db = await ClipboardDB.getInstance();
   await db.bindItemToTag(itemId, tagId);
   await loadClipboardItems(true);
-  dropdownState.visible = false;
 }
 
 // 删除项目
 async function removeItem(id: number) {
+  selectedItemId.value = id;
   const db = await ClipboardDB.getInstance();
   await db.deleteClipboardItem(id);
   await loadClipboardItems(true);
+  selectedItemId.value = undefined;
 }
 
 // 将内容复制到系统剪贴板
 async function onCopy(item: ClipboardItem) {
+  if (selectedItemId.value === item.id) {
+    return;
+  }
   if (item) {
     let isSuccess;
     if (item.type === 'file') {
@@ -407,8 +416,9 @@ async function onCopy(item: ClipboardItem) {
 }
 
 // 将单个文件复制到系统剪贴板
-async function onCopyFile(filePath: string) {
+async function onCopyFile(itemId: number, filePath: string) {
   if (filePath) {
+    selectedItemId.value = itemId;
     if (fileExist.get(filePath) && await exists(filePath)) {
       const isSuccess = await copyFileToClipboard([filePath]);
       if (isSuccess) {
@@ -422,6 +432,7 @@ async function onCopyFile(filePath: string) {
       message.error(currentLanguage.value.pages.list.fileNotExistCopyFailedMsg);
     }
   }
+  selectedItemId.value = undefined;
 }
 
 /**
@@ -433,8 +444,8 @@ function toggleSearchBox() {
     document.getElementById("search-input")?.focus();
   } else {
     // 当搜索框隐藏时，清空搜索内容并重新加载列表
-    if (searchText.value) {
-      searchText.value = '';
+    if (searchBoxState.text) {
+      searchBoxState.text = '';
       loadClipboardItems(true);
     }
   }
@@ -602,9 +613,9 @@ async function hideWindow() {
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
-      newValue !== oldValue
-      && newValue === CopyState.SUCCESS
-      && oldValue === CopyState.COPING
+    newValue !== oldValue
+    && newValue === CopyState.SUCCESS
+    && oldValue === CopyState.COPING
   ) {
     loadClipboardItems(true);
   }
@@ -782,32 +793,32 @@ onUnmounted(() => {
 
 <template>
   <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :fixed="`listFixedListen`"
-            :dev-tool="`main`"/>
-  <NavBar :menuItems="MenuItems"/>
+    :dev-tool="`main`" />
+  <NavBar :menuItems="MenuItems" />
 
   <!-- 搜索框 -->
   <div class="search-container" v-show="searchBoxState.visible">
-    <n-input id="search-input" v-model:value="searchText" :placeholder="currentLanguage.pages.list.searchHint" clearable
-             @input="loadClipboardItems(true)" :autofocus="true" size="small">
+    <n-input id="search-input" v-model:value="searchBoxState.text" :placeholder="currentLanguage.pages.list.searchHint"
+      clearable @input="loadClipboardItems(true)" :autofocus="true" size="small">
       <template #prefix>
         <!-- 搜索 -->
         <n-icon size="18">
-          <SearchIcon/>
+          <SearchIcon />
         </n-icon>
       </template>
     </n-input>
   </div>
 
   <!-- 标签列表 -->
-  <div class="tag-list" :class="{ 'has-selected-tag': selectedTagState.isTopmost }">
+  <div class="tag-list" :class="{ 'has-selected-tag': dragState.isDragging }">
     <div v-for="tag in TagItems" :key="tag.id" class="tag-item" :class="{
       'tag-dragging-over': dragState.draggedOverTagId === tag.id,
       'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItemId, tag.id),
       'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItemId, tag.id),
       'tag-selected': selectedTagState.selectedTagId === tag.id
     }" :style="{ backgroundColor: tag.color }" @dragenter="handleDragEnterTag(tag.id)"
-         @dragleave="handleDragLeaveTag($event)" @dragover.prevent @drop.prevent="handleDropOnTag(tag.id)"
-         @click="handleTagClick(tag.id)">
+      @dragleave="handleDragLeaveTag($event)" @dragover.prevent @drop.prevent="handleDropOnTag(tag.id)"
+      @click="handleTagClick(tag.id)">
       <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
     </div>
   </div>
@@ -822,8 +833,9 @@ onUnmounted(() => {
           <div class="card-header">
             <div class="card-header-left">
               <div>{{
-                  item.type === 'text' ? (isCode(item.content) ? currentLanguage.pages.list.typeCode : currentLanguage.pages.list.typeText) : currentLanguage.pages.list.typeFile
-                }}
+                item.type === 'text' ? (isCode(item.content) ? currentLanguage.pages.list.typeCode :
+                  currentLanguage.pages.list.typeText) : currentLanguage.pages.list.typeFile
+              }}
               </div>
               <div class="card-title">{{ new Date(item.copy_time).toLocaleString() }}</div>
             </div>
@@ -831,15 +843,17 @@ onUnmounted(() => {
               <div class="card-header-right-buttons">
                 <!-- 置顶/取消置顶按钮 -->
                 <div class="card-header-right-button" @click="item.is_topped ? onUnTop(item.id) : onTop(item.id)">
-                  <TopIcon v-if="!item.is_topped"/>
-                  <UntopIcon v-else/>
+                  <TopIcon v-if="!item.is_topped" />
+                  <UntopIcon v-else />
                 </div>
+                <!-- 删除按钮 -->
                 <div class="card-header-right-button" @click="removeItem(item.id)">
-                  <TrashIcon/>
+                  <TrashIcon />
                 </div>
+                <!-- 设置标签按钮 -->
                 <div class="card-header-right-button" draggable="true" @dragstart="handleDragStart(item.id, $event)"
-                     @dragend="handleDragEnd">
-                  <DragIcon class="dropdown-icon"/>
+                  @dragend="handleDragEnd">
+                  <AddTagIcon class="dropdown-icon" />
                 </div>
               </div>
             </div>
@@ -853,36 +867,36 @@ onUnmounted(() => {
               </div>
               <!-- 代码 -->
               <div v-else-if="item.type === 'text' && isCode(item.content)" class="code-line item-line">
-                <n-code :code="item.content" language="html" show-line-numbers/>
+                <n-code :code="item.content" language="html" show-line-numbers />
               </div>
               <!-- 文件 -->
               <div v-else-if="item.type === 'file'" class="file-line item-line">
                 <div class="file-item" v-if="JSON.parse(item.file_path).length === 1"
-                     :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(JSON.parse(item.file_path)[0])">
+                  :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(item.id, JSON.parse(item.file_path)[0])">
                   <n-image v-if="isImage(JSON.parse(item.file_path)[0])
                     && imageCache.get(JSON.parse(item.file_path)[0])"
-                           :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
-                           :show-toolbar="false"/>
+                    :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
+                    :show-toolbar="false" />
                   <ImageFiledIcon v-else-if="isImage(JSON.parse(item.file_path)[0])
-                    && !imageCache.get(JSON.parse(item.file_path)[0])"/>
-                  <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])"/>
-                  <FileDeleteIcon class="file-not-exist-icon" v-else/>
+                    && !imageCache.get(JSON.parse(item.file_path)[0])" />
+                  <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])" />
+                  <FileDeleteIcon class="file-not-exist-icon" v-else />
                   <span :class="!fileExist.get(JSON.parse(item.file_path)[0]) ? 'file-not-exist-text' : ''">{{
-                      filePathConverFileName(JSON.parse(item.file_path)[0])
-                    }}</span>
+                    filePathConverFileName(JSON.parse(item.file_path)[0])
+                  }}</span>
                 </div>
                 <div class="file-item" v-else v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
-                     @dblclick="onCopyFile(filePath)">
+                  @dblclick="onCopyFile(item.id, filePath)">
                   <n-image v-if="isImage(filePath)
                     && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" lazy width="100%"
-                           :show-toolbar="false"/>
+                    :show-toolbar="false" />
                   <ImageFiledIcon v-else-if="isImage(filePath)
-                    && !imageCache.get(filePath)"/>
-                  <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)"/>
-                  <FileDeleteIcon class="file-not-exist-icon" v-else/>
+                    && !imageCache.get(filePath)" />
+                  <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)" />
+                  <FileDeleteIcon class="file-not-exist-icon" v-else />
                   <span :class="!fileExist.get(filePath) ? 'file-not-exist-text' : ''">{{
-                      filePathConverFileName(filePath)
-                    }}</span>
+                    filePathConverFileName(filePath)
+                  }}</span>
                 </div>
               </div>
               <!-- 空 -->
@@ -894,8 +908,8 @@ onUnmounted(() => {
             <div class="item-tags">
               <div v-for="tag in item.tags" :key="tag.id" class="item-tag" :style="{ backgroundColor: tag.color }">
                 <span class="item-tag-name" :style="{ color: getContrastColor(tag.color) }">{{
-                    tag.name
-                  }}</span>
+                  tag.name
+                }}</span>
               </div>
             </div>
           </div>
@@ -903,14 +917,14 @@ onUnmounted(() => {
       </div>
       <!-- 最底部内容展示 -->
       <div v-if="scrollState.isLoading" class="loading-indicator">
-        <n-spin :description="currentLanguage.pages.list.dataLoading"/>
+        <n-spin :description="currentLanguage.pages.list.dataLoading" />
       </div>
       <div v-if="!scrollState.hasMore" class="no-more-indicator">
         {{ currentLanguage.pages.list.allLoaded }}
       </div>
     </n-infinite-scroll>
     <!-- 无数据展示 -->
-    <n-empty v-else description="暂无剪贴板记录" class="empty"/>
+    <n-empty v-else description="暂无剪贴板记录" class="empty" />
   </div>
 
 </template>
@@ -974,8 +988,9 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   color: var(--theme-text);
-  margin-bottom: 8px;
+  padding-bottom: 5px;
   font-size: 12px;
+  border-bottom: 1px solid var(--theme-border);
 }
 
 .card-header-left {
@@ -1013,6 +1028,7 @@ onUnmounted(() => {
   word-break: break-all;
   font-size: 0.9rem;
   line-height: 1.4;
+  margin: 5px 0;
 }
 
 .content-wrapper {
@@ -1022,7 +1038,6 @@ onUnmounted(() => {
 }
 
 .item-line {
-  margin-right: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   text-overflow: ellipsis;
@@ -1083,13 +1098,13 @@ onUnmounted(() => {
 }
 
 .file-exist-icon {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
 }
 
 .file-not-exist-icon {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
 }
 
 .file-not-exist-text {
@@ -1103,7 +1118,6 @@ onUnmounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 8px;
 }
 
 :deep(.ant-tag) {
@@ -1148,6 +1162,10 @@ onUnmounted(() => {
   height: calc(100vh - 57px);
 }
 
+.has-selected-tag {
+  width: 110px;
+}
+
 /* 隐藏 Chrome、Safari 和 Opera 的滚动条 */
 .tag-list::-webkit-scrollbar {
   width: 0;
@@ -1165,22 +1183,21 @@ onUnmounted(() => {
   margin-bottom: -4px;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transform-origin: left center;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 /* 鼠标悬停或拖拽时展开标签 */
 .tag-item:hover,
 .tag-item.tag-expanded {
   opacity: 1;
-  width: 100px;
   /* 固定宽度而不是拉伸 */
-  z-index: 10;
+  width: 100px;
   /* 悬浮时置于顶层 */
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  z-index: 10;
 }
 
 .tag-name {
@@ -1204,11 +1221,9 @@ onUnmounted(() => {
 .tag-item.tag-expanded .tag-name {
   opacity: 1;
   transform: translateY(-50%);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .tag-dragging-over {
-  box-shadow: 0 0 12px var(--theme-primary);
   transform: scale(1.08);
   z-index: 20 !important;
 }
@@ -1217,8 +1232,7 @@ onUnmounted(() => {
 .tag-selected {
   width: 100px !important;
   z-index: 5 !important;
-  opacity: 1;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+  opacity: 0.6;
 }
 
 /* 选中标签的名称始终显示 */
