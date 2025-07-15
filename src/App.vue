@@ -46,9 +46,9 @@ const theme = computed(() => {
       placeholderColorDisabled: `${themeColors.value.text}50`
     },
     Tag: {
-      colorBordered: themeColors.value.tagColor, // 背景色
+      colorBordered: themeColors.value.background, // 背景色
       textColor: themeColors.value.tagTextColor, // 文字颜色
-      border: `0px solid ${themeColors.value.primary}`, // 边框
+      border: `1px solid ${themeColors.value.border}`, // 边框
       fontWeightStrong: 400 // 字体粗细
     },
     Select: {

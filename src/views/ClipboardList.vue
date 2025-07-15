@@ -123,6 +123,9 @@ const MenuItems = computed((): NavBarItem[] => [
         isHide: true,
       },
       {
+        type: 'divider',
+      },
+      {
         key: '清空剪贴板',
         label: currentLanguage.value.pages.list.menu.clearData,
         onClick: async () => {
@@ -191,6 +194,9 @@ const MenuItems = computed((): NavBarItem[] => [
           const update = UpdaterService.getInstance();
           await update.checkForUpdates();
         },
+      },
+      {
+        type: 'divider',
       },
       {
         key: '关于',
@@ -383,6 +389,15 @@ async function removeItem(id: number) {
   selectedItemId.value = id;
   const db = await ClipboardDB.getInstance();
   await db.deleteClipboardItem(id);
+  await loadClipboardItems(true);
+  selectedItemId.value = undefined;
+}
+
+// 删除项目的标签
+async function removeItemTag(item: ClipboardItem, tag: TagItem) {
+  selectedItemId.value = item.id;
+  const db = await ClipboardDB.getInstance();
+  await db.deleteClipboardItemTag(item.id, tag.id);
   await loadClipboardItems(true);
   selectedItemId.value = undefined;
 }
@@ -851,8 +866,8 @@ onUnmounted(() => {
                   <TrashIcon />
                 </div>
                 <!-- 设置标签按钮 -->
-                <div class="card-header-right-button" draggable="true" @dragstart="handleDragStart(item.id, $event)"
-                  @dragend="handleDragEnd">
+                <div class="card-header-right-button drag-icon" draggable="true"
+                  @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
                   <AddTagIcon class="dropdown-icon" />
                 </div>
               </div>
@@ -904,13 +919,21 @@ onUnmounted(() => {
             </div>
           </div>
           <!-- 标签展示 -->
-          <div class="card-tags" v-if="item.tags && item.tags.length > 0">
-            <div class="item-tags">
-              <div v-for="tag in item.tags" :key="tag.id" class="item-tag" :style="{ backgroundColor: tag.color }">
-                <span class="item-tag-name" :style="{ color: getContrastColor(tag.color) }">{{
-                  tag.name
-                }}</span>
+          <!-- <div class="card-tags" v-if="item.tags && item.tags.length > 0"> -->
+          <div class="card-tags">
+            <n-tag size="small" round closable bordered v-for="tag in item.tags" :key="tag.id" class="item-tag"
+              @close="removeItemTag(item, tag)">
+              <div class="item-tag-content">
+                <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
+                <div class="item-tag-name">
+                  {{ tag.name }}
+                </div>
               </div>
+            </n-tag>
+            <div class="bind-tag-button" draggable="true" @dragstart="handleDragStart(item.id, $event)"
+              @dragend="handleDragEnd">
+              <AddTagIcon class="bind-tag-icon" />
+              <span>绑定标签</span>
             </div>
           </div>
         </div>
@@ -1023,6 +1046,10 @@ onUnmounted(() => {
   opacity: 0.8;
 }
 
+.drag-icon {
+  cursor: grab !important;
+}
+
 .card-content {
   color: var(--theme-text);
   word-break: break-all;
@@ -1120,32 +1147,63 @@ onUnmounted(() => {
   gap: 6px;
 }
 
-:deep(.ant-tag) {
-  margin: 0;
-}
-
-.item-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
 .item-tag {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  display: inline-block;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.item-tag-name {
-  font-size: 12px;
-  white-space: nowrap;
+.item-tag-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
 }
 
-.dropdown-icon {
-  width: 16px;
-  height: 16px;
+.item-tag-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 10px;
+}
+
+.item-tag-name {
+  max-width: 60px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.item-tag-close-icon {
+  margin-left: 5px;
+  width: 12px;
+  height: 12px;
+}
+
+.bind-tag-button {
+  cursor: grab;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px dashed var(--theme-text);
+  border-radius: 15px;
+  padding: 3px;
+  color: var(--theme-text);
+  background-color: var(--theme-background);
+  font-size: 11px;
+  padding: 0px 8px;
+  opacity: 0.6;
+  margin-left: auto;
+}
+
+.bind-tag-button:hover {
+  opacity: 1;
+}
+
+.bind-tag-icon {
+  width: 12px;
+  height: 12px;
 }
 
 /* 标签列表样式 */
@@ -1184,7 +1242,6 @@ onUnmounted(() => {
   position: relative;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
   transform-origin: left center;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0.2;
@@ -1206,14 +1263,16 @@ onUnmounted(() => {
   top: 50%;
   transform: translateY(-50%);
   font-size: 12px;
-  white-space: nowrap;
   opacity: 0;
   transition: opacity 0.3s ease 0.15s;
   /* 延迟显示文字，等待展开动画完成一半 */
   pointer-events: none;
   width: 70px;
-  overflow: hidden;
   transform-origin: left center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }
 
 /* 鼠标悬停或拖拽时显示标签名称 */

@@ -1,6 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
 import Database from '@tauri-apps/plugin-sql';
-import FileSystem from './fileSystem';
 
 class ClipboardDB {
     private db: Database | undefined;
@@ -216,17 +215,36 @@ class ClipboardDB {
         try {
             const item = await this.getItem(id);
             if (item && item.length > 0) {
-                // 删除文件
-                if (item[0].type === 'image') {
-                    const fileSystem = await FileSystem.getInstance();
-                    await fileSystem.removeImageFile(item[0].file_path);
-                }
                 // 删除数据
                 await this.db?.execute('DELETE FROM clipboard_items WHERE id = ?', [id]);
                 await this.db?.execute('DELETE FROM item_tags WHERE item_id = ?', [id]);
             }
             return true;
         } catch (err: any) {
+            error('[数据库进程] 删除剪贴板项目失败:' + err.message);
+            return false;
+        }
+    }
+
+    /**
+     * 删除项目的标签
+     * @param itemId 项目id
+     * @param tagId 标签id
+     * @returns 
+     */
+    async deleteClipboardItemTag(itemId: number, tagId: number) {
+        console.log(itemId, tagId)
+        try {
+            const item = await this.db?.select('SELECT * FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
+            console.log(item)
+            if (item) {
+                // 删除数据
+                await this.db?.execute('DELETE FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
+                console.log("删除成功")
+            }
+            return true;
+        } catch (err: any) {
+            console.log(err)
             error('[数据库进程] 删除剪贴板项目失败:' + err.message);
             return false;
         }
