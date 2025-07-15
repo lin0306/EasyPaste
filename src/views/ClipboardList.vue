@@ -10,7 +10,6 @@ import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import AddTagIcon from '../assets/icons/AddTagIcon.vue';
 import FileDeleteIcon from '../assets/icons/FileDeleteIcon.vue';
 import FileIcon from '../assets/icons/FileIcon.vue';
-import ImageFiledIcon from '../assets/icons/ImageFiledIcon.vue';
 import SearchIcon from '../assets/icons/SearchIcon.vue';
 import TopIcon from '../assets/icons/TopIcon.vue';
 import TrashIcon from '../assets/icons/TrashIcon.vue';
@@ -64,6 +63,9 @@ let checkUpdateUnListener: any = null;
 // 加载更新自动更新任务状态事件监听
 let autoCheckUpdateUnListener: any = null;
 
+// 更新标签设置状态事件监听
+let updateTagSettingStateListener: any = null;
+
 // 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
   {
@@ -115,7 +117,8 @@ const MenuItems = computed((): NavBarItem[] => [
         onClick: () => {
           // 打开标签管理窗口
           openTagsWindow();
-        }
+        },
+        isHide: !tagSettingState.isShow,
       },
       {
         key: '数据视图',
@@ -238,6 +241,11 @@ const scrollState = reactive({
   hasMore: true,
   isLoading: false
 })
+// 标签设置
+const tagSettingState = reactive({
+  isShow: false,
+  location: ''
+});
 
 // 图片缓存，用于存储图片的base64数据
 const imageCache = reactive(new Map<string, string>());
@@ -619,6 +627,15 @@ async function hideWindow() {
   }
 }
 
+/**
+ * 加载标签设置状态
+ */
+async function loadTagSettingState() {
+  const setting = await getSettings();
+  tagSettingState.isShow = setting.enableTag;
+  tagSettingState.location = setting.bindTagBtnShowLocation;
+}
+
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
@@ -709,6 +726,16 @@ async function initUpdateAutoCheckUpdateListener() {
   });
 }
 
+/**
+ * 初始化更新标签设置状态监听
+ */
+async function initUpdateTagSettingStateListener() {
+  return await listen('update-tag-setting-state', async (event: any) => {
+    tagSettingState.isShow = event.payload.isShow;
+    tagSettingState.location = event.payload.location;
+  });
+}
+
 // 组件挂载时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
@@ -718,6 +745,9 @@ onMounted(async () => {
 
     // 加载标签列表
     await loadTags();
+    
+    // 加载标签设置状态
+    await loadTagSettingState();
 
     // 启动剪贴板监听服务
     clipboardListener = await initClipboardListener();
@@ -736,6 +766,9 @@ onMounted(async () => {
 
     // 添加更新自动检查更新任务状态事件监听
     autoCheckUpdateUnListener = await initUpdateAutoCheckUpdateListener();
+
+    // 添加更新标签设置状态事件监听
+    updateTagSettingStateListener = await initUpdateTagSettingStateListener();
 
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
@@ -789,6 +822,10 @@ onUnmounted(() => {
   if (loadTagsUnListener) {
     loadTagsUnListener();
   }
+  // 清除更新标签设置状态事件监听
+  if (updateTagSettingStateListener) {
+    updateTagSettingStateListener();
+  }
 
   // 关闭自动检查更新操作
   const update = UpdaterService.getInstance();
@@ -797,7 +834,6 @@ onUnmounted(() => {
   // 移除事件监听
   document.removeEventListener('keydown', handleKeyDown);
 });
-
 </script>
 
 <template>
@@ -819,7 +855,7 @@ onUnmounted(() => {
   </div>
 
   <!-- 标签列表 -->
-  <div class="tag-list" :class="{ 'has-selected-tag': dragState.isDragging }">
+  <div v-if="tagSettingState.isShow" class="tag-list" :class="{ 'has-selected-tag': dragState.isDragging }">
     <div v-for="tag in TagItems" :key="tag.id" class="tag-item" :class="{
       'tag-dragging-over': dragState.draggedOverTagId === tag.id,
       'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItemId, tag.id),
@@ -860,8 +896,8 @@ onUnmounted(() => {
                   <TrashIcon />
                 </div>
                 <!-- 设置标签按钮 -->
-                <div class="card-header-right-button drag-icon" draggable="true"
-                  @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
+                <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'" class="card-header-right-button drag-icon"
+                  draggable="true" @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
                   <AddTagIcon class="dropdown-icon" />
                 </div>
               </div>
@@ -897,8 +933,7 @@ onUnmounted(() => {
             </div>
           </div>
           <!-- 标签展示 -->
-          <!-- <div class="card-tags" v-if="item.tags && item.tags.length > 0"> -->
-          <div class="card-tags">
+          <div class="card-tags" v-if="tagSettingState.isShow">
             <n-tag size="small" round closable bordered v-for="tag in item.tags" :key="tag.id" class="item-tag"
               @close="removeItemTag(item, tag)">
               <div class="item-tag-content">
@@ -908,10 +943,10 @@ onUnmounted(() => {
                 </div>
               </div>
             </n-tag>
-            <div class="bind-tag-button" draggable="true" @dragstart="handleDragStart(item.id, $event)"
-              @dragend="handleDragEnd">
+            <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'" class="bind-tag-button" draggable="true"
+              @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
               <AddTagIcon class="bind-tag-icon" />
-              <span>绑定标签</span>
+              <span v-if="tagSettingState.isShow">绑定标签</span>
             </div>
           </div>
         </div>

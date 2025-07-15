@@ -8,10 +8,10 @@ let defaultSettings: Settings = {
     replaceGlobalHotkey: false,
     languages: "chinese",
     maxHistoryItems: 2000,
-    maxStorageSize: 5000,
     dataRetentionDays: 30,
-    maxItemSize: 50,
     autoCheckUpdate: true,
+    enableTag: true,
+    bindTagBtnShowLocation: 'top-right',
 }
 let defaultShortcutKeys = {
     search: {
@@ -30,27 +30,9 @@ let defaultShortcutKeys = {
     }
 }
 
-let settingsCache: Settings | null = null;
-let shortcutKeysCache: ShortcutKeys | null = null;
-
 const userSettingsPath = "userSettings.json";
 const userShortcutKeysPath = "userShortcutKeys.json";
 const languageCachePathPath = "language.json";
-
-/**
- * 加载用户设置
- * @returns 用户设置
- */
-export async function getSettings(): Promise<Settings> {
-    if (settingsCache) {
-        return settingsCache;
-    }
-    await loadUserSettings();
-    if (settingsCache === null) {
-        throw new Error("用户设置加载失败");
-    }
-    return settingsCache;
-}
 
 /**
  * 更新主题
@@ -71,29 +53,14 @@ export async function updateLanguage(language: string) {
 }
 
 /**
- * 加载用户快捷键
- * @returns 用户快捷键
- */
-export async function getShortcutKeys(): Promise<ShortcutKeys> {
-    if (shortcutKeysCache) {
-        return shortcutKeysCache;
-    }
-    await loadUserShortcutKeys();
-    if (shortcutKeysCache === null) {
-        throw new Error('用户快捷键配置加载失败');
-    }
-    return shortcutKeysCache;
-}
-
-/**
  * 保存用户设置
  * @param userSettings 用户设置
  */
-export async function saveUserSettings(userSettings: any): Promise<boolean> {
+export async function saveUserSettings(userSettings: string): Promise<boolean> {
     try {
         await writeTextFile(userSettingsPath, userSettings, {
             baseDir: BaseDirectory.AppData,
-        })
+        });
         return true;
     } catch (err: any) {
         error("用户配置保存失败" + err.message);
@@ -105,12 +72,12 @@ export async function saveUserSettings(userSettings: any): Promise<boolean> {
  * 保存用户设置
  * @param userSettings 用户设置
  */
-export async function updateUserSettings(userSettings: any): Promise<boolean> {
+export async function updateUserSettings(userSettings: Settings): Promise<boolean> {
     try {
         const settings = { ...defaultSettings, ...userSettings };
         await writeTextFile(userSettingsPath, JSON.stringify(settings), {
             baseDir: BaseDirectory.AppData,
-        })
+        });
         return true;
     } catch (err: any) {
         error("用户配置保存失败" + err.message);
@@ -154,7 +121,7 @@ export async function saveUserShortcutKeys(userShortcutKeys: any): Promise<boole
     try {
         await writeTextFile(userShortcutKeysPath, userShortcutKeys, {
             baseDir: BaseDirectory.AppData,
-        })
+        });
         return true;
     } catch (err: any) {
         error("用户快捷键保存失败" + err.message);
@@ -165,7 +132,7 @@ export async function saveUserShortcutKeys(userShortcutKeys: any): Promise<boole
 /**
  * 加载用户设置
  */
-async function loadUserSettings() {
+export async function getSettings(): Promise<Settings> {
     const userSettingsExists = await exists(userSettingsPath, {
         baseDir: BaseDirectory.AppData,
     })
@@ -183,13 +150,13 @@ async function loadUserSettings() {
     const settings = { ...defaultSettings, ...JSON.parse(userSettingsString) };
     // 重新保存配置
     saveUserSettings(JSON.stringify(settings));
-    settingsCache = settings;
+    return settings;
 }
 
 /**
  * 加载用户快捷键
  */
-async function loadUserShortcutKeys() {
+export async function getShortcutKeys(): Promise<ShortcutKeys> {
     const userShortcutKeysExists = await exists(userShortcutKeysPath, {
         baseDir: BaseDirectory.AppData,
     })
@@ -207,5 +174,6 @@ async function loadUserShortcutKeys() {
     const shortcutKeys = { ...defaultShortcutKeys, ...JSON.parse(userShortcutKeysString) };
     // 重新保存快捷键
     saveUserShortcutKeys(JSON.stringify(shortcutKeys));
-    shortcutKeysCache = shortcutKeys;
+
+    return shortcutKeys;
 }

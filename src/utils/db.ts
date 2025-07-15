@@ -233,14 +233,11 @@ class ClipboardDB {
      * @returns 
      */
     async deleteClipboardItemTag(itemId: number, tagId: number) {
-        console.log(itemId, tagId)
         try {
             const item = await this.db?.select('SELECT * FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
-            console.log(item)
             if (item) {
                 // 删除数据
                 await this.db?.execute('DELETE FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
-                console.log("删除成功")
             }
             return true;
         } catch (err: any) {

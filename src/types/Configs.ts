@@ -1,13 +1,13 @@
 interface Settings {
-    theme: string,
-    powerOnSelfStart: boolean,
-    replaceGlobalHotkey: boolean,
-    languages: string,
-    maxHistoryItems: number,
-    maxStorageSize: number,
-    dataRetentionDays: number,
-    maxItemSize: number,
-    autoCheckUpdate: boolean,
+    theme: string,                  // 主题
+    powerOnSelfStart: boolean,      // 开机自启
+    replaceGlobalHotkey: boolean,   // 替换全局快捷键（仅限Windows）
+    languages: string,              // 语言
+    maxHistoryItems: number,        // 最大历史记录数
+    dataRetentionDays: number,      // 数据保留时长
+    autoCheckUpdate: boolean,       // 自动检查更新
+    enableTag: boolean,             // 启用标签
+    bindTagBtnShowLocation: string, // 标签绑定按钮位置
 }
 
 interface ShortcutKeys {

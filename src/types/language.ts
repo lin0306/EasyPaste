@@ -24,15 +24,15 @@ export interface PageConfig {
         replaceGlobalHotkey: string;
         languages: string;
         autoCheckUpdate: string;
+        enableTag: string;
+        bindTagBtnShowLocation: string;
+        topRight: string;
+        bottomRight: string;
         // 存储设置页面文字
         maxHistoryItems: string,
         maxHistoryItemsHint: string,
-        maxStorageSize: string,
-        maxStorageSizeHint: string,
         dataRetentionDays: string,
         dataRetentionDaysHint: string,
-        maxItemSize: string,
-        maxItemSizeHint: string,
         // 快捷键设置页面文字
         search: string;
         wakeUpRoutine: string;
