@@ -880,28 +880,12 @@ onUnmounted(() => {
               </div>
               <!-- 文件 -->
               <div v-else-if="item.type === 'file'" class="file-line item-line">
-                <div class="file-item" v-if="JSON.parse(item.file_path).length === 1"
-                  :title="JSON.parse(item.file_path)[0]" @dblclick="onCopyFile(item.id, JSON.parse(item.file_path)[0])">
-                  <n-image v-if="isImage(JSON.parse(item.file_path)[0])
-                    && imageCache.get(JSON.parse(item.file_path)[0])"
-                    :src="imageCache.get(JSON.parse(item.file_path)[0])" object-fit="cover" lazy width="100%"
-                    :show-toolbar="false" />
-                  <ImageFiledIcon v-else-if="isImage(JSON.parse(item.file_path)[0])
-                    && !imageCache.get(JSON.parse(item.file_path)[0])" />
-                  <FileIcon class="file-exist-icon" v-else-if="fileExist.get(JSON.parse(item.file_path)[0])" />
-                  <FileDeleteIcon class="file-not-exist-icon" v-else />
-                  <span :class="!fileExist.get(JSON.parse(item.file_path)[0]) ? 'file-not-exist-text' : ''">{{
-                    filePathConverFileName(JSON.parse(item.file_path)[0])
-                  }}</span>
-                </div>
-                <div class="file-item" v-else v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
+                <div class="file-item" v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
                   @dblclick="onCopyFile(item.id, filePath)">
                   <n-image v-if="isImage(filePath)
-                    && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" lazy width="100%"
+                    && imageCache.get(filePath)" :src="imageCache.get(filePath)" object-fit="cover" width="100%"
                     :show-toolbar="false" />
-                  <ImageFiledIcon v-else-if="isImage(filePath)
-                    && !imageCache.get(filePath)" />
-                  <FileIcon class="file-exist-icon" v-if="fileExist.get(filePath)" />
+                  <FileIcon class="file-exist-icon" v-else-if="fileExist.get(filePath)" />
                   <FileDeleteIcon class="file-not-exist-icon" v-else />
                   <span :class="!fileExist.get(filePath) ? 'file-not-exist-text' : ''">{{
                     filePathConverFileName(filePath)
@@ -1096,26 +1080,27 @@ onUnmounted(() => {
 }
 
 .file-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
   margin: 2px;
   padding: 3px;
   border: 1px solid var(--theme-border);
   border-radius: 5px;
   font-size: 12px;
-  width: 50px;
+  width: 80px;
+  display: grid;
+  place-items: center;
+  grid-template-rows: 1fr auto;
 }
 
 .file-item span {
-  width: 48px;
+  width: 75px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   /* 显示一行 */
   overflow: hidden;
   text-align: center;
+  align-self: end;
+  justify-self: center;
 }
 
 .file-exist-icon {
