@@ -295,9 +295,6 @@ async function loadClipboardItems(reset: boolean = true) {
 
     // 预加载图片的base64数据
     for (const item of items) {
-      if (item.type === 'image' && item.file_path && !imageCache.has(item.file_path)) {
-        loadImageFromPath(item.file_path);
-      }
       if (item.type === 'file') {
         checkFileExist(item.file_path);
       }
@@ -536,7 +533,6 @@ async function loadImageFromPath(filePath: string | null) {
     const base64Image = await fileSystem.readImageAsBase64(filePath);
     if (base64Image) {
       imageCache.set(filePath, base64Image);
-      console.log('图片缓存成功', filePath);
     }
   } catch (err: any) {
     error('加载图片失败:' + err.message);
@@ -572,17 +568,15 @@ function checkFileExist(filePaths: string) {
     if (isImage(filePath)) {
       // 这里不需要等待结果，避免处理慢
       loadImageFromPath(filePath);
-    } else {
-      loadFileExist(filePath);
     }
+    loadFileExist(filePath);
   } else {
     filePathList.forEach(filePath => {
       // 处理图片类型的文件
       if (isImage(filePath)) {
         loadImageFromPath(filePath);
-      } else {
-        loadFileExist(filePath);
       }
+      loadFileExist(filePath);
     });
   }
 }
