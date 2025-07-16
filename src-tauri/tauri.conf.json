@@ -26,7 +26,8 @@
         "skipTaskbar": true,
         "dragDropEnabled": false,
         "focus": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "incognito": true
       }
     ],
     "security": {

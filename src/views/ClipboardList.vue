@@ -19,20 +19,20 @@ import TitleBar from '../components/TitleBar.vue';
 import { getSettings, getShortcutKeys } from '../configs/FileConfig';
 import { useLanguage } from '../configs/LanguageConfig';
 import { themes, useTheme } from '../configs/ThemeConfig';
+import ClipboardDBService from '../services/ClipboardDBService';
 import { copyFileToClipboard, copyToClipboard, initClipboardListener } from '../services/ClipboardService';
+import DataClearService from '../services/DataClearService';
 import UpdaterService from '../services/UpdaterService';
 import { clipboardListenStore } from '../store/copyStatus';
 import { listFixedStore } from '../store/fixed';
 import { CopyState } from '../types/CopyState';
 import { NavBarItem } from '../types/NavBarItem';
 import { getContrastColor } from '../utils/color';
-import ClipboardDBService from '../services/ClipboardDBService';
 import FileSystem from '../utils/fileSystem';
 import { convertRegistKey } from '../utils/ShortcutKeys';
 import { filePathConverFileName } from '../utils/strUtil';
 import { isCode } from '../utils/TextType';
 import Windows, { openAboutWindow, openSettingsWindow, openTagsWindow } from '../utils/window';
-import DataClearService from '../services/DataClearService';
 
 // 获取语言上下文
 const { currentLanguage } = useLanguage();

@@ -5,8 +5,6 @@ use serde_json::{from_reader, from_slice};
 use std::fs::File;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use std::thread::sleep;
-use std::time::Duration;
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager};
@@ -18,7 +16,8 @@ pub fn create_tray(app: AppHandle) {
     let language = load_language(&app);
 
     // 创建菜单项
-    let settings = MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>).unwrap();
+    let settings =
+        MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>).unwrap();
     let clipboard_monitor = CheckMenuItem::with_id(
         &app,
         "clipboard_monitor",
@@ -26,16 +25,19 @@ pub fn create_tray(app: AppHandle) {
         true,
         is_listening(),
         None::<&str>,
-    ).unwrap();
+    )
+    .unwrap();
     let check_update = MenuItem::with_id(
         &app,
         "check_update",
         &language.checkUpdate,
         true,
         None::<&str>,
-    ).unwrap();
+    )
+    .unwrap();
     let about = MenuItem::with_id(&app, "about", &language.about, true, None::<&str>).unwrap();
-    let restart = MenuItem::with_id(&app, "restart", &language.restart, true, None::<&str>).unwrap();
+    let restart =
+        MenuItem::with_id(&app, "restart", &language.restart, true, None::<&str>).unwrap();
     let exit = MenuItem::with_id(&app, "exit", &language.exit, true, None::<&str>).unwrap();
     let separator = PredefinedMenuItem::separator(&app).unwrap();
 
@@ -52,7 +54,8 @@ pub fn create_tray(app: AppHandle) {
             &restart,
             &exit,
         ],
-    ).unwrap();
+    )
+    .unwrap();
 
     // 如果已有托盘图标，更新其菜单
     if state.is_loaded {
@@ -85,15 +88,10 @@ pub fn create_tray(app: AppHandle) {
                 let win = tray.app_handle().get_window("main").expect("主窗口不存在");
                 match win.is_visible() {
                     Ok(visible) if !visible => {
-                        win.show().unwrap();
-                        // win.set_focus();
-                        // 异步延迟后再设置焦点
-                        tauri::async_runtime::spawn(async move {
-                            sleep(Duration::from_millis(200));
-                            let _ = win.set_focus();
-                        });
+                        win.show().expect("窗口显示失败");
+                        win.set_focus().expect("窗口聚焦失败");
                     }
-                    Ok(visible) if visible => win.hide().unwrap(),
+                    Ok(visible) if visible => win.hide().expect("窗口隐藏失败"),
                     Err(e) => eprintln!("窗口可见性错误: {}", e),
                     _ => (),
                 };
@@ -127,7 +125,8 @@ pub fn create_tray(app: AppHandle) {
             "exit" => app.exit(0),
             _ => println!("菜单项 {:?} 未处理", event.id),
         })
-        .build(&app).unwrap();
+        .build(&app)
+        .unwrap();
 
     // 保存新的托盘实例到状态
     state.is_loaded = true;
@@ -150,7 +149,6 @@ fn load_language(app: &AppHandle) -> Tray {
     path.push(appdata_dir);
     path.push(&app.app_handle().config().identifier);
     path.push("language.json");
-
 
     if path.exists() {
         // 文件存在，读取文件内容

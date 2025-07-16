@@ -88,6 +88,7 @@
     "core:window:allow-inner-position",
     "core:window:allow-scale-factor",
     "core:window:allow-show",
+    "core:window:allow-set-focus",
     "process:default",
     "process:allow-exit",
     "process:allow-restart",

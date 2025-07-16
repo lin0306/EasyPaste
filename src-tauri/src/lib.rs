@@ -35,7 +35,7 @@ pub fn run() {
             listener::write_to_clipboard,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("应用程序运行异常");
 }
 
 #[cfg(debug_assertions)]
