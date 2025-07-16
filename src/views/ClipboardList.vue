@@ -68,10 +68,7 @@ let autoCheckUpdateUnListener: any = null;
 let updateTagSettingStateListener: any = null;
 
 // 数据清理定时器
-let updateDataRetentionDaysListener: any = null;
-
-// 更新数据保留条数事件监听
-let updateMaxHistoryItemsListener: any = null;
+let updateDataHistoryRestrictListener: any = null;
 
 // 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
@@ -294,7 +291,7 @@ async function loadClipboardItems(reset: boolean = true) {
 
     const db = await ClipboardDBService.getInstance();
     const { total, items } = await db.searchItemsPaged(searchBoxState.text, tagId, scrollState.page, scrollState.pageSize);
-
+    console.log(total, items)
     // 更新数据列表和分页信息
     if (reset) {
       clipboardItems.value = items;
@@ -743,31 +740,24 @@ async function initUpdateTagSettingStateListener() {
 }
 
 /**
- * 初始化更新数据保留天数监听
+ * 初始化更新数据保留限制监听
  */
-async function initUpdateDataRetentionDaysListener() {
-  return await listen('update-data-retention-days', async (event: any) => {
+async function initUpdateDataHistoryRestrictListener() {
+
+  return await listen('update-data-history-restrict', async (event: any) => {
     const dataRetentionDays = event.payload.dataRetentionDays;
-    const timer = DataClearService.getInstance(dataRetentionDays);
+    const maxHistoryItems = event.payload.maxHistoryItems;
+    const timer = await DataClearService.getInstance();
     // 更新保留天数
     timer.setDataRetentionDays(dataRetentionDays);
+    // 更新保留条数
+    timer.setMaxHistoryItems(maxHistoryItems);
     // 停止定时任务
     timer.stopDataClear();
     if (dataRetentionDays > 0) {
       // 当保留天数大于0时，启动定时任务
       timer.startDataClear();
     }
-  });
-}
-
-/**
- * 初始化更新数据保留条数监听
- */
-async function initUpdateMaxHistoryItemsListener() {
-  return await listen('update-max-history-items', async (event: any) => {
-    const maxHistoryItems = event.payload.maxHistoryItems;
-    const db = await ClipboardDBService.getInstance();
-    db.setMaxHistoryItems(maxHistoryItems);
   });
 }
 
@@ -805,11 +795,8 @@ onMounted(async () => {
     // 添加更新标签设置状态事件监听
     updateTagSettingStateListener = await initUpdateTagSettingStateListener();
 
-    // 添加更新数据保留天数事件监听
-    updateDataRetentionDaysListener = await initUpdateDataRetentionDaysListener();
-
-    // 添加更新数据保留条数事件监听
-    updateMaxHistoryItemsListener = await initUpdateMaxHistoryItemsListener();
+    // 添加更新数据保留限制事件监听
+    updateDataHistoryRestrictListener = await initUpdateDataHistoryRestrictListener();
 
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
@@ -828,7 +815,7 @@ onMounted(async () => {
 
     // 启动自动清理数据任务
     if (settings.dataRetentionDays > 0) {
-      const clearTimer = DataClearService.getInstance(settings.dataRetentionDays);
+      const clearTimer = await DataClearService.getInstance();
       clearTimer.startDataClear();
     }
   } catch (err: any) {
@@ -837,7 +824,7 @@ onMounted(async () => {
 });
 
 // 组件卸载时清除事件监听
-onUnmounted(() => {
+onUnmounted(async () => {
   // 清除剪贴板监听服务
   if (clipboardListener) {
     clipboardListener();
@@ -874,14 +861,9 @@ onUnmounted(() => {
     updateTagSettingStateListener();
   }
 
-  // 清除更新数据保留天数事件监听
-  if (updateDataRetentionDaysListener) {
-    updateDataRetentionDaysListener();
-  }
-
-  // 清除更新数据保留条数事件监听
-  if (updateMaxHistoryItemsListener) {
-    updateMaxHistoryItemsListener();
+  // 清除更新数据保留限制事件监听
+  if (updateDataHistoryRestrictListener) {
+    updateDataHistoryRestrictListener();
   }
 
   // 关闭自动检查更新操作
@@ -889,7 +871,7 @@ onUnmounted(() => {
   update.stopAutoCheck();
 
   // 清除数据清理定时器
-  const clearTimer = DataClearService.getInstance(undefined);
+  const clearTimer = await DataClearService.getInstance();
   clearTimer?.stopDataClear();
 
   // 移除事件监听

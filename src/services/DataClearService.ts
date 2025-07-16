@@ -1,4 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
+import { getSettings } from '../configs/FileConfig';
 import ClipboardDBService from './ClipboardDBService';
 
 /**
@@ -8,20 +9,33 @@ export default class DataClearService {
     private dataClearInterval: NodeJS.Timeout | null = null;
     private intervalTime: number = 1000 * 60 * 60; // 默认1小时检查一次更新
     private static instance: DataClearService; // 声明单例，避免重复创建定时任务
+    private initialized: Promise<void>;
     private dataRetentionDays: number = 0; // 数据保留时长
+    private maxHistoryItems: number = 0; // 数据保留条数
 
-    private constructor(dataRetentionDays: number) {
-        this.dataRetentionDays = dataRetentionDays;
+    private constructor() {
+        this.initialized = this.initialize();
+    }
+
+    private async initialize(): Promise<void> {
+        try {
+            const settings = await getSettings();
+            this.dataRetentionDays = settings.dataRetentionDays;
+            this.maxHistoryItems = settings.maxHistoryItems;
+            info('[数据库进程] 数据库初始化完成');
+        } catch (er: any) {
+            error('[数据库进程] 数据库加载失败:' + er.message);
+            throw er;
+        }
     }
 
     /**
      * 获取定时器实例
      */
-    static getInstance(dataRetentionDays: number | undefined) {
-        if (dataRetentionDays) {
-            if (!this.instance) {
-                this.instance = new DataClearService(dataRetentionDays);
-            }
+    public static async getInstance(): Promise<DataClearService> {
+        if (!DataClearService.instance) {
+            DataClearService.instance = new DataClearService();
+            await DataClearService.instance.initialized;
         }
 
         return this.instance;
@@ -43,10 +57,18 @@ export default class DataClearService {
      * 设置数据保留时长
      * @param days 天数
      */
-
     setDataRetentionDays(days: number) {
         this.dataRetentionDays = days;
     }
+
+    /**
+     * 设置数据保留条数
+     * @param count 保留条数
+     */
+    setMaxHistoryItems(count: number) {
+        this.maxHistoryItems = count;
+    }
+
 
     /**
      * 开始自动清理数据
@@ -74,12 +96,13 @@ export default class DataClearService {
      * 数据清理
      */
     async dataClear() {
-        info('触发数据清理操作')
         try {
             const db = await ClipboardDBService.getInstance();
-            const count = await db.clearClipboardItems(this.dataRetentionDays);
-            info(`清理历史数据完成，成功删除${count}条剪贴板数据`)
-            info('数据清理完成')
+            const c1 = await db.clearClipboardItems(this.dataRetentionDays);
+            const c2 = await db.clearHistoryItems(this.maxHistoryItems);
+            if (c1 + c2 > 0) {
+                info(`清理历史数据完成，成功删除${c1}条超过保留时长的数据，删除${c2}条超过保留条数限制的数据，保留时长：${this.dataRetentionDays}天，保留条数：${this.maxHistoryItems}条`);
+            }
         } catch (er: any) {
             error('数据清理异常:' + er.message);
         }

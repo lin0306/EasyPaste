@@ -197,13 +197,9 @@ const saveConfig = async () => {
           location: currentConfig.bindTagBtnShowLocation,
         });
       }
-      // 是否修改了【最大存储条数】
-      if (isUpdateMaxHistoryItems) {
-        await emit('update-max-history-items', { maxHistoryItems: currentConfig.maxHistoryItems });
-      }
-      // 是否修改了【自动清理天数】
-      if (isUpdateDataRetentionDays) {
-        await emit('update-data-retention-days', { dataRetentionDays: currentConfig.dataRetentionDays });
+      // 是否修改了【最大存储条数】或者【自动清理天数】
+      if (isUpdateMaxHistoryItems || isUpdateDataRetentionDays) {
+        await emit('update-data-history-restrict', { maxHistoryItems: currentConfig.maxHistoryItems, dataRetentionDays: currentConfig.dataRetentionDays });
       }
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
