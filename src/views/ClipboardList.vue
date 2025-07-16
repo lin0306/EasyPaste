@@ -291,7 +291,7 @@ async function loadClipboardItems(reset: boolean = true) {
 
     const db = await ClipboardDBService.getInstance();
     const { total, items } = await db.searchItemsPaged(searchBoxState.text, tagId, scrollState.page, scrollState.pageSize);
-    console.log(total, items)
+
     // 更新数据列表和分页信息
     if (reset) {
       clipboardItems.value = items;
