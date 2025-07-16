@@ -12,13 +12,13 @@ use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, Tray
 use tauri::{AppHandle, Emitter, Manager};
 
 // 创建/更新托盘的函数
-pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
+pub fn create_tray(app: AppHandle) {
     let mut state = LOAD_STATE.lock().unwrap();
     // 获取语言配置
     let language = load_language(&app);
 
     // 创建菜单项
-    let settings = MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>)?;
+    let settings = MenuItem::with_id(&app, "settings", &language.settings, true, None::<&str>).unwrap();
     let clipboard_monitor = CheckMenuItem::with_id(
         &app,
         "clipboard_monitor",
@@ -26,18 +26,18 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
         true,
         is_listening(),
         None::<&str>,
-    )?;
+    ).unwrap();
     let check_update = MenuItem::with_id(
         &app,
         "check_update",
         &language.checkUpdate,
         true,
         None::<&str>,
-    )?;
-    let about = MenuItem::with_id(&app, "about", &language.about, true, None::<&str>)?;
-    let restart = MenuItem::with_id(&app, "restart", &language.restart, true, None::<&str>)?;
-    let exit = MenuItem::with_id(&app, "exit", &language.exit, true, None::<&str>)?;
-    let separator = PredefinedMenuItem::separator(&app)?;
+    ).unwrap();
+    let about = MenuItem::with_id(&app, "about", &language.about, true, None::<&str>).unwrap();
+    let restart = MenuItem::with_id(&app, "restart", &language.restart, true, None::<&str>).unwrap();
+    let exit = MenuItem::with_id(&app, "exit", &language.exit, true, None::<&str>).unwrap();
+    let separator = PredefinedMenuItem::separator(&app).unwrap();
 
     // 创建菜单
     let menu = Menu::with_items(
@@ -52,16 +52,16 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
             &restart,
             &exit,
         ],
-    )?;
+    ).unwrap();
 
     // 如果已有托盘图标，更新其菜单
     if state.is_loaded {
         match state.tray.take() {
             Some(tray) => {
-                tray.set_menu(Some(menu))?;
+                tray.set_menu(Some(menu)).unwrap();
                 // 重新设置托盘
                 state.tray = Some(tray);
-                return Ok(());
+                return;
             }
             None => {}
         }
@@ -127,18 +127,17 @@ pub fn create_tray(app: AppHandle) -> tauri::Result<()> {
             "exit" => app.exit(0),
             _ => println!("菜单项 {:?} 未处理", event.id),
         })
-        .build(&app)?;
+        .build(&app).unwrap();
 
     // 保存新的托盘实例到状态
     state.is_loaded = true;
     state.tray = Some(tray);
-    Ok(())
 }
 
 // 重新加载托盘菜单的命令
 #[tauri::command]
 pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
-    create_tray(app)?;
+    create_tray(app);
     Ok(())
 }
 
