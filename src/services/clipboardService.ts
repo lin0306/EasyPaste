@@ -1,7 +1,7 @@
 import {listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
 import {clipboardListenStore} from '../store/copyStatus';
-import ClipboardDB from '../utils/db';
+import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
 
 /**
@@ -19,16 +19,15 @@ export async function initClipboardListener() {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    const db = await ClipboardDB.getInstance();
+                    const db = await ClipboardDBService.getInstance();
                     await db.saveClipboardItem(content, 'text');
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
                 if (fileName) {
-
                     // 直接将文件路径保存到数据库
-                    const db = await ClipboardDB.getInstance();
-                    await db.saveClipboardItem(fileName, 'file', fileName);
+                    const db = await ClipboardDBService.getInstance();
+                    await db.saveClipboardItem(fileName, 'file');
                 }
             }
         } catch (er: any) {

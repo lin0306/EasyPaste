@@ -26,12 +26,13 @@ import { listFixedStore } from '../store/fixed';
 import { CopyState } from '../types/CopyState';
 import { NavBarItem } from '../types/NavBarItem';
 import { getContrastColor } from '../utils/color';
-import ClipboardDB from '../utils/db';
+import ClipboardDBService from '../services/ClipboardDBService';
 import FileSystem from '../utils/fileSystem';
 import { convertRegistKey } from '../utils/ShortcutKeys';
 import { filePathConverFileName } from '../utils/strUtil';
 import { isCode } from '../utils/TextType';
 import Windows, { openAboutWindow, openSettingsWindow, openTagsWindow } from '../utils/window';
+import DataClearService from '../services/DataClearService';
 
 // 获取语言上下文
 const { currentLanguage } = useLanguage();
@@ -65,6 +66,12 @@ let autoCheckUpdateUnListener: any = null;
 
 // 更新标签设置状态事件监听
 let updateTagSettingStateListener: any = null;
+
+// 数据清理定时器
+let updateDataRetentionDaysListener: any = null;
+
+// 更新数据保留条数事件监听
+let updateMaxHistoryItemsListener: any = null;
 
 // 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
@@ -134,7 +141,7 @@ const MenuItems = computed((): NavBarItem[] => [
         onClick: async () => {
           // 清空历史记录
           try {
-            const db = await ClipboardDB.getInstance();
+            const db = await ClipboardDBService.getInstance();
             await db.clearAll();
             clipboardItems.value = []
             message.success(currentLanguage.value.pages.list.menu.clearDataSuccessMsg)
@@ -285,7 +292,7 @@ async function loadClipboardItems(reset: boolean = true) {
     // 使用选中的标签ID进行过滤
     const tagId = selectedTagState.selectedTagId;
 
-    const db = await ClipboardDB.getInstance();
+    const db = await ClipboardDBService.getInstance();
     const { total, items } = await db.searchItemsPaged(searchBoxState.text, tagId, scrollState.page, scrollState.pageSize);
 
     // 更新数据列表和分页信息
@@ -316,7 +323,7 @@ async function loadClipboardItems(reset: boolean = true) {
 
 // 加载所有标签
 async function loadTags() {
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   TagItems.value = await db.getAllTags();
 }
 
@@ -367,7 +374,7 @@ function loadMoreItems() {
 // 置顶项目
 async function onTop(id: number) {
   selectedItemId.value = id;
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   await db.toggleTopClipboardItem(id, true);
   await loadClipboardItems(true);
   selectedItemId.value = undefined;
@@ -376,7 +383,7 @@ async function onTop(id: number) {
 // 取消置顶项目
 async function onUnTop(id: number) {
   selectedItemId.value = id;
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   await db.toggleTopClipboardItem(id, false);
   await loadClipboardItems(true);
   selectedItemId.value = undefined;
@@ -384,7 +391,7 @@ async function onUnTop(id: number) {
 
 // 绑定标签
 async function bindTag(itemId: number, tagId: number) {
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   await db.bindItemToTag(itemId, tagId);
   await loadClipboardItems(true);
 }
@@ -392,7 +399,7 @@ async function bindTag(itemId: number, tagId: number) {
 // 删除项目
 async function removeItem(id: number) {
   selectedItemId.value = id;
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   await db.deleteClipboardItem(id);
   await loadClipboardItems(true);
   selectedItemId.value = undefined;
@@ -401,7 +408,7 @@ async function removeItem(id: number) {
 // 删除项目的标签
 async function removeItemTag(item: ClipboardItem, tag: TagItem) {
   selectedItemId.value = item.id;
-  const db = await ClipboardDB.getInstance();
+  const db = await ClipboardDBService.getInstance();
   await db.deleteClipboardItemTag(item.id, tag.id);
   await loadClipboardItems(true);
   selectedItemId.value = undefined;
@@ -630,8 +637,7 @@ async function hideWindow() {
 /**
  * 加载标签设置状态
  */
-async function loadTagSettingState() {
-  const setting = await getSettings();
+async function loadTagSettingState(setting: Settings) {
   tagSettingState.isShow = setting.enableTag;
   tagSettingState.location = setting.bindTagBtnShowLocation;
 }
@@ -736,6 +742,35 @@ async function initUpdateTagSettingStateListener() {
   });
 }
 
+/**
+ * 初始化更新数据保留天数监听
+ */
+async function initUpdateDataRetentionDaysListener() {
+  return await listen('update-data-retention-days', async (event: any) => {
+    const dataRetentionDays = event.payload.dataRetentionDays;
+    const timer = DataClearService.getInstance(dataRetentionDays);
+    // 更新保留天数
+    timer.setDataRetentionDays(dataRetentionDays);
+    // 停止定时任务
+    timer.stopDataClear();
+    if (dataRetentionDays > 0) {
+      // 当保留天数大于0时，启动定时任务
+      timer.startDataClear();
+    }
+  });
+}
+
+/**
+ * 初始化更新数据保留条数监听
+ */
+async function initUpdateMaxHistoryItemsListener() {
+  return await listen('update-max-history-items', async (event: any) => {
+    const maxHistoryItems = event.payload.maxHistoryItems;
+    const db = await ClipboardDBService.getInstance();
+    db.setMaxHistoryItems(maxHistoryItems);
+  });
+}
+
 // 组件挂载时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
@@ -747,7 +782,7 @@ onMounted(async () => {
     await loadTags();
     
     // 加载标签设置状态
-    await loadTagSettingState();
+    await loadTagSettingState(settings);
 
     // 启动剪贴板监听服务
     clipboardListener = await initClipboardListener();
@@ -770,6 +805,12 @@ onMounted(async () => {
     // 添加更新标签设置状态事件监听
     updateTagSettingStateListener = await initUpdateTagSettingStateListener();
 
+    // 添加更新数据保留天数事件监听
+    updateDataRetentionDaysListener = await initUpdateDataRetentionDaysListener();
+
+    // 添加更新数据保留条数事件监听
+    updateMaxHistoryItemsListener = await initUpdateMaxHistoryItemsListener();
+
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
 
@@ -783,6 +824,12 @@ onMounted(async () => {
     if (settings.autoCheckUpdate) {
       const update = UpdaterService.getInstance();
       update.startAutoCheck();
+    }
+
+    // 启动自动清理数据任务
+    if (settings.dataRetentionDays > 0) {
+      const clearTimer = DataClearService.getInstance(settings.dataRetentionDays);
+      clearTimer.startDataClear();
     }
   } catch (err: any) {
     error('初始化失败:' + err.message);
@@ -827,9 +874,23 @@ onUnmounted(() => {
     updateTagSettingStateListener();
   }
 
+  // 清除更新数据保留天数事件监听
+  if (updateDataRetentionDaysListener) {
+    updateDataRetentionDaysListener();
+  }
+
+  // 清除更新数据保留条数事件监听
+  if (updateMaxHistoryItemsListener) {
+    updateMaxHistoryItemsListener();
+  }
+
   // 关闭自动检查更新操作
   const update = UpdaterService.getInstance();
   update.stopAutoCheck();
+
+  // 清除数据清理定时器
+  const clearTimer = DataClearService.getInstance(undefined);
+  clearTimer?.stopDataClear();
 
   // 移除事件监听
   document.removeEventListener('keydown', handleKeyDown);

@@ -8,7 +8,7 @@ import SearchIcon from '../assets/icons/SearchIcon.vue';
 import TrashIcon from '../assets/icons/TrashIcon.vue';
 import TitleBar from '../components/TitleBar.vue';
 import { useLanguage } from '../configs/LanguageConfig';
-import ClipboardDB from '../utils/db';
+import ClipboardDBService from '../services/ClipboardDBService';
 
 const { currentLanguage } = useLanguage();
 
@@ -37,7 +37,7 @@ const searchText = ref('')
 // 加载标签列表
 async function loadTags() {
     try {
-        const db = await ClipboardDB.getInstance();
+        const db = await ClipboardDBService.getInstance();
         const tags = await db.getAllTags();
         if (tags) {
             tagItems.value = tags
@@ -90,12 +90,12 @@ async function addTag() {
     try {
         if (editState.isEdit && editState.currentTagId) {
             // 更新标签
-            const db = await ClipboardDB.getInstance();
+            const db = await ClipboardDBService.getInstance();
             await db.updateTag(editState.currentTagId, editState.tagName, editState.tagColor);
             message.success(currentLanguage.value.pages.tags.editSuccessMsg)
         } else {
             // 添加新标签
-            const db = await ClipboardDB.getInstance();
+            const db = await ClipboardDBService.getInstance();
             await db.addTag(editState.tagName, editState.tagColor);
             message.success(currentLanguage.value.pages.tags.saveSuccessMsg)
         }
@@ -115,7 +115,7 @@ async function addTag() {
 // 删除标签
 async function deleteTag(id: number) {
     try {
-        const db = await ClipboardDB.getInstance();
+        const db = await ClipboardDBService.getInstance();
         await db.deleteTag(id);
         message.success(currentLanguage.value.pages.tags.deleteSuccessMsg)
         if (editState.tagId === id) {

@@ -18,10 +18,10 @@ export const englishPageConfig: PageConfig = {
         topRight: 'Top Right',
         bottomRight: 'Bottom Right',
 
-        maxHistoryItems: 'Max History Items',
-        maxHistoryItemsHint: 'Limit the upper limit of data storage, exceeding the limit will automatically clean up old data, maximum 10000 items',
-        dataRetentionDays: 'Data Retention Days',
-        dataRetentionDaysHint: 'Limit data retention time, exceeding the number of days will automatically clean up, -1 means no cleanup, maximum retention time is 365 days',
+        maxHistoryItems: 'Max Record Items',
+        maxHistoryItemsHint: 'Limit the upper limit of data storage, 0 means no cleanup, maximum 10000 items',
+        dataRetentionDays: 'Max Record Days',
+        dataRetentionDaysHint: 'Limit data retention time, exceeding the number of days will automatically clean up, 0 means no cleanup, maximum retention time is 365 days',
        
         search: 'Search',
         wakeUpRoutine: 'Wake Up Routine',

@@ -158,10 +158,7 @@ const saveConfig = async () => {
     // 发送配置到主进程
     const isSuccess = await updateUserSettings(currentConfig);
     if (isSuccess) {
-      if (isUpdateReplaceGlobalHotkey
-        || isUpdateMaxHistoryItems
-        || isUpdateDataRetentionDays
-      ) {
+      if (isUpdateReplaceGlobalHotkey) {
         // 显示重启确认弹窗
         restartModalVisible.value = true;
       }
@@ -199,6 +196,14 @@ const saveConfig = async () => {
           isShow: currentConfig.enableTag,
           location: currentConfig.bindTagBtnShowLocation,
         });
+      }
+      // 是否修改了【最大存储条数】
+      if (isUpdateMaxHistoryItems) {
+        await emit('update-max-history-items', { maxHistoryItems: currentConfig.maxHistoryItems });
+      }
+      // 是否修改了【自动清理天数】
+      if (isUpdateDataRetentionDays) {
+        await emit('update-data-retention-days', { dataRetentionDays: currentConfig.dataRetentionDays });
       }
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
@@ -332,7 +337,7 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.maxHistoryItems }}</span>
-              <n-input-number v-model:value="currentConfig.maxHistoryItems" :min="10" :max="10000" />
+              <n-input-number v-model:value="currentConfig.maxHistoryItems" :min="0" :max="10000" />
             </div>
             <div class="second-item">
               <div class="hint">
@@ -344,7 +349,7 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.dataRetentionDays }}</span>
-              <n-input-number v-model:value="currentConfig.dataRetentionDays" :min="-1" :max="365" />
+              <n-input-number v-model:value="currentConfig.dataRetentionDays" :min="0" :max="365" />
             </div>
             <div class="second-item">
               <div class="hint">

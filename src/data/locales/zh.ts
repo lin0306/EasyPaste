@@ -19,10 +19,10 @@ export const chinesePageConfig: PageConfig = {
         topRight: '右上角',
         bottomRight: '右下角',
 
-        maxHistoryItems: '最大历史记录数',
-        maxHistoryItemsHint: '限制数据存储的上限，超过条数上限将自动清理旧数据，最多保留10000条',
-        dataRetentionDays: '数据保留时长',
-        dataRetentionDaysHint: '限制数据保留时长，超过天数上限将自动清理，-1表示不清理，最大保留365天',
+        maxHistoryItems: '记录保留条数',
+        maxHistoryItemsHint: '限制数据存储的上限，超过条数上限将自动清理旧数据，0表示不清理，最多保留10000条',
+        dataRetentionDays: '记录保留时长',
+        dataRetentionDaysHint: '限制数据保留时长，超过天数上限将自动清理，0表示不清理，最大保留365天',
         
         search: '搜索',
         wakeUpRoutine: '唤醒程序',

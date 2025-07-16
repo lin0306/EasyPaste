@@ -1,10 +1,12 @@
 import { error, info } from '@tauri-apps/plugin-log';
 import Database from '@tauri-apps/plugin-sql';
+import { getSettings } from '../configs/FileConfig';
 
-class ClipboardDB {
+class ClipboardDBService {
     private db: Database | undefined;
-    private static instance: ClipboardDB | null = null;
+    private static instance: ClipboardDBService | null = null;
     private initialized: Promise<void>;
+    private maxHistoryItems: number = 0;
 
     constructor() {
         this.initialized = this.initialize();
@@ -14,6 +16,8 @@ class ClipboardDB {
         try {
             this.db = await Database.load('sqlite:clipboard.db');
             await this.initDatabase();
+            const settings = await getSettings();
+            this.maxHistoryItems = settings.maxHistoryItems;
             info('[数据库进程] 数据库初始化完成');
         } catch (er: any) {
             error('[数据库进程] 数据库加载失败:' + er.message);
@@ -21,13 +25,13 @@ class ClipboardDB {
         }
     }
 
-    public static async getInstance(): Promise<ClipboardDB> {
-        if (!ClipboardDB.instance) {
-            ClipboardDB.instance = new ClipboardDB();
+    public static async getInstance(): Promise<ClipboardDBService> {
+        if (!ClipboardDBService.instance) {
+            ClipboardDBService.instance = new ClipboardDBService();
             // 确保数据库已初始化
-            await ClipboardDB.instance.initialized;
+            await ClipboardDBService.instance.initialized;
         }
-        return ClipboardDB.instance;
+        return ClipboardDBService.instance;
     }
 
     async initDatabase() {
@@ -70,6 +74,14 @@ class ClipboardDB {
         }
     }
 
+    /**
+     * 设置数据保留条数
+     * @param count 保留条数
+     */
+    setMaxHistoryItems(count: number) {
+        info("[数据库进程] 更新数据保留条数：" + count);
+        this.maxHistoryItems = count;
+    }
 
     /**
      * 保存剪贴板项目到数据库
@@ -77,7 +89,7 @@ class ClipboardDB {
      * @param type 类型
      * @param filePath 文件路径
      */
-    async saveClipboardItem(content: string, type: string = 'text', filePath: string | null = null) {
+    async saveClipboardItem(content: string, type: string) {
         try {
             // 覆盖相同内容的旧记录的复制时间
             if (type === 'text') {
@@ -87,16 +99,19 @@ class ClipboardDB {
                     info("[数据库进程] 有查询到相同文本内容的记录，覆盖复制时间");
                     return;
                 }
-            } else if (filePath) {
-                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, filePath]) as [{ id: number }];
+                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [content, Date.now(), type, null]);
+            }
+            if (type === 'file') {
+                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{ id: number }];
                 if (row && row.length > 0) {
                     await this.updateItemTime(row[0].id, Date.now());
                     info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
                     return;
                 }
+                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [null, Date.now(), type, content]);
             }
-
-            await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [content, Date.now(), type, filePath]);
+            // 清理历史数据
+            await this.clearHistoryItems();
             info("[数据库进程] 剪贴板内容添加成功");
         } catch (err: any) {
             error("[数据库进程] 剪贴板内容添加失败", err.message);
@@ -217,7 +232,6 @@ class ClipboardDB {
             if (item && item.length > 0) {
                 // 删除数据
                 await this.db?.execute('DELETE FROM clipboard_items WHERE id = ?', [id]);
-                await this.db?.execute('DELETE FROM item_tags WHERE item_id = ?', [id]);
             }
             return true;
         } catch (err: any) {
@@ -258,7 +272,6 @@ class ClipboardDB {
                 // 清空数据库记录
                 info('[数据库进程] 正在清空数据库记录...');
                 await this.db?.execute('DELETE FROM clipboard_items');
-                await this.db?.execute('DELETE FROM item_tags');
 
                 info('[数据库进程] 剪贴板内容和临时文件清理完成');
                 resolve();
@@ -294,7 +307,6 @@ class ClipboardDB {
      */
     async deleteTag(tagId: number) {
         await this.db?.execute('DELETE FROM tags WHERE id = ?', [tagId]);
-        await this.db?.execute('DELETE FROM item_tags WHERE tag_id = ?', [tagId]);
     }
 
     /**
@@ -322,15 +334,6 @@ class ClipboardDB {
      */
     async addItemTag(itemId: number, tagId: number) {
         await this.db?.execute('INSERT INTO item_tags (item_id, tag_id) VALUES (?, ?)', [itemId, tagId]);
-    }
-
-    /**
-     * 移除剪贴板条目的标签
-     * @param {number} itemId 剪贴板条目ID
-     * @param {number} tagId 标签ID
-     */
-    async removeItemTag(itemId: number, tagId: number) {
-        await this.db?.execute('DELETE FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
     }
 
     /**
@@ -364,6 +367,40 @@ class ClipboardDB {
         // 标签未绑定，执行绑定操作
         await this.db?.execute('INSERT OR IGNORE INTO item_tags (item_id, tag_id) VALUES (?, ?)', [itemId, tag[0].id]);
     }
+
+    /**
+     * 删除指定天数之前的剪贴板条目
+     * @param dataRetentionDays 保留天数
+     * @returns 删除条目数量
+     */
+    async clearClipboardItems(days: number): Promise<number> {
+        let now = new Date();
+        now.setDate(now.getDate() - days);
+        let count = await this.db?.select<number>('SELECT COUNT(*) FROM clipboard_items WHERE copy_time < ?', [now]);
+        if (count && count > 0) {
+            info('[数据库进程] 清理过期剪贴板条目');
+            await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [now]);
+            return count;
+        }
+        return 0;
+    }
+
+    /**
+     * 清理历史数据
+     */
+    async clearHistoryItems() {
+        if (this.maxHistoryItems && this.maxHistoryItems > 0) {
+            // 获取保留的最后一条数据
+            let item = await this.db?.select<ClipboardItem>('SELECT * FROM clipboard_items ORDER BY copy_time DESC LIMIT 1 OFFSET ?', [this.maxHistoryItems - 1]);
+            if (item) {
+                let count = await this.db?.select<number>('SELECT COUNT(*) FROM clipboard_items WHERE copy_time < ?', [item.copy_time]);
+                if (count && count > 0) {
+                    await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [item.copy_time]);
+                    info(`[数据库进程] 清理 ${count} 条历史数据`);
+                }
+            }
+        }
+    }
 }
 
-export default ClipboardDB;
+export default ClipboardDBService;
