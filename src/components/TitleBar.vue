@@ -106,6 +106,13 @@ function getFixedListener(): any {
       return null;
   }
 }
+
+onMounted(() => {
+  if (props.fixed) {
+    const fixedListener = getFixedListener();
+    isFixed.value = fixedListener.stateData();
+  }
+});
 </script>
 <style scoped>
 /* 标题栏样式 */
