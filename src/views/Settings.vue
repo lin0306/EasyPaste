@@ -224,14 +224,7 @@ const saveConfig = async () => {
           info("唤醒程序快捷键已修改，重新注册");
           // 重新注册快捷键
           await unregister(convertRegistKey(keys));
-          await register(convertRegistKey(currentShortcutKeys.wakeUpRoutine.key), async () => {
-            const windows = await getAllWindows();
-            const mainWindow = windows.find(window => window.label === 'main');
-            if (mainWindow) {
-              await mainWindow.show();
-              await mainWindow.setFocus();
-            }
-          });
+          await emit('update-open-window-key', { keys: currentShortcutKeys });
         }
         // 关闭编辑模式
         editingShortcut.value = null;

@@ -70,6 +70,9 @@ let updateTagSettingStateListener: any = null;
 // 数据清理定时器
 let updateDataHistoryRestrictListener: any = null;
 
+// 重新注册快捷键打开当前窗口事件监听
+let updateRegisterShortcutKeysOpenWindowListener: any = null;
+
 // 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
   {
@@ -639,6 +642,30 @@ async function loadTagSettingState(setting: Settings) {
   tagSettingState.location = setting.bindTagBtnShowLocation;
 }
 
+
+/**
+ * 注册打开当前窗口快捷键
+ * @param shortcutKeys 快捷键
+ */
+let lastKeyTime = 0;
+async function registerOpenWindowKey(shortcutKeys: string) {
+  await register(shortcutKeys, async () => {
+    const now = Date.now();
+    // 300ms 内不重复处理
+    if (now - lastKeyTime < 300) {
+      return;
+    }
+    lastKeyTime = now;
+    const win = getCurrentWindow();
+    const visible = await win.isVisible();
+    if (!visible) {
+      await win.show();
+    } else {
+      await hideWindow();
+    }
+  });
+}
+
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
@@ -711,6 +738,23 @@ async function registerShortcutKeysOpenWindow() {
       });
     }
   }
+      await registerOpenWindowKey(shortcutKeys);
+    }
+  }
+}
+
+/**
+ * 初始化修改快捷键打开当前窗口监听
+ * @param keys 快捷键
+ */
+async function initUpdateRegisterShortcutKeysOpenWindowListener() {
+  return await listen('update-open-window-key', async (event: any) => {
+    const keys: ShortcutKeys = event.payload.keys;
+    if (keys.wakeUpRoutine && keys.wakeUpRoutine.key && keys.wakeUpRoutine.key.length > 0) {
+      const shortcutKeys = convertRegistKey(keys.wakeUpRoutine.key);
+      await registerOpenWindowKey(shortcutKeys);
+    }
+  });
 }
 
 /**
@@ -743,7 +787,6 @@ async function initUpdateTagSettingStateListener() {
  * 初始化更新数据保留限制监听
  */
 async function initUpdateDataHistoryRestrictListener() {
-
   return await listen('update-data-history-restrict', async (event: any) => {
     const dataRetentionDays = event.payload.dataRetentionDays;
     const maxHistoryItems = event.payload.maxHistoryItems;
@@ -770,7 +813,7 @@ onMounted(async () => {
 
     // 加载标签列表
     await loadTags();
-    
+
     // 加载标签设置状态
     await loadTagSettingState(settings);
 
@@ -800,6 +843,9 @@ onMounted(async () => {
 
     // 注册快捷键打开当前窗口
     await registerShortcutKeysOpenWindow();
+
+    // 重新注册快捷键打开当前窗口
+    updateRegisterShortcutKeysOpenWindowListener = await initUpdateRegisterShortcutKeysOpenWindowListener();
 
     // 添加加载标签事件监听
     loadTagsUnListener = await initLoadTagsListener();
@@ -831,9 +877,6 @@ onUnmounted(async () => {
   }
   // 清除窗口失焦事件监听
   if (blurUnListener) {
-    clearInterval(blurUnListener);
-  }
-  if (blurUnListener) {
     blurUnListener();
   }
   // 清除打开设置窗口事件监听
@@ -864,6 +907,11 @@ onUnmounted(async () => {
   // 清除更新数据保留限制事件监听
   if (updateDataHistoryRestrictListener) {
     updateDataHistoryRestrictListener();
+  }
+
+  // 清除重新注册快捷键打开当前窗口事件监听
+  if (updateRegisterShortcutKeysOpenWindowListener) {
+    updateRegisterShortcutKeysOpenWindowListener();
   }
 
   // 关闭自动检查更新操作
@@ -939,8 +987,9 @@ onUnmounted(async () => {
                   <TrashIcon />
                 </div>
                 <!-- 设置标签按钮 -->
-                <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'" class="card-header-right-button drag-icon"
-                  draggable="true" @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
+                <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'"
+                  class="card-header-right-button drag-icon" draggable="true"
+                  @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
                   <AddTagIcon class="dropdown-icon" />
                 </div>
               </div>
@@ -986,8 +1035,8 @@ onUnmounted(async () => {
                 </div>
               </div>
             </n-tag>
-            <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'" class="bind-tag-button" draggable="true"
-              @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
+            <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'" class="bind-tag-button"
+              draggable="true" @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
               <AddTagIcon class="bind-tag-icon" />
               <span v-if="tagSettingState.isShow">绑定标签</span>
             </div>
