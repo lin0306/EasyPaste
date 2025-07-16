@@ -1,6 +1,10 @@
-use std::sync::{Arc, Mutex};
-use clipboard_rs::{Clipboard, ClipboardContext, ClipboardHandler, ClipboardWatcher, ClipboardWatcherContext, WatcherShutdown};
+use clipboard_rs::{
+    Clipboard, ClipboardContext, ClipboardHandler, ClipboardWatcher, ClipboardWatcherContext,
+    WatcherShutdown,
+};
+use log::{error, info};
 use serde_json::Map;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use tauri::{AppHandle, Emitter};
 
@@ -61,7 +65,7 @@ pub fn start_listening(app: AppHandle) {
     let mut state = LISTENER_STATE.lock().unwrap();
 
     if state.is_listening {
-        println!("已经在监听了");
+        info!("已经在监听了");
         return;
     }
 
@@ -71,7 +75,7 @@ pub fn start_listening(app: AppHandle) {
 
     let shutdown = watcher.add_handler(manager).get_shutdown_channel();
     let handle = thread::spawn(move || {
-        println!("开始监听剪贴板变化...");
+        info!("开始监听剪贴板变化...");
         watcher.start_watch();
     });
 
@@ -85,7 +89,7 @@ pub fn stop_listening() {
     let mut state = LISTENER_STATE.lock().unwrap();
 
     if !state.is_listening {
-        println!("当前没有监听");
+        info!("当前没有监听，不需要停止监听");
         return;
     }
 
@@ -96,7 +100,7 @@ pub fn stop_listening() {
     state.watcher_shutdown.take().unwrap().stop();
     drop(state.watcher_thread.take()); // 等待线程结束
     state.is_listening = false;
-    println!("已停止监听剪贴板");
+    info!("已停止监听剪贴板");
 }
 
 // 获取监听状态
@@ -117,7 +121,8 @@ pub fn write_to_clipboard(content: String, format: String) -> bool {
             ctx.set_files(paths).is_ok()
         }
         _ => {
-            panic!("文件类型不支持");
+            error!("文件类型不支持:{}复制到剪贴板", format);
+            return false;
         }
     }
 }
