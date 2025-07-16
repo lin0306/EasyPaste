@@ -21,25 +21,26 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = ["tray-icon", "image-png", "unstable"] } # 启用托盘和PNG支持
 tauri-plugin-opener = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-log = "2"
+tauri-plugin-process = "2"
+tauri-plugin-store = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-notification = "2"
 # JSON 处理
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri-plugin-clipboard-manager = "2"
-tauri-plugin-fs = "2"
 # 日志相关配置
 log = "0.4"
-tauri-plugin-log = "2"
 # 日期
 chrono = { version = "0.4.19", features = ["serde"] }
-tauri-plugin-process = "2"
-tauri-plugin-store = "2"
 # 文件操作
 dirs = "6.0.0"
-tauri-plugin-shell = "2"
-tauri-plugin-notification = "2"
+# 剪贴板操作
 clipboard-rs = "0.3.0"
 lazy_static = "1.5.0"
 
+# 数据库支持
 [dependencies.tauri-plugin-sql]
 features = ["sqlite"] # or "postgres", or "mysql"
 version = "2.0.0"
