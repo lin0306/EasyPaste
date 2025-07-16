@@ -732,12 +732,6 @@ async function registerShortcutKeysOpenWindow() {
     if (registered) {
       info('快捷键已注册');
     } else {
-      await register(shortcutKeys, async () => {
-        await getCurrentWindow().show();
-        await getCurrentWindow().setFocus();
-      });
-    }
-  }
       await registerOpenWindowKey(shortcutKeys);
     }
   }
