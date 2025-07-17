@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listen } from '@tauri-apps/api/event';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { currentMonitor, cursorPosition, getCurrentWindow, PhysicalPosition } from '@tauri-apps/api/window';
 import { exists } from '@tauri-apps/plugin-fs';
 import { isRegistered, register } from '@tauri-apps/plugin-global-shortcut';
 import { error, info } from '@tauri-apps/plugin-log';
@@ -659,7 +659,34 @@ async function registerOpenWindowKey(shortcutKeys: string) {
     const win = getCurrentWindow();
     const visible = await win.isVisible();
     if (!visible) {
+      const { x, y } = await cursorPosition();
+      
+      // 获取窗口大小
+      const size = await win.outerSize();
+      const monitor = await currentMonitor();
+      
+      // 计算窗口位置，确保不会超出屏幕边界
+      let posX = x;
+      let posY = y;
+      
+      if (monitor) {
+        const { width: screenWidth, height: screenHeight } = monitor.size;
+        
+        // 如果窗口右边界超出屏幕，则向左偏移
+        if (x + size.width > screenWidth) {
+          posX = screenWidth - size.width;
+        }
+        
+        // 如果窗口下边界超出屏幕，则向上偏移
+        if (y + size.height > screenHeight) {
+          posY = screenHeight - size.height;
+        }
+      }
+      
+      // 设置窗口位置并显示
+      await win.setPosition(new PhysicalPosition(posX, posY));
       await win.show();
+      await win.setFocus();
     } else {
       await hideWindow();
     }
