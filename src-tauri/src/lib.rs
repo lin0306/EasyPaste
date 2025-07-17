@@ -4,6 +4,7 @@ use tauri::Manager;
 mod log;
 mod tray;
 mod listener;
+mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -19,6 +20,7 @@ pub fn run() {
             ));
             listener::start_listening(app.handle().clone());
             tray::create_tray(app.handle().clone());
+            window::open_main_window(app.handle().clone());
             Ok(())
         })
         .plugin(tauri_plugin_store::Builder::new().build())
