@@ -43,35 +43,8 @@ const { currentThemeId, toggleTheme } = useTheme();
 // Naive UI 框架的消息组件
 const message = useMessage();
 
-// 窗口失焦自动关闭监听
-let blurUnListener: any = null;
-
 // 剪贴板监听
 let clipboardListener: any = null;
-
-// 打开设置窗口事件监听
-let openSettingsListener: any = null;
-
-// 打开关于窗口事件监听
-let openAboutListener: any = null;
-
-// 加载标签事件监听
-let loadTagsUnListener: any = null;
-
-// 加载更新事件监听
-let checkUpdateUnListener: any = null;
-
-// 加载更新自动更新任务状态事件监听
-let autoCheckUpdateUnListener: any = null;
-
-// 更新标签设置状态事件监听
-let updateTagSettingStateListener: any = null;
-
-// 数据清理定时器
-let updateDataHistoryRestrictListener: any = null;
-
-// 重新注册快捷键打开当前窗口事件监听
-let updateRegisterShortcutKeysOpenWindowListener: any = null;
 
 // 顶部菜单
 const MenuItems = computed((): NavBarItem[] => [
@@ -660,29 +633,29 @@ async function registerOpenWindowKey(shortcutKeys: string) {
     const visible = await win.isVisible();
     if (!visible) {
       const { x, y } = await cursorPosition();
-      
+
       // 获取窗口大小
       const size = await win.outerSize();
       const monitor = await currentMonitor();
-      
+
       // 计算窗口位置，确保不会超出屏幕边界
       let posX = x;
       let posY = y;
-      
+
       if (monitor) {
         const { width: screenWidth, height: screenHeight } = monitor.size;
-        
+
         // 如果窗口右边界超出屏幕，则向左偏移
         if (x + size.width > screenWidth) {
           posX = screenWidth - size.width;
         }
-        
+
         // 如果窗口下边界超出屏幕，则向上偏移
         if (y + size.height > screenHeight) {
           posY = screenHeight - size.height;
         }
       }
-      
+
       // 设置窗口位置并显示
       await win.setPosition(new PhysicalPosition(posX, posY));
       await win.show();
@@ -704,16 +677,37 @@ watch(() => clipboardListen.state, (newValue, oldValue) => {
   }
 });
 
-// 初始化窗口失焦事件监听
-function initBlueListener() {
-  return getCurrentWindow().listen('tauri://blur', async () => {
-    await hideWindow();
-  })
+// 初始化窗口失焦定时任务
+// todo tauri://blur 只会生效一次，暂时只能用这种笨办法
+let focusState = false; // 窗口聚焦状态
+let webFocusStatus = false; // web网页聚焦状态
+let blurTimer: any = null;
+function initBlurTimer() {
+  return setInterval(async () => {
+    window.onfocus = () => {
+      webFocusStatus = true;
+    }
+    window.onblur = () => {
+      webFocusStatus = false;
+    }
+    const win = getCurrentWindow();
+    const foused = await win.isFocused();
+    if (!webFocusStatus && ((focusState && !foused) || (focusState === false && foused === false))) {
+      const visible = await win.isVisible();
+      if (visible) {
+        hideWindow();
+      }
+    }
+    if (foused !== focusState) {
+      focusState = foused;
+    }
+  }, 200); // 时间可调整
 }
 
 /**
  * 初始化打开设置窗口事件监听
  */
+let openSettingsListener: any = null;
 function initOpenSettingsListener() {
   return listen('open-settings', (_event: any) => {
     openSettingsWindow();
@@ -723,6 +717,7 @@ function initOpenSettingsListener() {
 /**
  * 初始化打开关于窗口事件监听
  */
+let openAboutListener: any = null;
 function initOpenAboutListener() {
   return listen('open-about', (_event: any) => {
     openAboutWindow();
@@ -732,6 +727,7 @@ function initOpenAboutListener() {
 /**
  * 初始化加载标签事件监听
  */
+let loadTagsUnListener: any = null;
 async function initLoadTagsListener() {
   return await listen('reload-tags', async (_event: any) => {
     await loadTags();
@@ -741,6 +737,7 @@ async function initLoadTagsListener() {
 /**
  * 初始化加载标签事件监听
  */
+let checkUpdateUnListener: any = null;
 async function initCheckUpdateListener() {
   return await listen('check-update', async (_event: any) => {
     const update = UpdaterService.getInstance();
@@ -766,8 +763,8 @@ async function registerShortcutKeysOpenWindow() {
 
 /**
  * 初始化修改快捷键打开当前窗口监听
- * @param keys 快捷键
  */
+let updateRegisterShortcutKeysOpenWindowListener: any = null;
 async function initUpdateRegisterShortcutKeysOpenWindowListener() {
   return await listen('update-open-window-key', async (event: any) => {
     const keys: ShortcutKeys = event.payload.keys;
@@ -781,6 +778,7 @@ async function initUpdateRegisterShortcutKeysOpenWindowListener() {
 /**
  * 初始化更新自动检查更新任务状态监听
  */
+let autoCheckUpdateUnListener: any = null;
 async function initUpdateAutoCheckUpdateListener() {
   return await listen('update-auto-check-update', (event: any) => {
     const autoCheckUpdate = event.payload.data;
@@ -797,6 +795,7 @@ async function initUpdateAutoCheckUpdateListener() {
 /**
  * 初始化更新标签设置状态监听
  */
+let updateTagSettingStateListener: any = null;
 async function initUpdateTagSettingStateListener() {
   return await listen('update-tag-setting-state', async (event: any) => {
     tagSettingState.isShow = event.payload.isShow;
@@ -807,6 +806,7 @@ async function initUpdateTagSettingStateListener() {
 /**
  * 初始化更新数据保留限制监听
  */
+let updateDataHistoryRestrictListener: any = null;
 async function initUpdateDataHistoryRestrictListener() {
   return await listen('update-data-history-restrict', async (event: any) => {
     const dataRetentionDays = event.payload.dataRetentionDays;
@@ -841,8 +841,8 @@ onMounted(async () => {
     // 启动剪贴板监听服务
     clipboardListener = await initClipboardListener();
 
-    // 添加窗口失焦事件监听
-    blurUnListener = await initBlueListener();
+    // 添加监听窗口失焦自动隐藏定时任务
+    blurTimer = initBlurTimer();
 
     // 添加打开设置窗口事件监听
     openSettingsListener = await initOpenSettingsListener();
@@ -896,9 +896,9 @@ onUnmounted(async () => {
   if (clipboardListener) {
     clipboardListener();
   }
-  // 清除窗口失焦事件监听
-  if (blurUnListener) {
-    blurUnListener();
+  // 清除窗口失焦定时任务
+  if (blurTimer) {
+    clearInterval(blurTimer);
   }
   // 清除打开设置窗口事件监听
   if (openSettingsListener) {
