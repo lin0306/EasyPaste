@@ -5,9 +5,8 @@ import TitleBar from '../components/TitleBar.vue';
 
 import { invoke } from '@tauri-apps/api/core';
 import { emit } from '@tauri-apps/api/event';
-import { getAllWindows } from '@tauri-apps/api/window';
 import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
-import { register, unregister } from '@tauri-apps/plugin-global-shortcut';
+import { unregister } from '@tauri-apps/plugin-global-shortcut';
 import { info } from '@tauri-apps/plugin-log';
 import { exit, relaunch } from '@tauri-apps/plugin-process';
 import { computed, onMounted, reactive, ref } from 'vue';
