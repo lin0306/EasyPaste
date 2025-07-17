@@ -1,15 +1,6 @@
 {
-  "version": "0.0.4-beta",
+  "version": "0.0.5-beta",
   "notes": "Built with Tauri 2 | See assets to download",
-  "pub_date": "2025-06-20T06:15:12.105Z",
-  "platforms": {
-    "darwin-aarch64":{
-      "signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnZQTWFzUE8ra0FJZXFxVmR4OHNUZHdTY3F6RXRmbnlmZmlWbXh0c29KMG9sWjlCTlVMM1J4WkpUaUo1eG9iaFB5amh5bEhWc20xUldNbjY0VGt1THdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwMzk5NzgyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKTy8zaDdvKzM4bXNqb3RITkRYMVlLa09CQUo3S3hxSk1GdERQWUNWKzlTZjM2R0RUMVN0RG5zaU5aaEoyTVFZYklmZm9JczNHVjdTcWN5M0hHRlgrQWc9PQo=",
-      "url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.4-beta/EasyPaste.app.tar.gz"
-    },
-    "windows-x86_64":{
-      "signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnVKU3pGemxtTHBabzVhNE80UGhQcjJQQ2RNa3hIMmVvUCtvU3FUeHlRR0FsYnF2MzVDeWpTcXhGeVB4UXJCL05rNk5weXhXNk5hcVcrbE1ib2tNa0FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNDAwMDg4CWZpbGU6RWFzeVBhc3RlXzAuMC40X3g2NC1zZXR1cC5leGUKSlpDdFBvY04yTFVLbzlwL2F5NlJBV1lrSEo5UlhtR2dDOVlIcVdnbEd4UUlSblp3cE5pd1FOdE5mNmZVL2ZhaHRxbHd1N2Mxc1RoMHlMaHRWdXBsRGc9PQo=",
-      "url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.4-beta/EasyPaste_0.0.4_x64-setup.exe"
-    }
-  }
+  "pub_date": "2025-07-17T10:02:02.875Z",
+  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm40MStzRTFzQ0lMY1NSeXlYR0pnL3k2c3JLcmw2MlR5YWFTTUVrQnk0cHFaVFB1cEYra1dJNGYyT1dZbmdSQ1V1ZzVzLzMvaWRCRGo4a3o5bjVsZVFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUyNzQ2MDA1CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKUENGUzhHTmZENXJxTDVUTDhlVjdRdG4vQldaNW4xdUx0bVE1SXNmRUwzL3B2YVhKb1V3V21YK2U5Ukl4bFBjMk5GVDVRc3dDOVZtZ0xodmNVOGRWREE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.5-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm5HbXgrbFZLY0NlQ1BZaWowZGYzV3FPUnpjMlB2YnpIcytPaFZHbzI2eHJqUFpEeVB6M2dyb1lPUFJPYW16dG54NlZNSlJJZEFvQmdkZ3B6THhuUndBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUyNzQ2NDgxCWZpbGU6RWFzeVBhc3RlXzAuMC41X3g2NC1zZXR1cC5leGUKd0VsUFVpQ0J1cFVXb3VDcDlncG54bThFeWswYktJZjlLS1h3NXRuUHlxVnQ5TGlEUWRYbElTcVF5bmpCSlg0UU0rZ3BhNUhkOFgrbEwwczJzRitlQ3c9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.5-beta/EasyPaste_0.0.5_x64-setup.exe"}}
 }
