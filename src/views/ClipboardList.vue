@@ -584,7 +584,7 @@ function handleTagClick(tagId: number) {
  * 隐藏当前窗口
  */
 async function hideWindow() {
-  if (listFixedListen.stateData()) {
+  if (!listFixedListen.stateData()) {
     // 窗口未固定，触发失焦，隐藏窗口
     await getCurrentWindow().hide();
   }
