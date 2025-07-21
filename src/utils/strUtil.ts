@@ -1,22 +1,25 @@
-import { isMac } from "../data/SystemParams";
+import {isMac} from "../data/SystemParams";
 
 /**
  * Uint8Array转字符串
+ * @param fileData 文件数据
  */
 export function uint8ArrayToString(fileData: Uint8Array) {
     const decoder = new TextDecoder("utf-8");
     return decoder.decode(fileData);
 }
 
-export function filePathConverFileName(filePath: string) {
+/**
+ * 文件路径转文件名
+ * @param filePath 文件路径
+ * @return 文件名
+ */
+export function filePathConvertFileName(filePath: string): string {
     // windows是斜杠
     const strArr = filePath.split("\\");
     if (isMac) {
         // mac是反斜杠
         return filePath.split("/").pop() || filePath;
     }
-    if (strArr) {
-        return strArr[strArr.length - 1];
-    }
-    return filePath;
+    return strArr.pop() || filePath;
 }

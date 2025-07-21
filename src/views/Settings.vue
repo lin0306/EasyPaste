@@ -19,7 +19,7 @@ import {
   updateUserSettings
 } from '../configs/FileConfig';
 import { getTray, languages, useLanguage } from '../configs/LanguageConfig';
-import { convertRegistKey, convertShow, formatKeyDisplay } from '../utils/ShortcutKeys';
+import { convertRegisterKey, convertShow, formatKeyDisplay } from '../utils/ShortcutKeys';
 
 const message = useMessage();
 const { currentLanguage, toggleLanguage } = useLanguage();
@@ -222,7 +222,7 @@ const saveConfig = async () => {
         if (isUpdateWakeUpRoutine) {
           info("唤醒程序快捷键已修改，重新注册");
           // 重新注册快捷键
-          await unregister(convertRegistKey(keys));
+          await unregister(convertRegisterKey(keys));
           await emit('update-open-window-key', { keys: currentShortcutKeys });
         }
         // 关闭编辑模式

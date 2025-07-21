@@ -24,7 +24,7 @@ export function convertShow(keys: Array<string>): string {
 /**
  * 将快捷键转换为注册格式
  */
-export function convertRegistKey(keys: Array<string>): string {
+export function convertRegisterKey(keys: Array<string>): string {
     const list: string[] = [];
     keys.forEach(key => {
         // 由于Tauri进行快捷键注册时 Win/Command键位使用Super，这里需要进行转换

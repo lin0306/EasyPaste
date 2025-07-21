@@ -138,7 +138,7 @@ export async function getSettings(): Promise<Settings> {
     })
     if (!userSettingsExists) {
         info('[渲染进程] 用户设置文件不存在, 创建默认用户设置');
-        saveUserSettings(JSON.stringify(defaultSettings));
+        await saveUserSettings(JSON.stringify(defaultSettings));
         return defaultSettings;
     }
     const userSettings = await readFile(userSettingsPath, {
@@ -149,7 +149,7 @@ export async function getSettings(): Promise<Settings> {
     // 如果有加新的配置，则合并数据
     const settings = { ...defaultSettings, ...JSON.parse(userSettingsString) };
     // 重新保存配置
-    saveUserSettings(JSON.stringify(settings));
+    await saveUserSettings(JSON.stringify(settings));
     return settings;
 }
 
@@ -162,7 +162,7 @@ export async function getShortcutKeys(): Promise<ShortcutKeys> {
     })
     if (!userShortcutKeysExists) {
         info('[渲染进程] 用户快捷键文件不存在, 创建默认用户快捷键');
-        saveUserShortcutKeys(JSON.stringify(defaultShortcutKeys));
+        await saveUserShortcutKeys(JSON.stringify(defaultShortcutKeys));
         return defaultShortcutKeys;
     }
     const userShortcutKeys = await readFile(userShortcutKeysPath, {
@@ -173,7 +173,7 @@ export async function getShortcutKeys(): Promise<ShortcutKeys> {
     // 如果有加新的快捷键，则合并数据
     const shortcutKeys = { ...defaultShortcutKeys, ...JSON.parse(userShortcutKeysString) };
     // 重新保存快捷键
-    saveUserShortcutKeys(JSON.stringify(shortcutKeys));
+    await saveUserShortcutKeys(JSON.stringify(shortcutKeys));
 
     return shortcutKeys;
 }
