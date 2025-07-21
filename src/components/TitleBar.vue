@@ -41,10 +41,10 @@ import {listFixedStore} from '../store/fixed'
 const props = withDefaults(defineProps<{
   title: string;
   showCloseBtn?: boolean;
-  showHideBtn?: boolean;
+  showHideBtn?: boolean; // 是否显示窗口隐藏按钮
   showFixedBtn?: boolean;
   devTool?: string;
-  showMinimizeBtn?: boolean;
+  showMinimizeBtn?: boolean; // 是否显示窗口最小化按钮，当窗口属性skipTaskbar设置为true时，此设置不生效
 }>(), {
   showFixedBtn: false
 });
