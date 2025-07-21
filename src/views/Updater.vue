@@ -6,6 +6,7 @@ import { check } from '@tauri-apps/plugin-updater';
 import { onMounted, reactive, ref } from 'vue';
 import { useLanguage } from '../configs/LanguageConfig';
 import UpdaterService from '../services/UpdaterService';
+import {getCurrentWindow} from "@tauri-apps/api/window";
 
 const { currentLanguage } = useLanguage();
 let updater: any = null;
@@ -70,6 +71,8 @@ function downloadUpdate() {
         downloadCompleted.value = true;
         isDownloading.value = false;
         console.log('下载完成');
+        // 窗口最小化了，下载完成后自动取消最小化
+        getCurrentWindow().unminimize();
         break;
     }
   }, undefined);
@@ -91,7 +94,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="update-container">
-    <TitleBar :title="currentLanguage.pages.update.title" :showFixedBtn="true" :showCloseBtn="true"
+    <TitleBar :title="currentLanguage.pages.update.title" :showMinimizeBtn="true" :showCloseBtn="true"
       :dev-tool="`updater`" />
     <!-- 更新内容展示区域 -->
     <div class="update-content">
