@@ -32,7 +32,7 @@ import {isImage, readImageAsBase64} from '../utils/fileSystem';
 import {convertRegisterKey} from '../utils/ShortcutKeys';
 import {filePathConvertFileName} from '../utils/strUtil';
 import {isCode} from '../utils/TextType';
-import Windows, {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
+import {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -592,7 +592,7 @@ function handleTagClick(tagId: number) {
  * 隐藏当前窗口
  */
 async function hideWindow() {
-  if (listFixedListen.stateData() === 0) {
+  if (listFixedListen.stateData()) {
     // 窗口未固定，触发失焦，隐藏窗口
     await getCurrentWindow().hide();
   }
@@ -676,6 +676,7 @@ watch(() => clipboardListen.state, (newValue, oldValue) => {
 let focusState = false; // 窗口聚焦状态
 let webFocusStatus = false; // web网页聚焦状态
 let blurTimer: any = null;
+
 function initBlurTimer() {
   return setInterval(async () => {
     window.onfocus = () => {
@@ -702,6 +703,7 @@ function initBlurTimer() {
  * 初始化打开设置窗口事件监听
  */
 let openSettingsListener: any = null;
+
 function initOpenSettingsListener() {
   return listen('open-settings', (_event: any) => {
     openSettingsWindow();
@@ -712,6 +714,7 @@ function initOpenSettingsListener() {
  * 初始化打开关于窗口事件监听
  */
 let openAboutListener: any = null;
+
 function initOpenAboutListener() {
   return listen('open-about', (_event: any) => {
     openAboutWindow();
@@ -722,6 +725,7 @@ function initOpenAboutListener() {
  * 初始化加载标签事件监听
  */
 let loadTagsUnListener: any = null;
+
 async function initLoadTagsListener() {
   return await listen('reload-tags', async (_event: any) => {
     await loadTags();
@@ -732,6 +736,7 @@ async function initLoadTagsListener() {
  * 初始化加载标签事件监听
  */
 let checkUpdateUnListener: any = null;
+
 async function initCheckUpdateListener() {
   return await listen('check-update', async (_event: any) => {
     const update = UpdaterService.getInstance();
@@ -759,6 +764,7 @@ async function registerShortcutKeysOpenWindow() {
  * 初始化修改快捷键打开当前窗口监听
  */
 let updateRegisterShortcutKeysOpenWindowListener: any = null;
+
 async function initUpdateRegisterShortcutKeysOpenWindowListener() {
   return await listen('update-open-window-key', async (event: any) => {
     const keys: ShortcutKeys = event.payload.keys;
@@ -773,6 +779,7 @@ async function initUpdateRegisterShortcutKeysOpenWindowListener() {
  * 初始化更新自动检查更新任务状态监听
  */
 let autoCheckUpdateUnListener: any = null;
+
 async function initUpdateAutoCheckUpdateListener() {
   return await listen('update-auto-check-update', (event: any) => {
     const autoCheckUpdate = event.payload.data;
@@ -790,6 +797,7 @@ async function initUpdateAutoCheckUpdateListener() {
  * 初始化更新标签设置状态监听
  */
 let updateTagSettingStateListener: any = null;
+
 async function initUpdateTagSettingStateListener() {
   return await listen('update-tag-setting-state', async (event: any) => {
     tagSettingState.isShow = event.payload.isShow;
@@ -801,6 +809,7 @@ async function initUpdateTagSettingStateListener() {
  * 初始化更新数据保留限制监听
  */
 let updateDataHistoryRestrictListener: any = null;
+
 async function initUpdateDataHistoryRestrictListener() {
   return await listen('update-data-history-restrict', async (event: any) => {
     const dataRetentionDays = event.payload.dataRetentionDays;
