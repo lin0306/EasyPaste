@@ -91,7 +91,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="update-container">
-    <TitleBar :title="currentLanguage.pages.update.title" :showFixedBtn="true" :showClostBtn="true"
+    <TitleBar :title="currentLanguage.pages.update.title" :showFixedBtn="true" :showCloseBtn="true"
       :dev-tool="`updater`" />
     <!-- 更新内容展示区域 -->
     <div class="update-content">

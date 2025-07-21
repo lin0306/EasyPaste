@@ -166,7 +166,7 @@ onMounted(() => {
 </script>
 <template>
     <div class="tag-manager-container">
-        <TitleBar :title="currentLanguage.pages.tags.title" :showFixedBtn="true" :showClostBtn="true"
+        <TitleBar :title="currentLanguage.pages.tags.title" :showFixedBtn="true" :showCloseBtn="true"
             :dev-tool="`tags`" />
 
         <div class="tag-manager-content">

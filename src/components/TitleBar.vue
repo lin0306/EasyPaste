@@ -3,22 +3,22 @@
     <div class="window-title">{{ title }}</div>
     <div class="window-controls">
       <div v-if="isShow && devTool" class="control-button" @click="openDevTool">
-        <DevToolIcon class="program-btn" id="devtool-button-img" />
+        <DevToolIcon class="program-btn" id="devtool-button-img"/>
       </div>
-      <div v-if="fixed && !isFixed" class="control-button fixation-button" @click="onFixWindow">
-        <FixedIcon class="program-btn" id="fixation-button-img" />
+      <div v-if="showFixedBtn && !isFixed" class="control-button fixation-button" @click="onFixWindow">
+        <FixedIcon class="program-btn" id="fixation-button-img"/>
       </div>
-      <div v-if="fixed && isFixed" class="control-button unfixation-button" @click="onUnfixWindow">
-        <UnFixedIcon class="program-btn" id="unfixation-button-img" />
+      <div v-if="showFixedBtn && isFixed" class="control-button unfixation-button" @click="onUnfixWindow">
+        <UnFixedIcon class="program-btn" id="unfixation-button-img"/>
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
-        <MinimizeIcon class="program-btn" id="minimize-button-img" />
+        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
       </div>
-      <div v-if="showClostBtn" class="control-button close-button" @click="onClose">
-        <CloseIcon class="program-btn" id="close-button-img" />
+      <div v-if="showCloseBtn" class="control-button close-button" @click="onClose">
+        <CloseIcon class="program-btn" id="close-button-img"/>
       </div>
       <div v-if="showHideBtn" class="control-button close-button" @click="onHide">
-        <HideIcon class="program-btn" id="hide-button-img" />
+        <HideIcon class="program-btn" id="hide-button-img"/>
       </div>
     </div>
   </div>
@@ -32,18 +32,17 @@ import HideIcon from '../assets/icons/HideIcon.vue'
 import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
-import { invoke } from '@tauri-apps/api/core'
-import { getCurrentWindow } from '@tauri-apps/api/window'
-import { onMounted, ref } from 'vue'
-import { isDev } from "../data/SystemParams.ts"
-import { listFixedStore } from '../store/fixed'
+import {invoke} from '@tauri-apps/api/core'
+import {getCurrentWindow} from '@tauri-apps/api/window'
+import {onMounted, ref} from 'vue'
+import {isDev} from "../data/SystemParams.ts"
+import {listFixedStore} from '../store/fixed'
 
 const props = withDefaults(defineProps<{
   title: string;
-  showClostBtn?: boolean;
+  showCloseBtn?: boolean;
   showHideBtn?: boolean;
   showFixedBtn?: boolean;
-  fixed?: string;
   devTool?: string;
   showMinimizeBtn?: boolean;
 }>(), {
@@ -54,23 +53,21 @@ const isFixed = ref(false);
 
 const isShow = isDev();
 
-const listFixedListen = listFixedStore();
+let listFixedListen = listFixedStore();
 
 // 固定窗口
 function onFixWindow() {
-  isFixed.value = true;
-  const listener = getFixedListener();
-  if (listener) {
-    listener.fixed();
+  if (props.showFixedBtn) {
+    isFixed.value = true;
+    listFixedListen.fixed();
   }
 }
 
 // 取消固定窗口
 function onUnfixWindow() {
-  isFixed.value = false;
-  const listener = getFixedListener();
-  if (listener) {
-    listener.unfiexed();
+  if (props.showFixedBtn) {
+    isFixed.value = false;
+    listFixedListen.unfixed();
   }
 }
 
@@ -81,7 +78,7 @@ function onMinimizeWindow() {
 }
 
 function onClose() {
-  if (props.showClostBtn) {
+  if (props.showCloseBtn) {
     getCurrentWindow().close();
   }
 }
@@ -94,23 +91,14 @@ function onHide() {
 
 async function openDevTool() {
   if (props.devTool) {
-    await invoke('open_dev_tool', { windowName: props.devTool });
-  }
-}
-
-function getFixedListener(): any {
-  switch (props.fixed) {
-    case 'listFixedListen':
-      return listFixedListen;
-    default:
-      return null;
+    await invoke('open_dev_tool', {windowName: props.devTool});
   }
 }
 
 onMounted(() => {
-  if (props.fixed) {
-    const fixedListener = getFixedListener();
-    isFixed.value = fixedListener.stateData();
+  if (props.showFixedBtn) {
+    listFixedListen = listFixedStore();
+    isFixed.value = listFixedListen.stateData();
   }
 });
 </script>

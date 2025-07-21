@@ -947,7 +947,7 @@ onUnmounted(async () => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :fixed="`listFixedListen`"
+  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true"
             :dev-tool="`main`"/>
   <NavBar :menuItems="MenuItems"/>
 

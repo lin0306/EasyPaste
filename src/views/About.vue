@@ -22,7 +22,7 @@ onMounted(async () => {
 
 </script>
 <template>
-  <TitleBar :title="currentLanguage.pages.about.title" :showFixedBtn="true" :showClostBtn="true"
+  <TitleBar :title="currentLanguage.pages.about.title" :showFixedBtn="true" :showCloseBtn="true"
             :dev-tool="`about`"/>
 
   <div class="about-container">

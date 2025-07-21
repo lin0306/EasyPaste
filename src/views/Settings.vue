@@ -278,7 +278,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="settings-container">
-    <titleBar :title="currentLanguage.pages.settings.title" :showClostBtn="true" :dev-tool="`settings`" />
+    <titleBar :title="currentLanguage.pages.settings.title" :showCloseBtn="true" :dev-tool="`settings`" />
 
     <div class="settings-content">
       <!-- 左侧菜单 -->
