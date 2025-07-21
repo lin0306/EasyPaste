@@ -33,6 +33,7 @@ import {convertRegisterKey} from '../utils/ShortcutKeys';
 import {filePathConvertFileName} from '../utils/strUtil';
 import {isCode} from '../utils/TextType';
 import {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
+import {disable, enable} from "@tauri-apps/plugin-autostart";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -826,6 +827,15 @@ async function initUpdateDataHistoryRestrictListener() {
 onMounted(async () => {
   try {
     const settings = await getSettings();
+
+    if (settings.powerOnSelfStart) {
+      // 启用自启动
+      await enable();
+    } else {
+      // 禁用自启动
+      await disable();
+    }
+
     // 加载剪贴板项目列表
     await loadClipboardItems(true);
 
