@@ -75,7 +75,6 @@ class ClipboardDBService {
      * 保存剪贴板项目到数据库
      * @param content 内容
      * @param type 类型
-     * @param filePath 文件路径
      */
     async saveClipboardItem(content: string, type: string) {
         try {
@@ -142,7 +141,7 @@ class ClipboardDBService {
         const itemsParams = [];
 
         // 根据标签ID构建查询条件
-        if (tagId && tagId !== null) {
+        if (tagId) {
             // 通过关联表连接标签和剪贴板条目
             const joinClause = ' INNER JOIN item_tags it ON ci.id = it.item_id'
                 + ' INNER JOIN tags t ON it.tag_id = t.id'
@@ -154,8 +153,8 @@ class ClipboardDBService {
         }
 
         // 根据内容关键词构建查询条件
-        if (content && content !== null && content !== '') {
-            const whereClause = (tagId && tagId !== null) ? ' AND ci.content LIKE ?' : ' WHERE ci.content LIKE ?';
+        if (content && content !== '') {
+            const whereClause = tagId ? ' AND ci.content LIKE ?' : ' WHERE ci.content LIKE ?';
             countSql += whereClause;
             itemsSql += whereClause;
             countParams.push(`%${content}%`);
@@ -277,7 +276,7 @@ class ClipboardDBService {
      * @returns 条目信息
      */
     async getItem(id: number): Promise<ClipboardItem[] | undefined> {
-        return await this.db?.select('SELECT * FROM clipboard_items WHERE id = ?', [id]);
+        return this.db?.select('SELECT * FROM clipboard_items WHERE id = ?', [id]);
     }
 
     // 标签相关的方法
@@ -313,25 +312,7 @@ class ClipboardDBService {
      * @returns {Array} 标签数组，按创建时间升序排列
      */
     async getAllTags(): Promise<TagItem[] | undefined> {
-        return await this.db?.select('SELECT * FROM tags ORDER BY created_at ASC');
-    }
-
-    /**
-     * 剪贴板条目绑定标签
-     * @param {number} itemId 剪贴板条目ID
-     * @param {number} tagId 标签ID
-     */
-    async addItemTag(itemId: number, tagId: number) {
-        await this.db?.execute('INSERT INTO item_tags (item_id, tag_id) VALUES (?, ?)', [itemId, tagId]);
-    }
-
-    /**
-     * 获取剪贴板条目的所有标签
-     * @param {number} itemId 剪贴板条目ID
-     * @returns {Array} 标签数组
-     */
-    async getItemTags(itemId: number): Promise<TagItem[] | undefined> {
-        return await this.db?.select('SELECT t.* FROM tags t INNER JOIN item_tags it ON t.id = it.tag_id WHERE it.item_id = ?', [itemId]);
+        return this.db?.select('SELECT * FROM tags ORDER BY created_at ASC');
     }
 
     /**
@@ -359,7 +340,7 @@ class ClipboardDBService {
 
     /**
      * 删除指定天数之前的剪贴板条目
-     * @param dataRetentionDays 保留天数
+     * @param days 保留天数
      * @returns 删除条目数量
      */
     async clearClipboardItems(days: number): Promise<number> {

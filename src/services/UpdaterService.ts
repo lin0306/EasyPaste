@@ -86,7 +86,6 @@ export default class UpdaterService {
 
   /**
    * 显示更新窗口
-   * @param update 更新内容
    */
   showUpdateWindow() {
     // 打开更新窗口
