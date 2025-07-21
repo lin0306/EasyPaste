@@ -186,15 +186,7 @@ const MenuItems = computed((): NavBarItem[] => [
         label: currentLanguage.value.pages.list.menu.about,
         onClick: () => {
           // 打开关于窗口
-          Windows.createWin({
-            label: 'about',
-            url: '/about',
-            width: 350,
-            height: 270,
-            resizable: false,
-            alwaysOnTop: true,
-            visible: true
-          })
+          openAboutWindow();
         }
       },
     ],
