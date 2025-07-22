@@ -1,8 +1,9 @@
 <template>
   <nav class="custom-navbar">
     <ul class="navbar-menu">
-      <li v-for="item in menus" :key="item.key" class="navbar-item" :class="{ 'has-submenu': item.children }">
-        <a @click="handleMenuClick(item)" class="navbar-link">
+      <li v-for="item in menus" :key="item.key" class="navbar-item" :class="{ 'has-submenu': item.children }"
+          @click="handleMenuClick(item)">
+        <a class="navbar-link">
           {{ item.label }}
         </a>
         <div v-if="item.children && openSubmenu === item.key" class="submenu">
@@ -11,7 +12,7 @@
               <li v-if="subItem.type === 'divider'" class="divider"></li>
               <li v-if="subItem.type === 'theme'" class="submenu-item">
                 <a @click="handleSubMenuClick(subItem)" class="submenu-link">
-                  <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.primary" class="checked-icon" />
+                  <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.primary" class="checked-icon"/>
                   <div v-else class="unchecked-icon"></div>
                   {{ subItem.label }}
                 </a>
@@ -31,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import {computed, onMounted, onUnmounted, ref} from 'vue';
 import HookIcon from '../assets/icons/HookIcon.vue';
-import { useTheme } from '../configs/ThemeConfig.ts';
-import { NavBarItem } from "../types/NavBarItem.ts";
+import {useTheme} from '../configs/ThemeConfig.ts';
+import {NavBarItem} from "../types/NavBarItem.ts";
 
 const props = defineProps<{
   menuItems: NavBarItem[];
@@ -57,7 +58,7 @@ const menus = computed(() => {
 const openSubmenu: any = ref<string | null>(null);
 
 // 获取主题颜色
-const { themeColors } = useTheme();
+const {themeColors} = useTheme();
 
 // 处理主菜单点击
 function handleMenuClick(item: NavBarItem) {
