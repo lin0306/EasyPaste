@@ -742,14 +742,20 @@ async function initCheckUpdateListener() {
  */
 async function registerShortcutKeysOpenWindow() {
   const keys = await getShortcutKeys();
-  if (keys.wakeUpRoutine && keys.wakeUpRoutine.key && keys.wakeUpRoutine.key.length > 0) {
-    const shortcutKeys = convertRegisterKey(keys.wakeUpRoutine.key);
-    const registered = await isRegistered(shortcutKeys);
-    if (registered) {
-      info('快捷键已注册');
-    } else {
-      await registerOpenWindowKey(shortcutKeys);
+  try {
+    if (keys.wakeUpRoutine && keys.wakeUpRoutine.key && keys.wakeUpRoutine.key.length > 0) {
+      const shortcutKeys = convertRegisterKey(keys.wakeUpRoutine.key);
+      const registered = await isRegistered(shortcutKeys);
+      if (registered) {
+        info('打开程序快捷键已注册');
+      } else {
+        await registerOpenWindowKey(shortcutKeys);
+      }
     }
+  } catch (ex) {
+    error("打开程序快捷键注册失败，" + ex);
+    console.error(ex);
+    message.error("打开程序快捷键注册失败");
   }
 }
 
