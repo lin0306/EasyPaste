@@ -1,14 +1,19 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 
+mod listener;
 mod log;
 mod tray;
-mod listener;
 mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
+            let win = app.get_window("main").expect("主窗口不存在");
+            win.show().expect("窗口显示失败");
+            win.set_focus().expect("窗口聚焦失败");
+        }))
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_shell::init())

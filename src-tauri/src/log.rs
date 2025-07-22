@@ -1,4 +1,4 @@
-use tauri::{Runtime, plugin::TauriPlugin};
+use tauri::{plugin::TauriPlugin, Runtime};
 use tauri_plugin_log::{RotationStrategy, Target, TargetKind, TimezoneStrategy};
 
 // 初始化插件
