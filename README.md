@@ -219,7 +219,6 @@ EasyPaste/
 
 - 项目主页：[GitHub Repository](https://github.com/lin0306/EasyPaste)
 - 问题反馈：[Issues](https://github.com/lin0306/EasyPaste/issues)
-- 作者：linweijia
 
 ---
 
