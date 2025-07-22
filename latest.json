@@ -1,6 +1,6 @@
 {
   "version": "0.0.6-beta",
-  "notes": "Built with Tauri 2 | See assets to download",
+  "notes": "# v0.0.6-beta (2025-07-21)\n## 更新功能\n### \uD83D\uDC1B 修复Bug\n- 开机自启默认不生效\n### ☑\uFE0F 更新页面\n- 更新页面可最小化",
   "pub_date": "2025-07-21T10:19:11.911Z",
   "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm9qWVRFbjRIWVJuZGRSOW1nZ2RMM1QwUFhMVkltUm4wb3lGa2xsWXVycDE5blFmV3FQMmtvQVBVdmNQS3hrRExIK1V3RFJzNVlFblNWMEJ5eGlSb1FJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMDkyNzMzCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKWFFDYXBaTkVMam5tRThUU0hSN1NyQnNDSEFXb3ZSYUwrVVNiWGFlL2Y1Z1A1TThuNHpqNVF4a0hjN0VQYTQxSFVlaTB3RzVKN2l5UkRERkUvc1NtRFE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.6-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnVnSGptbDBYRGhhYjI3eGRpRWNabE9kUVhoRUVHeTFiZmZ2K0Fob0x1WTd4Z21BMDMzMFVDbHltQUU5MGRQZldoTTQ4MURYY094V2htT3JNVkVrU3dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzMDkzMTIwCWZpbGU6RWFzeVBhc3RlXzAuMC41X3g2NC1zZXR1cC5leGUKUTRvU2ZBd0ZkMnpnSWFZbDRoYWdNOFRaS205ZlVlekdYMmFOZ3pjUWdzbHdCcVRhUFhhMTZiRGQ5b282YkNtT0NYNHZ4ZDFqeks4WjllcHhCVHJXQkE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.6-beta/EasyPaste_0.0.5_x64-setup.exe"}}
 }
