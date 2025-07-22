@@ -31,6 +31,10 @@ jobs:
         with:
           node-version: 20
 
+      # 输出更新内容
+      - name: Check Update Content
+        run: echo {{ github.event.inputs.update_notes }}
+
   # 项目打包
   build:
     needs: setup
@@ -132,6 +136,7 @@ jobs:
           files: |
             artifacts/**/*
 
+  # 更新 latest.json 文件内容
   update_latest_json:
     needs: [setup, build, release]
     runs-on: ubuntu-latest
