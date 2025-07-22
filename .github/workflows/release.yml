@@ -6,6 +6,12 @@ on:
     tags:
       - 'v*'  # 当推送以v开头的标签时触发
   workflow_dispatch:  # 允许手动触发
+    inputs:
+      update_notes:
+        type: string
+        description: '更新内容'
+        required: true
+        default: '程序更新'
 
 jobs:
   # 设置运行环境
@@ -120,7 +126,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: "App ${{ github.ref_name }}"
-          body: "Built with Tauri 2 | See assets to download"
+          body: ${{ github.event.inputs.update_notes }}
           draft: false # 是否生成release草稿
           prerelease: false # 是否生成预发布包
           files: |
