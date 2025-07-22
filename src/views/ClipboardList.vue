@@ -176,7 +176,7 @@ const MenuItems = computed((): NavBarItem[] => [
         onClick: async () => {
           // 调用检查更新接口
           const update = UpdaterService.getInstance();
-          await update.checkForUpdates();
+          await update.checkForUpdates(true);
         },
       },
       {
@@ -733,7 +733,7 @@ let checkUpdateUnListener: any = null;
 async function initCheckUpdateListener() {
   return await listen('check-update', async (_event: any) => {
     const update = UpdaterService.getInstance();
-    await update.checkForUpdates();
+    await update.checkForUpdates(true);
   });
 }
 
