@@ -230,8 +230,8 @@ const saveConfig = async () => {
       } else {
         message.error(currentLanguage.value.pages.settings.saveFailedMsg);
       }
-    } catch (error: any) {
-      error('保存快捷键设置出错:' + error.message);
+    } catch (error) {
+      error('保存快捷键设置出错:' + error);
       message.error(currentLanguage.value.pages.settings.shortcutSaveErrorMsg + error.message);
     }
   }

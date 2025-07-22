@@ -23,8 +23,8 @@ export default class DataClearService {
             this.dataRetentionDays = settings.dataRetentionDays;
             this.maxHistoryItems = settings.maxHistoryItems;
             info('[数据库进程] 数据库初始化完成');
-        } catch (er: any) {
-            error('[数据库进程] 数据库加载失败:' + er.message);
+        } catch (er) {
+            error('[数据库进程] 数据库加载失败:' + er);
             throw er;
         }
     }
@@ -103,8 +103,8 @@ export default class DataClearService {
             if (c1 + c2 > 0) {
                 info(`清理历史数据完成，成功删除${c1}条超过保留时长的数据，删除${c2}条超过保留条数限制的数据，保留时长：${this.dataRetentionDays}天，保留条数：${this.maxHistoryItems}条`);
             }
-        } catch (er: any) {
-            error('数据清理异常:' + er.message);
+        } catch (er) {
+            error('数据清理异常:' + er);
         }
     }
 }

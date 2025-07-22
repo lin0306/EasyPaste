@@ -283,8 +283,8 @@ async function loadClipboardItems(reset: boolean = true) {
         checkFileExist(item.file_path);
       }
     }
-  } catch (err: any) {
-    error('加载剪贴板项目失败:' + err.message);
+  } catch (err) {
+    error('加载剪贴板项目失败:' + err);
   } finally {
     scrollState.isLoading = false;
   }
@@ -518,8 +518,8 @@ async function loadImageFromPath(filePath: string | null) {
     if (base64Image) {
       imageCache.set(filePath, base64Image);
     }
-  } catch (err: any) {
-    error('加载图片失败:' + err.message);
+  } catch (err) {
+    error('加载图片失败:' + err);
     throw err;
   }
 }
@@ -894,9 +894,9 @@ onMounted(async () => {
       const clearTimer = await DataClearService.getInstance();
       clearTimer.startDataClear();
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
-    error('初始化失败:' + err.message);
+    error('初始化失败:' + err);
     message.error("程序初始化失败，请重试");
   }
 });

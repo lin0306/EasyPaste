@@ -42,8 +42,8 @@ export function useTheme() {
         themeColors.value = lightTheme.colors;
         applyThemeToDOM(lightTheme.colors);
       }
-    } catch (err: any) {
-      error('加载主题失败:' + err.message);
+    } catch (err) {
+      error('加载主题失败:' + err);
       // 使用默认主题
       currentThemeId.value = lightTheme.id;
       themeColors.value = lightTheme.colors;
@@ -85,8 +85,8 @@ export function useTheme() {
       await emit('theme-changed', themeId);
 
       info('主题已切换为:' + themeId);
-    } catch (er: any) {
-      error('切换主题失败:' + er.message);
+    } catch (er) {
+      error('切换主题失败:' + er);
     }
   };
 

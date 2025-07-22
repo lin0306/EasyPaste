@@ -30,8 +30,8 @@ export async function initClipboardListener() {
                     await db.saveClipboardItem(fileName, 'file');
                 }
             }
-        } catch (er: any) {
-            error('处理剪贴板事件失败:' + er.message);
+        } catch (er) {
+            error('处理剪贴板事件失败:' + er);
         } finally {
             clipboardListen.success();
         }

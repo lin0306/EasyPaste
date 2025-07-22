@@ -168,8 +168,8 @@ onMounted(async () => {
     await setupLanguageListener();
 
     info('应用初始化完成');
-  } catch (er: any) {
-    error('应用初始化失败:' + er.message);
+  } catch (er) {
+    error('应用初始化失败:' + er);
   }
 });
 </script>

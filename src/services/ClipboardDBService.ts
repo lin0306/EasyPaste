@@ -16,8 +16,8 @@ class ClipboardDBService {
             this.db = await Database.load('sqlite:clipboard.db');
             await this.initDatabase();
             info('[数据库进程] 数据库初始化完成');
-        } catch (er: any) {
-            error('[数据库进程] 数据库加载失败:' + er.message);
+        } catch (er) {
+            error('[数据库进程] 数据库加载失败:' + er);
             throw er;
         }
     }
@@ -65,8 +65,8 @@ class ClipboardDBService {
                     PRIMARY KEY (item_id, tag_id)
                 )
             `);
-        } catch (er: any) {
-            error('[数据库进程] 数据库表初始化失败:' + er.message);
+        } catch (er) {
+            error('[数据库进程] 数据库表初始化失败:' + er);
             throw er;
         }
     }
@@ -101,8 +101,8 @@ class ClipboardDBService {
             const clearTimer = await DataClearService.getInstance();
             await clearTimer.dataClear();
             info("[数据库进程] 剪贴板内容添加成功");
-        } catch (err: any) {
-            error("[数据库进程] 剪贴板内容添加失败", err.message);
+        } catch (err) {
+            error("[数据库进程] 剪贴板内容添加失败", err);
             throw err;
         }
     }
@@ -184,8 +184,8 @@ class ClipboardDBService {
             try {
                 item.tags = item.tags_json ? JSON.parse(item.tags_json) : [];
                 delete item.tags_json; // 删除原始JSON字符串字段
-            } catch (err: any) {
-                error('[数据库进程] 解析标签JSON失败:' + err.message);
+            } catch (err) {
+                error('[数据库进程] 解析标签JSON失败:' + err);
                 item.tags = [];
             }
         }
@@ -205,8 +205,8 @@ class ClipboardDBService {
                 [isTopped ? 1 : 0, isTopped ? now : null, id]
             );
             return true;
-        } catch (err: any) {
-            error('[数据库进程] 更新剪贴板项目置顶状态失败:' + err.message);
+        } catch (err) {
+            error('[数据库进程] 更新剪贴板项目置顶状态失败:' + err);
             return false;
         }
     }
@@ -222,8 +222,8 @@ class ClipboardDBService {
                 await this.db?.execute('DELETE FROM clipboard_items WHERE id = ?', [id]);
             }
             return true;
-        } catch (err: any) {
-            error('[数据库进程] 删除剪贴板项目失败:' + err.message);
+        } catch (err) {
+            error('[数据库进程] 删除剪贴板项目失败:' + err);
             return false;
         }
     }
@@ -242,9 +242,9 @@ class ClipboardDBService {
                 await this.db?.execute('DELETE FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
             }
             return true;
-        } catch (err: any) {
+        } catch (err) {
             console.log(err)
-            error('[数据库进程] 删除剪贴板项目失败:' + err.message);
+            error('[数据库进程] 删除剪贴板项目失败:' + err);
             return false;
         }
     }
@@ -263,8 +263,8 @@ class ClipboardDBService {
 
                 info('[数据库进程] 剪贴板内容清理完成');
                 resolve();
-            } catch (err: any) {
-                error('[数据库进程] 清空剪贴板时发生错误:' + err.message);
+            } catch (err) {
+                error('[数据库进程] 清空剪贴板时发生错误:' + err);
                 reject(err);
             }
         });

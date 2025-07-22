@@ -53,8 +53,8 @@ export function useLanguage() {
                 // 如果找不到主题，使用默认主题
                 currentLanguage.value = chinese;
             }
-        } catch (err: any) {
-            error('加载主题失败:' + err.message);
+        } catch (err) {
+            error('加载主题失败:' + err);
             // 使用默认语言
             currentLanguageId.value = chinese.id;
             currentLanguage.value = chinese;
@@ -82,8 +82,8 @@ export function useLanguage() {
             await emit('language-changed', languageId);
 
             info('语言已切换为:' + languageId);
-        } catch (err: any) {
-            error('切换主题失败:' + err.message);
+        } catch (err) {
+            error('切换主题失败:' + err);
         }
     };
 

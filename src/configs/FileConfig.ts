@@ -62,8 +62,8 @@ export async function saveUserSettings(userSettings: string): Promise<boolean> {
             baseDir: BaseDirectory.AppData,
         });
         return true;
-    } catch (err: any) {
-        error("用户配置保存失败" + err.message);
+    } catch (err) {
+        error("用户配置保存失败" + err);
         return false;
     }
 }
@@ -79,8 +79,8 @@ export async function updateUserSettings(userSettings: Settings): Promise<boolea
             baseDir: BaseDirectory.AppData,
         });
         return true;
-    } catch (err: any) {
-        error("用户配置保存失败" + err.message);
+    } catch (err) {
+        error("用户配置保存失败" + err);
         return false;
     }
 }
@@ -107,8 +107,8 @@ export async function saveLanguageCache(tray: any): Promise<boolean> {
             await file.close();
         }
         return true;
-    } catch (err: any) {
-        error("语言配置保存失败" + err.message);
+    } catch (err) {
+        error("语言配置保存失败" + err);
         return false;
     }
 }
@@ -123,8 +123,8 @@ export async function saveUserShortcutKeys(userShortcutKeys: any): Promise<boole
             baseDir: BaseDirectory.AppData,
         });
         return true;
-    } catch (err: any) {
-        error("用户快捷键保存失败" + err.message);
+    } catch (err) {
+        error("用户快捷键保存失败" + err);
         return false;
     }
 }

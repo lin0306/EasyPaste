@@ -33,8 +33,8 @@ export async function readImageAsBase64(filePath: string): Promise<string> {
 
         // 返回完整的base64图片数据
         return `data:${mimeType};base64,${base64Data}`;
-    } catch (err: any) {
-        error('读取图片文件失败:' + err.message);
+    } catch (err) {
+        error('读取图片文件失败:' + err);
         throw err;
     }
 }
