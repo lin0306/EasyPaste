@@ -7,6 +7,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useLanguage } from '../configs/LanguageConfig';
 import UpdaterService from '../services/UpdaterService';
 import {getCurrentWindow} from "@tauri-apps/api/window";
+import {covertMarkdown} from "../utils/strUtil.ts";
 
 const { currentLanguage } = useLanguage();
 let updater: any = null;
@@ -105,8 +106,8 @@ onMounted(async () => {
       <div class="release-date" v-if="updaterVer.pubDate">
         {{ new Date(updaterVer.pubDate).toLocaleDateString() }}
       </div>
-      <div class="release-notes github-markdown" v-if="updaterVer.notes" v-html="updaterVer.notes">
-      </div>
+      <div class="divider"></div>
+      <vue-markdown class="release-notes github-markdown" v-if="updaterVer.notes" v-html="covertMarkdown(updaterVer.notes)" />
       <div class="release-notes" v-else>
         {{ currentLanguage.pages.update.updateNotes }}
       </div>
@@ -201,6 +202,11 @@ onMounted(async () => {
   font-size: 12px;
   color: var(--theme-secondaryText);
   margin-bottom: 15px;
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px solid var(--theme-border);
 }
 
 .release-notes {

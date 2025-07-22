@@ -1,4 +1,6 @@
 import {isMac} from "../data/SystemParams";
+import markdownIt from 'markdown-it'
+const md = markdownIt()
 
 /**
  * Uint8Array转字符串
@@ -22,4 +24,12 @@ export function filePathConvertFileName(filePath: string): string {
         return filePath.split("/").pop() || filePath;
     }
     return strArr.pop() || filePath;
+}
+
+/**
+ * 将文本转换成markdown数据
+ * @param content 文本数据
+ */
+export function covertMarkdown(content: string) {
+    return md.render(content);
 }
