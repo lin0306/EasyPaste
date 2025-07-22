@@ -11,7 +11,7 @@ on:
         type: string
         description: '更新内容'
         required: true
-        default: '# v0.0.6-beta (2025-07-21)
+        default: '# v0.0.6-beta (2025-07-22)
 ## 更新功能
 ### 🐛 修复Bug
 - 开机自启默认不生效
