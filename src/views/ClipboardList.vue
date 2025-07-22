@@ -241,7 +241,10 @@ const selectedTagState = reactive({
 // 选中的内容id
 const selectedItemId = ref<number | undefined>();
 
-// 加载剪贴板项目列表
+/**
+ * 加载剪贴板项目列表
+ * @param reset 是否重新获取数据
+ */
 async function loadClipboardItems(reset: boolean = true) {
   if (reset) {
     // 重置列表和分页状态
@@ -651,6 +654,23 @@ async function registerOpenWindowKey(shortcutKeys: string) {
   });
 }
 
+/**
+ * 初始化程序自启设置
+ * @param settings 用户设置
+ */
+async function initRegisterAutoStart(settings: Settings) {
+  const isAutoStart = await isEnabled();
+  if (settings.powerOnSelfStart !== isAutoStart) {
+    if (settings.powerOnSelfStart) {
+      // 启用自启动
+      await enable();
+    } else {
+      // 禁用自启动
+      await disable();
+    }
+  }
+}
+
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
@@ -833,16 +853,8 @@ async function initUpdateDataHistoryRestrictListener() {
 onMounted(async () => {
   try {
     const settings = await getSettings();
-    const isAutoStart = await isEnabled();
-    if (settings.powerOnSelfStart !== isAutoStart) {
-      if (settings.powerOnSelfStart) {
-        // 启用自启动
-        await enable();
-      } else {
-        // 禁用自启动
-        await disable();
-      }
-    }
+
+    initRegisterAutoStart(settings);
 
     // 加载剪贴板项目列表
     await loadClipboardItems(true);
