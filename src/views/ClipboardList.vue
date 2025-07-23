@@ -654,23 +654,6 @@ async function registerOpenWindowKey(shortcutKeys: string) {
   });
 }
 
-/**
- * 初始化程序自启设置
- * @param settings 用户设置
- */
-async function initRegisterAutoStart(settings: Settings) {
-  const isAutoStart = await isEnabled();
-  if (settings.powerOnSelfStart !== isAutoStart) {
-    if (settings.powerOnSelfStart) {
-      // 启用自启动
-      await enable();
-    } else {
-      // 禁用自启动
-      await disable();
-    }
-  }
-}
-
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
@@ -853,8 +836,6 @@ async function initUpdateDataHistoryRestrictListener() {
 onMounted(async () => {
   try {
     const settings = await getSettings();
-
-    initRegisterAutoStart(settings);
 
     // 加载剪贴板项目列表
     await loadClipboardItems(true);
