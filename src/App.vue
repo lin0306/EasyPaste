@@ -41,9 +41,10 @@ const theme = computed(() => {
       borderFocus: themeColors.value.primary,
       borderDisabled: themeColors.value.border,
       textColor: themeColors.value.text,
-      textColorDisabled: `${themeColors.value.text}80`,
-      placeholderColor: `${themeColors.value.text}80`,
-      placeholderColorDisabled: `${themeColors.value.text}50`
+      textColorDisabled: themeColors.value.textHint,
+      placeholderColor: themeColors.value.textHint,
+      placeholderColorDisabled: themeColors.value.textHint,
+      borderRadius: '5px'
     },
     Tag: {
       colorBordered: themeColors.value.background, // 背景色
