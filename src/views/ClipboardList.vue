@@ -450,6 +450,17 @@ function toggleSearchBox() {
   }
 }
 
+/**
+ * 文本内容拖拽
+ */
+function contentDragStart(item: ClipboardItem, event: DragEvent) {
+  // 设置拖拽数据
+  if (event.dataTransfer) {
+    event.dataTransfer.setData('text/plain', item.content);
+    event.dataTransfer.effectAllowed = 'link';
+  }
+}
+
 // 处理拖拽开始事件
 function handleDragStart(itemId: number, event: DragEvent) {
   dragState.isDragging = true;
@@ -978,15 +989,26 @@ onUnmounted(async () => {
   </div>
 
   <!-- 标签列表 -->
-  <div v-if="tagSettingState.isShow" class="tag-list" :class="{ 'has-selected-tag': dragState.isDragging }">
-    <div v-for="tag in TagItems" :key="tag.id" class="tag-item" :class="{
-      'tag-dragging-over': dragState.draggedOverTagId === tag.id,
-      'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItemId, tag.id),
-      'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItemId, tag.id),
-      'tag-selected': selectedTagState.selectedTagId === tag.id
-    }" :style="{ backgroundColor: tag.color }" @dragenter="handleDragEnterTag(tag.id)"
-         @dragleave="handleDragLeaveTag($event)" @dragover.prevent @drop.prevent="handleDropOnTag(tag.id)"
-         @click="handleTagClick(tag.id)">
+  <div
+      v-if="tagSettingState.isShow"
+      class="tag-list"
+      :class="{ 'has-selected-tag': dragState.isDragging }"
+      @dragover.prevent
+  >
+    <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
+         :class="{
+          'tag-dragging-over': dragState.draggedOverTagId === tag.id,
+          'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItemId, tag.id),
+          'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItemId, tag.id),
+          'tag-selected': selectedTagState.selectedTagId === tag.id
+        }"
+         :style="{ backgroundColor: tag.color }"
+         @dragover.prevent
+         @dragenter="handleDragEnterTag(tag.id)"
+         @dragleave="handleDragLeaveTag($event)"
+         @drop="handleDropOnTag(tag.id)"
+         @click="handleTagClick(tag.id)"
+    >
       <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
     </div>
   </div>
@@ -1020,8 +1042,10 @@ onUnmounted(async () => {
                 </div>
                 <!-- 设置标签按钮 -->
                 <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'"
-                     class="card-header-right-button drag-icon" draggable="true"
-                     @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
+                     class="card-header-right-button drag-icon"
+                     draggable="true"
+                     @dragstart="handleDragStart(item.id, $event)"
+                     @dragend="handleDragEnd">
                   <AddTagIcon class="dropdown-icon"/>
                 </div>
               </div>
@@ -1031,11 +1055,17 @@ onUnmounted(async () => {
           <div class="card-content">
             <div class="content-wrapper">
               <!-- 普通文本 -->
-              <div v-if="item.type === 'text' && !isCode(item.content)" class="text-line item-line">
+              <div v-if="item.type === 'text' && !isCode(item.content)"
+                   class="text-line item-line"
+                   draggable="true"
+                   @dragstart="contentDragStart(item, $event)">
                 {{ item.content }}
               </div>
               <!-- 代码 -->
-              <div v-else-if="item.type === 'text' && isCode(item.content)" class="code-line item-line">
+              <div v-else-if="item.type === 'text' && isCode(item.content)"
+                   class="code-line item-line"
+                   draggable="true"
+                   @dragstart="contentDragStart(item, $event)">
                 <n-code :code="item.content" language="html" show-line-numbers/>
               </div>
               <!-- 文件 -->
@@ -1184,7 +1214,7 @@ onUnmounted(async () => {
 }
 
 .drag-icon {
-  cursor: grab !important;
+  cursor: move !important;
 }
 
 .card-content {
