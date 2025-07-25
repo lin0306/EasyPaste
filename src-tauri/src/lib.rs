@@ -18,11 +18,18 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
+            // 获取主窗口
+            let window = app.get_window("main").expect("无法获取窗口");
+            // 强制隐藏窗口
+            window.hide().expect("无法隐藏窗口");
+            // 自启动配置
             let _ = app.handle().plugin(tauri_plugin_autostart::init(
                 tauri_plugin_autostart::MacosLauncher::LaunchAgent,
                 Some(vec!["--flag1", "--flag2"]), /* arbitrary number of args to pass to your app */
             ));
+            // 开始监听
             listener::start_listening(app.handle().clone());
+            // 创建系统托盘
             tray::create_tray(app.handle().clone());
             Ok(())
         })
