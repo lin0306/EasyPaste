@@ -1,5 +1,5 @@
 <template>
-  <div id="title-bar" :class="{ 'fixed': isFixed }">
+  <div id="title-bar" :data-tauri-drag-region="!isFixed">
     <div class="window-title">{{ title }}</div>
     <div class="window-controls">
       <div v-if="isShow && devTool" class="control-button" @click="openDevTool">
@@ -107,7 +107,6 @@ onMounted(() => {
 #title-bar {
   height: 25px;
   width: 100%;
-  -webkit-app-region: drag;
   user-select: none;
   touch-action: none;
   -webkit-user-select: none;
@@ -118,20 +117,18 @@ onMounted(() => {
   padding: 0 5px;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
-  position: relative;
   z-index: 1000;
   position: fixed;
   top: 0;
   background-color: var(--theme-titleBarBackground);
   color: var(--theme-text);
-}
-
-#title-bar.fixed {
-  -webkit-app-region: no-drag;
+  cursor: move;
 }
 
 .window-title {
   font-size: 12px;
+  -webkit-app-region: no-drag;
+  cursor: auto !important;
 }
 
 .window-controls {
