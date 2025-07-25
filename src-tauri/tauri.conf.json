@@ -10,6 +10,27 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "windows": [
+      {
+        "title": "main",
+        "width": 350,
+        "height": 550,
+        "minWidth": 350,
+        "minHeight": 550,
+        "maxWidth": 800,
+        "maxHeight":1000,
+        "url": "/list",
+        "alwaysOnTop": true,
+        "decorations": false,
+        "visible": true,
+        "skipTaskbar": true,
+        "dragDropEnabled": false,
+        "focus": true,
+        "fullscreen": false,
+        "incognito": true,
+        "shadow": true
+      }
+    ],
     "security": {
       "csp": null
     }
