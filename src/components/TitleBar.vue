@@ -1,5 +1,5 @@
 <template>
-  <div id="title-bar" :data-tauri-drag-region="!isFixed">
+  <div id="title-bar" :class="{ 'fixed': isFixed }" :data-tauri-drag-region="!isFixed">
     <div class="window-title">{{ title }}</div>
     <div class="window-controls">
       <div v-if="isShow && devTool" class="control-button" @click="openDevTool">
@@ -123,6 +123,10 @@ onMounted(() => {
   background-color: var(--theme-titleBarBackground);
   color: var(--theme-text);
   cursor: move;
+}
+
+#title-bar.fixed {
+  cursor: auto !important;
 }
 
 .window-title {
