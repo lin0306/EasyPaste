@@ -8,20 +8,7 @@ mod tray;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
-            let win = app.get_window("main").expect("主窗口不存在");
-            win.show().expect("窗口显示失败");
-            win.set_focus().expect("窗口聚焦失败");
-        }))
-        .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
-            // 获取主窗口
-            let window = app.get_window("main").expect("无法获取窗口");
-            // 强制隐藏窗口
-            window.hide().expect("无法隐藏窗口");
             // 自启动配置
             let _ = app.handle().plugin(tauri_plugin_autostart::init(
                 tauri_plugin_autostart::MacosLauncher::LaunchAgent,
@@ -33,8 +20,16 @@ pub fn run() {
             tray::create_tray(app.handle().clone());
             Ok(())
         })
+        .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
+            let win = app.get_window("main").expect("主窗口不存在");
+            win.show().expect("窗口显示失败");
+            win.set_focus().expect("窗口聚焦失败");
+        }))
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())
-        .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(log::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_fs::init())
