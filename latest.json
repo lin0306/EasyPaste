@@ -1,6 +1,6 @@
 {
   "version": "0.0.7-beta",
-  "notes": "",
+  "notes": "# v0.0.7-beta (2025-07-29)\n## 更新内容\n### \uD83D\uDE80 优化\n- 增加文件下载代理节点\n- 增加同时只能运行一个程序逻辑\n- 窗口拖拽逻辑优化\n- 增加文本项可直接拖拽到程序外的任意位置\n- 禁止程序被捕获\n- 可使用菜单栏唤起搜索框\n\n### ✅ 修复Bug\n- 修复拖拽绑定标签功能无法使用问题\n- 修复静默启动功能不生效问题\n- 修复搜索框无法使用问题\n\n### ❌ 移除功能\n- 关于页面移除固钉功能\n- 标签管理页面移除固钉功能",
   "pub_date": "2025-07-29T10:33:20.786Z",
   "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm1MazNqS0pOKzRxcXVycTVyVVJvbGlFMFl2N3V3ZStBNlp1a0VzT1NDWkNmQk9JY3hSb2NveGNtS29yWlpGZXdOZzJiV08wdWpLWEZ1NHIyb0tGbkFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNzg0OTE2CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKTHc3ZWEyTHBJR3JVMGk0VHhrS3NNZy9MY1g2ckJ4UzFBd0FSQ0NJNHArc1c0UFFMU3pIZFFQNW5xWXk4VkZzb2drREd6UGhRaEhxZTU5UlYrSTR4Q1E9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.7-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm9qZ0pHWmJWWERtellOYWp1UWFqTkxOdmpMQmNyMVd4bkdTRU5uM1EzR3JpcDhud3V1czhSOXd6Z3IxbHVwYnRDK3JFbXIxNDVxVGUrVnRZRnRBQ0FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzNzg1MTYyCWZpbGU6RWFzeVBhc3RlXzAuMC42X3g2NC1zZXR1cC5leGUKUHJPNXNHUWs1NnNpdWFtSHRRS2VKeGQ1SG9JbHJPb2tyRFJGRHdIbEtxbWczWWVJUkM2bGJOV3pNYUlpOEpyMmJ1MVQrUmhMdGY0VVp6K28waGxZREE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.7-beta/EasyPaste_0.0.6_x64-setup.exe"}}
 }
