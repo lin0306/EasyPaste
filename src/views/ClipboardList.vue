@@ -402,6 +402,7 @@ async function onCopy(item: ClipboardItem) {
     }
     if (isSuccess) {
       message.success(currentLanguage.value.pages.list.copySuccessMsg);
+      toggleSearchBox();
       // 隐藏窗口
       await hideWindow();
     } else {
@@ -418,6 +419,7 @@ async function onCopyFile(itemId: number, filePath: string) {
       const isSuccess = await copyFileToClipboard([filePath]);
       if (isSuccess) {
         message.success(currentLanguage.value.pages.list.copySuccessMsg);
+        toggleSearchBox();
         // 隐藏窗口
         await hideWindow();
       } else {
