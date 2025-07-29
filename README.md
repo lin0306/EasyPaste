@@ -95,7 +95,6 @@ EasyPaste 是一个基于 Tauri + Vue3 + TypeScript 开发的跨平台剪贴板�
 - `tauri-plugin-sql`：SQL 数据库支持
 - `tauri-plugin-store`：数据存储
 - `tauri-plugin-updater`：应用更新
-- `tauri-plugin-window-state`：窗口状态管理
 
 ### Rust 依赖
 
