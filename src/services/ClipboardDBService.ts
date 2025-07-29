@@ -102,7 +102,7 @@ class ClipboardDBService {
             await clearTimer.dataClear();
             info("[数据库进程] 剪贴板内容添加成功");
         } catch (err) {
-            error("[数据库进程] 剪贴板内容添加失败", err);
+            error("[数据库进程] 剪贴板内容添加失败" + err);
             throw err;
         }
     }

@@ -7,7 +7,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { emit } from '@tauri-apps/api/event';
 import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { unregister } from '@tauri-apps/plugin-global-shortcut';
-import { info } from '@tauri-apps/plugin-log';
+import { info, error } from '@tauri-apps/plugin-log';
 import { exit, relaunch } from '@tauri-apps/plugin-process';
 import { computed, onMounted, reactive, ref } from 'vue';
 import HintIcon from '../assets/icons/HintIcon.vue';
@@ -230,9 +230,9 @@ const saveConfig = async () => {
       } else {
         message.error(currentLanguage.value.pages.settings.saveFailedMsg);
       }
-    } catch (error) {
-      error('保存快捷键设置出错:' + error);
-      message.error(currentLanguage.value.pages.settings.shortcutSaveErrorMsg + error.message);
+    } catch (er) {
+      error('保存快捷键设置出错:' + er);
+      message.error(currentLanguage.value.pages.settings.shortcutSaveErrorMsg + er);
     }
   }
 };
