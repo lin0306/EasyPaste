@@ -597,6 +597,10 @@ function handleTagClick(tagId: number) {
  */
 async function hideWindow() {
   if (!listFixedListen.stateData()) {
+    // 失焦隐藏窗口、搜索框显示时，需要隐藏搜索框
+    if (searchBoxState.visible) {
+      toggleSearchBox();
+    }
     // 窗口未固定，触发失焦，隐藏窗口
     await getCurrentWindow().hide();
   }
