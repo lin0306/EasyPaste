@@ -66,10 +66,6 @@ const MenuItems = computed((): NavBarItem[] => [
         onClick: async () => {
           message.loading('正在重新加载应用程序...');
           // 重新加载应用程序
-          // exits the app with the given status code
-          await exit(0);
-
-          // restarts the app
           await relaunch();
         }
       },
