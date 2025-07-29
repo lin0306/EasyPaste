@@ -61,6 +61,9 @@ const MenuItems = computed((): NavBarItem[] => [
         }
       },
       {
+        type: 'divider',
+      },
+      {
         key: '重新加载',
         label: currentLanguage.value.pages.list.menu.reload,
         onClick: async () => {
@@ -68,9 +71,6 @@ const MenuItems = computed((): NavBarItem[] => [
           // 重新加载应用程序
           await relaunch();
         }
-      },
-      {
-        type: 'divider',
       },
       {
         key: '关闭',
@@ -100,6 +100,13 @@ const MenuItems = computed((): NavBarItem[] => [
         key: '数据视图',
         label: currentLanguage.value.pages.list.menu.dataView,
         isHide: true,
+      },
+      {
+        key: '搜索',
+        label: currentLanguage.value.pages.list.menu.search,
+        onClick: () => {
+          toggleSearchBox();
+        }
       },
       {
         type: 'divider',

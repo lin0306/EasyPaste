@@ -67,6 +67,7 @@ export const englishPageConfig: PageConfig = {
             data: 'Data',
             tagManger: 'Tag Manager',
             dataView: 'Data View',
+            search: 'Search',
             dataImport: 'Data Import',
             dataExport: 'Data Export',
             clearData: 'Clear Data',

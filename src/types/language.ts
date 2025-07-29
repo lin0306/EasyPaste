@@ -85,6 +85,7 @@ export interface PageConfig {
             data: string;
             tagManger: string;
             dataView: string;
+            search: string;
             dataImport: string;
             dataExport: string;
             clearData: string;
