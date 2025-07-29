@@ -299,10 +299,22 @@ async function loadTags() {
  * @param {KeyboardEvent} event - 键盘事件
  */
 async function handleKeyDown(event: KeyboardEvent) {
-  event.preventDefault();
+  // 如果设置的搜索快捷键是ctrl + f，则优先触发搜索，mac是command + f
+  if (event.key.toLowerCase() === 'f' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   const shortcutKeys = await getShortcutKeys();
   // 如果没有快捷键配置，则不处理
   if (!shortcutKeys || !shortcutKeys.search) return;
+
+  // 当搜索框显示时，按ESC键隐藏
+  if (searchBoxState.visible && event.key === 'Escape') {
+    event.preventDefault(); // 阻止默认行为
+    toggleSearchBox();
+    return;
+  }
 
   const searchConfig = shortcutKeys.search;
   const keys: string[] = searchConfig.key;
@@ -322,11 +334,7 @@ async function handleKeyDown(event: KeyboardEvent) {
   ) {
     event.preventDefault(); // 阻止默认行为
     toggleSearchBox();
-  }
-
-  // 当搜索框显示时，按ESC键隐藏
-  if (searchBoxState.visible && event.key === 'Escape') {
-    toggleSearchBox();
+    return;
   }
 }
 
@@ -438,7 +446,10 @@ async function onCopyFile(itemId: number, filePath: string) {
 function toggleSearchBox() {
   searchBoxState.visible = !searchBoxState.visible;
   if (searchBoxState.visible) {
-    document.getElementById("search-input")?.focus();
+    const input = document.querySelector(".n-input__input-el") as HTMLInputElement;
+    if (input) {
+      input.focus();
+    }
   } else {
     // 当搜索框隐藏时，清空搜索内容并重新加载列表
     if (searchBoxState.text) {
@@ -979,8 +990,15 @@ onUnmounted(async () => {
 
   <!-- 搜索框 -->
   <div class="search-container" v-show="searchBoxState.visible">
-    <n-input id="search-input" v-model:value="searchBoxState.text" :placeholder="currentLanguage.pages.list.searchHint"
-             clearable @input="loadClipboardItems(true)" :autofocus="true" size="small">
+    <n-input
+        id="search-input"
+        v-model:value="searchBoxState.text"
+        :placeholder="currentLanguage.pages.list.searchHint"
+        clearable
+        @input="loadClipboardItems(true)"
+        size="small"
+        @keydown.stop
+    >
       <template #prefix>
         <!-- 搜索 -->
         <n-icon size="18">
