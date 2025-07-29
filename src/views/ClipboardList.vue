@@ -1004,7 +1004,6 @@ onUnmounted(async () => {
         clearable
         @input="loadClipboardItems(true)"
         size="small"
-        @keydown.stop
     >
       <template #prefix>
         <!-- 搜索 -->
