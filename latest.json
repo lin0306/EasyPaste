@@ -1,6 +1,6 @@
 {
   "version": "0.0.7-beta.1",
-  "notes": "",
+  "notes": "# v0.0.7-beta.1 (2025-07-31)\n## 更新内容\n\n### ✅ 修复Bug\n- 修复其他窗口无法打开问题",
   "pub_date": "2025-07-31T10:44:24.218Z",
   "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmtWNUYvWjBUdzNoRmFjK3JXNzdGYkI4UmVjM2ZmRnJQRU0zcnRuTHppZmZCczYzT0pReGZ4QkppUGtsNWk0OW5PR2RjWFlCaGxEeVluR3NVYWluRncwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzOTU4Mjk1CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKQnRtZTRibFN5eTZwbVV0MFBBYWZIQTRvM3JPeGg1Wjl3TXBRVS9NbVJXR0RGQmNrbHN2Ni9xNllyeFJweFRGOU52YWd0NkMxaHo3QnZ2ejdtd2xZQVE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.7-beta.1/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm5tcHJmbmFLVWJDT1lwS1d4d1RvMFZZR0ptdEh4c0tEWnJkWEpBTjRJMkJ2OVFveUZtZUlPdzRuRkpOZnhyZkp0MHRaTkNIeTlKa1BGN1oreTlyR1FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUzOTU4NjIyCWZpbGU6RWFzeVBhc3RlXzAuMC43X3g2NC1zZXR1cC5leGUKZVFJTnpXVGs5TDYyZ2c5VXBtcnhSdVY1R0ZqZWlSdlVkNHlqNzR6czNpVFViOUJFK3lIOHRjMW1uYmNIYUoyQ2N5ZVorYTFQN0w3MVU3MUJvWTJNRGc9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.0.7-beta.1/EasyPaste_0.0.7_x64-setup.exe"}}
 }
