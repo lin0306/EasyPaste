@@ -19,7 +19,7 @@ export const windowConfig: WindowOptions = {
     decorations: false,
     alwaysOnTop: false,
     dragDropEnabled: false,
-    visible: false,
+    visible: true,
     focus: true,
     resizable: true,
 };
