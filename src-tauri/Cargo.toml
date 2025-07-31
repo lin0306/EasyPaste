@@ -2,7 +2,7 @@
 name = "EasyPaste"
 version = "0.0.7"
 description = "简易的剪贴板管理工具"
-authors = ["linweijia"]
+authors = ["lin0306"]
 edition = "2021"
 license = "Apache License 2.0"
 

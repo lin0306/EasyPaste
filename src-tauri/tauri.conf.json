@@ -42,7 +42,7 @@
     "createUpdaterArtifacts": true,
     "targets": "all",
     "licenseFile": "../LICENSE",
-    "publisher": "linweijia",
+    "publisher": "lin0306",
     "shortDescription": "简易的剪贴板管理工具",
     "icon": [
       "icons/128x128.png",
