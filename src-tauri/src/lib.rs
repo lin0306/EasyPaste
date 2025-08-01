@@ -20,7 +20,7 @@ pub fn run() {
             tray::create_tray(app.handle().clone());
             Ok(())
         })
-        .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             let win = app.get_window("main").expect("主窗口不存在");
             win.show().expect("窗口显示失败");
             win.set_focus().expect("窗口聚焦失败");
