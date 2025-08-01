@@ -21,7 +21,7 @@ pub fn create_tray(app: AppHandle) {
     let clipboard_monitor = CheckMenuItem::with_id(
         &app,
         "clipboard_monitor",
-        &language.clipboardMonitor,
+        &language.clipboard_monitor,
         true,
         is_listening(),
         None::<&str>,
@@ -30,7 +30,7 @@ pub fn create_tray(app: AppHandle) {
     let check_update = MenuItem::with_id(
         &app,
         "check_update",
-        &language.checkUpdate,
+        &language.check_update,
         true,
         None::<&str>,
     )
@@ -177,11 +177,13 @@ struct LanguageConfig {
 #[derive(Deserialize)]
 pub struct Tray {
     settings: String,
-    checkUpdate: String,
+    #[serde(rename = "checkUpdate")]
+    check_update: String,
     about: String,
     restart: String,
     exit: String,
-    clipboardMonitor: String,
+    #[serde(rename = "clipboardMonitor")]
+    clipboard_monitor: String,
 }
 
 // 全局状态管理结构体
