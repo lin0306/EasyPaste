@@ -540,7 +540,7 @@ onMounted(async () => {
 
 /* 快捷键相关样式 */
 .shortcut-item {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .shortcut-display {
@@ -572,8 +572,6 @@ onMounted(async () => {
   font-size: 13px;
   font-weight: 500;
   color: var(--theme-text);
-  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-border: 1px solid rgba(255, 255, 255, 0.1); */
 }
 
 .edit-icon {
@@ -588,77 +586,6 @@ border: 1px solid rgba(255, 255, 255, 0.1); */
 
 .edit-icon:hover {
   opacity: 1;
-}
-
-.shortcut-edit {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.shortcut-input {
-  padding: 8px 12px;
-  border: 1px solid var(--theme-divider);
-  border-radius: 4px;
-  background-color: var(--theme-background-secondary);
-  cursor: text;
-  min-height: 36px;
-  outline: none;
-}
-
-.shortcut-input:focus {
-  border-color: var(--theme-primary);
-}
-
-.shortcut-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.shortcut-modal-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 10px 0;
-}
-
-.shortcut-hint {
-  color: var(--theme-secondary);
-  font-size: 14px;
-  margin: 0;
-}
-
-.right {
-  justify-content: flex-end !important;
-}
-
-.setting-label {
-  font-size: 14px;
-  min-width: 90px;
-  margin-right: 5px;
-}
-
-.sub-label {
-  min-width: 0px !important;
-}
-
-.window-size-inputs {
-  display: flex;
-  gap: 16px;
-  width: 70%;
-}
-
-.size-input-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.setting-description {
-  color: var(--theme-secondary);
-  font-size: 14px;
-  margin-top: 8px;
 }
 
 .select {
