@@ -20,6 +20,9 @@ import {
 } from '../configs/FileConfig';
 import {getTray, languages, useLanguage} from '../configs/LanguageConfig';
 import {convertRegisterKey, convertShow, formatKeyDisplay} from '../utils/ShortcutKeys';
+import {getWakeUpRoutineKeyAvailable} from "../store/ShortcutKeyAvailableStatus.ts";
+import PassedIcon from "../assets/icons/PassedIcon.vue";
+import ErrorIcon from "../assets/icons/ErrorIcon.vue";
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -87,17 +90,36 @@ const editingShortcut = ref<number | null>(null);
 const tempKeys = ref<any[]>([]);
 // 快捷键编辑弹窗状态
 const shortcutModalVisible = ref(false);
+// 快捷键是否可用
+const availableKey = ref(true);
 
-// 开始编辑快捷键
+/**
+ * 开始编辑快捷键
+ * @param key 快捷键类型
+ */
 function startEditShortcut(key: number) {
   editingShortcut.value = key;
   tempKeys.value = [...(currentShortcutKeys[key]?.key || [])];
   shortcutModalVisible.value = true;
+  // 如果修改的是唤醒程序快捷键，需要检查快捷键是否可用
+  if (key.toString() === 'wakeUpRoutine') {
+    getWakeUpRoutineKeyAvailable().then(available => {
+      if (available === undefined) {
+        availableKey.value = true;
+      } else {
+        availableKey.value = available;
+      }
+    });
+  } else {
+    availableKey.value = true;
+  }
   // 打开弹窗后添加全局按键监听
   document.addEventListener('keydown', handleKeyDown);
 }
 
-// 取消编辑快捷键
+/**
+ * 取消编辑快捷键
+ */
 function cancelEditShortcut() {
   editingShortcut.value = null;
   tempKeys.value = [];
@@ -106,7 +128,9 @@ function cancelEditShortcut() {
   document.removeEventListener('keydown', handleKeyDown);
 }
 
-// 确认编辑快捷键
+/**
+ * 确认编辑快捷键
+ */
 function confirmEditShortcut() {
   const key = editingShortcut.value;
   if (key && tempKeys.value.length > 0) {
@@ -119,7 +143,10 @@ function confirmEditShortcut() {
   document.removeEventListener('keydown', handleKeyDown);
 }
 
-// 处理按键事件
+/**
+ * 处理按键事件
+ * @param event 事件
+ */
 function handleKeyDown(event: any) {
   event.preventDefault();
 
@@ -137,6 +164,19 @@ function handleKeyDown(event: any) {
   if (!['control', 'shift', 'alt', 'meta'].includes(keyName) && keyName !== 'dead') {
     tempKeys.value.push(keyName === ' ' ? 'space' : keyName);
   }
+  // 如果修改的是唤醒程序快捷键，需要检查快捷键是否可用
+  if (editingShortcut.value && editingShortcut.value.toString() === 'wakeUpRoutine') {
+    checkShortcutKeys();
+  }
+}
+
+/**
+ * 检查快捷键是否可用
+ */
+async function checkShortcutKeys() {
+  const key = editingShortcut.value || "";
+  const isUpdate = currentShortcutKeys[key] === tempKeys.value;
+  availableKey.value = !isUpdate || await isRegistered(convertRegisterKey(currentShortcutKeys[key].key));
 }
 
 // 保存配置
@@ -401,7 +441,7 @@ onMounted(async () => {
         <div v-if="selectedKey === 'shortcut'" class="settings-section">
           <h2>{{ currentLanguage.pages.settings.shortcutTitle }}</h2>
 
-          <div v-for="(shortcut, key) in currentShortcutKeys" :key="key" class="form-item shortcut-item">
+          <div v-for="(shortcut, key) in currentShortcutKeys" :key="key" class="form-item">
             <span class="label">{{ currentLanguage.pages.settings[key] }}</span>
             <!-- 显示当前快捷键 -->
             <div class="shortcut-display">
@@ -449,17 +489,24 @@ onMounted(async () => {
              preset="dialog">
       <div class="shortcut-modal-content">
         <p>{{ currentLanguage.pages.settings.editHotkeyModalContent }}</p>
-        <div class="shortcut-keys">
+        <div class="shortcut-keys-select">
           {{
             convertShow(tempKeys) || currentLanguage.pages.settings.editHotkeyModalHint
           }}
+        </div>
+        <div class="shortcut-line">
+          <div class="shortcut-hint" :class="availableKey ? 'key-available': 'key-not-available'">
+            <PassedIcon v-if="availableKey" class="shortcut-hint-icon"/>
+            <ErrorIcon v-else class="shortcut-hint-icon"/>
+            {{ availableKey ? currentLanguage.pages.settings.keyAvailableHint : currentLanguage.pages.settings.keyNotAvailableHint }}
+          </div>
         </div>
       </div>
       <template #action>
         <n-button @click="cancelEditShortcut">
           {{ currentLanguage.pages.settings.editHotkeyModalCancelBtn }}
         </n-button>
-        <n-button type="primary" :disabled="tempKeys.length === 0" @click="confirmEditShortcut">
+        <n-button type="primary" :disabled="tempKeys.length === 0 || !availableKey" @click="confirmEditShortcut">
           {{ currentLanguage.pages.settings.editHotkeyModalConfirmBtn }}
         </n-button>
       </template>
@@ -526,9 +573,15 @@ onMounted(async () => {
   width: 65%;
 }
 
-.shortcut-modal-content {
-  padding: 16px 0;
+.shortcut-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px;
+  background-color: var(--theme-background-secondary);
+  transition: background-color 0.2s;
 }
+
 
 .shortcut-keys {
   display: flex;
@@ -536,23 +589,6 @@ onMounted(async () => {
   gap: 8px;
   align-items: center;
 }
-
-
-/* 快捷键相关样式 */
-.shortcut-item {
-  margin-bottom: 0;
-}
-
-.shortcut-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background-color: var(--theme-background-secondary);
-  transition: background-color 0.2s;
-}
-
 
 .key-plus {
   font-weight: bold;
@@ -575,7 +611,7 @@ onMounted(async () => {
 }
 
 .edit-icon {
-  width: 16px;
+  width: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -586,6 +622,47 @@ onMounted(async () => {
 
 .edit-icon:hover {
   opacity: 1;
+}
+
+.shortcut-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.shortcut-keys-select {
+  flex-wrap: wrap;
+  font-size: 18px;
+  text-align: center;
+  background-color: var(--theme-divider);
+  border-radius: 6px;
+  padding: 2px 0;
+}
+
+.shortcut-line {
+  opacity: 0.8;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.shortcut-hint {
+  display: flex;
+  align-items: center;
+}
+
+.shortcut-hint-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+}
+
+.key-available {
+  color: rgb(62, 181, 3) !important;
+}
+
+.key-not-available {
+  color: rgb(214, 0, 0) !important;
 }
 
 .select {

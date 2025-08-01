@@ -34,6 +34,7 @@ import {filePathConvertFileName} from '../utils/strUtil';
 import {isCode} from '../utils/TextType';
 import {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
 import {sendNotification} from "@tauri-apps/plugin-notification";
+import {saveWakeUpRoutineKeyAvailable} from "../store/ShortcutKeyAvailableStatus.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -785,11 +786,13 @@ async function registerShortcutKeysOpenWindow() {
       } else {
         await registerOpenWindowKey(shortcutKeys);
       }
+      saveWakeUpRoutineKeyAvailable(true);
     }
   } catch (ex) {
     error("打开程序快捷键注册失败，" + ex);
     console.error(ex);
     sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.list.registerShortcutKeysErrorHint});
+    saveWakeUpRoutineKeyAvailable(false);
   }
 }
 

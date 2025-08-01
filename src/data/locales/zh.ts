@@ -50,6 +50,8 @@ export const chinesePageConfig: PageConfig = {
         editHotkeyModalContent: '请按下您想要设置的快捷键组合',
         editHotkeyModalCancelBtn: '取消',
         editHotkeyModalConfirmBtn: '确认',
+        keyAvailableHint: '快捷键可正常使用',
+        keyNotAvailableHint: '快捷键不可用，请检查快捷键是否被其他程序占用',
         saveSuccessMsg: '保存成功',
         saveFailedMsg: '保存失败',
         shortcutSaveErrorMsg: '保存快捷键设置失败: ',

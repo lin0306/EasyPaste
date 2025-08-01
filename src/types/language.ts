@@ -63,6 +63,8 @@ export interface PageConfig {
         editHotkeyModalContent: string;
         editHotkeyModalCancelBtn: string;
         editHotkeyModalConfirmBtn: string;
+        keyAvailableHint: string;
+        keyNotAvailableHint: string;
 
         // 提示信息
         saveSuccessMsg: string;

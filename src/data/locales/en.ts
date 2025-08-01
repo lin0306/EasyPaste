@@ -49,6 +49,9 @@ export const englishPageConfig: PageConfig = {
         editHotkeyModalContent: 'Please press the shortcut key combination you want to set',
         editHotkeyModalCancelBtn: 'Cancel',
         editHotkeyModalConfirmBtn: 'Confirm',
+        keyAvailableHint: 'The shortcut keys can be used normally.',
+        keyNotAvailableHint: 'The shortcut keys are not available. Please check if they are being used by another program.',
+
         saveSuccessMsg: 'Save Success',
         saveFailedMsg: 'Save Failed',
         shortcutSaveErrorMsg: 'Save Shortcut Settings Failed: ',
