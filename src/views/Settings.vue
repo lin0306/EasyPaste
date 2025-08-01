@@ -8,7 +8,7 @@ import {emit} from '@tauri-apps/api/event';
 import {disable, enable, isEnabled} from '@tauri-apps/plugin-autostart';
 import {isRegistered, unregister} from '@tauri-apps/plugin-global-shortcut';
 import {error, info} from '@tauri-apps/plugin-log';
-import {exit, relaunch} from '@tauri-apps/plugin-process';
+import {relaunch} from '@tauri-apps/plugin-process';
 import {computed, onMounted, reactive, ref} from 'vue';
 import HintIcon from '../assets/icons/HintIcon.vue';
 import {
@@ -282,11 +282,7 @@ const resetConfig = () => {
 // 处理重启应用
 const handleRestart = async () => {
   restartModalVisible.value = false;
-  // 触发重启应用
-  // exits the app with the given status code
-  await exit(0);
 
-  // restarts the app
   await relaunch();
 };
 
