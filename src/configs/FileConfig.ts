@@ -26,8 +26,8 @@ let defaultShortcutKeys = {
     wakeUpRoutine: {
         name: "唤醒程序",
         key: [
-            "meta",
-            "v"
+            "alt",
+            "c"
         ]
     }
 }
