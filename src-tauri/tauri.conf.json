@@ -40,7 +40,7 @@
     "active": true,
     "category": "Utility",
     "createUpdaterArtifacts": true,
-    "targets": "all",
+    "targets": ["nsis", "dmg", "app"],
     "licenseFile": "../LICENSE",
     "publisher": "lin0306",
     "shortDescription": "一个简易且高效的剪贴板管理工具",
