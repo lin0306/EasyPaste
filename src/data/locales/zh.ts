@@ -132,6 +132,8 @@ export const chinesePageConfig: PageConfig = {
         downloadingTitle: '下载更新中',
         backupTitle: '备份用户数据',
         backupCompleted: '备份完成',
+        alreadyLatestHint: '已经是最新版本',
+        checkUpdateErrorHint: '检查更新异常：',
     },
     restore: {
         title: '数据恢复',

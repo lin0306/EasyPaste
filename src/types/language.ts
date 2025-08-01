@@ -148,6 +148,8 @@ export interface PageConfig {
         downloadingTitle: string;
         backupTitle: string;
         backupCompleted: string;
+        alreadyLatestHint: string;
+        checkUpdateErrorHint: string;
     },
     restore: {
         title: string;

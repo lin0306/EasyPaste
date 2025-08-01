@@ -3,6 +3,10 @@ import {isPermissionGranted, requestPermission, sendNotification} from '@tauri-a
 import {relaunch} from '@tauri-apps/plugin-process';
 import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-updater';
 import {openUpdaterWindow} from '../utils/window';
+import {useLanguage} from "../configs/LanguageConfig.ts";
+
+// 获取语言上下文
+const {currentLanguage} = useLanguage();
 
 /**
  * 程序更新服务
@@ -77,14 +81,14 @@ export default class UpdaterService {
                     }
 
                     if (permissionGranted) {
-                        sendNotification({title: 'EasyPaste', body: '已经是最新版本'});
+                        sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.update.alreadyLatestHint});
                     }
                 }
             }
         } catch (error) {
             console.error('Error occurred while checking for updates:', error);
             if (isManual) {
-                sendNotification({title: 'EasyPaste', body: '检查更新异常' + error});
+                sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.update.checkUpdateErrorHint + error});
             }
         }
     }

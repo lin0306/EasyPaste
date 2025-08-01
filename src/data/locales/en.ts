@@ -130,7 +130,9 @@ export const englishPageConfig: PageConfig = {
         viewMoreBtn: 'View More',
         downloadingTitle: 'Downloading Update',
         backupTitle: 'Backing Up User Data',
-        backupCompleted: 'Backup Completed'
+        backupCompleted: 'Backup Completed',
+        alreadyLatestHint: 'It is already the latest version at present',
+        checkUpdateErrorHint: 'Check Update Error: ',
     },
     restore: {
         title: 'Data Recovery',
