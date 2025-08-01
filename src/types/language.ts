@@ -15,6 +15,7 @@ export interface PageConfig {
         generalMenu: string;
         storageMenu: string;
         shortcutMenu: string;
+        updaterMenu: string;
         // 设置页面右侧页面标题
         generalTitle: string;
         storageTitle: string;
@@ -28,6 +29,12 @@ export interface PageConfig {
         bindTagBtnShowLocation: string;
         topRight: string;
         bottomRight: string;
+        checkUpdateMode: string;
+        regularCheck: string;
+        afterRunningCheck: string;
+        timeInterval: string;
+        timeIntervalUnit: string;
+        timeIntervalHint: string;
         // 存储设置页面文字
         maxHistoryItems: string,
         maxHistoryItemsHint: string,

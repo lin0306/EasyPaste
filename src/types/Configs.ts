@@ -6,6 +6,8 @@ interface Settings {
     maxHistoryItems: number,        // 最大历史记录数
     dataRetentionDays: number,      // 数据保留时长
     autoCheckUpdate: boolean,       // 自动检查更新
+    updateMode: string,             // 自动检查更新方式
+    autoCheckUpdateInterval: number, // 自动检查更新间隔
     enableTag: boolean,             // 启用标签
     bindTagBtnShowLocation: string, // 标签绑定按钮位置
 }

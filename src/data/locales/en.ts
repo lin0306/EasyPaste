@@ -4,6 +4,7 @@ export const englishPageConfig: PageConfig = {
     settings: {
         title: 'Settings',
         generalMenu: 'General Settings',
+        updaterMenu: 'Update Settings',
         storageMenu: 'Storage Settings',
         shortcutMenu: 'Shortcuts',
         generalTitle: 'General Settings',
@@ -12,11 +13,18 @@ export const englishPageConfig: PageConfig = {
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey (Windows Applicable)',
         languages: 'Languages',
-        autoCheckUpdate: 'Automatically Check Updates',
         enableTag: 'Enable Tag Function',
         bindTagBtnShowLocation: 'Tag Binding Button Location',
         topRight: 'Top Right',
         bottomRight: 'Bottom Right',
+
+        autoCheckUpdate: 'Automatically Check Updates',
+        checkUpdateMode: 'Check Update Mode',
+        regularCheck: 'Regular Check',
+        afterRunningCheck: 'After Running Check',
+        timeInterval: 'Time Interval',
+        timeIntervalUnit: 'hours',
+        timeIntervalHint: 'Please enter the time interval, the unit is hour, the range is 1 hour to 30 days (720 hours)',
 
         maxHistoryItems: 'Max Record Items',
         maxHistoryItemsHint: 'Limit the upper limit of data storage, 0 means no cleanup, maximum 10000 items',

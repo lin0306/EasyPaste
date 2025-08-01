@@ -814,10 +814,15 @@ let autoCheckUpdateUnListener: any = null;
 
 async function initUpdateAutoCheckUpdateListener() {
   return await listen('update-auto-check-update', (event: any) => {
-    const autoCheckUpdate = event.payload.data;
+    const payload = event.payload;
+    const autoCheckUpdate = payload.isUpdate;
     if (autoCheckUpdate) {
       const update = UpdaterService.getInstance();
-      update.startAutoCheck();
+      update.stopAutoCheck();
+      if (payload.updateMode === 'timing') {
+        update.setIntervalTime(payload.interval * 60);
+        update.startAutoCheck();
+      }
     } else {
       const update = UpdaterService.getInstance();
       update.stopAutoCheck();
@@ -914,8 +919,15 @@ onMounted(async () => {
 
     // 开启自动检查更新
     if (settings.autoCheckUpdate) {
-      const update = UpdaterService.getInstance();
-      update.startAutoCheck();
+      if (settings.updateMode === 'timing') {
+        const update = UpdaterService.getInstance();
+        update.setIntervalTime(settings.autoCheckUpdateInterval * 60);
+        update.startAutoCheck();
+      } else if(settings.updateMode === 'after-running') {
+        const update = UpdaterService.getInstance();
+        // 异步检查，同步会影响程序启动
+        update.checkForUpdates(false);
+      }
     }
 
     // 启动自动清理数据任务

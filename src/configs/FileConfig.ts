@@ -10,6 +10,8 @@ let defaultSettings: Settings = {
     maxHistoryItems: 2000,
     dataRetentionDays: 30,
     autoCheckUpdate: true,
+    updateMode: "timing",
+    autoCheckUpdateInterval: 1,
     enableTag: true,
     bindTagBtnShowLocation: 'top-right',
 }

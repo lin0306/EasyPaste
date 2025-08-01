@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useMessage } from 'naive-ui';
+import {useMessage} from 'naive-ui';
 import EditIcon from '../assets/icons/EditIcon.vue';
 import TitleBar from '../components/TitleBar.vue';
 
-import { invoke } from '@tauri-apps/api/core';
-import { emit } from '@tauri-apps/api/event';
-import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
-import { unregister } from '@tauri-apps/plugin-global-shortcut';
-import { info, error } from '@tauri-apps/plugin-log';
-import { exit, relaunch } from '@tauri-apps/plugin-process';
-import { computed, onMounted, reactive, ref } from 'vue';
+import {invoke} from '@tauri-apps/api/core';
+import {emit} from '@tauri-apps/api/event';
+import {disable, enable, isEnabled} from '@tauri-apps/plugin-autostart';
+import {unregister} from '@tauri-apps/plugin-global-shortcut';
+import {error, info} from '@tauri-apps/plugin-log';
+import {exit, relaunch} from '@tauri-apps/plugin-process';
+import {computed, onMounted, reactive, ref} from 'vue';
 import HintIcon from '../assets/icons/HintIcon.vue';
 import {
   getSettings,
@@ -18,11 +18,11 @@ import {
   saveUserShortcutKeys,
   updateUserSettings
 } from '../configs/FileConfig';
-import { getTray, languages, useLanguage } from '../configs/LanguageConfig';
-import { convertRegisterKey, convertShow, formatKeyDisplay } from '../utils/ShortcutKeys';
+import {getTray, languages, useLanguage} from '../configs/LanguageConfig';
+import {convertRegisterKey, convertShow, formatKeyDisplay} from '../utils/ShortcutKeys';
 
 const message = useMessage();
-const { currentLanguage, toggleLanguage } = useLanguage();
+const {currentLanguage, toggleLanguage} = useLanguage();
 
 // 重启确认弹窗状态
 const restartModalVisible = ref(false);
@@ -30,9 +30,10 @@ const restartModalVisible = ref(false);
 // 菜单相关
 const selectedKey = ref<string>('general');
 const menuItems = computed(() => [
-  { key: 'general', label: currentLanguage.value.pages.settings.generalMenu },
-  { key: 'storage', label: currentLanguage.value.pages.settings.storageMenu },
-  { key: 'shortcut', label: currentLanguage.value.pages.settings.shortcutMenu },
+  {key: 'general', label: currentLanguage.value.pages.settings.generalMenu},
+  {key: 'updater', label: currentLanguage.value.pages.settings.updaterMenu},
+  {key: 'storage', label: currentLanguage.value.pages.settings.storageMenu},
+  {key: 'shortcut', label: currentLanguage.value.pages.settings.shortcutMenu},
 ]);
 
 // 配置相关
@@ -61,6 +62,15 @@ const bindTagBtnShowLocation = computed(() => [{
   value: 'bottom-right',
   label: currentLanguage.value.pages.settings.bottomRight,
 }]);
+
+// 自动检查更新方式
+const autoUpdateMode = computed(() => [{
+  value: 'timing',
+  label: '定时检查'
+}, {
+  value: 'after-running',
+  label: '启动时检查'
+}])
 
 // 是否有修改
 const hasChanges = computed(() => {
@@ -134,7 +144,9 @@ const saveConfig = async () => {
   if (!hasChanges.value) {
     return; // 如果没有修改，不做任何处理
   }
-  if (selectedKey.value === 'general' || selectedKey.value === 'storage') {
+  if (selectedKey.value === 'general'
+      || selectedKey.value === 'updater'
+      || selectedKey.value === 'storage') {
 
     // 是否修改了【开机自启】
     const isUpdatePowerOnSelfStart = currentConfig.powerOnSelfStart !== originalConfig.powerOnSelfStart;
@@ -142,12 +154,17 @@ const saveConfig = async () => {
     const isUpdateReplaceGlobalHotkey = currentConfig.replaceGlobalHotkey !== originalConfig.replaceGlobalHotkey;
     // 是否修改了【语言】
     const isUpdateLanguages = currentConfig.languages !== originalConfig.languages;
-    // 是否修改了【自动检查更新】
-    const isUpdateAutoCheckUpdate = currentConfig.autoCheckUpdate !== originalConfig.autoCheckUpdate;
     // 是否修改了【启用标签】
     const isUpdateEnableTag = currentConfig.enableTag !== originalConfig.enableTag;
     // 是否修改了【标签绑定按钮位置】
     const isUpdateBindTagBtnShowLocation = currentConfig.bindTagBtnShowLocation !== originalConfig.bindTagBtnShowLocation;
+
+    // 是否修改了【自动检查更新】
+    const isUpdateAutoCheckUpdate = currentConfig.autoCheckUpdate !== originalConfig.autoCheckUpdate;
+    // 是否修改了【自动更新方式】
+    const isUpdateAutoUpdateMode = currentConfig.updateMode !== originalConfig.updateMode;
+    // 是否修改了【自动更新时间间隔】
+    const isUpdateAutoUpdateInterval = currentConfig.autoCheckUpdateInterval !== originalConfig.autoCheckUpdateInterval;
 
     // 是否修改了【最大存储条数】
     const isUpdateMaxHistoryItems = currentConfig.maxHistoryItems !== originalConfig.maxHistoryItems;
@@ -183,10 +200,14 @@ const saveConfig = async () => {
           }
         }
       }
-      // 是否修改了【自动检查更新】
-      if (isUpdateAutoCheckUpdate) {
+      // 是否修改了【自动检查更新】或者【自动更新方式】或者【自动更新时间间隔】
+      if (isUpdateAutoCheckUpdate || isUpdateAutoUpdateMode || isUpdateAutoUpdateInterval) {
         // 发送更新了自动检查更新状态消息
-        await emit('update-auto-check-update', { data: currentConfig.autoCheckUpdate });
+        await emit('update-auto-check-update', {
+          isUpdate: currentConfig.autoCheckUpdate,
+          updateMode: currentConfig.updateMode,
+          interval: currentConfig.autoCheckUpdateInterval
+        });
       }
       // 是否修改了【启用标签】或者【标签位置】
       if (isUpdateEnableTag || isUpdateBindTagBtnShowLocation) {
@@ -198,7 +219,10 @@ const saveConfig = async () => {
       }
       // 是否修改了【最大存储条数】或者【自动清理天数】
       if (isUpdateMaxHistoryItems || isUpdateDataRetentionDays) {
-        await emit('update-data-history-restrict', { maxHistoryItems: currentConfig.maxHistoryItems, dataRetentionDays: currentConfig.dataRetentionDays });
+        await emit('update-data-history-restrict', {
+          maxHistoryItems: currentConfig.maxHistoryItems,
+          dataRetentionDays: currentConfig.dataRetentionDays
+        });
       }
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
@@ -223,7 +247,7 @@ const saveConfig = async () => {
           info("唤醒程序快捷键已修改，重新注册");
           // 重新注册快捷键
           await unregister(convertRegisterKey(keys));
-          await emit('update-open-window-key', { keys: currentShortcutKeys });
+          await emit('update-open-window-key', {keys: currentShortcutKeys});
         }
         // 关闭编辑模式
         editingShortcut.value = null;
@@ -278,12 +302,12 @@ onMounted(async () => {
 </script>
 <template>
   <div class="settings-container">
-    <titleBar :title="currentLanguage.pages.settings.title" :showCloseBtn="true" :dev-tool="`settings`" />
+    <titleBar :title="currentLanguage.pages.settings.title" :showCloseBtn="true" :dev-tool="`settings`"/>
 
     <div class="settings-content">
       <!-- 左侧菜单 -->
       <div class="settings-menu">
-        <n-menu v-model:value="selectedKey" :options="menuItems" mode="vertical" />
+        <n-menu v-model:value="selectedKey" :options="menuItems" mode="vertical"/>
       </div>
 
       <!-- 右侧内容 -->
@@ -293,7 +317,7 @@ onMounted(async () => {
           <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
-            <n-switch v-model:value="currentConfig.powerOnSelfStart" />
+            <n-switch v-model:value="currentConfig.powerOnSelfStart"/>
           </div>
           <!-- todo 暂时没有办法替换Windows默认的剪贴板程序 -->
           <!-- <div class="form-item">
@@ -302,20 +326,45 @@ onMounted(async () => {
 </div> -->
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.languages }}</span>
-            <n-select class="select" v-model:value="currentConfig.languages" :options="languageOptions" />
-          </div>
-          <div class="form-item">
-            <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
-            <n-switch v-model:value="currentConfig.autoCheckUpdate" />
+            <n-select class="select" v-model:value="currentConfig.languages" :options="languageOptions"/>
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.enableTag }}</span>
-            <n-switch v-model:value="currentConfig.enableTag" />
+            <n-switch v-model:value="currentConfig.enableTag"/>
           </div>
           <div class="form-item" v-if="currentConfig.enableTag">
             <span class="label">{{ currentLanguage.pages.settings.bindTagBtnShowLocation }}</span>
             <n-select class="select" v-model:value="currentConfig.bindTagBtnShowLocation"
-              :options="bindTagBtnShowLocation" />
+                      :options="bindTagBtnShowLocation"/>
+          </div>
+        </div>
+
+        <!-- 更新设置 -->
+        <div v-if="selectedKey === 'updater'" class="settings-section">
+          <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
+          <div class="form-item">
+            <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
+            <n-switch v-model:value="currentConfig.autoCheckUpdate"/>
+          </div>
+          <div class="form-item" v-if="currentConfig.autoCheckUpdate">
+            <span class="label">{{ currentLanguage.pages.settings.checkUpdateMode }}</span>
+            <n-select class="select" v-model:value="currentConfig.updateMode" :options="autoUpdateMode"/>
+          </div>
+          <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === 'timing'">
+            <div class="main-item">
+              <span class="label">{{ currentLanguage.pages.settings.timeInterval }}</span>
+              <n-input-number v-model:value="currentConfig.autoCheckUpdateInterval" :min="1" :max="720">
+                <template #suffix>
+                  {{ currentLanguage.pages.settings.timeIntervalUnit }}
+                </template>
+              </n-input-number>
+            </div>
+            <div class="second-item">
+              <div class="hint">
+                <HintIcon class="hint-icon"/>
+                {{ currentLanguage.pages.settings.timeIntervalHint }}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -325,11 +374,11 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.maxHistoryItems }}</span>
-              <n-input-number v-model:value="currentConfig.maxHistoryItems" :min="0" :max="10000" />
+              <n-input-number v-model:value="currentConfig.maxHistoryItems" :min="0" :max="10000"/>
             </div>
             <div class="second-item">
               <div class="hint">
-                <HintIcon class="hint-icon" />
+                <HintIcon class="hint-icon"/>
                 {{ currentLanguage.pages.settings.maxHistoryItemsHint }}
               </div>
             </div>
@@ -337,11 +386,11 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.dataRetentionDays }}</span>
-              <n-input-number v-model:value="currentConfig.dataRetentionDays" :min="0" :max="365" />
+              <n-input-number v-model:value="currentConfig.dataRetentionDays" :min="0" :max="365"/>
             </div>
             <div class="second-item">
               <div class="hint">
-                <HintIcon class="hint-icon" />
+                <HintIcon class="hint-icon"/>
                 {{ currentLanguage.pages.settings.dataRetentionDaysHint }}
               </div>
             </div>
@@ -363,7 +412,7 @@ onMounted(async () => {
                 </template>
               </div>
               <span class="edit-icon" @click="startEditShortcut(key)">
-                <EditIcon />
+                <EditIcon/>
               </span>
             </div>
           </div>
@@ -383,7 +432,7 @@ onMounted(async () => {
 
     <!-- 重启确认弹窗 -->
     <n-modal v-model:show="restartModalVisible" :title="currentLanguage.pages.settings.restartModalTitle"
-      preset="dialog">
+             preset="dialog">
       <p>{{ currentLanguage.pages.settings.restartModalContent }}</p>
       <template #action>
         <n-button @click="restartModalVisible = false">
@@ -397,7 +446,7 @@ onMounted(async () => {
 
     <!-- 快捷键编辑弹窗 -->
     <n-modal v-model:show="shortcutModalVisible" :title="currentLanguage.pages.settings.editHotkeyModalTitle"
-      preset="dialog">
+             preset="dialog">
       <div class="shortcut-modal-content">
         <p>{{ currentLanguage.pages.settings.editHotkeyModalContent }}</p>
         <div class="shortcut-keys">
