@@ -33,6 +33,7 @@ import {convertRegisterKey} from '../utils/ShortcutKeys';
 import {filePathConvertFileName} from '../utils/strUtil';
 import {isCode} from '../utils/TextType';
 import {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
+import {sendNotification} from "@tauri-apps/plugin-notification";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -788,7 +789,7 @@ async function registerShortcutKeysOpenWindow() {
   } catch (ex) {
     error("打开程序快捷键注册失败，" + ex);
     console.error(ex);
-    message.error("打开程序快捷键注册失败");
+    sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.list.registerShortcutKeysErrorHint});
   }
 }
 

@@ -6,7 +6,7 @@ import TitleBar from '../components/TitleBar.vue';
 import {invoke} from '@tauri-apps/api/core';
 import {emit} from '@tauri-apps/api/event';
 import {disable, enable, isEnabled} from '@tauri-apps/plugin-autostart';
-import {unregister} from '@tauri-apps/plugin-global-shortcut';
+import {isRegistered, unregister} from '@tauri-apps/plugin-global-shortcut';
 import {error, info} from '@tauri-apps/plugin-log';
 import {exit, relaunch} from '@tauri-apps/plugin-process';
 import {computed, onMounted, reactive, ref} from 'vue';
@@ -246,7 +246,11 @@ const saveConfig = async () => {
         if (isUpdateWakeUpRoutine) {
           info("唤醒程序快捷键已修改，重新注册");
           // 重新注册快捷键
-          await unregister(convertRegisterKey(keys));
+          const registerKey = convertRegisterKey(keys);
+          if (await isRegistered(registerKey)) {
+            // 如果已经注册了快捷键，需要先取消注册，再重新注册
+            await unregister(registerKey);
+          }
           await emit('update-open-window-key', {keys: currentShortcutKeys});
         }
         // 关闭编辑模式

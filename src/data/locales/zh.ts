@@ -68,6 +68,7 @@ export const chinesePageConfig: PageConfig = {
         typeText: '文本',
         typeCode: '代码',
         typeFile: '文件',
+        registerShortcutKeysErrorHint: '唤醒程序快捷键注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
         menu: {
             program: '程序',
             settings: '偏好设置',
