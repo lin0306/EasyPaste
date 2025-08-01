@@ -1,6 +1,6 @@
 [package]
 name = "EasyPaste"
-version = "0.0.7"
+version = "0.1.0"
 description = "简易的剪贴板管理工具"
 authors = ["lin0306"]
 edition = "2021"
