@@ -66,7 +66,8 @@
           "SimpChinese",
           "English"
         ],
-        "displayLanguageSelector": true
+        "displayLanguageSelector": true,
+        "installerHooks": "./windows/hook.nsh"
       }
     },
     "macOS": {
