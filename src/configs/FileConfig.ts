@@ -27,7 +27,7 @@ let defaultShortcutKeys = {
         name: "唤醒程序",
         key: [
             "meta",
-            "c"
+            "v"
         ]
     }
 }
