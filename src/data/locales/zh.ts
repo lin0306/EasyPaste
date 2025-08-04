@@ -7,10 +7,13 @@ export const chinesePageConfig: PageConfig = {
         generalMenu: '通用设置',
         storageMenu: '存储设置',
         shortcutMenu: '快捷键',
-        generalTitle: '通用设置',
         updaterMenu: '更新设置',
+
+        generalTitle: '通用设置',
         storageTitle: '存储设置',
         shortcutTitle: '快捷键设置',
+        updaterTitle: '更新设置',
+
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键 (Windows适用)',
         languages: '语言',

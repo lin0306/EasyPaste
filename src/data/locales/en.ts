@@ -7,9 +7,12 @@ export const englishPageConfig: PageConfig = {
         updaterMenu: 'Update Settings',
         storageMenu: 'Storage Settings',
         shortcutMenu: 'Shortcuts',
+
         generalTitle: 'General Settings',
         storageTitle: 'Storage Settings',
         shortcutTitle: 'Shortcut Settings',
+        updaterTitle: 'Update Settings',
+
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey (Windows Applicable)',
         languages: 'Languages',

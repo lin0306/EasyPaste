@@ -20,6 +20,7 @@ export interface PageConfig {
         generalTitle: string;
         storageTitle: string;
         shortcutTitle: string;
+        updaterTitle: string;
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;

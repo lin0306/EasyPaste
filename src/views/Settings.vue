@@ -381,7 +381,7 @@ onMounted(async () => {
 
         <!-- 更新设置 -->
         <div v-if="selectedKey === 'updater'" class="settings-section">
-          <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
+          <h2>{{ currentLanguage.pages.settings.updaterTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
             <n-switch v-model:value="currentConfig.autoCheckUpdate"/>
