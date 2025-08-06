@@ -927,7 +927,7 @@ onMounted(async () => {
         const update = UpdaterService.getInstance();
         update.setIntervalTime(settings.autoCheckUpdateInterval * 60);
         update.startAutoCheck();
-      } else if(settings.updateMode === 'after-running') {
+      } else if (settings.updateMode === 'after-running') {
         const update = UpdaterService.getInstance();
         // 异步检查，同步会影响程序启动
         update.checkForUpdates(false);
@@ -1070,6 +1070,7 @@ onUnmounted(async () => {
                 }}
               </div>
               <div class="card-title">{{ new Date(item.copy_time).toLocaleString() }}</div>
+              <div v-if="item.chars">{{ item.chars + ' ' + currentLanguage.pages.list.chars }}</div>
             </div>
             <div class="card-header-right">
               <div class="card-header-right-buttons">

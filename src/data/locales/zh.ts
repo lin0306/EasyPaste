@@ -1,4 +1,4 @@
-import { PageConfig } from "../../types/language";
+import {PageConfig} from "../../types/language";
 
 // 导出中文页面配置
 export const chinesePageConfig: PageConfig = {
@@ -34,7 +34,7 @@ export const chinesePageConfig: PageConfig = {
         maxHistoryItemsHint: '限制数据存储的上限，超过条数上限将自动清理旧数据，0表示不清理，最多保留10000条',
         dataRetentionDays: '记录保留时长',
         dataRetentionDaysHint: '限制数据保留时长，超过天数上限将自动清理，0表示不清理，最大保留365天',
-        
+
         search: '搜索',
         wakeUpRoutine: '唤醒程序',
         emptyShortcutConfig: '暂无快捷键配置',
@@ -74,6 +74,7 @@ export const chinesePageConfig: PageConfig = {
         typeCode: '代码',
         typeFile: '文件',
         registerShortcutKeysErrorHint: '唤醒程序快捷键注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
+        chars: '字符',
         menu: {
             program: '程序',
             settings: '偏好设置',

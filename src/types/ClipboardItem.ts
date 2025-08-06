@@ -6,7 +6,8 @@ interface ClipboardItem {
   top_time: number | null;
   type: string;
   file_path: string;
-  tags: TagItem[]
+  tags: TagItem[],
+  chars: number;
 }
 
 interface TagItem {

@@ -1,4 +1,4 @@
-import { PageConfig } from "../../types/language";
+import {PageConfig} from "../../types/language";
 
 export const englishPageConfig: PageConfig = {
     settings: {
@@ -33,7 +33,7 @@ export const englishPageConfig: PageConfig = {
         maxHistoryItemsHint: 'Limit the upper limit of data storage, 0 means no cleanup, maximum 10000 items',
         dataRetentionDays: 'Max Record Days',
         dataRetentionDaysHint: 'Limit data retention time, exceeding the number of days will automatically clean up, 0 means no cleanup, maximum retention time is 365 days',
-       
+
         search: 'Search',
         wakeUpRoutine: 'Wake Up Routine',
         emptyShortcutConfig: 'No Shortcut Config',
@@ -74,6 +74,7 @@ export const englishPageConfig: PageConfig = {
         typeCode: 'Code',
         typeFile: 'File',
         registerShortcutKeysErrorHint: 'The registration of the "Wake Up Routine" shortcut key failed. Please check if this shortcut key is already in use. You can make the adjustment on the "Settings - Shortcuts" page here.',
+        chars: 'chars',
         menu: {
             program: 'Program',
             settings: 'Settings',

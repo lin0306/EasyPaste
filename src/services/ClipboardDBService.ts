@@ -1,4 +1,4 @@
-import { error, info } from '@tauri-apps/plugin-log';
+import {error, info} from '@tauri-apps/plugin-log';
 import Database from '@tauri-apps/plugin-sql';
 import DataClearService from './DataClearService';
 
@@ -35,35 +35,45 @@ class ClipboardDBService {
         try {
             // 创建剪贴板项目表
             await this.db?.execute(`
-                CREATE TABLE IF NOT EXISTS clipboard_items (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    content TEXT NOT NULL,
+                CREATE TABLE IF NOT EXISTS clipboard_items
+                (
+                    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+                    content   TEXT    NOT NULL,
+                    chars     INTEGER,
                     copy_time INTEGER NOT NULL,
                     is_topped BOOLEAN DEFAULT 0,
-                    top_time INTEGER,
-                    type TEXT DEFAULT 'text',
+                    top_time  INTEGER,
+                    type      TEXT    DEFAULT 'text',
                     file_path TEXT
                 )
             `);
             // 创建标签表
             await this.db?.execute(`
-                CREATE TABLE IF NOT EXISTS tags (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL UNIQUE,
-                    color TEXT,
+                CREATE TABLE IF NOT EXISTS tags
+                (
+                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name       TEXT    NOT NULL UNIQUE,
+                    color      TEXT,
                     created_at INTEGER NOT NULL
                 )
             `);
 
             // 创建剪贴板条目和标签的关联表
             await this.db?.execute(`
-                CREATE TABLE IF NOT EXISTS item_tags (
+                CREATE TABLE IF NOT EXISTS item_tags
+                (
                     item_id INTEGER,
-                    tag_id INTEGER,
+                    tag_id  INTEGER,
                     FOREIGN KEY (item_id) REFERENCES clipboard_items (id) ON DELETE CASCADE,
                     FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE,
                     PRIMARY KEY (item_id, tag_id)
                 )
+            `);
+
+            // 增加字符数字段
+            await this.db?.execute(`
+                alter table clipboard_items
+                    add chars integer;
             `);
         } catch (er) {
             error('[数据库进程] 数据库表初始化失败:' + er);
@@ -80,16 +90,20 @@ class ClipboardDBService {
         try {
             // 覆盖相同内容的旧记录的复制时间
             if (type === 'text') {
-                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ? AND type = ?', [content, type]) as [{ id: number }];
+                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ? AND type = ?', [content, type]) as [{
+                    id: number
+                }];
                 if (row && row.length > 0) {
                     await this.updateItemTime(row[0].id, Date.now());
                     info("[数据库进程] 有查询到相同文本内容的记录，覆盖复制时间");
                     return;
                 }
-                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [content, Date.now(), type, null]);
+                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path, chars) VALUES (?, ?, ?, ?, ?)', [content, Date.now(), type, null, content.length]);
             }
             if (type === 'file') {
-                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{ id: number }];
+                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{
+                    id: number
+                }];
                 if (row && row.length > 0) {
                     await this.updateItemTime(row[0].id, Date.now());
                     info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
@@ -125,7 +139,10 @@ class ClipboardDBService {
      * @param {number} pageSize 每页条数
      * @returns {Object} 包含总条数和当前页数据的对象
      */
-    async searchItemsPaged(content: string | undefined, tagId: number | undefined, page: number = 1, pageSize: number = 10): Promise<{ total: number; items: ClipboardItem[]; }> {
+    async searchItemsPaged(content: string | undefined, tagId: number | undefined, page: number = 1, pageSize: number = 10): Promise<{
+        total: number;
+        items: ClipboardItem[];
+    }> {
         // 构建基础SQL查询，用于计算总条数
         let countSql = 'SELECT COUNT(DISTINCT ci.id) as total FROM clipboard_items ci';
         const countParams = [];
@@ -173,7 +190,7 @@ class ClipboardDBService {
         const countResult = await this.db?.select(countSql, countParams) as any[];
         const total = countResult[0].total;
         if (!total || total <= 0) {
-            return { total: 0, items: [] };
+            return {total: 0, items: []};
         }
 
         // 获取符合条件的剪贴板条目
@@ -190,7 +207,7 @@ class ClipboardDBService {
             }
         }
 
-        return { total, items };
+        return {total, items};
     }
 
     /**
@@ -201,7 +218,10 @@ class ClipboardDBService {
 
         try {
             await this.db?.execute(
-                `UPDATE clipboard_items SET is_topped = ?, top_time = ? WHERE id = ?`,
+                `UPDATE clipboard_items
+                 SET is_topped = ?,
+                     top_time  = ?
+                 WHERE id = ?`,
                 [isTopped ? 1 : 0, isTopped ? now : null, id]
             );
             return true;
@@ -232,7 +252,7 @@ class ClipboardDBService {
      * 删除项目的标签
      * @param itemId 项目id
      * @param tagId 标签id
-     * @returns 
+     * @returns
      */
     async deleteClipboardItemTag(itemId: number, tagId: number) {
         try {
@@ -347,7 +367,9 @@ class ClipboardDBService {
         if (days && days > 0) {
             let now = new Date();
             now.setDate(now.getDate() - days);
-            let counts = await this.db?.select('SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?', [now.getTime()]) as [{ count: number }];
+            let counts = await this.db?.select('SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?', [now.getTime()]) as [{
+                count: number
+            }];
             if (counts && counts.length > 0 && counts[0].count > 0) {
                 info('[数据库进程] 清理过期剪贴板条目');
                 await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [now.getTime()]);
@@ -366,7 +388,9 @@ class ClipboardDBService {
             // 获取可以保留的最早一条数据
             let items = await this.db?.select<ClipboardItem[]>('SELECT * FROM clipboard_items ORDER BY copy_time DESC LIMIT 1 OFFSET ?', [maxCount - 1]);
             if (items && items.length > 0) {
-                let counts = await this.db?.select('SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?', [items[0].copy_time]) as [{ count: number }];
+                let counts = await this.db?.select('SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?', [items[0].copy_time]) as [{
+                    count: number
+                }];
                 if (counts && counts.length > 0 && counts[0].count) {
                     info('[数据库进程] 清理超过保留时长的数据');
                     await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [items[0].copy_time]);
