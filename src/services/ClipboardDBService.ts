@@ -70,11 +70,15 @@ class ClipboardDBService {
                 )
             `);
 
-            // 增加字符数字段
-            await this.db?.execute(`
-                alter table clipboard_items
-                    add chars integer;
-            `);
+            const clipboardItemsInfo = await this.db?.select<[{cid: number, name: string}]>(`PRAGMA table_info(clipboard_items)`);
+            const clipboardItemsColumnExists = clipboardItemsInfo?.some((col) => col.name === 'chars')
+            if (!clipboardItemsColumnExists) {
+                // 增加字符数字段
+                await this.db?.execute(`
+                    alter table clipboard_items
+                        add chars integer;
+                `);
+            }
         } catch (er) {
             error('[数据库进程] 数据库表初始化失败:' + er);
             throw er;
