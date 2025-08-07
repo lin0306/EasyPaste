@@ -55,6 +55,8 @@ export const chinesePageConfig: PageConfig = {
         editHotkeyModalConfirmBtn: '确认',
         keyAvailableHint: '快捷键可正常使用',
         keyNotAvailableHint: '快捷键不可用，请检查快捷键是否被其他程序占用',
+        shortcutHint: 'Win键加字母键大部分都是系统键位，无法直接使用，如果需要替换系统自带的剪贴板功能，请到“通用设置”中打开“替换全局热键 (Windows适用)”设置',
+
         saveSuccessMsg: '保存成功',
         saveFailedMsg: '保存失败',
         shortcutSaveErrorMsg: '保存快捷键设置失败: ',

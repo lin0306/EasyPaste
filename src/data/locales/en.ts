@@ -54,6 +54,7 @@ export const englishPageConfig: PageConfig = {
         editHotkeyModalConfirmBtn: 'Confirm',
         keyAvailableHint: 'The shortcut keys can be used normally.',
         keyNotAvailableHint: 'The shortcut keys are not available. Please check if they are being used by another program.',
+        shortcutHint: 'The Win key combined with letter keys are mostly system keys and cannot be directly used. If you need to replace the clipboard function provided by the system, please go to "General Settings" and enable the "Replace Global Hotkeys (Windows applicable)" setting.',
 
         saveSuccessMsg: 'Save Success',
         saveFailedMsg: 'Save Failed',

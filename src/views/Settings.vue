@@ -23,6 +23,7 @@ import {convertRegisterKey, convertShow, formatKeyDisplay} from '../utils/Shortc
 import {getWakeUpRoutineKeyAvailable} from "../store/ShortcutKeyAvailableStatus.ts";
 import PassedIcon from "../assets/icons/PassedIcon.vue";
 import ErrorIcon from "../assets/icons/ErrorIcon.vue";
+import {isMac} from "../data/SystemParams.ts";
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -489,16 +490,22 @@ onMounted(async () => {
              preset="dialog">
       <div class="shortcut-modal-content">
         <p>{{ currentLanguage.pages.settings.editHotkeyModalContent }}</p>
+        <div class="shortcut-hint" v-if="!isMac">
+          <HintIcon class="shortcut-hint-icon"/>
+          {{ currentLanguage.pages.settings.shortcutHint }}
+        </div>
         <div class="shortcut-keys-select">
           {{
             convertShow(tempKeys) || currentLanguage.pages.settings.editHotkeyModalHint
           }}
         </div>
         <div class="shortcut-line">
-          <div class="shortcut-hint" :class="availableKey ? 'key-available': 'key-not-available'">
-            <PassedIcon v-if="availableKey" class="shortcut-hint-icon"/>
-            <ErrorIcon v-else class="shortcut-hint-icon"/>
-            {{ availableKey ? currentLanguage.pages.settings.keyAvailableHint : currentLanguage.pages.settings.keyNotAvailableHint }}
+          <div class="shortcut-verification" :class="availableKey ? 'key-available': 'key-not-available'">
+            <PassedIcon v-if="availableKey" class="shortcut-verification-icon"/>
+            <ErrorIcon v-else class="shortcut-verification-icon"/>
+            {{
+              availableKey ? currentLanguage.pages.settings.keyAvailableHint : currentLanguage.pages.settings.keyNotAvailableHint
+            }}
           </div>
         </div>
       </div>
@@ -631,6 +638,22 @@ onMounted(async () => {
   padding: 10px 0;
 }
 
+.shortcut-hint {
+  display: flex;
+  font-size: 12px;
+  opacity: 0.5;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+  color: var(--theme-text);
+}
+
+.shortcut-hint-icon {
+  width: 30px;
+  margin-right: 6px;
+  padding-top: 5px;
+}
+
 .shortcut-keys-select {
   flex-wrap: wrap;
   font-size: 18px;
@@ -646,12 +669,12 @@ onMounted(async () => {
   margin-bottom: 15px;
 }
 
-.shortcut-hint {
+.shortcut-verification {
   display: flex;
   align-items: center;
 }
 
-.shortcut-hint-icon {
+.shortcut-verification-icon {
   width: 14px;
   height: 14px;
   margin-right: 4px;
