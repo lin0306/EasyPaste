@@ -6,6 +6,7 @@
 > 1. 项目目前处于开发测试阶段，欢迎提issue和PR;
 > 2. 程序使用纯净版Windows 10、Windows 11进行测试，暂时没发现功能性缺陷;
 > 3. 由于是个人项目，可能部分边缘性测试场景没有覆盖到。
+> 4. 如果想完全禁用Windows自带的剪贴板功能，请打开注册表编辑器，找到`\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Clipboard`目录，将这个目录重命名后重启电脑即可完全禁用Windows自带的剪贴板功能。
 
 ## 项目简介
 
