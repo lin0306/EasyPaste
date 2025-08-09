@@ -211,6 +211,10 @@ EasyPaste/
 
 本项目基于 [Apache License 2.0](LICENSE) 许可证开源。
 
+## 💡 答疑
+- [Windows 剪贴板替换系统剪贴板原理](./FAQ/replace_global_hotkey_theory/replace_global_hotkey_theory.md)
+- [Windows 如何以管理员身份运行](./FAQ/rights_of_administrators/rights_of_administrators.md)
+
 ## 🙏 致谢
 
 感谢以下开源项目：
