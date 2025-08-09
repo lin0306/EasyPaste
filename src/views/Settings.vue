@@ -477,10 +477,12 @@ onMounted(async () => {
             <div class="second-item" v-else>
               <div class="hint">
                 <HintIcon class="hint-icon"/>
-                <span class="hint-text">{{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }} <a href="#"
-                                                                                                        @click="openLink('https://github.com/lin0306/EasyPaste/issues/5')">{{
-                    currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint
-                  }}</a></span>
+                <span class="hint-text">{{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }}
+                  <a href="#"
+                     @click="openLink('https://github.com/lin0306/EasyPaste/blob/master/FAQ/rights_of_administrators/rights_of_administrators.md')">
+                    {{ currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint }}
+                  </a>
+                </span>
               </div>
             </div>
           </div>
