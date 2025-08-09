@@ -74,13 +74,6 @@ async fn restart_computer() -> Result<(), String> {
             .map_err(|e| e.to_string()).expect("重启失败");
     }
 
-    #[cfg(target_os = "linux")]
-    {
-        std::process::Command::new("reboot")
-            .status()
-            .map_err(|e| e.to_string()).expect("重启失败");
-    }
-
     #[cfg(target_os = "macos")]
     {
         std::process::Command::new("sudo")
