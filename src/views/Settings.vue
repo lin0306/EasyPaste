@@ -214,7 +214,7 @@ async function updateToSystemShortcutKeys() {
 }
 
 // 保存配置
-const saveConfig = async () => {
+async function saveConfig() {
   if (!hasChanges.value) {
     return; // 如果没有修改，不做任何处理
   }

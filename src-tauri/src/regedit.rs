@@ -61,10 +61,13 @@ pub fn recover_clipboard_regedit() -> tauri::Result<bool> {
 /// `key` 注册表项
 /// `new_name` 新注册表项名称
 /// `old_name` 旧注册表项名称
-fn rename_regedit(key: RegKey, new_name: &str, old_name: &str) -> tauri::Result<bool> {
-    match key.open_subkey(old_name) {
+fn rename_regedit(root_key: RegKey, new_name: &str, old_name: &str) -> tauri::Result<bool> {
+    match root_key.open_subkey(old_name) {
         Ok(key) => {
-            info!("开始修改注册表配置");
+            info!(
+                "开始修改注册表配置，原注册表文件夹：{}, 新注册表文件夹：{}",
+                old_name, new_name
+            );
             let mut values: Vec<(String, RegValue)> = Vec::new();
             let mut enum_values = key.enum_values();
             loop {
@@ -78,7 +81,7 @@ fn rename_regedit(key: RegKey, new_name: &str, old_name: &str) -> tauri::Result<
                 }
             }
 
-            match key.create_subkey(new_name) {
+            match root_key.create_subkey(new_name) {
                 Ok((dest_key, disposition)) => {
                     if disposition == REG_OPENED_EXISTING_KEY {
                         info!("注册表项已存在");
@@ -98,7 +101,19 @@ fn rename_regedit(key: RegKey, new_name: &str, old_name: &str) -> tauri::Result<
                             .expect("无法设置注册表项");
                         info!("已修改注册表项：{}", sub_key);
                     }
-                    key.delete_subkey_all(old_name).expect("无法删除原注册表项");
+                    match root_key.delete_subkey_all(old_name) {
+                        Ok(_) => {
+                            info!("已删除原注册表项");
+                        }
+                        Err(e) => {
+                            info!("无法删除原注册表项: {}", e);
+                            let err = root_key.delete_subkey_all(new_name).err();
+                            if err.is_some() {
+                                info!("无法删除新注册表项: {}", err.unwrap());
+                            }
+                            return Ok(false);
+                        }
+                    }
                     info!("已删除原注册表项");
                 }
                 Err(e) => {
