@@ -24,6 +24,9 @@ export interface PageConfig {
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;
+        shortcutKeyOccupationHint: string;
+        replaceGlobalHotkeyHint: string;
+        replaceGlobalHotkeyLinkHint: string;
         languages: string;
         autoCheckUpdate: string;
         enableTag: string;

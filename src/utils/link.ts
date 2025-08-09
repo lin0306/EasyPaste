@@ -1,0 +1,1 @@
+import {open} from '@tauri-apps/plugin-shell';/** * 打开外部链接 * @param url 外部链接 */export function openLink(url: string) {    open(url);}

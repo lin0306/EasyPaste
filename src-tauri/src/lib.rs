@@ -3,6 +3,7 @@ use tauri::Manager;
 
 mod listener;
 mod log;
+mod regedit;
 mod tray;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -38,8 +39,13 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             #[cfg(debug_assertions)]
             open_dev_tool,
+            restart_computer,
             tray::reload_tray_menu,
             listener::write_to_clipboard,
+            regedit::valid_clipboard_regedit,
+            regedit::valid_clipboard_backup_regedit,
+            regedit::backup_clipboard_regedit,
+            regedit::recover_clipboard_regedit,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
@@ -53,4 +59,35 @@ fn open_dev_tool(app_handle: tauri::AppHandle, window_name: &str) {
     } else {
         eprintln!("找不到名称为 {} 的窗口", window_name);
     }
+}
+
+/**
+ * 重启电脑
+ */
+#[tauri::command]
+async fn restart_computer() -> Result<(), String> {
+    #[cfg(target_os = "windows")]
+    {
+        std::process::Command::new("shutdown")
+            .args(["/r", "/t", "0"]) // 立即重启
+            .status()
+            .map_err(|e| e.to_string()).expect("重启失败");
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        std::process::Command::new("reboot")
+            .status()
+            .map_err(|e| e.to_string()).expect("重启失败");
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        std::process::Command::new("sudo")
+            .args(["shutdown", "-r", "now"])
+            .status()
+            .map_err(|e| e.to_string()).expect("重启失败");
+    }
+
+    Ok(())
 }

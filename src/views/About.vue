@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import {open} from '@tauri-apps/plugin-shell';
 import TitleBar from '../components/TitleBar.vue';
 
 import {getVersion} from '@tauri-apps/api/app';
 import {onMounted, ref} from 'vue';
 import {useLanguage} from '../configs/LanguageConfig';
+import {openLink} from "../utils/link.ts";
 
 const {currentLanguage} = useLanguage();
 
 // @ts-ignore
 const appVersion = ref<string>("");
-
-// 打开外部链接
-function openLink(url: string) {
-  open(url);
-}
 
 onMounted(async () => {
   appVersion.value = await getVersion();

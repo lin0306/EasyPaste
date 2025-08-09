@@ -39,6 +39,8 @@ dirs = "6.0.0"
 # 剪贴板操作
 clipboard-rs = "0.3.0"
 lazy_static = "1.5.0"
+# 注册表操作
+winreg = "0.55.0"
 
 # 数据库支持
 [dependencies.tauri-plugin-sql]
