@@ -63,6 +63,8 @@ export const englishPageConfig: PageConfig = {
         saveFailedMsg: 'Save Failed',
         shortcutSaveErrorMsg: 'Save Shortcut Settings Failed: ',
         resetSuccessMsg: 'Reset Success',
+        enableReplaceGlobalHotkeyFailedMsg: 'The "Replace Global Hotkeys" function failed to be enabled. Please confirm if the program was launched as an administrator.',
+        disableReplaceGlobalHotkeyFailedMsg: 'The "Replace Global Hotkey" option failed to be closed. Please confirm if the program was launched as an administrator.',
     },
     list: {
         title: 'Clipboard',

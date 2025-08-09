@@ -64,6 +64,8 @@ export const chinesePageConfig: PageConfig = {
         saveFailedMsg: '保存失败',
         shortcutSaveErrorMsg: '保存快捷键设置失败: ',
         resetSuccessMsg: '已重置',
+        enableReplaceGlobalHotkeyFailedMsg: '打开“替换全局热键”失败，请确认程序是否以管理员身份启动',
+        disableReplaceGlobalHotkeyFailedMsg: '关闭“替换全局热键”失败，请确认程序是否以管理员身份启动',
     },
     list: {
         title: '剪贴板',

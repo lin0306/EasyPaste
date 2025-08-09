@@ -259,7 +259,7 @@ const saveConfig = async () => {
             const backupResult = await invoke<boolean>('backup_clipboard_regedit');
             if (!backupResult) {
               console.log("备份注册表失败");
-              message.error("注册表备份失败");
+              message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
               return false;
             }
             await updateToSystemShortcutKeys();
@@ -275,7 +275,7 @@ const saveConfig = async () => {
             const backupResult = await invoke<boolean>('recover_clipboard_regedit');
             if (!backupResult) {
               console.log("恢复注册表失败");
-              message.error("注册表恢复失败");
+              message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
               return false;
             }
           }
@@ -296,6 +296,11 @@ const saveConfig = async () => {
           await emit('update-open-window-key', {keys: currentShortcutKeys});
           // 更新原始配置
           Object.assign(originalConfig, currentConfig);
+
+          if (valid) {
+            // 显示重启确认弹窗
+            restartModalVisible.value = true;
+          }
         }
       }
       // 是否修改了【语言】

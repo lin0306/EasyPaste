@@ -76,6 +76,8 @@ export interface PageConfig {
         saveFailedMsg: string;
         shortcutSaveErrorMsg: string;
         resetSuccessMsg: string;
+        enableReplaceGlobalHotkeyFailedMsg: string;
+        disableReplaceGlobalHotkeyFailedMsg: string;
     },
     list: {
         title: string;
