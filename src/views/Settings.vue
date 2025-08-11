@@ -250,6 +250,7 @@ async function saveConfig() {
     // 发送配置到主进程
     const isSuccess = await updateUserSettings(currentConfig);
     if (isSuccess) {
+      // 是否修改了【替换全局热键】
       if (isUpdateReplaceGlobalHotkey) {
         // 打开替换全局热键
         if (currentConfig.replaceGlobalHotkey) {
@@ -262,6 +263,8 @@ async function saveConfig() {
             if (!backupResult) {
               console.log("备份注册表失败");
               message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
+              currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
+              await updateUserSettings(currentConfig);
               return false;
             }
             await updateToSystemShortcutKeys();
@@ -278,6 +281,8 @@ async function saveConfig() {
             if (!backupResult) {
               console.log("恢复注册表失败");
               message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
+              currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
+              await updateUserSettings(currentConfig);
               return false;
             }
           }
