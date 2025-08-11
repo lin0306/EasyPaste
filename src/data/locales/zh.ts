@@ -16,6 +16,7 @@ export const chinesePageConfig: PageConfig = {
 
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键',
+        autoHideWindow: '自动隐藏窗口',
         shortcutKeyOccupationHint: '系统默认剪贴板快捷键被其他程序占用，请先释放快捷键',
         replaceGlobalHotkeyHint: '打开后会关闭系统自带的剪贴板功能，卸载程序前请先关闭此功能，否则无法使用剪贴板功能，关闭此功能后，默认快捷键会恢复成“Alt + C”，注意，开启此功能需要程序以管理员身份运行',
         replaceGlobalHotkeyLinkHint: '如何以管理员身份运行程序',

@@ -15,6 +15,7 @@ export const englishPageConfig: PageConfig = {
 
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey',
+        autoHideWindow: 'Auto Hide Window',
         shortcutKeyOccupationHint: 'The default clipboard shortcut key of the system is already occupied by another program. Please release the shortcut key first.',
         replaceGlobalHotkeyHint: 'After opening, the system\'s built-in clipboard function will be disabled. Before uninstalling the program, please turn off this function first. Otherwise, the clipboard function will not be usable. After turning off this function, the default shortcut key will revert to "Alt + C". Note that this function needs to be enabled when the program is run as an administrator.',
         replaceGlobalHotkeyLinkHint: 'How to run a program as an administrator',

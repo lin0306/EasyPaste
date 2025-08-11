@@ -245,6 +245,9 @@ const selectedTagState = reactive({
 // 选中的内容id
 const selectedItemId = ref<number | undefined>();
 
+// 自动隐藏窗口
+const isAutoHideWindow = ref(false);
+
 /**
  * 加载剪贴板项目列表
  * @param reset 是否重新获取数据
@@ -870,6 +873,31 @@ async function initUpdateDataHistoryRestrictListener() {
 }
 
 /**
+ * 初始化更新自动隐藏窗口监听
+ */
+let updateAutoHideWindowListener: any = null;
+async function initUpdateAutoHideWindowListener() {
+  return await listen('update-auto-hide-window', async (event: any) => {
+    const autoHideWindow = event.payload.isAutoHide;
+    console.log('更新自动隐藏窗口状态', autoHideWindow)
+    isAutoHideWindow.value = autoHideWindow;
+    if (autoHideWindow) {
+
+      if (blurTimer) {
+        clearInterval(blurTimer);
+      }
+      // 添加监听窗口失焦自动隐藏定时任务
+      blurTimer = initBlurTimer();
+    } else {
+      // 清除窗口失焦定时任务
+      if (blurTimer) {
+        clearInterval(blurTimer);
+      }
+    }
+  });
+}
+
+/**
  * 组件初始化挂载监听
  */
 onMounted(async () => {
@@ -889,7 +917,10 @@ onMounted(async () => {
     clipboardListener = await initClipboardListener();
 
     // 添加监听窗口失焦自动隐藏定时任务
-    blurTimer = initBlurTimer();
+    isAutoHideWindow.value = settings.autoHideWindow;
+    if (settings.autoHideWindow) {
+      blurTimer = initBlurTimer();
+    }
 
     // 添加打开设置窗口事件监听
     openSettingsListener = await initOpenSettingsListener();
@@ -917,6 +948,9 @@ onMounted(async () => {
 
     // 添加加载标签事件监听
     loadTagsUnListener = await initLoadTagsListener();
+
+    // 添加更新自动隐藏窗口事件监听
+    updateAutoHideWindowListener = await initUpdateAutoHideWindowListener();
 
     // 增加事件监听
     document.addEventListener('keydown', handleKeyDown);
@@ -993,6 +1027,11 @@ onUnmounted(async () => {
     updateRegisterShortcutKeysOpenWindowListener();
   }
 
+  // 添加更新自动隐藏窗口事件监听
+  if (updateAutoHideWindowListener) {
+    updateAutoHideWindowListener();
+  }
+
   // 关闭自动检查更新操作
   const update = UpdaterService.getInstance();
   update.stopAutoCheck();
@@ -1007,7 +1046,7 @@ onUnmounted(async () => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true"
+  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
             :dev-tool="`main`"/>
   <NavBar :menuItems="MenuItems"/>
 

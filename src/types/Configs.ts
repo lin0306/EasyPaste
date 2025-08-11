@@ -10,6 +10,7 @@ interface Settings {
     autoCheckUpdateInterval: number, // 自动检查更新间隔
     enableTag: boolean,             // 启用标签
     bindTagBtnShowLocation: string, // 标签绑定按钮位置
+    autoHideWindow: boolean,        // 自动隐藏窗口
 }
 
 interface ShortcutKeys {

@@ -226,6 +226,8 @@ async function saveConfig() {
     const isUpdatePowerOnSelfStart = currentConfig.powerOnSelfStart !== originalConfig.powerOnSelfStart;
     // 是否修改了【替换全局热键】
     const isUpdateReplaceGlobalHotkey = currentConfig.replaceGlobalHotkey !== originalConfig.replaceGlobalHotkey;
+    // 是否修改了【自动隐藏窗口】
+    const isUpdateAutoHideWindow = currentConfig.autoHideWindow !== originalConfig.autoHideWindow;
     // 是否修改了【语言】
     const isUpdateLanguages = currentConfig.languages !== originalConfig.languages;
     // 是否修改了【启用标签】
@@ -349,6 +351,12 @@ async function saveConfig() {
           dataRetentionDays: currentConfig.dataRetentionDays
         });
       }
+      // 是否修改了【自动隐藏窗口】
+      if (isUpdateAutoHideWindow) {
+        // 发送更新了启用标签状态消息
+        await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
+      }
+
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
       Object.assign(originalConfig, currentConfig);
@@ -465,6 +473,10 @@ onMounted(async () => {
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
             <n-switch v-model:value="currentConfig.powerOnSelfStart"/>
+          </div>
+          <div class="form-item">
+            <span class="label">{{ currentLanguage.pages.settings.autoHideWindow }}</span>
+            <n-switch v-model:value="currentConfig.autoHideWindow"/>
           </div>
           <div class="line" v-if="!isMac">
             <div class="main-item">
