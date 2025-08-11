@@ -6,7 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-build.bat
 
 node_modules
 dist
@@ -26,3 +25,7 @@ dist-ssr
 .cursor
 .vscode
 .vercel
+build.bat
+stats.html
+/auto-imports.d.ts
+/components.d.ts
