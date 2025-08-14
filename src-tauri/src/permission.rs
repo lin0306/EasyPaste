@@ -6,14 +6,10 @@ use std::process::Command;
 #[tauri::command]
 pub fn check_admin() -> tauri::Result<bool> {
     #[cfg(windows)]
-    let output = Command::new("net")
-        .args(["session"])
-        .output();
+    let output = Command::new("net").args(["session"]).output();
 
     #[cfg(unix)]
-    let output = Command::new("id")
-        .args(["-u"])
-        .output();
+    let output = Command::new("id").args(["-u"]).output();
 
     match output {
         Ok(output) => {
@@ -22,7 +18,9 @@ pub fn check_admin() -> tauri::Result<bool> {
 
             #[cfg(unix)]
             if let Ok(stdout) = String::from_utf8(output.stdout) {
-                return Ok(stdout.trim() == "0");
+                Ok(stdout.trim() == "0")
+            } else {
+                Ok(false)
             }
         }
         Err(_) => Ok(false),
