@@ -461,23 +461,25 @@ onMounted(async () => {
     Object.assign(originalShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));
     Object.assign(currentShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));
 
-    // 系统剪贴板快捷键占用检查
-    systemClipboardKeyOccupied.value = JSON.stringify(shortcutKeys.wakeUpRoutine.key) === JSON.stringify(['meta', 'v']);
-    if (!systemClipboardKeyOccupied.value) {
-      // 检测系统剪贴板快捷键是否可用
-      systemClipboardEnable.value = await invoke('valid_clipboard_regedit');
-      if (!systemClipboardEnable.value) {
-        const key = ['meta', 'v'];
-        try {
-          await register(convertRegisterKey(key), () => {
-          });
-          systemClipboardKeysRegistered.value = false;
-          await unregister(convertRegisterKey(key));
-        } catch (e) {
-          systemClipboardKeysRegistered.value = true;
+    if (!isMac) {
+      // 系统剪贴板快捷键占用检查
+      systemClipboardKeyOccupied.value = JSON.stringify(shortcutKeys.wakeUpRoutine.key) === JSON.stringify(['meta', 'v']);
+      if (!systemClipboardKeyOccupied.value) {
+        // 检测系统剪贴板快捷键是否可用
+        systemClipboardEnable.value = await invoke('valid_clipboard_regedit');
+        if (!systemClipboardEnable.value) {
+          const key = ['meta', 'v'];
+          try {
+            await register(convertRegisterKey(key), () => {
+            });
+            systemClipboardKeysRegistered.value = false;
+            await unregister(convertRegisterKey(key));
+          } catch (e) {
+            systemClipboardKeysRegistered.value = true;
+          }
+        } else {
+          isAdminStart.value = await invoke('check_admin');
         }
-      } else {
-        isAdminStart.value = await invoke('check_admin');
       }
     }
   } catch (e) {

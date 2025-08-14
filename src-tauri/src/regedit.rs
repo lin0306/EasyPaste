@@ -1,5 +1,7 @@
 use log::info;
+#[cfg(target_os = "windows")]
 use winreg::enums::{HKEY_LOCAL_MACHINE, REG_OPENED_EXISTING_KEY};
+#[cfg(target_os = "windows")]
 use winreg::{RegKey, RegValue};
 
 // 剪贴板注册表项路径
@@ -10,6 +12,7 @@ const CLIPBOARD_PATH_BACKUP: &str = "SOFTWARE\\Microsoft\\Clipboard-Backup";
 /**
  * 检查剪贴板注册表项是否存在
  */
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn valid_clipboard_regedit() -> tauri::Result<bool> {
     info!("开始检查剪贴板注册表");
@@ -26,6 +29,7 @@ pub fn valid_clipboard_regedit() -> tauri::Result<bool> {
 /**
  * 检查剪贴板备份注册表项是否存在
  */
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn valid_clipboard_backup_regedit() -> tauri::Result<bool> {
     info!("开始检查剪贴板备份注册表");
@@ -42,6 +46,7 @@ pub fn valid_clipboard_backup_regedit() -> tauri::Result<bool> {
 /**
  * 备份注册表剪贴板配置
  */
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn backup_clipboard_regedit() -> tauri::Result<bool> {
     let h_k_l_m = RegKey::predef(HKEY_LOCAL_MACHINE);
@@ -51,6 +56,7 @@ pub fn backup_clipboard_regedit() -> tauri::Result<bool> {
 /**
  * 还原注册表剪贴板配置
  */
+#[cfg(target_os = "windows")]
 #[tauri::command]
 pub fn recover_clipboard_regedit() -> tauri::Result<bool> {
     let h_k_l_m = RegKey::predef(HKEY_LOCAL_MACHINE);
@@ -61,6 +67,7 @@ pub fn recover_clipboard_regedit() -> tauri::Result<bool> {
 /// `key` 注册表项
 /// `new_name` 新注册表项名称
 /// `old_name` 旧注册表项名称
+#[cfg(target_os = "windows")]
 fn rename_regedit(root_key: RegKey, new_name: &str, old_name: &str) -> tauri::Result<bool> {
     match root_key.open_subkey(old_name) {
         Ok(key) => {

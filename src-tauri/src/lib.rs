@@ -43,9 +43,13 @@ pub fn run() {
             restart_computer,
             tray::reload_tray_menu,
             listener::write_to_clipboard,
+            #[cfg(target_os = "windows")]
             regedit::valid_clipboard_regedit,
+            #[cfg(target_os = "windows")]
             regedit::valid_clipboard_backup_regedit,
+            #[cfg(target_os = "windows")]
             regedit::backup_clipboard_regedit,
+            #[cfg(target_os = "windows")]
             regedit::recover_clipboard_regedit,
             permission::check_admin,
         ])

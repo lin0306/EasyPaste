@@ -40,6 +40,7 @@ dirs = "6.0.0"
 clipboard-rs = "0.3.0"
 lazy_static = "1.5.0"
 # 注册表操作
+[target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"
 
 # 数据库支持
