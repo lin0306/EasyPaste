@@ -26,8 +26,9 @@ export interface PageConfig {
         replaceGlobalHotkey: string;
         autoHideWindow: string;
         shortcutKeyOccupationHint: string;
-        replaceGlobalHotkeyHint: string;
+        replaceGlobalHotkeyNoPermissionHint: string;
         replaceGlobalHotkeyLinkHint: string;
+        replaceGlobalHotkeyHint: string;
         languages: string;
         autoCheckUpdate: string;
         enableTag: string;

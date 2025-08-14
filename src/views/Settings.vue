@@ -99,6 +99,8 @@ const systemClipboardKeyOccupied = ref(false);
 const systemClipboardEnable = ref(false);
 // 系统剪贴板未启用的情况下，系统剪贴板快捷键是否被注册
 const systemClipboardKeysRegistered = ref(false);
+// 当前程序是否为管理员启动
+const isAdminStart = ref(false);
 
 /**
  * 开始编辑快捷键
@@ -250,6 +252,7 @@ async function saveConfig() {
     // 发送配置到主进程
     const isSuccess = await updateUserSettings(currentConfig);
     if (isSuccess) {
+      /// 修改了通用设置页面
       // 是否修改了【替换全局热键】
       if (isUpdateReplaceGlobalHotkey) {
         // 打开替换全局热键
@@ -337,6 +340,16 @@ async function saveConfig() {
           }
         }
       }
+      // 是否修改了【启用标签】或者【标签位置】
+      if (isUpdateEnableTag || isUpdateBindTagBtnShowLocation) {
+        // 发送更新了启用标签状态消息
+        await emit('update-tag-setting-state', {
+          isShow: currentConfig.enableTag,
+          location: currentConfig.bindTagBtnShowLocation,
+        });
+      }
+
+      /// 修改了更新设置页面
       // 是否修改了【自动检查更新】或者【自动更新方式】或者【自动更新时间间隔】
       if (isUpdateAutoCheckUpdate || isUpdateAutoUpdateMode || isUpdateAutoUpdateInterval) {
         // 发送更新了自动检查更新状态消息
@@ -346,14 +359,8 @@ async function saveConfig() {
           interval: currentConfig.autoCheckUpdateInterval
         });
       }
-      // 是否修改了【启用标签】或者【标签位置】
-      if (isUpdateEnableTag || isUpdateBindTagBtnShowLocation) {
-        // 发送更新了启用标签状态消息
-        await emit('update-tag-setting-state', {
-          isShow: currentConfig.enableTag,
-          location: currentConfig.bindTagBtnShowLocation,
-        });
-      }
+
+      /// 修改了存储设置页面
       // 是否修改了【最大存储条数】或者【自动清理天数】
       if (isUpdateMaxHistoryItems || isUpdateDataRetentionDays) {
         await emit('update-data-history-restrict', {
@@ -367,6 +374,17 @@ async function saveConfig() {
         await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
       }
 
+      // 如果只修改了【替换全局热键】，不需要提示保存成功
+      if (isUpdateReplaceGlobalHotkey
+          && !isUpdateLanguages
+          && !isUpdatePowerOnSelfStart
+          && !isUpdateAutoCheckUpdate
+          && !isUpdateAutoUpdateMode
+          && !isUpdateAutoUpdateInterval
+          && !isUpdateEnableTag
+          && !isUpdateBindTagBtnShowLocation) {
+        return;
+      }
       message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
       // 更新原始配置
       Object.assign(originalConfig, currentConfig);
@@ -406,7 +424,7 @@ async function saveConfig() {
       message.error(currentLanguage.value.pages.settings.shortcutSaveErrorMsg + er);
     }
   }
-};
+}
 
 // 重置配置
 const resetConfig = () => {
@@ -458,6 +476,8 @@ onMounted(async () => {
         } catch (e) {
           systemClipboardKeysRegistered.value = true;
         }
+      } else {
+        isAdminStart.value = await invoke('check_admin');
       }
     }
   } catch (e) {
@@ -492,23 +512,34 @@ onMounted(async () => {
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.replaceGlobalHotkey }}</span>
               <n-switch v-model:value="currentConfig.replaceGlobalHotkey"
-                        :disabled="!systemClipboardKeyOccupied && !systemClipboardEnable && systemClipboardKeysRegistered"/>
+                        :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered)"/>
             </div>
             <div class="second-item"
                  v-if="!systemClipboardKeyOccupied && !systemClipboardEnable && systemClipboardKeysRegistered">
               <div class="hint">
                 <HintIcon class="hint-icon"/>
-                {{ currentLanguage.pages.settings.shortcutKeyOccupationHint }}
+                <span class="hint-text">
+                  {{ currentLanguage.pages.settings.shortcutKeyOccupationHint }}
+                </span>
+              </div>
+            </div>
+            <div class="second-item" v-else-if="systemClipboardEnable && !isAdminStart">
+              <div class="hint">
+                <HintIcon class="hint-icon"/>
+                <span class="hint-text">
+                  {{ currentLanguage.pages.settings.replaceGlobalHotkeyNoPermissionHint }}
+                  <a href="#"
+                     @click="openLink('https://github.com/lin0306/EasyPaste/blob/master/FAQ/rights_of_administrators/rights_of_administrators.md')">
+                    {{ currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint }}
+                  </a>
+                </span>
               </div>
             </div>
             <div class="second-item" v-else>
               <div class="hint">
                 <HintIcon class="hint-icon"/>
-                <span class="hint-text">{{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }}
-                  <a href="#"
-                     @click="openLink('https://github.com/lin0306/EasyPaste/blob/master/FAQ/rights_of_administrators/rights_of_administrators.md')">
-                    {{ currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint }}
-                  </a>
+                <span class="hint-text">
+                  {{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }}
                 </span>
               </div>
             </div>

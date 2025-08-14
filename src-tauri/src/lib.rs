@@ -5,6 +5,7 @@ mod listener;
 mod log;
 mod regedit;
 mod tray;
+mod permission;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -46,6 +47,7 @@ pub fn run() {
             regedit::valid_clipboard_backup_regedit,
             regedit::backup_clipboard_regedit,
             regedit::recover_clipboard_regedit,
+            permission::check_admin,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
