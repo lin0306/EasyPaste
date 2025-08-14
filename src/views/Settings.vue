@@ -263,50 +263,55 @@ async function saveConfig() {
             if (!backupResult) {
               console.log("备份注册表失败");
               message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
+              // 回滚【替换全局热键】设置
               currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
               await updateUserSettings(currentConfig);
-              return false;
+            } else {
+              await updateToSystemShortcutKeys();
+              // 显示重启确认弹窗
+              restartModalVisible.value = true;
             }
-            await updateToSystemShortcutKeys();
-            // 显示重启确认弹窗
-            restartModalVisible.value = true;
           }
         } else {
           // 关闭全局热键，重置快捷键
           info("唤醒程序快捷键已修改，重新注册");
           const valid = await invoke('valid_clipboard_backup_regedit');
+          let isBackupSuccess = true;
           if (valid) {
             // 恢复注册表配置
             const backupResult = await invoke<boolean>('recover_clipboard_regedit');
             if (!backupResult) {
               console.log("恢复注册表失败");
               message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
+              // 回滚【替换全局热键】设置
               currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
               await updateUserSettings(currentConfig);
-              return false;
+              isBackupSuccess = false;
             }
           }
-          // 注销快捷键
-          try {
-            const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
-            const registerKey = convertRegisterKey(keys);
-            if (await isRegistered(registerKey)) {
-              // 如果已经注册了快捷键，需要先取消注册，再重新注册
-              await unregister(registerKey);
+          if (isBackupSuccess) {
+            // 注销快捷键
+            try {
+              const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
+              const registerKey = convertRegisterKey(keys);
+              if (await isRegistered(registerKey)) {
+                // 如果已经注册了快捷键，需要先取消注册，再重新注册
+                await unregister(registerKey);
+              }
+            } catch (e) {
+              info("快捷键注销失败" + e);
             }
-          } catch (e) {
-            info("快捷键注销失败" + e);
-          }
 
-          // 修改快捷键
-          currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c'];
-          await emit('update-open-window-key', {keys: currentShortcutKeys});
-          // 更新原始配置
-          Object.assign(originalConfig, currentConfig);
+            // 修改快捷键
+            currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c'];
+            await emit('update-open-window-key', {keys: currentShortcutKeys});
+            // 更新原始配置
+            Object.assign(originalConfig, currentConfig);
 
-          if (valid) {
-            // 显示重启确认弹窗
-            restartModalVisible.value = true;
+            if (valid) {
+              // 显示重启确认弹窗
+              restartModalVisible.value = true;
+            }
           }
         }
       }
