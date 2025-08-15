@@ -7,8 +7,8 @@ import router from "./routers";
 
 // 全局滚动条样式设置
 import './assets/css/scrollbarGlobal.css';
-import {useLanguage} from './configs/LanguageConfig';
-import {useTheme} from './configs/ThemeConfig';
+import {useLanguage} from './services/LanguageService.ts';
+import {useTheme} from './services/ThemeService.ts';
 
 const app = createApp(App);
 const pinia = createPinia();

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import TitleBar from '../components/TitleBar.vue';
+import TitleBar from '../../components/TitleBar.vue';
 
 import {getVersion} from '@tauri-apps/api/app';
 import {onMounted, ref} from 'vue';
-import {useLanguage} from '../configs/LanguageConfig';
-import {openLink} from "../utils/link.ts";
+import {useLanguage} from '../../services/LanguageService.ts';
+import {openLink} from "../../utils/link.ts";
 
 const {currentLanguage} = useLanguage();
 
@@ -21,7 +21,7 @@ onMounted(async () => {
             :dev-tool="`about`"/>
 
   <div class="about-container">
-    <img src="../../public/logo.png" class="logo">
+    <img src="../../../public/logo.png" class="logo">
     <div class="app-name">{{ currentLanguage.pages.about.appName }}</div>
     <div class="version-info">{{ currentLanguage.pages.about.version }}: {{ appVersion }}</div>
     <div class="links-container">

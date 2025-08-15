@@ -2,13 +2,13 @@
 import { emit } from '@tauri-apps/api/event';
 import { useMessage } from 'naive-ui';
 import { onMounted, reactive, ref } from 'vue';
-import AddIcon from '../assets/icons/AddIcon.vue';
-import LeftArrowIcon from '../assets/icons/LeftArrowIcon.vue';
-import SearchIcon from '../assets/icons/SearchIcon.vue';
-import TrashIcon from '../assets/icons/TrashIcon.vue';
-import TitleBar from '../components/TitleBar.vue';
-import { useLanguage } from '../configs/LanguageConfig';
-import ClipboardDBService from '../services/ClipboardDBService';
+import AddIcon from '../../assets/icons/AddIcon.vue';
+import LeftArrowIcon from '../../assets/icons/LeftArrowIcon.vue';
+import SearchIcon from '../../assets/icons/SearchIcon.vue';
+import TrashIcon from '../../assets/icons/TrashIcon.vue';
+import TitleBar from '../../components/TitleBar.vue';
+import { useLanguage } from '../../services/LanguageService.ts';
+import ClipboardDBService from '../../services/ClipboardDBService.ts';
 
 const { currentLanguage } = useLanguage();
 

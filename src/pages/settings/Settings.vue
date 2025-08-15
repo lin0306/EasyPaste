@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useMessage} from 'naive-ui';
-import EditIcon from '../assets/icons/EditIcon.vue';
-import TitleBar from '../components/TitleBar.vue';
+import EditIcon from '../../assets/icons/EditIcon.vue';
+import TitleBar from '../../components/TitleBar.vue';
 
 import {invoke} from '@tauri-apps/api/core';
 import {emit} from '@tauri-apps/api/event';
@@ -9,21 +9,21 @@ import {disable, enable, isEnabled} from '@tauri-apps/plugin-autostart';
 import {isRegistered, register, unregister} from '@tauri-apps/plugin-global-shortcut';
 import {error, info} from '@tauri-apps/plugin-log';
 import {computed, onMounted, reactive, ref} from 'vue';
-import HintIcon from '../assets/icons/HintIcon.vue';
+import HintIcon from '../../assets/icons/HintIcon.vue';
 import {
   getSettings,
   getShortcutKeys,
   saveLanguageCache,
   saveUserShortcutKeys,
   updateUserSettings
-} from '../configs/FileConfig';
-import {getTray, languages, useLanguage} from '../configs/LanguageConfig';
-import {convertRegisterKey, convertShow, formatKeyDisplay} from '../utils/ShortcutKeys';
-import {getWakeUpRoutineKeyAvailable} from "../store/ShortcutKeyAvailableStatus.ts";
-import PassedIcon from "../assets/icons/PassedIcon.vue";
-import ErrorIcon from "../assets/icons/ErrorIcon.vue";
-import {isMac} from "../data/SystemParams.ts";
-import {openLink} from "../utils/link.ts";
+} from '../../services/FileService.ts';
+import {getTray, languages, useLanguage} from '../../services/LanguageService.ts';
+import {convertRegisterKey, convertShow, formatKeyDisplay} from '../../utils/ShortcutKeys.ts';
+import {getWakeUpRoutineKeyAvailable} from "../../store/ShortcutKeyAvailableStatus.ts";
+import PassedIcon from "../../assets/icons/PassedIcon.vue";
+import ErrorIcon from "../../assets/icons/ErrorIcon.vue";
+import {isMac} from "../../data/SystemParams.ts";
+import {openLink} from "../../utils/link.ts";
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();

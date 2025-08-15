@@ -3,8 +3,8 @@ import { GlobalThemeOverrides, NConfigProvider, NMessageProvider } from 'naive-u
 import { computed, onMounted } from 'vue';
 
 import { error, info } from '@tauri-apps/plugin-log';
-import { useLanguage } from './configs/LanguageConfig.ts';
-import { useTheme } from './configs/ThemeConfig.ts';
+import { useLanguage } from './services/LanguageService.ts';
+import { useTheme } from './services/ThemeService.ts';
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
 

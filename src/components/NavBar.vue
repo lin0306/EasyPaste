@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 import HookIcon from '../assets/icons/HookIcon.vue';
-import {useTheme} from '../configs/ThemeConfig.ts';
+import {useTheme} from '../services/ThemeService.ts';
 import {NavBarItem} from "../types/NavBarItem.ts";
 
 const props = defineProps<{

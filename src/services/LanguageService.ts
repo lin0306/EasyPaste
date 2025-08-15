@@ -2,10 +2,10 @@ import { emit, listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
 import { dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui';
 import { ref } from 'vue';
-import { getSettings, updateLanguage } from './FileConfig';
-import { LanguageConfig } from '../types/language';
-import { chinesePageConfig } from '../data/locales/zh';
-import { englishPageConfig } from '../data/locales/en';
+import { getSettings, updateLanguage } from './FileService.ts';
+import { LanguageConfig } from '../types/language.ts';
+import { chinesePageConfig } from '../data/locales/zh.ts';
+import { englishPageConfig } from '../data/locales/en.ts';
 
 // 简体中文配置
 export const chinese: LanguageConfig = {

@@ -3,7 +3,7 @@ import {isPermissionGranted, requestPermission, sendNotification} from '@tauri-a
 import {relaunch} from '@tauri-apps/plugin-process';
 import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-updater';
 import {openUpdaterWindow} from '../utils/window';
-import {useLanguage} from "../configs/LanguageConfig.ts";
+import {useLanguage} from "./LanguageService.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();

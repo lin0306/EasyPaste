@@ -1,11 +1,11 @@
 import {createRouter, createWebHistory} from 'vue-router';
 
 const routes = [
-    {path: '/list', component: () => import('../pages/ClipboardList.vue')},
-    {path: '/settings', component: () => import('../pages/Settings.vue')},
-    {path: '/tags', component: () => import('../pages/TagsManager.vue')},
-    {path: '/about', component: () => import('../pages/About.vue')},
-    {path: '/updater', component: () => import('../pages/Updater.vue')},
+    {path: '/list', component: () => import('../pages/index/ClipboardList.vue')},
+    {path: '/settings', component: () => import('../pages/settings/Settings.vue')},
+    {path: '/tags', component: () => import('../pages/tags/TagsManager.vue')},
+    {path: '/about', component: () => import('../pages/about/About.vue')},
+    {path: '/updater', component: () => import('../pages/updater/Updater.vue')},
 ]
 
 const router = createRouter({

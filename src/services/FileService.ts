@@ -1,6 +1,6 @@
 import { BaseDirectory, create, exists, readFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { error, info } from "@tauri-apps/plugin-log";
-import { uint8ArrayToString } from "../utils/strUtil";
+import { uint8ArrayToString } from "../utils/strUtil.ts";
 
 let defaultSettings: Settings = {
     theme: "light",

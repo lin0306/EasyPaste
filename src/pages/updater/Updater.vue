@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { open } from '@tauri-apps/plugin-shell';
-import TitleBar from '../components/TitleBar.vue';
+import TitleBar from '../../components/TitleBar.vue';
 
 import { check } from '@tauri-apps/plugin-updater';
 import { onMounted, reactive, ref } from 'vue';
-import { useLanguage } from '../configs/LanguageConfig';
-import UpdaterService from '../services/UpdaterService';
+import { useLanguage } from '../../services/LanguageService.ts';
+import UpdaterService from '../../services/UpdaterService.ts';
 import {getCurrentWindow} from "@tauri-apps/api/window";
-import {covertMarkdown} from "../utils/strUtil.ts";
+import {covertMarkdown} from "../../utils/strUtil.ts";
 
 const { currentLanguage } = useLanguage();
 let updater: any = null;

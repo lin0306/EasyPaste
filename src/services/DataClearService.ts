@@ -1,5 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
-import { getSettings } from '../configs/FileConfig';
+import { getSettings } from './FileService.ts';
 import ClipboardDBService from './ClipboardDBService';
 
 /**
