@@ -68,7 +68,7 @@
           "English"
         ],
         "displayLanguageSelector": true,
-        "installerHooks": "./windows/hook.nsh",
+        "installerHooks": "./configs/nsis/hook.nsh",
         "installerIcon": "./icons/icon.ico",
         "installMode": "both"
       }
