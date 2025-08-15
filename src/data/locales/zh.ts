@@ -17,6 +17,7 @@ export const chinesePageConfig: PageConfig = {
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键',
         autoHideWindow: '自动隐藏窗口',
+        alwaysOnTop: '窗口始终置顶',
         shortcutKeyOccupationHint: '系统默认剪贴板快捷键被其他程序占用，请先释放快捷键',
         replaceGlobalHotkeyNoPermissionHint: '请先以管理员身份启动程序，才能修改此设置',
         replaceGlobalHotkeyLinkHint: '如何以管理员身份运行程序',

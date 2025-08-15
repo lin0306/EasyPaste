@@ -884,7 +884,6 @@ async function initUpdateAutoHideWindowListener() {
     isAutoHideWindow.value = autoHideWindow;
     const window = getCurrentWebviewWindow();
     if (autoHideWindow) {
-
       if (blurTimer) {
         clearInterval(blurTimer);
       }
@@ -898,6 +897,18 @@ async function initUpdateAutoHideWindowListener() {
       }
       await window.setSkipTaskbar(false);
     }
+  });
+}
+
+/**
+ * 初始化更新窗口置顶状态监听
+ */
+let updateAlwaysOnTopListener: any = null;
+function initUpdateAlwaysOnTopListener() {
+  return listen('update-always-on-top', async (event: any) => {
+    const isTop = event.payload.isTop;
+    const window = getCurrentWebviewWindow();
+    await window.setAlwaysOnTop(isTop);
   });
 }
 
@@ -927,6 +938,11 @@ onMounted(async () => {
     } else {
       const window = getCurrentWebviewWindow();
       await window.setSkipTaskbar(false);
+    }
+    // 窗口设置不置顶，取消置顶状态
+    if (!settings.alwaysOnTop) {
+      const window = getCurrentWebviewWindow();
+      await window.setAlwaysOnTop(false);
     }
 
     // 添加打开设置窗口事件监听
@@ -958,6 +974,9 @@ onMounted(async () => {
 
     // 添加更新自动隐藏窗口事件监听
     updateAutoHideWindowListener = await initUpdateAutoHideWindowListener();
+
+    // 添加修改窗口置顶状态事件监听
+    updateAlwaysOnTopListener = await initUpdateAlwaysOnTopListener();
 
     // 增加事件监听
     document.addEventListener('keydown', handleKeyDown);
@@ -1037,6 +1056,11 @@ onUnmounted(async () => {
   // 添加更新自动隐藏窗口事件监听
   if (updateAutoHideWindowListener) {
     updateAutoHideWindowListener();
+  }
+
+  // 清除修改窗口置顶状态事件监听
+  if (updateAlwaysOnTopListener) {
+    updateAlwaysOnTopListener();
   }
 
   // 关闭自动检查更新操作

@@ -230,6 +230,8 @@ async function saveConfig() {
     const isUpdateReplaceGlobalHotkey = currentConfig.replaceGlobalHotkey !== originalConfig.replaceGlobalHotkey;
     // 是否修改了【自动隐藏窗口】
     const isUpdateAutoHideWindow = currentConfig.autoHideWindow !== originalConfig.autoHideWindow;
+    // 是否修改了【窗口始终置顶】
+    const isUpdateAlwaysOnTop = currentConfig.alwaysOnTop !== originalConfig.alwaysOnTop;
     // 是否修改了【语言】
     const isUpdateLanguages = currentConfig.languages !== originalConfig.languages;
     // 是否修改了【启用标签】
@@ -348,6 +350,16 @@ async function saveConfig() {
           location: currentConfig.bindTagBtnShowLocation,
         });
       }
+      // 是否修改了【自动隐藏窗口】
+      if (isUpdateAutoHideWindow) {
+        // 发送更新了启用标签状态消息
+        await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
+      }
+      // 是否修改了【窗口始终置顶】
+      if (isUpdateAlwaysOnTop) {
+        // 发送更新了窗口置顶状态消息
+        await emit('update-always-on-top', {isTop: currentConfig.alwaysOnTop});
+      }
 
       /// 修改了更新设置页面
       // 是否修改了【自动检查更新】或者【自动更新方式】或者【自动更新时间间隔】
@@ -367,11 +379,6 @@ async function saveConfig() {
           maxHistoryItems: currentConfig.maxHistoryItems,
           dataRetentionDays: currentConfig.dataRetentionDays
         });
-      }
-      // 是否修改了【自动隐藏窗口】
-      if (isUpdateAutoHideWindow) {
-        // 发送更新了启用标签状态消息
-        await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
       }
 
       // 如果只修改了【替换全局热键】，不需要提示保存成功
@@ -509,6 +516,10 @@ onMounted(async () => {
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoHideWindow }}</span>
             <n-switch v-model:value="currentConfig.autoHideWindow"/>
+          </div>
+          <div class="form-item" v-if="!currentConfig.autoHideWindow">
+            <span class="label">{{ currentLanguage.pages.settings.alwaysOnTop }}</span>
+            <n-switch v-model:value="currentConfig.alwaysOnTop"/>
           </div>
           <div class="line" v-if="!isMac">
             <div class="main-item">

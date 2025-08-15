@@ -14,7 +14,8 @@ let defaultSettings: Settings = {
     autoCheckUpdateInterval: 1,
     enableTag: true,
     bindTagBtnShowLocation: 'top-right',
-    autoHideWindow: false
+    autoHideWindow: false,
+    alwaysOnTop: true,
 }
 let defaultShortcutKeys = {
     search: {

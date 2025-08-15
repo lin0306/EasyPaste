@@ -16,6 +16,7 @@ export const englishPageConfig: PageConfig = {
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey',
         autoHideWindow: 'Auto Hide Window',
+        alwaysOnTop: 'Window Always Top',
         shortcutKeyOccupationHint: 'The default clipboard shortcut key of the system is already occupied by another program. Please release the shortcut key first.',
         replaceGlobalHotkeyNoPermissionHint: 'Please start the program as an administrator first, then you can modify this setting.',
         replaceGlobalHotkeyLinkHint: 'How to run a program as an administrator',

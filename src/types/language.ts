@@ -25,6 +25,7 @@ export interface PageConfig {
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;
         autoHideWindow: string;
+        alwaysOnTop: string;
         shortcutKeyOccupationHint: string;
         replaceGlobalHotkeyNoPermissionHint: string;
         replaceGlobalHotkeyLinkHint: string;
