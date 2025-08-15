@@ -35,6 +35,7 @@ import {isCode} from '../utils/TextType';
 import {openAboutWindow, openSettingsWindow, openTagsWindow} from '../utils/window';
 import {sendNotification} from "@tauri-apps/plugin-notification";
 import {saveWakeUpRoutineKeyAvailable} from "../store/ShortcutKeyAvailableStatus.ts";
+import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -881,6 +882,7 @@ async function initUpdateAutoHideWindowListener() {
     const autoHideWindow = event.payload.isAutoHide;
     console.log('更新自动隐藏窗口状态', autoHideWindow)
     isAutoHideWindow.value = autoHideWindow;
+    const window = getCurrentWebviewWindow();
     if (autoHideWindow) {
 
       if (blurTimer) {
@@ -888,11 +890,13 @@ async function initUpdateAutoHideWindowListener() {
       }
       // 添加监听窗口失焦自动隐藏定时任务
       blurTimer = initBlurTimer();
+      await window.setSkipTaskbar(true);
     } else {
       // 清除窗口失焦定时任务
       if (blurTimer) {
         clearInterval(blurTimer);
       }
+      await window.setSkipTaskbar(false);
     }
   });
 }
@@ -920,6 +924,9 @@ onMounted(async () => {
     isAutoHideWindow.value = settings.autoHideWindow;
     if (settings.autoHideWindow) {
       blurTimer = initBlurTimer();
+    } else {
+      const window = getCurrentWebviewWindow();
+      await window.setSkipTaskbar(false);
     }
 
     // 添加打开设置窗口事件监听
