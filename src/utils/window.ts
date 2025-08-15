@@ -36,8 +36,9 @@ async function createWin(options: WindowOptions) {
     // 判断窗口是否存在
     const existWin = await WebviewWindow.getByLabel(args.label)
     if (existWin) {
-        console.log('窗口已存在>>' + existWin)
-        // ...
+        // 窗口存在，直接聚焦
+        await existWin.setFocus();
+        return;
     }
     // 创建窗口对象
     const win = new WebviewWindow(args.label, args)
