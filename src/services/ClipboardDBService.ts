@@ -183,7 +183,7 @@ class ClipboardDBService {
         }
 
         // 添加排序条件：先按置顶状态，再按时间排序
-        itemsSql += ' ORDER BY ci.is_topped DESC, CASE WHEN ci.is_topped = 1 THEN ci.top_time ELSE ci.copy_time END DESC';
+        itemsSql += ' ORDER BY ci.is_topped DESC, CASE WHEN ci.is_topped = 1 THEN ci.top_time ELSE ci.copy_time END DESC, ci.id DESC';
 
         // 添加分页限制
         const offset = (page - 1) * pageSize;
