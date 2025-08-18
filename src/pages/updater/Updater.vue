@@ -6,8 +6,8 @@ import { check } from '@tauri-apps/plugin-updater';
 import { onMounted, reactive, ref } from 'vue';
 import { useLanguage } from '../../services/LanguageService.ts';
 import UpdaterService from '../../services/UpdaterService.ts';
-import {getCurrentWindow} from "@tauri-apps/api/window";
 import {covertMarkdown} from "../../utils/strUtil.ts";
+import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 
 const { currentLanguage } = useLanguage();
 let updater: any = null;
@@ -73,7 +73,7 @@ function downloadUpdate() {
         isDownloading.value = false;
         console.log('下载完成');
         // 窗口最小化了，下载完成后自动取消最小化
-        getCurrentWindow().unminimize();
+        getCurrentWebviewWindow().unminimize();
         break;
     }
   }, undefined);

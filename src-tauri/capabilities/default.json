@@ -95,6 +95,7 @@
     "core:window:allow-start-dragging",
     "core:window:allow-set-always-on-top",
     "core:window:allow-set-skip-taskbar",
+    "core:window:allow-minimize",
     "process:default",
     "process:allow-exit",
     "process:allow-restart",

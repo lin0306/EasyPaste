@@ -24,13 +24,14 @@
         "alwaysOnTop": true,
         "decorations": false,
         "visible": false,
-        "skipTaskbar": true,
+        "skipTaskbar": false,
         "dragDropEnabled": false,
-        "focus": false,
+        "focus": true,
         "fullscreen": false,
         "incognito": true,
         "shadow": true,
-        "contentProtected": true
+        "contentProtected": true,
+        "resizable": true
       }
     ],
     "security": {

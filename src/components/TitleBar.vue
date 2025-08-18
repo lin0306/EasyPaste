@@ -18,7 +18,7 @@
         <CloseIcon class="program-btn" id="close-button-img"/>
       </div>
       <div v-if="showHideBtn" class="control-button close-button" @click="onHide">
-        <HideIcon class="program-btn" id="hide-button-img"/>
+        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
       </div>
     </div>
   </div>
@@ -28,15 +28,14 @@
 import CloseIcon from '../assets/icons/CloseIcon.vue'
 import DevToolIcon from '../assets/icons/DevToolIcon.vue'
 import FixedIcon from '../assets/icons/FixedIcon.vue'
-import HideIcon from '../assets/icons/HideIcon.vue'
 import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
 import {invoke} from '@tauri-apps/api/core'
-import {getCurrentWindow} from '@tauri-apps/api/window'
 import {onMounted, ref} from 'vue'
 import {isDev} from "../data/SystemParams.ts"
 import {listFixedStore} from '../store/fixed'
+import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 
 const props = withDefaults(defineProps<{
   title: string;
@@ -73,19 +72,19 @@ function onUnfixWindow() {
 
 function onMinimizeWindow() {
   if (props.showMinimizeBtn) {
-    getCurrentWindow().minimize();
+    getCurrentWebviewWindow().minimize();
   }
 }
 
 function onClose() {
   if (props.showCloseBtn) {
-    getCurrentWindow().close();
+    getCurrentWebviewWindow().close();
   }
 }
 
 function onHide() {
   if (props.showHideBtn) {
-    getCurrentWindow().hide();
+    getCurrentWebviewWindow().hide();
   }
 }
 

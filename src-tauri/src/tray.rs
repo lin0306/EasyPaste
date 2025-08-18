@@ -84,16 +84,22 @@ pub fn create_tray(app: AppHandle) {
                 button: MouseButton::Left,
                 button_state: MouseButtonState::Up,
             } => {
+                // todo 已知bug：事件只有在松开鼠标的时候才会触发
+                println!("按下托盘图标 {:?}", event);
                 // 打开主窗口
-                let win = tray.app_handle().get_window("main").expect("主窗口不存在");
+                let win = tray.app_handle().get_webview_window("main").expect("主窗口不存在");
                 match win.is_visible() {
-                    Ok(visible) if !visible => {
-                        win.show().expect("窗口显示失败");
-                        win.set_focus().expect("窗口聚焦失败");
+                    Ok(visible) => {
+                        if !visible {
+                            println!("显示窗口");
+                            win.show().expect("窗口显示失败");
+                            win.set_focus().expect("窗口聚焦失败");
+                        } else {
+                            println!("隐藏窗口");
+                            win.hide().expect("窗口隐藏失败")
+                        }
                     }
-                    Ok(visible) if visible => win.hide().expect("窗口隐藏失败"),
-                    Err(e) => eprintln!("窗口可见性错误: {}", e),
-                    _ => (),
+                    Err(e) => eprintln!("窗口可见性错误: {}", e)
                 };
             }
             _ => {}
