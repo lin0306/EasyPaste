@@ -8,6 +8,7 @@ interface ClipboardItem {
   file_path: string;
   tags: TagItem[],
   chars: number;
+  tags_json: string;
 }
 
 interface TagItem {

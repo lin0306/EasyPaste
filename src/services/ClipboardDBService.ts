@@ -70,7 +70,10 @@ class ClipboardDBService {
                 )
             `);
 
-            const clipboardItemsInfo = await this.db?.select<[{cid: number, name: string}]>(`PRAGMA table_info(clipboard_items)`);
+            const clipboardItemsInfo = await this.db?.select<[{
+                cid: number,
+                name: string
+            }]>(`PRAGMA table_info(clipboard_items)`);
             const clipboardItemsColumnExists = clipboardItemsInfo?.some((col) => col.name === 'chars')
             if (!clipboardItemsColumnExists) {
                 // 增加字符数字段
@@ -135,83 +138,172 @@ class ClipboardDBService {
     }
 
     /**
-     * 分页搜索剪贴板内容
-     * 支持按内容和标签ID进行搜索，并支持分页
-     * @param {string} content 搜索内容关键词
-     * @param {number} tagId 标签ID
-     * @param {number} page 页码，从1开始
-     * @param {number} pageSize 每页条数
-     * @returns {Object} 包含总条数和当前页数据的对象
+     * 搜索剪贴板项目 - 游标分页，降低查询性能
+     * @link <a href="https://lxblog.com/qianwen/share?shareId=2d2509e7-a486-4b7a-a18d-49fb85826cfb">查询逻辑设计来源</a>
+     * @param content 搜索内容
+     * @param tagId 标签ID
+     * @param pageSize 每页数量
+     * @param latestItemId 条目ID
      */
-    async searchItemsPaged(content: string | undefined, tagId: number | undefined, page: number = 1, pageSize: number = 10): Promise<{
+    async searchItems(content?: string, tagId?: number, pageSize: number = 10, latestItemId?: number): Promise<{
         total: number;
         items: ClipboardItem[];
     }> {
-        // 构建基础SQL查询，用于计算总条数
-        let countSql = 'SELECT COUNT(DISTINCT ci.id) as total FROM clipboard_items ci';
-        const countParams = [];
+        try {
+            // 初始化sql前缀
+            let itemsSql = `
+                select ci.*,
+                       iif(t.id is null, null,
+                           json_group_array(
+                                   json_object('id', t.id, 'name', t.name, 'color', t.color, 'created_at', t.created_at)
+                           )
+                       ) as tags_json
+                from clipboard_items ci
+                         left join item_tags it on ci.id = it.item_id
+                         left join tags t on it.tag_id = t.id
+                where 1 = 1
+            `;
+            let countSql = `
+                select COUNT(DISTINCT ci.id) as total
+                from clipboard_items ci
+                         left join item_tags it on ci.id = it.item_id
+                         left join tags t on it.tag_id = t.id
+                where 1 = 1
+            `;
 
-        // 构建基础SQL查询，获取符合条件的剪贴板条目
-        let itemsSql = 'SELECT DISTINCT ci.*, ('
-            + 'SELECT json_group_array(json_object('
-            + "'id', t.id, 'name', t.name, 'color', t.color, 'created_at', t.created_at"
-            + ')) FROM tags t'
-            + ' INNER JOIN item_tags it ON t.id = it.tag_id'
-            + ' WHERE it.item_id = ci.id'
-            + ') as tags_json FROM clipboard_items ci';
-        const itemsParams = [];
+            // 初始化查询参数
+            const queryParams = [];
+            const countParams = [];
 
-        // 根据标签ID构建查询条件
-        if (tagId) {
-            // 通过关联表连接标签和剪贴板条目
-            const joinClause = ' INNER JOIN item_tags it ON ci.id = it.item_id'
-                + ' INNER JOIN tags t ON it.tag_id = t.id'
-                + ' WHERE t.id = ?';
-            countSql += joinClause;
-            itemsSql += joinClause;
-            countParams.push(tagId);
-            itemsParams.push(tagId);
-        }
+            // 传了id，查的不是第一页
+            if (latestItemId) {
+                const items = await this.getItem(latestItemId);
+                if (items && items.length > 0) {
+                    const latestItem = items[0];
+                    // sql有点复杂，具体解释如下：
+                    // -- 条件1：当前记录的“置顶状态” > 上一条（即从非置顶跳到置顶区不可能，所以只可能是同区或下一个区）
+                    // -- 我们分三种情况：
+                    //
+                    // -- 情况1：当前记录在“置顶区”，且比上一条的 top_time 更新
+                    // (ci.top_time IS NOT NULL
+                    //  AND (CASE WHEN ? IS NULL THEN 1 ELSE 0 END = 0)  -- 上一条不是置顶（即上一条在非置顶区）
+                    // )
+                    // OR
+                    // -- 情况2：都在置顶区，但 top_time 更晚，或 top_time 相同但 id 更小
+                    // (ci.top_time IS NOT NULL
+                    //  AND ? IS NOT NULL
+                    //  AND (
+                    //    ci.top_time < ?
+                    //    OR (ci.top_time = ? AND a.id < ?)
+                    //  )
+                    // )
+                    // OR
+                    // -- 情况3：当前在非置顶区（即上一条已经是非置顶区或当前就是非置顶）
+                    // (ci.top_time IS NULL
+                    //  AND (
+                    //    -- 上一条是置顶区：直接进入非置顶区
+                    //    ? IS NULL
+                    //    OR
+                    //    -- 上一条也是非置顶区：按 copy_time 和 id 继续
+                    //    (ci.copy_time < ?
+                    //     OR (ci.copy_time = ? AND ci.id < ?)
+                    //    )
+                    //  )
+                    // )
+                    //
+                    // 参数说明（按顺序传参）
+                    // 第一个 ? 参数：上一条记录的 top_time（用于判断是否还在置顶区）
+                    // 第二个 ? 参数：上一条记录的 top_time（用于比较）
+                    // 第三个 ? 参数：上一条记录的 top_time（用于 = 判断）
+                    // 第四个 ? 参数：上一条记录的 ci.id（用于 = 时 id 比较）
+                    // 第五个 ? 参数：上一条记录的 top_time（判断是否已进入非置顶区）
+                    // 第六个 ? 参数：上一条记录的 copy_time
+                    // 第七个 ? 参数：上一条记录的 copy_time
+                    // 第八个 ? 参数：上一条记录的 ci.id
 
-        // 根据内容关键词构建查询条件
-        if (content && content !== '') {
-            const whereClause = tagId ? ' AND ci.content LIKE ?' : ' WHERE ci.content LIKE ?';
-            countSql += whereClause;
-            itemsSql += whereClause;
-            countParams.push(`%${content}%`);
-            itemsParams.push(`%${content}%`);
-        }
+                    itemsSql += `
+                        AND 
+                        (
+                            (
+                                ci.top_time IS NOT NULL 
+                                AND (CASE WHEN ? IS NULL THEN 1 ELSE 0 END = 0)
+                            )
+                            OR (
+                                ci.top_time IS NOT NULL 
+                                AND ? IS NOT NULL 
+                                AND ( ci.top_time < ? OR (ci.top_time = ? AND ci.id < ?) )
+                            )
+                            OR (
+                                ci.top_time IS NULL 
+                                AND ( ? IS NULL OR ( ci.copy_time < ? OR (ci.copy_time = ? AND ci.id < ?) ) )
+                            )
+                        )
+                    `;
+                    queryParams.push(latestItem.top_time);
+                    queryParams.push(latestItem.top_time);
+                    queryParams.push(latestItem.top_time);
+                    queryParams.push(latestItem.top_time);
+                    queryParams.push(latestItem.id);
+                    queryParams.push(latestItem.top_time);
+                    queryParams.push(latestItem.copy_time);
+                    queryParams.push(latestItem.copy_time);
+                    queryParams.push(latestItem.id);
+                }
+            }
 
-        // 添加排序条件：先按置顶状态，再按时间排序
-        itemsSql += ' ORDER BY ci.is_topped DESC, CASE WHEN ci.is_topped = 1 THEN ci.top_time ELSE ci.copy_time END DESC, ci.id DESC';
+            // 生成查询参数
+            if (tagId) {
+                itemsSql += `and t.id = ?`;
+                countSql += `and t.id = ?`;
+                queryParams.push(tagId);
+                countParams.push(tagId);
+            }
 
-        // 添加分页限制
-        const offset = (page - 1) * pageSize;
-        itemsSql += ' LIMIT ? OFFSET ?';
-        itemsParams.push(pageSize, offset);
+            if (content && content.trim() !== '') {
+                itemsSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`;
+                countSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`;
+                queryParams.push(`%${content}%`);
+                queryParams.push(`%${content}%`);
+                countParams.push(`%${content}%`);
+                countParams.push(`%${content}%`);
+            }
 
-        // 获取总条数
-        const countResult = await this.db?.select(countSql, countParams) as any[];
-        const total = countResult[0].total;
-        if (!total || total <= 0) {
+
+            // 拼接过滤参数
+            itemsSql += `
+                group by ci.id, ci.top_time, ci.copy_time
+                order by ci.top_time desc, ci.copy_time desc, ci.id desc
+            `;
+
+            // 拼接分页
+            itemsSql += ` limit ?`;
+            queryParams.push(pageSize);
+
+            // 获取总条数
+            const countResult = await this.db?.select(countSql, countParams) as [{ total: number }];
+            const total = countResult[0].total;
+            if (!total || total <= 0) {
+                return {total: 0, items: []};
+            }
+
+            // 获取符合条件的剪贴板条目
+            const items = await this.db?.select(itemsSql, queryParams) as any[];
+
+            // 处理JSON字符串为JavaScript对象
+            for (const item of items) {
+                try {
+                    item.tags = item.tags_json ? JSON.parse(item.tags_json) : [];
+                } catch (err) {
+                    error('[数据库进程] 解析标签JSON失败，itemId:' + item.id + ':' + err);
+                    item.tags = [];
+                }
+            }
+
+            return {total, items};
+        } catch (e) {
+            console.error('[数据库进程] 获取剪贴板条目失败:' + e);
             return {total: 0, items: []};
         }
-
-        // 获取符合条件的剪贴板条目
-        const items = await this.db?.select(itemsSql, itemsParams) as any[];
-
-        // 处理JSON字符串为JavaScript对象
-        for (const item of items) {
-            try {
-                item.tags = item.tags_json ? JSON.parse(item.tags_json) : [];
-                delete item.tags_json; // 删除原始JSON字符串字段
-            } catch (err) {
-                error('[数据库进程] 解析标签JSON失败:' + err);
-                item.tags = [];
-            }
-        }
-
-        return {total, items};
     }
 
     /**
