@@ -248,7 +248,7 @@ onUnmounted(async () => {
                   <UnTopIcon v-else/>
                 </div>
                 <!-- 删除按钮 -->
-                <div class="card-header-right-button" @click="removeItem(item.id)">
+                <div class="card-header-right-button" @click="removeItem(item.id, index)">
                   <TrashIcon/>
                 </div>
                 <!-- 设置标签按钮 -->
