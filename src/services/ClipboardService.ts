@@ -36,7 +36,7 @@ export async function initClipboardListener() {
                     clipboardListen.setItem(latestItem[0]);
                 }
                 clipboardListen.success();
-                info("剪贴板内容更新入库成功");
+                info("剪贴板内容保存完成");
             }, 50);
         } catch (er) {
             error('处理剪贴板事件失败:' + er);
