@@ -85,7 +85,6 @@ pub fn create_tray(app: AppHandle) {
                 button_state: MouseButtonState::Up,
             } => {
                 // todo 已知bug：事件只有在松开鼠标的时候才会触发
-                println!("按下托盘图标 {:?}", event);
                 // 打开主窗口
                 let win = tray.app_handle().get_webview_window("main").expect("主窗口不存在");
                 match win.is_visible() {
