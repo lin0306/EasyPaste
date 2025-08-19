@@ -215,7 +215,7 @@ onUnmounted(async () => {
          @dragover.prevent
          @dragenter="handleDragEnterTag(tag.id)"
          @dragleave="handleDragLeaveTag($event)"
-         @drop="handleDropOnTag(tag.id)"
+         @drop="handleDropOnTag(tag)"
          @click="handleTagClick(tag.id)"
     >
       <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
@@ -226,7 +226,7 @@ onUnmounted(async () => {
   <div :class="searchBoxState.visible ? `clipboard-container-search` : `clipboard-container`">
     <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems()">
       <!-- 列表内容 -->
-      <div v-for="item in clipboardItems" :key="item.id" class="clipboard-item"
+      <div v-for="(item, index) in clipboardItems" :key="item.id" class="clipboard-item"
            @dblclick="onCopy(item, message, currentLanguage)">
         <div class="clipboard-card">
           <!-- 头部 -->
@@ -255,7 +255,7 @@ onUnmounted(async () => {
                 <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'"
                      class="card-header-right-button drag-icon"
                      draggable="true"
-                     @dragstart="handleDragStart(item.id, $event)"
+                     @dragstart="handleDragStart(item, index, $event)"
                      @dragend="handleDragEnd">
                   <AddTagIcon class="dropdown-icon"/>
                 </div>
@@ -300,7 +300,7 @@ onUnmounted(async () => {
           <!-- 标签展示 -->
           <div class="card-tags" v-if="tagSettingState.isShow">
             <n-tag size="small" round closable bordered v-for="tag in item.tags" :key="tag.id" class="item-tag"
-                   @close="removeItemTag(item, tag)">
+                   @close="removeItemTag(item, tag, index)">
               <div class="item-tag-content">
                 <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
                 <div class="item-tag-name">
@@ -309,7 +309,7 @@ onUnmounted(async () => {
               </div>
             </n-tag>
             <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'" class="bind-tag-button"
-                 draggable="true" @dragstart="handleDragStart(item.id, $event)" @dragend="handleDragEnd">
+                 draggable="true" @dragstart="handleDragStart(item, index, $event)" @dragend="handleDragEnd">
               <AddTagIcon class="bind-tag-icon"/>
               <span v-if="tagSettingState.isShow">绑定标签</span>
             </div>
