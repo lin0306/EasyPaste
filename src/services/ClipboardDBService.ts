@@ -143,9 +143,9 @@ class ClipboardDBService {
      * @param content 搜索内容
      * @param tagId 标签ID
      * @param pageSize 每页数量
-     * @param latestItemId 条目ID
+     * @param lastItemId 上一页最后一个条目ID
      */
-    async searchItems(content?: string, tagId?: number, pageSize: number = 10, latestItemId?: number): Promise<{
+    async searchItems(content?: string, tagId?: number, pageSize: number = 10, lastItemId?: number): Promise<{
         total: number;
         items: ClipboardItem[];
     }> {
@@ -176,8 +176,8 @@ class ClipboardDBService {
             const countParams = [];
 
             // 传了id，查的不是第一页
-            if (latestItemId) {
-                const items = await this.getItem(latestItemId);
+            if (lastItemId) {
+                const items = await this.getItem(lastItemId);
                 if (items && items.length > 0) {
                     const latestItem = items[0];
                     // sql有点复杂，具体解释如下：
@@ -393,6 +393,13 @@ class ClipboardDBService {
      */
     async getItem(id: number): Promise<ClipboardItem[] | undefined> {
         return this.db?.select('SELECT * FROM clipboard_items WHERE id = ?', [id]);
+    }
+
+    /**
+     * 获取最新条目
+     */
+    async getLatestItem(): Promise<ClipboardItem[] | undefined> {
+        return this.db?.select('SELECT * FROM clipboard_items ORDER BY copy_time DESC LIMIT 1');
     }
 
     // 标签相关的方法

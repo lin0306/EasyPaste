@@ -22,6 +22,7 @@ import {
   clipboardItems,
   destroyClipboardDataContext,
   initializeClipboardDataContext,
+  insertClipboardItem,
   isItemTagged,
   loadClipboardItems,
   loadMoreItems,
@@ -118,7 +119,8 @@ watch(() => clipboardListen.state, (newValue, oldValue) => {
       && newValue === CopyState.SUCCESS
       && oldValue === CopyState.COPING
   ) {
-    loadClipboardItems(true);
+    console.log("检测到剪贴板有更新，插入新数据");
+    insertClipboardItem(clipboardListen.getItem());
   }
 });
 

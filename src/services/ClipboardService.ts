@@ -15,25 +15,31 @@ export async function initClipboardListener() {
             clipboardListen.coping();
             const payload: any = event.payload;
 
+            const db = await ClipboardDBService.getInstance();
             if (payload.type === 'text') {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    const db = await ClipboardDBService.getInstance();
                     await db.saveClipboardItem(content, 'text');
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
                 if (fileName) {
                     // 直接将文件路径保存到数据库
-                    const db = await ClipboardDBService.getInstance();
                     await db.saveClipboardItem(fileName, 'file');
                 }
             }
+            // 延迟50毫米，让数据先入库完成
+            setTimeout(async () => {
+                const latestItem = await db.getLatestItem();
+                if (latestItem) {
+                    clipboardListen.setItem(latestItem[0]);
+                }
+                clipboardListen.success();
+            }, 50);
         } catch (er) {
             error('处理剪贴板事件失败:' + er);
-        } finally {
-            clipboardListen.success();
+            clipboardListen.error();
         }
     });
 
