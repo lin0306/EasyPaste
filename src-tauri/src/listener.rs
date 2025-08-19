@@ -24,7 +24,7 @@ impl ClipboardHandler for Manager {
     fn on_clipboard_change(&mut self) {
         // 1. 检测文件
         if let Ok(files) = self.ctx.get_files() {
-            println!("files:{}", files.join(";"));
+            info!("检测到剪贴板有复制到新的文件，files:{}", files.join(";"));
             let mut map = Map::new();
             map.insert("type".into(), "file".into());
             map.insert(
@@ -37,7 +37,7 @@ impl ClipboardHandler for Manager {
 
         // 2. 检测文本
         if let Ok(text) = self.ctx.get_text() {
-            println!("text:{}", text);
+            println!("检测到剪贴板有复制到新的文本，text:{}", text);
             let mut map = Map::new();
             map.insert("type".into(), "text".into());
             map.insert("content".into(), text.into());
