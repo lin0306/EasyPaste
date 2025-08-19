@@ -37,7 +37,7 @@ impl ClipboardHandler for Manager {
 
         // 2. 检测文本
         if let Ok(text) = self.ctx.get_text() {
-            println!("检测到剪贴板有复制到新的文本，text:{}", text);
+            info!("检测到剪贴板有复制到新的文本，text:{}", text);
             let mut map = Map::new();
             map.insert("type".into(), "text".into());
             map.insert("content".into(), text.into());
