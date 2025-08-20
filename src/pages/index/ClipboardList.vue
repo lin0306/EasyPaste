@@ -175,7 +175,9 @@ onUnmounted(async () => {
 
 <template>
 
-  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
+  <TitleBar :title="currentLanguage.pages.list.title"
+            :showFixedBtn="true"
+            :show-hide-btn="!isAutoHideWindow"
             :dev-tool="`main`"/>
   <HeadNavigationBar/>
 
@@ -210,7 +212,7 @@ onUnmounted(async () => {
       :class="{ 'has-selected-tag': dragState.isDragging }"
       @dragover.prevent
   >
-    <transition-group name="tag" tag="ul">
+    <transition-group name="tag">
       <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
            :class="{
           'tag-dragging-over': dragState.draggedOverTagId === tag.id,
