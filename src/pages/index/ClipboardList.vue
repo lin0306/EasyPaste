@@ -174,63 +174,66 @@ onUnmounted(async () => {
 </script>
 
 <template>
-  <transition-group name="container" mode="out-in">
-    <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
-              :dev-tool="`main`"/>
-    <HeadNavigationBar/>
 
-    <!-- 搜索框 -->
-    <div class="search-container" v-show="searchBoxState.visible">
-      <transition-group name="search" mode="out-in">
-        <n-input
-            id="search-input"
-            v-model:value="searchBoxState.text"
-            :placeholder="currentLanguage.pages.list.searchHint"
-            clearable
-            @input="loadClipboardItems(true)"
-            size="small"
-            v-if="searchBoxState.visible"
-        >
-          <template #prefix>
-            <!-- 搜索 -->
-            <n-icon size="18">
-              <SearchIcon/>
-            </n-icon>
-          </template>
-        </n-input>
-      </transition-group>
-    </div>
+  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
+            :dev-tool="`main`"/>
+  <HeadNavigationBar/>
+
+  <!-- 搜索框 -->
+  <div class="search-container" v-show="searchBoxState.visible">
+    <transition-group name="search">
+      <n-input
+          id="search-input"
+          v-model:value="searchBoxState.text"
+          :placeholder="currentLanguage.pages.list.searchHint"
+          clearable
+          @input="loadClipboardItems(true)"
+          size="small"
+          v-if="searchBoxState.visible"
+          :key="searchBoxState.visible.toString()"
+      >
+        <template #prefix>
+          <!-- 搜索 -->
+          <n-icon size="18">
+            <SearchIcon/>
+          </n-icon>
+        </template>
+      </n-input>
+    </transition-group>
+  </div>
 
 
-    <!-- 标签列表 -->
-    <div
-        v-if="tagSettingState.isShow"
-        class="tag-list"
-        :class="{ 'has-selected-tag': dragState.isDragging }"
-        @dragover.prevent
-    >
-      <transition-group name="tag" tag="ul">
-        <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
-             :class="{
+  <!-- 标签列表 -->
+  <div
+      v-if="tagSettingState.isShow"
+      class="tag-list"
+      :class="{ 'has-selected-tag': dragState.isDragging }"
+      @dragover.prevent
+  >
+    <transition-group name="tag" tag="ul">
+      <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
+           :class="{
           'tag-dragging-over': dragState.draggedOverTagId === tag.id,
           'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
           'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
           'tag-selected': selectedTagState.selectedTagId === tag.id
         }"
-             :style="{ backgroundColor: tag.color }"
-             @dragover.prevent
-             @dragenter="handleDragEnterTag(tag.id)"
-             @dragleave="handleDragLeaveTag($event)"
-             @drop="handleDropOnTag(tag)"
-             @click="handleTagClick(tag.id)"
-        >
-          <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
-        </div>
-      </transition-group>
-    </div>
+           :style="{ backgroundColor: tag.color }"
+           @dragover.prevent
+           @dragenter="handleDragEnterTag(tag.id)"
+           @dragleave="handleDragLeaveTag($event)"
+           @drop="handleDropOnTag(tag)"
+           @click="handleTagClick(tag.id)"
+      >
+        <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
+      </div>
+    </transition-group>
+  </div>
 
-    <!-- 数据列表 -->
-    <div class="clipboard-container" :class="{'clipboard-container-search': searchBoxState.visible}">
+  <!-- 数据列表 -->
+  <transition-group name="container">
+    <div class="clipboard-container" key="clipboard-container"
+         :class="{'clipboard-container-search': searchBoxState.visible}">
       <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems()">
         <transition-group name="item" tag="ul">
           <!-- 列表内容 -->
@@ -337,7 +340,6 @@ onUnmounted(async () => {
       <!-- 无数据展示 -->
       <n-empty v-else description="暂无剪贴板记录" class="empty"/>
     </div>
-
   </transition-group>
 </template>
 
