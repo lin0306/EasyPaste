@@ -1,3 +1,4 @@
+#[cfg(target_os = "windows")]
 use log::info;
 #[cfg(target_os = "windows")]
 use winreg::enums::{HKEY_LOCAL_MACHINE, REG_OPENED_EXISTING_KEY};
@@ -5,8 +6,10 @@ use winreg::enums::{HKEY_LOCAL_MACHINE, REG_OPENED_EXISTING_KEY};
 use winreg::{RegKey, RegValue};
 
 // 剪贴板注册表项路径
+#[cfg(target_os = "windows")]
 const CLIPBOARD_PATH: &str = "SOFTWARE\\Microsoft\\Clipboard";
 // 剪贴板注册表项备份路径
+#[cfg(target_os = "windows")]
 const CLIPBOARD_PATH_BACKUP: &str = "SOFTWARE\\Microsoft\\Clipboard-Backup";
 
 /**
