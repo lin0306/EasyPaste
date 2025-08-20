@@ -389,7 +389,7 @@ onUnmounted(async () => {
   transition: all 0.4s;
   display: block;
 }
-
+/*内容列表动画效果start*/
 /* 进入动画 - 从右侧进入 */
 .item-enter-from {
   opacity: 0;
@@ -417,6 +417,7 @@ onUnmounted(async () => {
   position: absolute;
   width: calc(100% - 12px); /* 考虑左右 margin */
 }
+/*内容列表动画效果end*/
 
 /* 确保 transition-group 定位正常 */
 ul {
@@ -610,12 +611,6 @@ ul {
   word-break: break-all;
 }
 
-.item-tag-close-icon {
-  margin-left: 5px;
-  width: 12px;
-  height: 12px;
-}
-
 .bind-tag-button {
   cursor: grab;
   display: flex;
@@ -712,6 +707,7 @@ ul {
   z-index: 10;
 }
 
+/*标签管理动画效果start*/
 /* 鼠标悬停或拖拽时显示标签名称 */
 .tag-item:hover .tag-name,
 .tag-item.tag-expanded .tag-name {
@@ -747,6 +743,7 @@ ul {
   position: absolute;
   width: calc(100%); /* 考虑左右 margin */
 }
+/*标签管理动画效果end*/
 
 .tag-dragging-over {
   transform: scale(1.08);
@@ -797,6 +794,7 @@ ul {
   position: relative;
 }
 
+/*搜索框动画效果 start*/
 /* 显示时从上往下滑入 */
 .search-enter-from {
   opacity: 0;
@@ -819,6 +817,7 @@ ul {
 .search-leave-active {
   transition: opacity 0.5s ease;
 }
+/*搜索框动画效果 end*/
 
 .search-container :deep(.n-input) {
   border-radius: 4px;
