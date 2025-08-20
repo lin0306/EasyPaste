@@ -8,9 +8,13 @@
   </p>
   
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-v0.1.1-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-v0.1.2-blue.svg?cacheSeconds=2592000" />
     <img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
     <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey" />
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/lin0306/EasyPaste?style=social">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/lin0306/EasyPaste?style=social">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/lin0306/EasyPaste">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/lin0306/EasyPaste">
   </p>
 </div>
 
@@ -18,7 +22,7 @@
 
 > ⚠️ **项目状态**
 > 
-> **当前版本**: v0.1.1 (开发测试阶段)
+> **当前版本**: v0.1.2 (开发测试阶段)
 > 
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
@@ -65,23 +69,6 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 | 🎨 **现代化界面** | 基于 Vue3 + Naive UI | 支持多主题，响应式设计 |
 | 🌍 **跨平台支持** | 支持主流操作系统 | Windows 10/11，macOS 10.13+ |
 | 📦 **轻量级** | 安装包小巧，资源占用低 | 后台 CPU 占用 < 1% |
-
-### 📈 性能基准
-
-<details>
-<summary><strong>性能测试数据</strong></summary>
-
-| 测试项目 | EasyPaste | 同类产品平均值 | 优势 |
-|----------|-----------|----------------|------|
-| 🚀 启动时间 | < 2秒 | 5-8秒 | **60%+ 更快** |
-| 💾 内存占用 | < 50MB | 150-300MB | **70%+ 更少** |
-| 📦 安装包大小 | ~15MB | 80-150MB | **80%+ 更小** |
-| 🔍 搜索响应时间 | < 100ms | 200-500ms | **50%+ 更快** |
-| ⚡ CPU 占用 | < 1% | 2-5% | **显著更低** |
-
-*测试环境: Windows 11, Intel i7-10700K, 16GB RAM*
-
-</details>
 
 ## 🚀 主要功能
 
@@ -428,13 +415,17 @@ EasyPaste/
 <summary><strong>技术相关问题</strong></summary>
 
 **Q: 为什么选择 Tauri 而不是 Electron？**
+
 A: Tauri 基于 Rust 构建，相比 Electron 有以下优势：
+
 - 更小的安装包体积（约 10MB vs 100MB+）
 - 更低的内存占用（约 50MB vs 200MB+）
 - 更好的安全性和性能表现
 
 **Q: 数据存储在哪里？**
+
 A: 所有数据都存储在本地 SQLite 数据库中，位置：
+
 - Windows: `%APPDATA%/com.lin.EasyPaste/`
 - macOS: `~/Library/Application Support/com.lin.EasyPaste/`
 
@@ -445,15 +436,6 @@ A: 目前支持：
 - 未来计划支持图片和富文本
 
 </details>
-
-## 📊 项目统计
-
-<div align="center">
-  <img alt="GitHub stars" src="https://img.shields.io/github/stars/lin0306/EasyPaste?style=social">
-  <img alt="GitHub forks" src="https://img.shields.io/github/forks/lin0306/EasyPaste?style=social">
-  <img alt="GitHub issues" src="https://img.shields.io/github/issues/lin0306/EasyPaste">
-  <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/lin0306/EasyPaste">
-</div>
 
 ## 🙏 致谢
 
@@ -475,7 +457,7 @@ A: 目前支持：
 |----------|------|
 | 🏠 项目主页 | [GitHub Repository](https://github.com/lin0306/EasyPaste) |
 | 🐛 问题反馈 | [Issues](https://github.com/lin0306/EasyPaste/issues) |
-| 💬 讨论交流 | [Discussions](https://github.com/lin0306/EasyPaste/discussions) |
+| 💬 讨论交流 | [暂未开通](https://github.com/lin0306/EasyPaste) |
 | 📧 邮件联系 | [通过 GitHub](https://github.com/lin0306) |
 
 </div>
