@@ -174,162 +174,170 @@ onUnmounted(async () => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
-            :dev-tool="`main`"/>
-  <HeadNavigationBar/>
+  <transition-group name="container" mode="out-in">
+    <TitleBar :title="currentLanguage.pages.list.title" :showFixedBtn="true" :show-hide-btn="!isAutoHideWindow"
+              :dev-tool="`main`"/>
+    <HeadNavigationBar/>
 
-  <!-- 搜索框 -->
-  <div class="search-container" v-show="searchBoxState.visible">
-    <n-input
-        id="search-input"
-        v-model:value="searchBoxState.text"
-        :placeholder="currentLanguage.pages.list.searchHint"
-        clearable
-        @input="loadClipboardItems(true)"
-        size="small"
+    <!-- 搜索框 -->
+
+      <div class="search-container" v-show="searchBoxState.visible">
+        <transition-group name="search" mode="out-in">
+        <n-input
+            id="search-input"
+            v-model:value="searchBoxState.text"
+            :placeholder="currentLanguage.pages.list.searchHint"
+            clearable
+            @input="loadClipboardItems(true)"
+            size="small"
+            v-if="searchBoxState.visible"
+        >
+          <template #prefix>
+            <!-- 搜索 -->
+            <n-icon size="18">
+              <SearchIcon/>
+            </n-icon>
+          </template>
+        </n-input>
+        </transition-group>
+      </div>
+
+
+    <!-- 标签列表 -->
+    <div
+        v-if="tagSettingState.isShow"
+        class="tag-list"
+        :class="{ 'has-selected-tag': dragState.isDragging }"
+        @dragover.prevent
     >
-      <template #prefix>
-        <!-- 搜索 -->
-        <n-icon size="18">
-          <SearchIcon/>
-        </n-icon>
-      </template>
-    </n-input>
-  </div>
-
-  <!-- 标签列表 -->
-  <div
-      v-if="tagSettingState.isShow"
-      class="tag-list"
-      :class="{ 'has-selected-tag': dragState.isDragging }"
-      @dragover.prevent
-  >
-    <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
-         :class="{
+      <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
+           :class="{
           'tag-dragging-over': dragState.draggedOverTagId === tag.id,
           'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
           'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
           'tag-selected': selectedTagState.selectedTagId === tag.id
         }"
-         :style="{ backgroundColor: tag.color }"
-         @dragover.prevent
-         @dragenter="handleDragEnterTag(tag.id)"
-         @dragleave="handleDragLeaveTag($event)"
-         @drop="handleDropOnTag(tag)"
-         @click="handleTagClick(tag.id)"
-    >
-      <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
+           :style="{ backgroundColor: tag.color }"
+           @dragover.prevent
+           @dragenter="handleDragEnterTag(tag.id)"
+           @dragleave="handleDragLeaveTag($event)"
+           @drop="handleDropOnTag(tag)"
+           @click="handleTagClick(tag.id)"
+      >
+        <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
+      </div>
     </div>
-  </div>
 
-  <!-- 数据列表 -->
-  <div :class="searchBoxState.visible ? `clipboard-container-search` : `clipboard-container`">
-    <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems()">
-      <transition-group name="list" tag="ul">
-      <!-- 列表内容 -->
-      <div v-for="(item, index) in clipboardItems" :key="item.id" class="clipboard-item"
-           @dblclick="onCopy(item, message, currentLanguage)">
-        <div class="clipboard-card">
-          <!-- 头部 -->
-          <div class="card-header">
-            <div class="card-header-left">
-              <div>{{
-                  item.type === 'text' ? (isCode(item.content) ? currentLanguage.pages.list.typeCode :
-                      currentLanguage.pages.list.typeText) : currentLanguage.pages.list.typeFile
-                }}
-              </div>
-              <div class="card-title">{{ new Date(item.copy_time).toLocaleString() }}</div>
-              <div v-if="item.chars">{{ item.chars + ' ' + currentLanguage.pages.list.chars }}</div>
-            </div>
-            <div class="card-header-right">
-              <div class="card-header-right-buttons">
-                <!-- 置顶/取消置顶按钮 -->
-                <div class="card-header-right-button" @click="item.is_topped ? onUnTop(item.id) : onTop(item.id)">
-                  <TopIcon v-if="!item.is_topped"/>
-                  <UnTopIcon v-else/>
+    <!-- 数据列表 -->
+    <div class="clipboard-container" :class="{'clipboard-container-search': searchBoxState.visible}">
+      <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems()">
+        <transition-group name="item" tag="ul">
+          <!-- 列表内容 -->
+          <div v-for="(item, index) in clipboardItems" :key="item.id" class="clipboard-item"
+               @dblclick="onCopy(item, message, currentLanguage)">
+            <div class="clipboard-card">
+              <!-- 头部 -->
+              <div class="card-header">
+                <div class="card-header-left">
+                  <div>{{
+                      item.type === 'text' ? (isCode(item.content) ? currentLanguage.pages.list.typeCode :
+                          currentLanguage.pages.list.typeText) : currentLanguage.pages.list.typeFile
+                    }}
+                  </div>
+                  <div class="card-title">{{ new Date(item.copy_time).toLocaleString() }}</div>
+                  <div v-if="item.chars">{{ item.chars + ' ' + currentLanguage.pages.list.chars }}</div>
                 </div>
-                <!-- 删除按钮 -->
-                <div class="card-header-right-button" @click="removeItem(item.id, index)">
-                  <TrashIcon/>
+                <div class="card-header-right">
+                  <div class="card-header-right-buttons">
+                    <!-- 置顶/取消置顶按钮 -->
+                    <div class="card-header-right-button" @click="item.is_topped ? onUnTop(item.id) : onTop(item.id)">
+                      <TopIcon v-if="!item.is_topped"/>
+                      <UnTopIcon v-else/>
+                    </div>
+                    <!-- 删除按钮 -->
+                    <div class="card-header-right-button" @click="removeItem(item.id, index)">
+                      <TrashIcon/>
+                    </div>
+                    <!-- 设置标签按钮 -->
+                    <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'"
+                         class="card-header-right-button drag-icon"
+                         draggable="true"
+                         @dragstart="handleDragStart(item, index, $event)"
+                         @dragend="handleDragEnd">
+                      <AddTagIcon class="dropdown-icon"/>
+                    </div>
+                  </div>
                 </div>
-                <!-- 设置标签按钮 -->
-                <div v-if="tagSettingState.isShow && tagSettingState.location === 'top-right'"
-                     class="card-header-right-button drag-icon"
-                     draggable="true"
-                     @dragstart="handleDragStart(item, index, $event)"
-                     @dragend="handleDragEnd">
-                  <AddTagIcon class="dropdown-icon"/>
-                </div>
               </div>
-            </div>
-          </div>
-          <!-- 内容 -->
-          <div class="card-content">
-            <div class="content-wrapper">
-              <!-- 普通文本 -->
-              <div v-if="item.type === 'text' && !isCode(item.content)"
-                   class="text-line item-line"
-                   draggable="true"
-                   @dragstart="contentDragStart(item, $event)">
-                {{ item.content }}
-              </div>
-              <!-- 代码 -->
-              <div v-else-if="item.type === 'text' && isCode(item.content)"
-                   class="code-line item-line"
-                   draggable="true"
-                   @dragstart="contentDragStart(item, $event)">
-                <n-code :code="item.content" language="html" show-line-numbers/>
-              </div>
-              <!-- 文件 -->
-              <div v-else-if="item.type === 'file'" class="file-line item-line">
-                <div class="file-item" v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
-                     @dblclick="onCopyFile(item.id, filePath, message, currentLanguage)">
-                  <n-image v-if="isImage(filePath)
+              <!-- 内容 -->
+              <div class="card-content">
+                <div class="content-wrapper">
+                  <!-- 普通文本 -->
+                  <div v-if="item.type === 'text' && !isCode(item.content)"
+                       class="text-line item-line"
+                       draggable="true"
+                       @dragstart="contentDragStart(item, $event)">
+                    {{ item.content }}
+                  </div>
+                  <!-- 代码 -->
+                  <div v-else-if="item.type === 'text' && isCode(item.content)"
+                       class="code-line item-line"
+                       draggable="true"
+                       @dragstart="contentDragStart(item, $event)">
+                    <n-code :code="item.content" language="html" show-line-numbers/>
+                  </div>
+                  <!-- 文件 -->
+                  <div v-else-if="item.type === 'file'" class="file-line item-line">
+                    <div class="file-item" v-for="filePath in JSON.parse(item.file_path)" :title="filePath"
+                         @dblclick="onCopyFile(item.id, filePath, message, currentLanguage)">
+                      <n-image v-if="isImage(filePath)
                     && imageDataCache.get(filePath)" :src="imageDataCache.get(filePath)" object-fit="cover" width="100%"
-                           :show-toolbar="false"/>
-                  <FileIcon class="file-exist-icon" v-else-if="fileExistCache.get(filePath)"/>
-                  <FileDeleteIcon class="file-not-exist-icon" v-else/>
-                  <span :class="!fileExistCache.get(filePath) ? 'file-not-exist-text' : ''">{{
-                      filePathConvertFileName(filePath)
-                    }}</span>
+                               :show-toolbar="false"/>
+                      <FileIcon class="file-exist-icon" v-else-if="fileExistCache.get(filePath)"/>
+                      <FileDeleteIcon class="file-not-exist-icon" v-else/>
+                      <span :class="!fileExistCache.get(filePath) ? 'file-not-exist-text' : ''">{{
+                          filePathConvertFileName(filePath)
+                        }}</span>
+                    </div>
+                  </div>
+                  <!-- 空 -->
+                  <div v-else class="item-line"></div>
                 </div>
               </div>
-              <!-- 空 -->
-              <div v-else class="item-line"></div>
-            </div>
-          </div>
-          <!-- 标签展示 -->
-          <div class="card-tags" v-if="tagSettingState.isShow">
-            <n-tag size="small" round closable bordered v-for="tag in item.tags" :key="tag.id" class="item-tag"
-                   @close="removeItemTag(item, tag, index)">
-              <div class="item-tag-content">
-                <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
-                <div class="item-tag-name">
-                  {{ tag.name }}
+              <!-- 标签展示 -->
+              <div class="card-tags" v-if="tagSettingState.isShow">
+                <n-tag size="small" round closable bordered v-for="tag in item.tags" :key="tag.id" class="item-tag"
+                       @close="removeItemTag(item, tag, index)">
+                  <div class="item-tag-content">
+                    <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
+                    <div class="item-tag-name">
+                      {{ tag.name }}
+                    </div>
+                  </div>
+                </n-tag>
+                <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'"
+                     class="bind-tag-button"
+                     draggable="true" @dragstart="handleDragStart(item, index, $event)" @dragend="handleDragEnd">
+                  <AddTagIcon class="bind-tag-icon"/>
+                  <span v-if="tagSettingState.isShow">绑定标签</span>
                 </div>
               </div>
-            </n-tag>
-            <div v-if="tagSettingState.isShow && tagSettingState.location === 'bottom-right'" class="bind-tag-button"
-                 draggable="true" @dragstart="handleDragStart(item, index, $event)" @dragend="handleDragEnd">
-              <AddTagIcon class="bind-tag-icon"/>
-              <span v-if="tagSettingState.isShow">绑定标签</span>
             </div>
           </div>
+        </transition-group>
+        <!-- 最底部内容展示 -->
+        <div v-if="scrollState.isLoading" class="loading-indicator">
+          <n-spin :description="currentLanguage.pages.list.dataLoading"/>
         </div>
-      </div>
-      </transition-group>
-      <!-- 最底部内容展示 -->
-      <div v-if="scrollState.isLoading" class="loading-indicator">
-        <n-spin :description="currentLanguage.pages.list.dataLoading"/>
-      </div>
-      <div v-if="!scrollState.hasMore" class="no-more-indicator">
-        {{ currentLanguage.pages.list.allLoaded }}
-      </div>
-    </n-infinite-scroll>
-    <!-- 无数据展示 -->
-    <n-empty v-else description="暂无剪贴板记录" class="empty"/>
-  </div>
+        <div v-if="!scrollState.hasMore" class="no-more-indicator">
+          {{ currentLanguage.pages.list.allLoaded }}
+        </div>
+      </n-infinite-scroll>
+      <!-- 无数据展示 -->
+      <n-empty v-else description="暂无剪贴板记录" class="empty"/>
+    </div>
 
+  </transition-group>
 </template>
 
 <style scoped>
@@ -360,8 +368,15 @@ onUnmounted(async () => {
 }
 
 .clipboard-container-search {
-  height: calc(100vh - 110px);
+  height: calc(100vh - 110px) !important;
   /* 减去TitleBar(25px)和NavBar(30px)的高度 */
+}
+
+.clipboard-container {
+  transition: height 0.3s ease;
+  z-index: 1;
+  position: relative;
+  overflow-y: auto;
 }
 
 .clipboard-item {
@@ -371,29 +386,29 @@ onUnmounted(async () => {
 }
 
 /* 进入动画 - 从右侧进入 */
-.list-enter-from {
+.item-enter-from {
   opacity: 0;
   transform: translateX(100%);
 }
 
-.list-enter-to {
+.item-enter-to {
   opacity: 1;
   transform: translateX(0);
 }
 
 /* 离开动画 - 向左侧离开 */
-.list-leave-from {
+.item-leave-from {
   opacity: 1;
   transform: translateX(0);
 }
 
-.list-leave-to {
+.item-leave-to {
   opacity: 0;
   transform: translateX(-100%);
 }
 
 /* 离开中 */
-.list-leave-active {
+.item-leave-active {
   position: absolute;
   width: calc(100% - 12px); /* 考虑左右 margin */
 }
@@ -744,7 +759,31 @@ ul {
   border-radius: 0 0 8px 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: 8px;
-  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 显示时从上往下滑入 */
+.search-enter-from {
+  opacity: 0;
+}
+
+.search-enter-to {
+  opacity: 1;
+}
+
+/* 隐藏时从下往上滑出 */
+.search-leave-from {
+  opacity: 1;
+}
+
+.search-leave-to {
+  opacity: 0;
+}
+
+.search-enter-active,
+.search-leave-active {
+  transition: opacity 0.5s ease;
 }
 
 .search-container :deep(.n-input) {
