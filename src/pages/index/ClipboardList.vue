@@ -180,9 +180,8 @@ onUnmounted(async () => {
     <HeadNavigationBar/>
 
     <!-- 搜索框 -->
-
-      <div class="search-container" v-show="searchBoxState.visible">
-        <transition-group name="search" mode="out-in">
+    <div class="search-container" v-show="searchBoxState.visible">
+      <transition-group name="search" mode="out-in">
         <n-input
             id="search-input"
             v-model:value="searchBoxState.text"
@@ -199,8 +198,8 @@ onUnmounted(async () => {
             </n-icon>
           </template>
         </n-input>
-        </transition-group>
-      </div>
+      </transition-group>
+    </div>
 
 
     <!-- 标签列表 -->
@@ -210,22 +209,24 @@ onUnmounted(async () => {
         :class="{ 'has-selected-tag': dragState.isDragging }"
         @dragover.prevent
     >
-      <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
-           :class="{
+      <transition-group name="tag" tag="ul">
+        <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
+             :class="{
           'tag-dragging-over': dragState.draggedOverTagId === tag.id,
           'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
           'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
           'tag-selected': selectedTagState.selectedTagId === tag.id
         }"
-           :style="{ backgroundColor: tag.color }"
-           @dragover.prevent
-           @dragenter="handleDragEnterTag(tag.id)"
-           @dragleave="handleDragLeaveTag($event)"
-           @drop="handleDropOnTag(tag)"
-           @click="handleTagClick(tag.id)"
-      >
-        <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
-      </div>
+             :style="{ backgroundColor: tag.color }"
+             @dragover.prevent
+             @dragenter="handleDragEnterTag(tag.id)"
+             @dragleave="handleDragLeaveTag($event)"
+             @drop="handleDropOnTag(tag)"
+             @click="handleTagClick(tag.id)"
+        >
+          <span class="tag-name" :style="{ color: getContrastColor(tag.color) }">{{ tag.name }}</span>
+        </div>
+      </transition-group>
     </div>
 
     <!-- 数据列表 -->
@@ -679,16 +680,6 @@ ul {
   opacity: 0.2;
 }
 
-/* 鼠标悬停或拖拽时展开标签 */
-.tag-item:hover,
-.tag-item.tag-expanded {
-  opacity: 1;
-  /* 固定宽度而不是拉伸 */
-  width: 100px;
-  /* 悬浮时置于顶层 */
-  z-index: 10;
-}
-
 .tag-name {
   position: absolute;
   left: 20px;
@@ -707,11 +698,50 @@ ul {
   word-break: break-all;
 }
 
+/* 鼠标悬停或拖拽时展开标签 */
+.tag-item:hover,
+.tag-item.tag-expanded {
+  opacity: 1;
+  /* 固定宽度而不是拉伸 */
+  width: 100px;
+  /* 悬浮时置于顶层 */
+  z-index: 10;
+}
+
 /* 鼠标悬停或拖拽时显示标签名称 */
 .tag-item:hover .tag-name,
 .tag-item.tag-expanded .tag-name {
   opacity: 1;
   transform: translateY(-50%);
+}
+
+
+/* 进入动画 - 从左侧进入 */
+.tag-enter-from {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.tag-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 离开动画 - 向左侧离开 */
+.tag-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tag-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+/* 离开中 */
+.tag-leave-active {
+  position: absolute;
+  width: calc(100%); /* 考虑左右 margin */
 }
 
 .tag-dragging-over {
