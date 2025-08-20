@@ -3,6 +3,7 @@ use tauri::Manager;
 
 mod listener;
 mod log;
+#[cfg(target_os = "windows")]
 mod regedit;
 mod tray;
 mod permission;
