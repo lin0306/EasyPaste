@@ -225,6 +225,7 @@ onUnmounted(async () => {
   <!-- 数据列表 -->
   <div :class="searchBoxState.visible ? `clipboard-container-search` : `clipboard-container`">
     <n-infinite-scroll v-if="clipboardItems && clipboardItems.length > 0" :distance="9" @load="loadMoreItems()">
+      <transition-group name="list" tag="ul">
       <!-- 列表内容 -->
       <div v-for="(item, index) in clipboardItems" :key="item.id" class="clipboard-item"
            @dblclick="onCopy(item, message, currentLanguage)">
@@ -316,6 +317,7 @@ onUnmounted(async () => {
           </div>
         </div>
       </div>
+      </transition-group>
       <!-- 最底部内容展示 -->
       <div v-if="scrollState.isLoading" class="loading-indicator">
         <n-spin :description="currentLanguage.pages.list.dataLoading"/>
@@ -364,6 +366,42 @@ onUnmounted(async () => {
 
 .clipboard-item {
   margin: 6px 6px;
+  transition: all 0.4s;
+  display: block;
+}
+
+/* 进入动画 - 从右侧进入 */
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.list-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 离开动画 - 向左侧离开 */
+.list-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+/* 离开中 */
+.list-leave-active {
+  position: absolute;
+  width: calc(100% - 12px); /* 考虑左右 margin */
+}
+
+/* 确保 transition-group 定位正常 */
+ul {
+  position: relative;
+  padding: 0;
 }
 
 .clipboard-card:hover {
