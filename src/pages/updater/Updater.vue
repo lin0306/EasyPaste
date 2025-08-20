@@ -3,7 +3,7 @@ import { open } from '@tauri-apps/plugin-shell';
 import TitleBar from '../../components/TitleBar.vue';
 
 import { check } from '@tauri-apps/plugin-updater';
-import { onMounted, reactive, ref } from 'vue';
+import {nextTick, onMounted, reactive, ref} from 'vue';
 import { useLanguage } from '../../services/LanguageService.ts';
 import UpdaterService from '../../services/UpdaterService.ts';
 import {covertMarkdown} from "../../utils/strUtil.ts";
@@ -16,6 +16,8 @@ const updaterVer: UpdaterInfo = reactive({
   pubDate: '',
   notes: ''
 });
+
+const markdownContent = ref<any>(null);
 
 // 下载状态
 const isDownloading = ref(false);
@@ -85,11 +87,35 @@ function installNow() {
   UpdaterService.install(updater);
 }
 
+// 在 nextTick 中为超链接添加点击事件监听器
+function handleLinks() {
+  nextTick(() => {
+    if (markdownContent.value) {
+      const links = markdownContent.value.querySelectorAll('a[href]');
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href) {
+            open(href);
+          }
+        });
+      });
+    }
+  });
+}
+
+
 onMounted(async () => {
   updater = await check();
   updaterVer.version = updater.version;
   updaterVer.pubDate = updater.date;
   updaterVer.notes = updater.body;
+
+  // 在数据更新后处理链接
+  nextTick(() => {
+    handleLinks();
+  });
 })
 
 </script>
@@ -107,7 +133,7 @@ onMounted(async () => {
         {{ new Date(updaterVer.pubDate).toLocaleDateString() }}
       </div>
       <div class="divider"></div>
-      <vue-markdown class="release-notes github-markdown" v-if="updaterVer.notes" v-html="covertMarkdown(updaterVer.notes)" />
+      <vue-markdown ref="markdownContent" class="release-notes github-markdown" v-if="updaterVer.notes" v-html="covertMarkdown(updaterVer.notes)" />
       <div class="release-notes" v-else>
         {{ currentLanguage.pages.update.updateNotes }}
       </div>
