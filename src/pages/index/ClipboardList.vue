@@ -207,8 +207,8 @@ onUnmounted(async () => {
     <div v-for="tag in TagItems" :key="tag.id" class="tag-item"
          :class="{
           'tag-dragging-over': dragState.draggedOverTagId === tag.id,
-          'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItemId, tag.id),
-          'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItemId, tag.id),
+          'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
+          'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
           'tag-selected': selectedTagState.selectedTagId === tag.id
         }"
          :style="{ backgroundColor: tag.color }"
