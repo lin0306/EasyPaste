@@ -8,13 +8,13 @@
   </p>
   
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-v0.1.2-blue.svg?cacheSeconds=2592000" />
-    <img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
+    <a href="https://github.com/lin0306/EasyPaste/releases/latest">
+      <img alt="Version" src="https://img.shields.io/badge/version-v0.1.2-blue.svg?cacheSeconds=2592000" />
+   </a>
+   <a href="https://www.apache.org/licenses/LICENSE-2.0.html">
+      <img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
+   </a>
     <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey" />
-    <img alt="GitHub stars" src="https://img.shields.io/github/stars/lin0306/EasyPaste?style=social">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/lin0306/EasyPaste?style=social">
-    <img alt="GitHub issues" src="https://img.shields.io/github/issues/lin0306/EasyPaste">
-    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/lin0306/EasyPaste">
   </p>
 </div>
 
@@ -26,7 +26,7 @@
 > 
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
-> - 📖 **系统集成**: 如需完全替换 Windows 剪贴板，请参考 [FAQ 文档](./FAQ/replace_global_hotkey_theory/replace_global_hotkey_theory.md)
+> - 📖 **系统集成**: 如需完全替换 Windows 剪贴板，请打开程序设置，开启`替换全局热键`功能，功能实现逻辑请参考 [FAQ 文档](./FAQ/replace_global_hotkey_theory/replace_global_hotkey_theory.md)
 > - 💡 **反馈欢迎**: 由于是个人项目，可能部分边缘性测试场景没有覆盖到，欢迎提 Issue 和 PR
 
 
@@ -37,16 +37,16 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 ### 🎯 设计理念
 
 - **高效优先**: 专注于核心功能，避免功能冗余，确保每个功能都能真正提升效率
-- **隐私安全**: 所有数据本地存储，不依赖网络，保护用户隐私和数据安全
+- **隐私安全**: 所有数据本地存储，不依赖网络，保护用户隐私和数据安全，禁止其他程序捕捉，避免数据泄露
 - **轻量稳定**: 基于 Rust 构建，内存占用小，运行稳定，不影响系统性能
 - **用户友好**: 简洁直观的界面设计，支持多主题和个性化定制
 
 ## 📸 应用截图
 
 <div align="center">
-  <p><em>主界面 - 剪贴板历史记录</em></p>
-  <!-- 这里可以添加实际的截图 -->
-  <p>🖼️ <em>截图将在后续版本中添加</em></p>
+   <p><em>主界面 - 剪贴板历史记录</em></p>
+      <img src="./public/main-screenshot.png" width="300px" alt="主界面截图"/>
+   <p>🖼️ <em>截图将在后续版本中添加</em></p>
 </div>
 
 <details>
@@ -78,17 +78,18 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 - **历史记录管理**: 按时间顺序保存剪贴板历史，支持置顶重要内容
 - **分页加载**: 支持大量历史记录的高效分页显示，默认保存 2000 条
 - **多类型支持**: 完整支持文本、文件的复制粘贴操作
+- **智能分类**：可自动根据复制的文本，判断文本是否为代码，并以代码格式展示
 
 ### 🏷️ 标签与分类
 - **自定义标签**: 为剪贴板内容添加自定义标签，便于分类管理
 - **颜色标识**: 支持为标签设置不同颜色，视觉化分类
 - **标签筛选**: 按标签快速筛选和查找相关内容
-- **批量管理**: 支持批量添加、删除、修改标签
+- **批量管理**: 支持批量添加、删除、修改标签（规划中）
 - **智能建议**: 基于内容自动建议相关标签（规划中）
 
 ### 🔍 搜索与导航
 - **实时搜索**: 支持内容关键词搜索，响应时间 < 100ms
-- **模糊匹配**: 支持部分关键词匹配，智能搜索算法
+- **模糊匹配**: 支持关键词匹配，可根据文本内容/文件路径进行匹配展示
 - **多维筛选**: 支持内容、标签组合筛选（已发布），按照类型、时间范围的组合筛选（规划中）
 - **快捷导航**: 键盘快捷键支持，提升操作效率
 
@@ -109,7 +110,7 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 - **自动更新**: 内置应用自动更新功能，签名验证确保安全
 - **智能清理**: 支持按时间和数量自动清理历史数据
 - **数据备份**: 支持数据的备份和恢复（规划中）
-- **SQLite 存储**: 使用 SQLite 数据库，数据安全可靠，支持加密
+- **SQLite 存储**: 使用 SQLite 数据库，数据安全可靠
 - **数据迁移**: 支持版本升级时的数据平滑迁移
 
 ## 🏗️ 技术架构
@@ -125,28 +126,29 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 | **Vite 6.0+** | 最新稳定版 | 现代前端构建工具，支持 HMR |
 
 ### 后端技术栈
-| 技术 | 版本 | 用途 |
-|------|------|------|
-| **Tauri 2.x** | 最新稳定版 | 使用 Rust 构建的跨平台应用框架 |
-| **Rust** | 最新稳定版 | 高性能、内存安全的系统编程语言 |
-| **SQLite** | 内置 | 本地数据存储，支持 SQL 查询和事务 |
-| **clipboard-rs** | 最新稳定版 | 跨平台剪贴板操作库 |
+| 技术 | 版本       | 用途 |
+|------|----------|------|
+| **Tauri 2.x** | 最新稳定版    | 使用 Rust 构建的跨平台应用框架 |
+| **Rust** | 最新稳定版    | 高性能、内存安全的系统编程语言 |
+| **SQLite** | Tauri 内置 | 本地数据存储，支持 SQL 查询和事务 |
+| **clipboard-rs** | 最新稳定版    | 跨平台剪贴板操作库 |
 
 ## 📦 主要依赖
 
 <details>
 <summary><strong>前端依赖</strong></summary>
 
-| 依赖包 | 用途 |
-|--------|------|
+| 依赖包 | 用途            |
+|--------|---------------|
 | `@tauri-apps/api` | Tauri API 客户端 |
-| `vue` | Vue 3 核心库 |
-| `vue-router` | Vue 路由管理 |
-| `pinia` | Vue 状态管理 |
-| `naive-ui` | UI 组件库 |
-| `vfonts` | 字体支持 |
-| `@highlightjs/vue-plugin` | 代码高亮支持 |
-| `highlight.js` | 语法高亮库 |
+| `vue` | Vue 3 核心库     |
+| `vue-router` | Vue 路由管理      |
+| `pinia` | Vue 状态管理      |
+| `naive-ui` | UI 组件库        |
+| `vfonts` | 字体支持          |
+| `@highlightjs/vue-plugin` | 代码高亮支持        |
+| `highlight.js` | 语法高亮库         |
+| `markdown-it` | Markdown格式支持  |
 
 </details>
 
@@ -171,14 +173,15 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 <details>
 <summary><strong>Rust 依赖</strong></summary>
 
-| 依赖包 | 用途 |
-|--------|------|
-| `clipboard-rs` | 跨平台剪贴板操作 |
+| 依赖包 | 用途            |
+|--------|---------------|
+| `clipboard-rs` | 跨平台剪贴板操作      |
 | `serde` & `serde_json` | JSON 序列化/反序列化 |
-| `chrono` | 日期时间处理 |
-| `dirs` | 系统目录获取 |
-| `log` | 日志记录 |
-| `lazy_static` | 静态变量管理 |
+| `chrono` | 日期时间处理        |
+| `dirs` | 系统目录获取        |
+| `log` | 日志记录          |
+| `lazy_static` | 静态变量管理        |
+| `winreg` | Windows注册表操作  |
 
 </details>
 
@@ -267,7 +270,7 @@ EasyPaste/
 │   │   │   │   ├── ClipboardDataContext.ts  # 剪贴板数据上下文
 │   │   │   │   ├── DragContext.ts           # 拖拽上下文
 │   │   │   │   ├── FileDataContext.ts       # 文件数据上下文
-│   │   │   │    TagDataContext.ts        # 标签数据上下文
+│   │   │   │   ├── TagDataContext.ts        # 标签数据上下文
 │   │   │   │   ├── UpdaterContext.ts        # 更新器上下文
 │   │   │   │   └── WindowContext.ts         # 窗口上下文
 │   │   │   └── index.vue      # 主页面入口
@@ -345,6 +348,7 @@ EasyPaste/
 │   └── 📁 rights_of_administrators/      # 管理员权限说明
 ├── 📁 .github/                # GitHub 配置
 │   └── 📁 workflows/          # GitHub Actions 工作流
+│   │   └── release.yml        # GitHub Actions 自动打包工作流配置
 ├── 📁 dist/                   # 构建输出
 ├── 📄 package.json            # 项目配置
 ├── 📄 vite.config.ts          # Vite 配置
@@ -441,13 +445,14 @@ A: 目前支持：
 
 感谢以下优秀的开源项目，让 EasyPaste 的开发成为可能：
 
-| 项目 | 描述 | 许可证 |
-|------|------|--------|
-| [Tauri](https://tauri.app/) | 跨平台应用框架 | MIT |
-| [Vue.js](https://vuejs.org/) | 渐进式 JavaScript 框架 | MIT |
-| [Naive UI](https://www.naiveui.com/) | Vue 3 组件库 | MIT |
-| [clipboard-rs](https://github.com/ChurchTao/clipboard-rs) | Rust 剪贴板库 | MIT |
-| [SQLite](https://www.sqlite.org/) | 嵌入式数据库 | Public Domain |
+| 项目                                                        | 描述                | 许可证           |
+|-----------------------------------------------------------|-------------------|---------------|
+| [Tauri](https://tauri.app/)                               | 跨平台应用框架           | MIT           |
+| [Vue.js](https://vuejs.org/)                              | 渐进式 JavaScript 框架 | MIT           |
+| [Naive UI](https://www.naiveui.com/)                      | Vue 3 组件库         | MIT           |
+| [clipboard-rs](https://github.com/ChurchTao/clipboard-rs) | Rust 剪贴板库         | MIT           |
+| [SQLite](https://www.sqlite.org/)                         | 嵌入式数据库            | Public Domain |
+| [winreg-rs](https://github.com/gentoo90/winreg-rs)        | Windows 注册表操作     | MIT           |
 
 ## 📞 联系方式
 
