@@ -4,6 +4,10 @@
  * @returns 'black' | 'white'
  */
 export function getContrastColor(color: string): string {
+    // 如果没有颜色值，则返回默认黑色
+    if (!color) {
+        return 'rgba(0, 0, 0, 1)';
+    }
     // 解析颜色为 RGBA 数组 [r, g, b, a]
     const rgba = parseColor(color);
 
