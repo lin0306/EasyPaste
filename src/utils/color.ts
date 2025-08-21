@@ -16,7 +16,7 @@ export function getContrastColor(color: string): string {
     const luminance = calculateLuminance(r, g, b);
 
     // WCAG 对比度阈值 (0.179 是理论计算值)
-    return luminance > 0.179 ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)';
+    return luminance < 0.179 ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)';
 }
 
 // 颜色混合函数（假设白色背景）
