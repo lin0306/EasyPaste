@@ -3,6 +3,7 @@ import {PageConfig} from "../../types/language";
 // 导出中文页面配置
 export const chinesePageConfig: PageConfig = {
     settings: {
+        initFailedHint: '页面内容加载失败，请重新打开',
         title: '设置',
         generalMenu: '通用设置',
         storageMenu: '存储设置',
@@ -86,11 +87,14 @@ export const chinesePageConfig: PageConfig = {
         registerShortcutKeysErrorHint: '唤醒程序快捷键注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
         chars: '字符',
         empty: '暂无剪贴板记录',
+        initFailedHint: '程序初始化失败，请重新运行程序',
         menu: {
             program: '程序',
             settings: '偏好设置',
             reload: '重新加载',
+            reloadHint: '正在重新加载应用程序...',
             exit: '退出程序',
+            exitHint: '正在关闭应用程序...',
             data: '数据',
             tagManger: '标签管理',
             dataView: '数据视图',
@@ -152,19 +156,6 @@ export const chinesePageConfig: PageConfig = {
         backupCompleted: '备份完成',
         alreadyLatestHint: '已经是最新版本',
         checkUpdateErrorHint: '检查更新异常：',
-    },
-    restore: {
-        title: '数据恢复',
-        description: '检测到上次更新后的备份数据，正在自动恢复中...',
-        readyText: '准备恢复数据',
-        startingText: '开始恢复数据',
-        restartCountdown: ' 秒后重新启动程序 ~',
-        setp1: '恢复备份文件',
-        setp2: '恢复备份数据',
-        setp3: '恢复用户配置',
-        setp4: '删除备份文件',
-        restoreSuccess: '恢复完成，准备删除备份文件',
-        toRestart: '备份文件已删除，即将重启程序',
     },
     tray: {
         settings: '设置',

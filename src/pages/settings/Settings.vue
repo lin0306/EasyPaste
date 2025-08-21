@@ -70,10 +70,10 @@ const bindTagBtnShowLocation = computed(() => [{
 // 自动检查更新方式
 const autoUpdateMode = computed(() => [{
   value: 'timing',
-  label: '定时检查'
+  label: currentLanguage.value.pages.settings.regularCheck
 }, {
   value: 'after-running',
-  label: '启动时检查'
+  label: currentLanguage.value.pages.settings.afterRunningCheck
 }])
 
 // 是否有修改
@@ -491,6 +491,8 @@ onMounted(async () => {
     }
   } catch (e) {
     console.error('页面初始化失败:', e);
+    error("页面初始化失败：" + e);
+    message.error(currentLanguage.value.pages.settings.initFailedHint);
   }
 });
 </script>

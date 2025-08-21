@@ -9,6 +9,7 @@ export interface LanguageConfig {
 export interface PageConfig {
     settings: {
         [x: string]: string;
+        initFailedHint: string;
         // 设置页面标题
         title: string;
         // 设置页面左侧菜单文字
@@ -31,11 +32,12 @@ export interface PageConfig {
         replaceGlobalHotkeyLinkHint: string;
         replaceGlobalHotkeyHint: string;
         languages: string;
-        autoCheckUpdate: string;
         enableTag: string;
         bindTagBtnShowLocation: string;
         topRight: string;
         bottomRight: string;
+        // 更新设置页面文字
+        autoCheckUpdate: string;
         checkUpdateMode: string;
         regularCheck: string;
         afterRunningCheck: string;
@@ -98,12 +100,15 @@ export interface PageConfig {
         registerShortcutKeysErrorHint: string;
         chars: string;
         empty: string;
+        initFailedHint: string;
         menu: {
             [x: string]: string;
             program: string;
             settings: string;
             reload: string;
+            reloadHint: string;
             exit: string;
+            exitHint: string;
             data: string;
             tagManger: string;
             dataView: string;
@@ -165,19 +170,6 @@ export interface PageConfig {
         backupCompleted: string;
         alreadyLatestHint: string;
         checkUpdateErrorHint: string;
-    },
-    restore: {
-        title: string;
-        description: string;
-        readyText: string;
-        startingText: string;
-        restartCountdown: string;
-        setp1: string;
-        setp2: string;
-        setp3: string;
-        setp4: string;
-        restoreSuccess: string;
-        toRestart: string;
     },
     tray: {
         settings: string,

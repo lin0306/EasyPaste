@@ -2,6 +2,7 @@ import {PageConfig} from "../../types/language";
 
 export const englishPageConfig: PageConfig = {
     settings: {
+        initFailedHint: 'The page content loading failed. Please reload the page.',
         title: 'Settings',
         generalMenu: 'General Settings',
         updaterMenu: 'Update Settings',
@@ -85,11 +86,14 @@ export const englishPageConfig: PageConfig = {
         registerShortcutKeysErrorHint: 'The registration of the "Wake Up Routine" shortcut key failed. Please check if this shortcut key is already in use. You can make the adjustment on the "Settings - Shortcuts" page here.',
         chars: 'chars',
         empty: 'No clipboard record exists',
+        initFailedHint: 'The program initialization failed. Please run the program again.',
         menu: {
             program: 'Program',
             settings: 'Settings',
             reload: 'Reload',
-            exit: 'Exit',
+            reloadHint: 'The application is reloading...',
+            exit: 'Close',
+            exitHint: 'The application is being closed...',
             data: 'Data',
             tagManger: 'Tag Manager',
             dataView: 'Data View',
@@ -151,19 +155,6 @@ export const englishPageConfig: PageConfig = {
         backupCompleted: 'Backup Completed',
         alreadyLatestHint: 'It is already the latest version at present',
         checkUpdateErrorHint: 'Check Update Error: ',
-    },
-    restore: {
-        title: 'Data Recovery',
-        description: 'Detected backup data from previous update, starting automatic recovery...',
-        readyText: 'Ready to restore data',
-        startingText: 'Starting to restore data',
-        restartCountdown: 'seconds to restart program ~',
-        setp1: 'Restore backup file',
-        setp2: 'Restore backup data',
-        setp3: 'Restore user configuration',
-        setp4: 'Delete backup file',
-        restoreSuccess: 'Recovery completed, preparing to delete backup file',
-        toRestart: 'Backup file deleted, restarting program in',
     },
     tray: {
         settings: 'Settings',

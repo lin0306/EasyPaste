@@ -92,7 +92,9 @@ function handleLinks() {
   nextTick(() => {
     if (markdownContent.value) {
       const links = markdownContent.value.querySelectorAll('a[href]');
+      // @ts-ignore
       links.forEach(link => {
+        // @ts-ignore
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const href = link.getAttribute('href');
