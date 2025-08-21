@@ -12,8 +12,9 @@ interface ClipboardItem {
 }
 
 interface TagItem {
-  id: number,
-  name: string,
-  color: string,
-  created_at: Date
+  id: number;
+  name: string;
+  color: string;
+  created_at: Date;
+  stats: number;
 }

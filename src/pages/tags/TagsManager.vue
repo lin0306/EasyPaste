@@ -252,6 +252,7 @@ onMounted(() => {
                   <div class="tag-item-content">
                     <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
                     <div class="tag-item-name">{{ tag.name }}</div>
+                    <div v-if="tag.stats && tag.stats > 0" class="tag-item-stats">{{ currentLanguage.pages.tags.bindDataHint }}{{ tag.stats }}</div>
                   </div>
                   <div class="tag-item-actions" @click.stop>
                     <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
@@ -491,6 +492,12 @@ onMounted(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.tag-item-stats {
+  font-size: 12px;
+  margin-right: 10px;
+  color: var(--theme-textHint);
 }
 
 .tag-item-actions {

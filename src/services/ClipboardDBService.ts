@@ -435,7 +435,15 @@ class ClipboardDBService {
      * @returns {Array} 标签数组，按创建时间升序排列
      */
     async getAllTags(): Promise<TagItem[] | undefined> {
-        return this.db?.select('SELECT * FROM tags ORDER BY created_at ASC');
+        return this.db?.select(`
+            select 
+                t.*,
+                sum(iif(it.item_id is null , 0, 1)) as stats
+            from tags t
+                     left join item_tags it on t.id = it.tag_id
+            group by t.id, t.created_at
+            order by t.created_at
+        `);
     }
 
     /**

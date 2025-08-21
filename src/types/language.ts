@@ -132,6 +132,7 @@ export interface PageConfig {
     },
     tags: {
         title: string;
+        bindDataHint: string;
         addTitle: string;
         editTitle: string;
         tagName: string;

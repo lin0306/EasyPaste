@@ -118,6 +118,7 @@ export const chinesePageConfig: PageConfig = {
     },
     tags: {
         title: '标签管理',
+        bindDataHint: '关联数据：',
         addTitle: '添加标签',
         editTitle: '编辑标签',
         tagName: '标签名称',

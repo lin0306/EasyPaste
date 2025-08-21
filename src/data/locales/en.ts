@@ -117,6 +117,7 @@ export const englishPageConfig: PageConfig = {
     },
     tags: {
         title: 'Tag Manager',
+        bindDataHint: 'associated data: ',
         addTitle: 'Add Tag',
         editTitle: 'Edit Tag',
         tagName: 'Tag Name',
