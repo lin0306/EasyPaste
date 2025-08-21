@@ -1,6 +1,6 @@
 {
   "version": "0.1.3-beta",
-  "notes": "",
+  "notes": "# v0.1.3-beta (2025-08-21)\n\n## 更新内容\n\n### \uD83C\uDF89 新功能\n- 标签管理新增/修改标签时，增加在列表上的预览效果\n- 标签管理增加查看标签绑定的数据条数\n- 新版本提示增加轻提示显示设置，避免在处理其他任务时，被突然出现的更新窗口挡住\n\n### \uD83D\uDE80 优化\n- 英文翻译完善\n- 标签文字颜色计算逻辑修改\n- 优化列表内容绑定的标签颜色为白色时的颜色显示\n- 优化标签管理页面操作，增加颜色同步、动画效果等功能\n\n### ✅ 修复Bug\n- 更新页面的链接无法点击查看",
   "pub_date": "2025-08-21T10:32:14.883Z",
   "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnZoclNXbDZIcmRlRlQ2TjdNMll2YWQ2d0xlNDdCUDRvRW5pazNLRmhsNCtBNDZicWNWaWZDcWs3SmNxZkNURW41SElSUVlCLzFXbXpTb1E3NHdieFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1NzcyMTUzCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKa040c2Y4a05LQ1Z2Z0VNREQxd3FkQXRkeHJTTGp2WFRPMys4NFh2RlVvY0w1NzVBTWxEbEJKbXI2Ni94QmlhNFByR3VNSVg0OU5hbU1sMzhIS0JLQ3c9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.3-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmtIUjRCaGZ2RzNaVGlLTEcvL0x6QmVMM1l6WnhKRW82MmhFYkVHaGswZDVCYXFLT2lKWkRnamZPMkUxNzZCY1NhY1oyOTdlSGovNk5LWS9SdFRRQ1FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU1NzcyMzAxCWZpbGU6RWFzeVBhc3RlXzAuMS4zX3g2NC1zZXR1cC5leGUKTTJsS3VsdEJNalp5ZWo0ODhSK3BsTE9QVUhMN1lTME9pYVV0UHU5REd4d1J2MElmNDRoNzNFRENlejRHZlF3OHRNNVpXMmhsTDR0UzdSNUpRTjZxQWc9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.3-beta/EasyPaste_0.1.3_x64-setup.exe"}}
 }
