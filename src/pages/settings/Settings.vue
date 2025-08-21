@@ -76,6 +76,15 @@ const autoUpdateMode = computed(() => [{
   label: currentLanguage.value.pages.settings.afterRunningCheck
 }])
 
+// 更新提示显示方式
+const updateHintMode = computed(() => [{
+  value: 'toast',
+  label: currentLanguage.value.pages.settings.toast
+}, {
+  value: 'dialog',
+  label: currentLanguage.value.pages.settings.dialog
+}])
+
 // 是否有修改
 const hasChanges = computed(() => {
   if (selectedKey.value === 'shortcut') {
@@ -600,6 +609,10 @@ onMounted(async () => {
                 {{ currentLanguage.pages.settings.timeIntervalHint }}
               </div>
             </div>
+          </div>
+          <div class="form-item">
+            <span class="label">{{ currentLanguage.pages.settings.newVersionAlertMode }}</span>
+            <n-select class="select" v-model:value="currentConfig.newVersionAlertMode" :options="updateHintMode"/>
           </div>
         </div>
 

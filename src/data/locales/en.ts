@@ -35,6 +35,9 @@ export const englishPageConfig: PageConfig = {
         timeInterval: 'Time Interval',
         timeIntervalUnit: 'hours',
         timeIntervalHint: 'Please enter the time interval, the unit is hour, the range is 1 hour to 30 days (720 hours)',
+        newVersionAlertMode: 'Detected a new version prompt',
+        toast: 'Minor hint',
+        dialog: 'Update Window',
 
         maxHistoryItems: 'Max Record Items',
         maxHistoryItemsHint: 'Limit the upper limit of data storage, 0 means no cleanup, maximum 10000 items',
@@ -87,6 +90,7 @@ export const englishPageConfig: PageConfig = {
         chars: 'chars',
         empty: 'No clipboard record exists',
         initFailedHint: 'The program initialization failed. Please run the program again.',
+        updateTxt: 'New',
         menu: {
             program: 'Program',
             settings: 'Settings',

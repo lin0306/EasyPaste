@@ -44,6 +44,9 @@ export interface PageConfig {
         timeInterval: string;
         timeIntervalUnit: string;
         timeIntervalHint: string;
+        newVersionAlertMode: string;
+        toast: string;
+        dialog: string;
         // 存储设置页面文字
         maxHistoryItems: string,
         maxHistoryItemsHint: string,
@@ -101,6 +104,7 @@ export interface PageConfig {
         chars: string;
         empty: string;
         initFailedHint: string;
+        updateTxt: string;
         menu: {
             [x: string]: string;
             program: string;

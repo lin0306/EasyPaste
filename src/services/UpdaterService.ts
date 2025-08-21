@@ -4,6 +4,8 @@ import {relaunch} from '@tauri-apps/plugin-process';
 import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-updater';
 import {openUpdaterWindow} from '../utils/window';
 import {useLanguage} from "./LanguageService.ts";
+import {hasNewVersion} from "../pages/index/context/UpdaterContext.ts";
+import {getSettings} from "./FileService.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -71,7 +73,17 @@ export default class UpdaterService {
             const update = await check();
             if (update && update.version) {
                 info('检查到新版本')
-                this.showUpdateWindow();
+                if (isManual) {
+                    this.showUpdateWindow();
+                } else {
+                    // 自动检查更新根据设置不同，进行不同的提示方式
+                    const settings = await getSettings();
+                    if (settings.newVersionAlertMode === 'toast') {
+                        hasNewVersion.value = true;
+                    } else {
+                        this.showUpdateWindow();
+                    }
+                }
             } else {
                 if (isManual) {
                     let permissionGranted = await isPermissionGranted();

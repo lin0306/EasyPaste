@@ -1,7 +1,13 @@
 <template>
   <div id="title-bar" :class="{ 'fixed': isFixed }" :data-tauri-drag-region="!isFixed">
-    <div class="window-title">{{ title }}</div>
+    <div class="window-title">
+      <span>
+      {{ title }}
+      </span>
+      <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="checkUpdate"/>
+    </div>
     <div class="window-controls">
+
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
         <DevToolIcon class="program-btn" id="devtool-button-img"/>
       </div>
@@ -36,6 +42,8 @@ import {onMounted, ref} from 'vue'
 import {isDev} from "../data/SystemParams.ts"
 import {listFixedStore} from '../store/fixed'
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
+import UpdateIcon from "../assets/icons/UpdateIcon.vue";
+import UpdaterService from "../services/UpdaterService.ts";
 
 const props = withDefaults(defineProps<{
   title: string;
@@ -44,6 +52,7 @@ const props = withDefaults(defineProps<{
   showFixedBtn?: boolean;
   devTool?: string;
   showMinimizeBtn?: boolean; // 是否显示窗口最小化按钮，当窗口属性skipTaskbar设置为true时，此设置不生效
+  showUpdateIcon?: boolean;
 }>(), {
   showFixedBtn: false
 });
@@ -92,6 +101,14 @@ async function openDevTool() {
   }
 }
 
+/**
+ * 检查更新
+ */
+async function checkUpdate() {
+  const update = UpdaterService.getInstance();
+  await update.checkForUpdates(true);
+}
+
 onMounted(() => {
   if (props.showFixedBtn) {
     listFixedListen = listFixedStore();
@@ -130,6 +147,20 @@ onMounted(() => {
   font-size: 12px;
   -webkit-app-region: no-drag;
   cursor: auto !important;
+  display: flex;
+  align-items: center;
+}
+
+.update-icon {
+  width: 36px;
+  margin-left: 5px;
+  cursor: pointer;
+  opacity: 0.8;
+  padding-bottom: 2px;
+}
+
+.update-icon:hover {
+  opacity: 1;
 }
 
 .window-controls {

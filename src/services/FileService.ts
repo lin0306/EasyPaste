@@ -16,6 +16,7 @@ let defaultSettings: Settings = {
     bindTagBtnShowLocation: 'top-right',
     autoHideWindow: false,
     alwaysOnTop: true,
+    newVersionAlertMode: 'toast'
 }
 let defaultShortcutKeys = {
     search: {

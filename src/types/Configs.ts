@@ -5,13 +5,14 @@ interface Settings {
     languages: string,                  // 语言
     maxHistoryItems: number,            // 最大历史记录数
     dataRetentionDays: number,          // 数据保留时长
-        autoCheckUpdate: boolean,       // 自动检查更新
+    autoCheckUpdate: boolean,           // 自动检查更新
     updateMode: string,                 // 自动检查更新方式
     autoCheckUpdateInterval: number,    // 自动检查更新间隔
     enableTag: boolean,                 // 启用标签
     bindTagBtnShowLocation: string,     // 标签绑定按钮位置
     autoHideWindow: boolean,            // 自动隐藏窗口
     alwaysOnTop: boolean,               // 窗口是否始终置顶
+    newVersionAlertMode: string,        // 检查到新版本提示方式
 }
 
 interface ShortcutKeys {

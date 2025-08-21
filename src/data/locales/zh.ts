@@ -36,6 +36,9 @@ export const chinesePageConfig: PageConfig = {
         timeInterval: '检查时间间隔',
         timeIntervalUnit: '小时',
         timeIntervalHint: '设置多长时间检查一次，单位：小时，可设置范围为：1小时-30天（720小时）',
+        newVersionAlertMode: '检查到新版本提示',
+        toast: '轻提示',
+        dialog: '更新窗口',
 
         maxHistoryItems: '记录保留条数',
         maxHistoryItemsHint: '限制数据存储的上限，超过条数上限将自动清理旧数据，0表示不清理，最多保留10000条',
@@ -88,6 +91,7 @@ export const chinesePageConfig: PageConfig = {
         chars: '字符',
         empty: '暂无剪贴板记录',
         initFailedHint: '程序初始化失败，请重新运行程序',
+        updateTxt: '新版本',
         menu: {
             program: '程序',
             settings: '偏好设置',
