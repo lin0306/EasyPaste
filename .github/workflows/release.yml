@@ -216,8 +216,14 @@ jobs:
             --arg macos_sig "$MACOS_SIG" \
             --arg win_sig "$WIN_SIG" \
             '{
-              "darwin-aarch64": ($macos_url | if . != "" then {signature: $macos_sig, url: $macos_url} else null end),
-              "windows-x86_64": ($win_url | if . != "" then {signature: $win_sig, url: $win_url} else null end)
+              "darwin-aarch64": ($macos_url | if . != "" then {
+                signature: $macos_sig, 
+                url: $macos_url
+              } else null end),
+              "windows-x86_64": ($win_url | if . != "" then {
+                signature: $win_sig, 
+                url: $win_url
+              } else null end)
             }')
 
           # 控制台打印json内容
