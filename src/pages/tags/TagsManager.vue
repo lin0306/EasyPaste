@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {emit} from '@tauri-apps/api/event';
+import {emit, listen} from '@tauri-apps/api/event';
 import {NTag, useMessage} from 'naive-ui';
-import {onMounted, reactive, ref, watch} from 'vue';
+import {onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import AddIcon from '../../assets/icons/AddIcon.vue';
 import LeftArrowIcon from '../../assets/icons/LeftArrowIcon.vue';
 import SearchIcon from '../../assets/icons/SearchIcon.vue';
@@ -213,10 +213,27 @@ watch(() => editState.tagColor, (newValue: string, _oldValue: string) => {
   }
 })
 
+/**
+ * 监听标签绑定的数据变化
+ */
+let updateBindQuantityListener: any = null;
+function initUpdateBindQuantityListener() {
+  return listen('update-bind-quantity', () => {
+    loadTags();
+  })
+}
+
 // 组件挂载时加载标签列表
 onMounted(() => {
   loadTags()
+  updateBindQuantityListener = initUpdateBindQuantityListener();
 })
+
+onUnmounted(() => {
+  if (updateBindQuantityListener) {
+    updateBindQuantityListener();
+  }
+});
 </script>
 <template>
   <div class="tag-manager-container">
