@@ -12,7 +12,6 @@ import ClipboardDBService from '../../services/ClipboardDBService.ts';
 import {error} from "@tauri-apps/plugin-log";
 import HintIcon from "../../assets/icons/HintIcon.vue";
 import {getContrastColor} from "../../utils/color.ts";
-import {removeItemTag} from "../index/context/ClipboardDataContext.ts";
 
 const {currentLanguage} = useLanguage();
 
