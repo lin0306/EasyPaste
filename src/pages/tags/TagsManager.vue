@@ -245,19 +245,21 @@ onMounted(() => {
           <div class="tag-list-container">
             <n-empty v-if="tagItems.length === 0"/>
             <div v-else class="tag-list">
-              <div v-for="(tag, index) in tagItems" :key="tag.id" class="tag-item"
-                   :class="{ 'tag-item-active': editState.tagId === tag.id }" @click="selectTag(tag, index)"
-                   :style="{ borderLeft: `4px solid ${tag.color}` }">
-                <div class="tag-item-content">
-                  <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
-                  <div class="tag-item-name">{{ tag.name }}</div>
-                </div>
-                <div class="tag-item-actions" @click.stop>
-                  <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
-                    <TrashIcon/>
+              <transition-group name="tag-list">
+                <div v-for="(tag, index) in tagItems" :key="tag.id" class="tag-item"
+                     :class="{ 'tag-item-active': editState.tagId === tag.id }" @click="selectTag(tag, index)"
+                     :style="{ borderLeft: `4px solid ${tag.color}` }">
+                  <div class="tag-item-content">
+                    <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
+                    <div class="tag-item-name">{{ tag.name }}</div>
+                  </div>
+                  <div class="tag-item-actions" @click.stop>
+                    <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
+                      <TrashIcon/>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </transition-group>
             </div>
           </div>
 
@@ -431,6 +433,36 @@ onMounted(() => {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+/*内容列表动画效果start*/
+/* 进入动画 - 从右侧进入 */
+.tag-list-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.tag-list-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 离开动画 - 向左侧离开 */
+.tag-list-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tag-list-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+/* 离开中 */
+.tag-list-leave-active {
+  position: relative;
+}
+
+/*内容列表动画效果end*/
 
 .tag-item-active {
   background-color: var(--theme-primary-light);
