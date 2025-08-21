@@ -2,7 +2,7 @@
   <div id="title-bar" :class="{ 'fixed': isFixed }" :data-tauri-drag-region="!isFixed">
     <div class="window-title">{{ title }}</div>
     <div class="window-controls">
-      <div v-if="isShow && devTool" class="control-button" @click="openDevTool">
+      <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
         <DevToolIcon class="program-btn" id="devtool-button-img"/>
       </div>
       <div v-if="showFixedBtn && !isFixed" class="control-button fixation-button" @click="onFixWindow">
@@ -49,8 +49,6 @@ const props = withDefaults(defineProps<{
 });
 
 const isFixed = ref(false);
-
-const isShow = isDev();
 
 let listFixedListen = listFixedStore();
 
