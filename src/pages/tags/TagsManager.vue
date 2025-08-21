@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {emit} from '@tauri-apps/api/event';
 import {NTag, useMessage} from 'naive-ui';
-import {onMounted, reactive, ref} from 'vue';
+import {onMounted, reactive, ref, watch} from 'vue';
 import AddIcon from '../../assets/icons/AddIcon.vue';
 import LeftArrowIcon from '../../assets/icons/LeftArrowIcon.vue';
 import SearchIcon from '../../assets/icons/SearchIcon.vue';
@@ -22,22 +22,24 @@ const tagItems = ref<TagItem[]>([])
 
 // 右侧面板显示状态
 const isPanelVisible = ref(false)
-// 是否为编辑模式
-const isEditMode = ref(false)
 
 // 标签编辑状态
 const editState = reactive({
-  isEdit: false,
+  isEdit: false, // 是否为编辑模式
   currentTagId: null as number | null,
-  tagId: null,
+  tagId: null as number | null,
+  index: -1,
   tagName: '',
   tagColor: 'rgba(128, 128, 128, 1)'
 })
+const originTag = ref({} as TagItem);
 
 // 搜索关键词
 const searchText = ref('')
 
-// 加载标签列表
+/**
+ * 加载标签列表
+ */
 async function loadTags() {
   try {
     const db = await ClipboardDBService.getInstance();
@@ -52,39 +54,56 @@ async function loadTags() {
   }
 }
 
-// 选择标签
-function selectTag(tag: any) {
+/**
+ * 选择标签
+ * @param tag
+ * @param index
+ */
+function selectTag(tag: TagItem, index: number) {
   editState.tagId = tag.id
+  editState.index = index
   editState.isEdit = true
   editState.currentTagId = tag.id
   editState.tagName = tag.name
   editState.tagColor = tag.color
+  originTag.value = {...tag};
 
-  isEditMode.value = true
   isPanelVisible.value = true
 }
 
-// 显示添加面板
+/**
+ * 显示添加面板
+ */
 function showAddPanel() {
+  // 隐藏的时候回滚数据
+  if (isPanelVisible.value) {
+    tagItems.value[editState.index] = originTag.value;
+  }
   resetForm()
-  isEditMode.value = false
   isPanelVisible.value = !isPanelVisible.value
 }
 
-// 隐藏面板
-function hidePanel() {
-  isPanelVisible.value = false
-  if (!isEditMode.value) {
-    editState.tagId = null
+/**
+ * 取消编辑操作
+ */
+function cancelEdit() {
+  if (editState.isEdit) {
+    tagItems.value[editState.index] = originTag.value;
   }
+  resetForm();
+  isPanelVisible.value = false
 }
 
-// 刷新列表页面的标签
+/**
+ * 刷新列表页面的标签
+ */
 async function reloadListTags() {
   await emit('reload-tags');
 }
 
-// 添加标签
+/**
+ * 添加标签
+ */
 async function addTag() {
   if (!editState.tagName.trim()) {
     message.warning(currentLanguage.value.pages.tags.tageNameIsNullWarnMsg)
@@ -102,12 +121,18 @@ async function addTag() {
       const db = await ClipboardDBService.getInstance();
       await db.addTag(editState.tagName, editState.tagColor);
       message.success(currentLanguage.value.pages.tags.saveSuccessMsg)
+      // 插入新数据
+      setTimeout(async () => {
+        const tag = await db.getLatestTag();
+        if (tag) {
+          tagItems.value.push(tag[0]);
+        }
+      }, 50);
     }
 
     // 重置表单并刷新列表
     resetForm();
-    hidePanel();
-    loadTags();
+    isPanelVisible.value = false
     // 刷新剪贴板的标签列表
     await reloadListTags();
   } catch (error) {
@@ -116,17 +141,23 @@ async function addTag() {
   }
 }
 
-// 删除标签
-async function deleteTag(id: number) {
+/**
+ * 删除标签
+ * @param id 标签id
+ * @param index 标签索引
+ */
+async function deleteTag(id: number, index: number) {
   try {
+    console.log(tagItems.value, id, index)
     const db = await ClipboardDBService.getInstance();
     await db.deleteTag(id);
     message.success(currentLanguage.value.pages.tags.deleteSuccessMsg)
     if (editState.tagId === id) {
       editState.tagId = null
-      hidePanel()
+      isPanelVisible.value = false
     }
-    loadTags()
+    tagItems.value.splice(index, 1);
+    console.log(tagItems.value)
     // 刷新剪贴板的标签列表
     await reloadListTags();
   } catch (error) {
@@ -135,19 +166,27 @@ async function deleteTag(id: number) {
   }
 }
 
-// 重置表单
+/**
+ * 重置表单
+ */
 function resetForm() {
   editState.isEdit = false
   editState.currentTagId = null
   editState.tagName = ''
+  editState.index = -1
   // 默认灰色
   editState.tagColor = 'rgba(128, 128, 128, 1)'
   editState.tagId = null
 }
 
+/**
+ * 打开添加表单
+ */
 function openAddForm() {
+  if (editState.isEdit) {
+    tagItems.value[editState.index] = originTag.value;
+  }
   resetForm()
-  isEditMode.value = false
 }
 
 // 过滤标签
@@ -162,6 +201,17 @@ function filterTags() {
       tag.name.toLowerCase().includes(keyword)
   )
 }
+
+watch(() => editState.tagName, (newValue: string, _oldValue: string) => {
+  if (editState.isEdit) {
+    tagItems.value[editState.index].name = newValue;
+  }
+})
+watch(() => editState.tagColor, (newValue: string, _oldValue: string) => {
+  if (editState.isEdit) {
+    tagItems.value[editState.index].color = newValue;
+  }
+})
 
 // 组件挂载时加载标签列表
 onMounted(() => {
@@ -195,15 +245,15 @@ onMounted(() => {
           <div class="tag-list-container">
             <n-empty v-if="tagItems.length === 0"/>
             <div v-else class="tag-list">
-              <div v-for="tag in tagItems" :key="tag.id" class="tag-item"
-                   :class="{ 'tag-item-active': editState.tagId === tag.id }" @click="selectTag(tag)"
+              <div v-for="(tag, index) in tagItems" :key="tag.id" class="tag-item"
+                   :class="{ 'tag-item-active': editState.tagId === tag.id }" @click="selectTag(tag, index)"
                    :style="{ borderLeft: `4px solid ${tag.color}` }">
                 <div class="tag-item-content">
                   <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
                   <div class="tag-item-name">{{ tag.name }}</div>
                 </div>
                 <div class="tag-item-actions" @click.stop>
-                  <div class="tag-delete-button" @click="deleteTag(tag.id)">
+                  <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
                     <TrashIcon/>
                   </div>
                 </div>
@@ -223,10 +273,10 @@ onMounted(() => {
         <div class="tag-detail-panel" :class="{ 'panel-visible': isPanelVisible }">
           <div class="panel-header">
             <h3>{{
-                isEditMode ? currentLanguage.pages.tags.editTitle : currentLanguage.pages.tags.addTitle
+                editState.isEdit ? currentLanguage.pages.tags.editTitle : currentLanguage.pages.tags.addTitle
               }}</h3>
             <div>
-              <AddIcon class="add-btn" v-if="isEditMode" @click="openAddForm"/>
+              <AddIcon class="add-btn" v-if="editState.isEdit" @click="openAddForm"/>
             </div>
           </div>
 
@@ -276,7 +326,7 @@ onMounted(() => {
               </div>
 
               <div class="form-actions">
-                <n-button @click="hidePanel">
+                <n-button @click="cancelEdit">
                   {{ currentLanguage.pages.tags.cancelBtn }}
                 </n-button>
                 <n-button type="primary" @click="addTag">

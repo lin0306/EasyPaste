@@ -462,6 +462,13 @@ class ClipboardDBService {
     }
 
     /**
+     * 获取最新的标签
+     */
+    async getLatestTag(): Promise<TagItem[] | undefined> {
+        return this.db?.select('SELECT * FROM tags ORDER BY created_at DESC LIMIT 1');
+    }
+
+    /**
      * 删除指定天数之前的剪贴板条目
      * @param days 保留天数
      * @returns 删除条目数量
