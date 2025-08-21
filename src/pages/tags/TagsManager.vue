@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {emit} from '@tauri-apps/api/event';
-import {useMessage} from 'naive-ui';
+import {NTag, useMessage} from 'naive-ui';
 import {onMounted, reactive, ref} from 'vue';
 import AddIcon from '../../assets/icons/AddIcon.vue';
 import LeftArrowIcon from '../../assets/icons/LeftArrowIcon.vue';
@@ -10,6 +10,9 @@ import TitleBar from '../../components/TitleBar.vue';
 import {useLanguage} from '../../services/LanguageService.ts';
 import ClipboardDBService from '../../services/ClipboardDBService.ts';
 import {error} from "@tauri-apps/plugin-log";
+import HintIcon from "../../assets/icons/HintIcon.vue";
+import {getContrastColor} from "../../utils/color.ts";
+import {removeItemTag} from "../index/context/ClipboardDataContext.ts";
 
 const {currentLanguage} = useLanguage();
 
@@ -233,7 +236,14 @@ onMounted(() => {
               <div class="form-item">
                 <label>{{ currentLanguage.pages.tags.tagName }}</label>
                 <n-input v-model:value="editState.tagName"
-                         :placeholder="currentLanguage.pages.tags.tagNameHint"/>
+                         :placeholder="currentLanguage.pages.tags.tagNamePlaceholder"
+                         clearable/>
+                <div class="hint">
+                  <HintIcon class="hint-icon"/>
+                  <span class="hint-text">
+                  {{ currentLanguage.pages.tags.tagNameHint }}
+                </span>
+                </div>
               </div>
               <div class="form-item">
                 <label>{{ currentLanguage.pages.tags.tagColor }}</label>
@@ -241,12 +251,37 @@ onMounted(() => {
                   <n-color-picker v-model:value="editState.tagColor" :placement="'left-end'"/>
                 </div>
               </div>
+              <div class="form-item">
+                <label>{{ currentLanguage.pages.tags.preview }}</label>
+                <div
+                    class="preview-tag-item"
+                    :style="{ backgroundColor: editState.tagColor }"
+                >
+                  <span class="preview-tag-name"
+                        :style="{ color: getContrastColor(editState.tagColor) }">{{ editState.tagName }}</span>
+                </div>
+                <n-tag
+                    size="small"
+                    round
+                    closable
+                    bordered
+                    class="preview-item-tag"
+                >
+                  <div class="preview-item-tag-content">
+                    <div :style="{ backgroundColor: editState.tagColor }" class="preview-item-tag-color"></div>
+                    <div class="preview-item-tag-name">
+                      {{ editState.tagName }}
+                    </div>
+                  </div>
+                </n-tag>
+              </div>
 
               <div class="form-actions">
-                <n-button @click="hidePanel">{{ currentLanguage.pages.tags.cancelBtn }}</n-button>
-                <n-button type="primary" @click="addTag">{{
-                    currentLanguage.pages.tags.saveBtn
-                  }}
+                <n-button @click="hidePanel">
+                  {{ currentLanguage.pages.tags.cancelBtn }}
+                </n-button>
+                <n-button type="primary" @click="addTag">
+                  {{ currentLanguage.pages.tags.saveBtn }}
                 </n-button>
               </div>
             </div>
@@ -522,4 +557,72 @@ onMounted(() => {
   width: 20px;
 }
 
+.hint {
+  display: flex;
+  font-size: 11px;
+  opacity: 0.5;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  color: var(--theme-text);
+}
+
+.hint-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+
+.hint-text {
+  width: 98%;
+}
+
+.preview-tag-item {
+  width: 100px;
+  height: 30px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.preview-tag-name {
+  position: absolute;
+  margin-left: 20px;
+  font-size: 12px;
+  width: 70px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.preview-item-tag {
+  margin-top: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.preview-item-tag-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.preview-item-tag-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+
+.preview-item-tag-name {
+  max-width: 60px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
 </style>

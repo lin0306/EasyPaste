@@ -135,8 +135,10 @@ export interface PageConfig {
         addTitle: string;
         editTitle: string;
         tagName: string;
+        tagNamePlaceholder: string;
         tagNameHint: string;
         tagColor: string;
+        preview: string;
         saveBtn: string;
         cancelBtn: string;
         loadFailedMsg: string;
