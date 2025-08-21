@@ -84,6 +84,7 @@ export const englishPageConfig: PageConfig = {
         typeFile: 'File',
         registerShortcutKeysErrorHint: 'The registration of the "Wake Up Routine" shortcut key failed. Please check if this shortcut key is already in use. You can make the adjustment on the "Settings - Shortcuts" page here.',
         chars: 'chars',
+        empty: 'No clipboard record exists',
         menu: {
             program: 'Program',
             settings: 'Settings',

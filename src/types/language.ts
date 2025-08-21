@@ -97,6 +97,7 @@ export interface PageConfig {
         typeFile: string;
         registerShortcutKeysErrorHint: string;
         chars: string;
+        empty: string;
         menu: {
             [x: string]: string;
             program: string;
