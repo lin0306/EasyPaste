@@ -71,6 +71,7 @@ pub fn create_tray(app: AppHandle) {
 
     // 创建新的托盘图标
     let tray = TrayIconBuilder::new()
+        .tooltip("EasyPaste")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&menu) // 直接使用菜单对象
         .show_menu_on_left_click(false)
