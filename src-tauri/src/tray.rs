@@ -1,9 +1,8 @@
+use crate::file;
 use crate::listener::{is_listening, start_listening, stop_listening};
 use log::info;
 use serde::Deserialize;
-use serde_json::{from_reader, from_slice};
-use std::fs::File;
-use std::path::PathBuf;
+use serde_json::from_slice;
 use std::sync::{Arc, Mutex};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
@@ -86,7 +85,10 @@ pub fn create_tray(app: AppHandle) {
             } => {
                 // todo 已知bug：事件只有在松开鼠标的时候才会触发
                 // 打开主窗口
-                let win = tray.app_handle().get_webview_window("main").expect("主窗口不存在");
+                let win = tray
+                    .app_handle()
+                    .get_webview_window("main")
+                    .expect("主窗口不存在");
                 match win.is_visible() {
                     Ok(visible) => {
                         if !visible {
@@ -98,7 +100,7 @@ pub fn create_tray(app: AppHandle) {
                             win.hide().expect("窗口隐藏失败")
                         }
                     }
-                    Err(e) => eprintln!("窗口可见性错误: {}", e)
+                    Err(e) => eprintln!("窗口可见性错误: {}", e),
                 };
             }
             _ => {}
@@ -141,6 +143,7 @@ pub fn create_tray(app: AppHandle) {
 // 重新加载托盘菜单的命令
 #[tauri::command]
 pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
+    println!("重新加载托盘菜单");
     create_tray(app);
     Ok(())
 }
@@ -149,28 +152,22 @@ pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
  * 加载语言配置
  */
 fn load_language(app: &AppHandle) -> Tray {
-    let appdata_dir = dirs::data_dir().expect("未找到数据目录");
-    let mut path = PathBuf::new();
-    path.push(appdata_dir);
-    path.push(&app.app_handle().config().identifier);
-    path.push("language.json");
-
-    if path.exists() {
-        // 文件存在，读取文件内容
-        let file = File::open(path).unwrap();
-        let json: LanguageConfig = from_reader(file).unwrap();
-        json.tray
-    } else {
-        info!("使用默认托盘语言配置");
-        let default_json = r#"{
-            "settings": "设置",
-            "clipboardMonitor": "剪贴板监听",
-            "checkUpdate": "检查更新",
-            "about": "关于",
-            "restart": "重启",
-            "exit": "退出"
-        }"#;
-        from_slice(default_json.as_bytes()).unwrap()
+    match file::load_file_content::<LanguageConfig>(app.clone(), "language.json".into()) {
+        Ok(data) => {
+            data.tray
+        }
+        Err(_e) => {
+            info!("使用默认托盘语言配置");
+            let default_json = r#"{
+                "settings": "设置",
+                "clipboardMonitor": "剪贴板监听",
+                "checkUpdate": "检查更新",
+                "about": "关于",
+                "restart": "重启",
+                "exit": "退出"
+            }"#;
+            from_slice(default_json.as_bytes()).unwrap()
+        }
     }
 }
 

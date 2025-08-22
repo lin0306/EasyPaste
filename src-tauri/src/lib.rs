@@ -7,6 +7,8 @@ mod log;
 mod regedit;
 mod tray;
 mod permission;
+mod windows;
+mod file;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -21,6 +23,7 @@ pub fn run() {
             listener::start_listening(app.handle().clone());
             // 创建系统托盘
             tray::create_tray(app.handle().clone());
+            windows::create_main_window(app.handle().clone());
             Ok(())
         })
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {

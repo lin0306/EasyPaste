@@ -12,27 +12,7 @@
   },
   "app": {
     "windows": [
-      {
-        "title": "main",
-        "width": 350,
-        "height": 550,
-        "minWidth": 350,
-        "minHeight": 550,
-        "maxWidth": 800,
-        "maxHeight": 1000,
-        "url": "/list",
-        "alwaysOnTop": true,
-        "decorations": false,
-        "visible": false,
-        "skipTaskbar": false,
-        "dragDropEnabled": false,
-        "focus": true,
-        "fullscreen": false,
-        "incognito": true,
-        "shadow": true,
-        "contentProtected": true,
-        "resizable": true
-      }
+
     ],
     "security": {
       "csp": null
