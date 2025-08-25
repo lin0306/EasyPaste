@@ -1,11 +1,12 @@
-import { emit, listen } from '@tauri-apps/api/event';
-import { error, info } from '@tauri-apps/plugin-log';
-import { dateEnUS, dateZhCN, enUS, zhCN } from 'naive-ui';
-import { ref } from 'vue';
-import { getSettings, updateLanguage } from './FileService.ts';
-import { LanguageConfig } from '../types/language.ts';
-import { chinesePageConfig } from '../data/locales/zh.ts';
-import { englishPageConfig } from '../data/locales/en.ts';
+import {emit, listen} from '@tauri-apps/api/event';
+import {error, info} from '@tauri-apps/plugin-log';
+import {dateEnUS, dateZhCN, enUS, zhCN} from 'naive-ui';
+import {ref} from 'vue';
+import {updateLanguage} from './FileService.ts';
+import {LanguageConfig} from '../types/language.ts';
+import {chinesePageConfig} from '../data/locales/zh.ts';
+import {englishPageConfig} from '../data/locales/en.ts';
+import {getLanguage} from "../store/Settings.ts";
 
 // 简体中文配置
 export const chinese: LanguageConfig = {
@@ -39,14 +40,11 @@ export function useLanguage() {
     // 初始化主题
     const initializeLanguage = async () => {
         try {
-            // 从用户设置中获取主题
-            const settings = await getSettings();
-
             // 设置当前主题
-            currentLanguageId.value = settings.languages;
+            currentLanguageId.value = await getLanguage();
 
             // 查找并应用主题
-            const language = languages.find(item => item.id === settings.languages);
+            const language = languages.find(item => item.id === currentLanguageId.value);
             if (language) {
                 currentLanguage.value = language;
             } else {

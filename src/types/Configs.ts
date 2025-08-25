@@ -16,6 +16,7 @@ interface Settings {
 }
 
 interface ShortcutKeys {
+    [x: string]: any;
     search: {
         name: string,
         key: string[]

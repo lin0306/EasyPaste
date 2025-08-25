@@ -10,13 +10,7 @@ import {isRegistered, register, unregister} from '@tauri-apps/plugin-global-shor
 import {error, info} from '@tauri-apps/plugin-log';
 import {computed, onMounted, reactive, ref} from 'vue';
 import HintIcon from '../../assets/icons/HintIcon.vue';
-import {
-  getSettings,
-  getShortcutKeys,
-  saveLanguageCache,
-  saveUserShortcutKeys,
-  updateUserSettings
-} from '../../services/FileService.ts';
+import {saveLanguageCache} from '../../services/FileService.ts';
 import {getTray, languages, useLanguage} from '../../services/LanguageService.ts';
 import {convertRegisterKey, convertShow, formatKeyDisplay} from '../../utils/ShortcutKeys.ts';
 import {getWakeUpRoutineKeyAvailable} from "../../store/ShortcutKeyAvailableStatus.ts";
@@ -24,6 +18,34 @@ import PassedIcon from "../../assets/icons/PassedIcon.vue";
 import ErrorIcon from "../../assets/icons/ErrorIcon.vue";
 import {isMac} from "../../data/SystemParams.ts";
 import {openLink} from "../../utils/link.ts";
+import {
+  getAlwaysOnTop,
+  getAutoCheckUpdate,
+  getAutoCheckUpdateInterval,
+  getAutoHideWindow,
+  getBindTagBtnShowLocation,
+  getDataRetentionDays,
+  getEnableTag,
+  getMaxHistoryItems,
+  getNewVersionAlertMode,
+  getPowerOnSelfStart,
+  getReplaceGlobalHotkey,
+  getUpdateMode,
+  saveAlwaysOnTop,
+  saveAutoCheckUpdate,
+  saveAutoCheckUpdateInterval,
+  saveAutoHideWindow,
+  saveBindTagBtnShowLocation,
+  saveDataRetentionDays,
+  saveEnableTag,
+  saveLanguage,
+  saveMaxHistoryItems,
+  saveNewVersionAlertMode,
+  savePowerOnSelfStart,
+  saveReplaceGlobalHotkey,
+  saveUpdateMode
+} from "../../store/Settings.ts";
+import {getSearchKey, getWakeUpRoutine, saveSearchKey, saveWakeUpRoutineKey} from "../../store/ShortcutKeys.ts";
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -41,16 +63,76 @@ const menuItems = computed(() => [
 ]);
 
 // 配置相关
-const originalConfig = reactive<Settings | any>({});
+const originalConfig = reactive<Settings>({
+  theme: "light",
+  powerOnSelfStart: false,
+  replaceGlobalHotkey: false,
+  languages: "chinese",
+  maxHistoryItems: 2000,
+  dataRetentionDays: 30,
+  autoCheckUpdate: true,
+  updateMode: "timing",
+  autoCheckUpdateInterval: 1,
+  enableTag: true,
+  bindTagBtnShowLocation: 'top-right',
+  autoHideWindow: false,
+  alwaysOnTop: true,
+  newVersionAlertMode: 'toast'
+});
 
 // 当前编辑的配置
-const currentConfig = reactive<Settings | any>({});
+const currentConfig = reactive<Settings>({
+  theme: "light",
+  powerOnSelfStart: false,
+  replaceGlobalHotkey: false,
+  languages: "chinese",
+  maxHistoryItems: 2000,
+  dataRetentionDays: 30,
+  autoCheckUpdate: true,
+  updateMode: "timing",
+  autoCheckUpdateInterval: 1,
+  enableTag: true,
+  bindTagBtnShowLocation: 'top-right',
+  autoHideWindow: false,
+  alwaysOnTop: true,
+  newVersionAlertMode: 'toast'
+});
 
 // 配置相关
-const originalShortcutKeys = reactive<ShortcutKeys | any>({});
+const originalShortcutKeys = reactive<ShortcutKeys>({
+  search: {
+    name: "搜索",
+    key: [
+      "ctrl",
+      "f"
+    ]
+  },
+  wakeUpRoutine: {
+    name: "唤醒程序",
+    key: [
+      "alt",
+      "c"
+    ]
+  }
+});
 
 // 当前编辑的配置
-const currentShortcutKeys = reactive<ShortcutKeys | any>({});
+const currentShortcutKeys = reactive<ShortcutKeys>({
+  search: {
+    name: "搜索",
+    key: [
+      "ctrl",
+      "f"
+    ]
+  },
+  wakeUpRoutine: {
+    name: "唤醒程序",
+    key: [
+      "alt",
+      "c"
+    ]
+  }
+});
 
 // 语言选项
 const languageOptions = languages.map(lang => ({
@@ -85,17 +167,10 @@ const updateHintMode = computed(() => [{
   label: currentLanguage.value.pages.settings.dialog
 }])
 
-// 是否有修改
-const hasChanges = computed(() => {
-  if (selectedKey.value === 'shortcut') {
-    // 检查是否在编辑快捷键，或者原始快捷键和当前快捷键是否不同
-    return JSON.stringify(originalShortcutKeys) !== JSON.stringify(currentShortcutKeys);
-  }
-  return JSON.stringify(originalConfig) !== JSON.stringify(currentConfig);
-});
+const onLoading = ref(false);
 
 // 当前正在编辑的快捷键
-const editingShortcut = ref<number | null>(null);
+const editingShortcut = ref<string>('');
 // 临时存储编辑中的按键
 const tempKeys = ref<any[]>([]);
 // 快捷键编辑弹窗状态
@@ -115,7 +190,7 @@ const isAdminStart = ref(false);
  * 开始编辑快捷键
  * @param key 快捷键类型
  */
-function startEditShortcut(key: number) {
+function startEditShortcut(key: string) {
   editingShortcut.value = key;
   tempKeys.value = [...(currentShortcutKeys[key]?.key || [])];
   shortcutModalVisible.value = true;
@@ -139,7 +214,7 @@ function startEditShortcut(key: number) {
  * 取消编辑快捷键
  */
 function cancelEditShortcut() {
-  editingShortcut.value = null;
+  editingShortcut.value = '';
   tempKeys.value = [];
   shortcutModalVisible.value = false;
   // 关闭弹窗后移除全局按键监听
@@ -149,16 +224,40 @@ function cancelEditShortcut() {
 /**
  * 确认编辑快捷键
  */
-function confirmEditShortcut() {
-  const key = editingShortcut.value;
-  if (key && tempKeys.value.length > 0) {
-    currentShortcutKeys[key].key = [...tempKeys.value];
+async function confirmEditShortcut() {
+  try {
+    onLoading.value = true;
+    const key = editingShortcut.value;
+    if (key && tempKeys.value.length > 0) {
+      currentShortcutKeys[key].key = [...tempKeys.value];
+    }
+    if (editingShortcut.value === 'wakeUpRoutine') {
+      await saveWakeUpRoutineKey(currentShortcutKeys[key]);
+      const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
+      info("唤醒程序快捷键已修改，重新注册");
+      // 重新注册快捷键
+      const registerKey = convertRegisterKey(keys);
+      if (await isRegistered(registerKey)) {
+        // 如果已经注册了快捷键，需要先取消注册，再重新注册
+        await unregister(registerKey);
+      }
+      await emit('update-open-window-key', {keys: currentShortcutKeys});
+    }
+    if (editingShortcut.value === 'search') {
+      await saveSearchKey(currentShortcutKeys[key]);
+    }
+    originalShortcutKeys[editingShortcut.value].key = currentShortcutKeys[editingShortcut.value].key;
+    editingShortcut.value = '';
+    tempKeys.value = [];
+    shortcutModalVisible.value = false;
+    // 关闭弹窗后移除全局按键监听
+    document.removeEventListener('keydown', handleKeyDown);
+  } catch (e) {
+    error('修改快捷键设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+  } finally {
+    onLoading.value = false;
   }
-  editingShortcut.value = null;
-  tempKeys.value = [];
-  shortcutModalVisible.value = false;
-  // 关闭弹窗后移除全局按键监听
-  document.removeEventListener('keydown', handleKeyDown);
 }
 
 /**
@@ -220,241 +319,378 @@ async function updateToSystemShortcutKeys() {
   // 修改快捷键
   currentShortcutKeys.wakeUpRoutine.key = key;
   await emit('update-open-window-key', {keys: currentShortcutKeys});
-  // 更新原始配置
-  Object.assign(originalConfig, currentConfig);
 }
 
-// 保存配置
-async function saveConfig() {
-  if (!hasChanges.value) {
-    return; // 如果没有修改，不做任何处理
-  }
-  if (selectedKey.value === 'general'
-      || selectedKey.value === 'updater'
-      || selectedKey.value === 'storage') {
-
-    // 是否修改了【开机自启】
-    const isUpdatePowerOnSelfStart = currentConfig.powerOnSelfStart !== originalConfig.powerOnSelfStart;
-    // 是否修改了【替换全局热键】
-    const isUpdateReplaceGlobalHotkey = currentConfig.replaceGlobalHotkey !== originalConfig.replaceGlobalHotkey;
-    // 是否修改了【自动隐藏窗口】
-    const isUpdateAutoHideWindow = currentConfig.autoHideWindow !== originalConfig.autoHideWindow;
-    // 是否修改了【窗口始终置顶】
-    const isUpdateAlwaysOnTop = currentConfig.alwaysOnTop !== originalConfig.alwaysOnTop;
-    // 是否修改了【语言】
-    const isUpdateLanguages = currentConfig.languages !== originalConfig.languages;
-    // 是否修改了【启用标签】
-    const isUpdateEnableTag = currentConfig.enableTag !== originalConfig.enableTag;
-    // 是否修改了【标签绑定按钮位置】
-    const isUpdateBindTagBtnShowLocation = currentConfig.bindTagBtnShowLocation !== originalConfig.bindTagBtnShowLocation;
-
-    // 是否修改了【自动检查更新】
-    const isUpdateAutoCheckUpdate = currentConfig.autoCheckUpdate !== originalConfig.autoCheckUpdate;
-    // 是否修改了【自动更新方式】
-    const isUpdateAutoUpdateMode = currentConfig.updateMode !== originalConfig.updateMode;
-    // 是否修改了【自动更新时间间隔】
-    const isUpdateAutoUpdateInterval = currentConfig.autoCheckUpdateInterval !== originalConfig.autoCheckUpdateInterval;
-
-    // 是否修改了【最大存储条数】
-    const isUpdateMaxHistoryItems = currentConfig.maxHistoryItems !== originalConfig.maxHistoryItems;
-    // 是否修改了【自动清理天数】
-    const isUpdateDataRetentionDays = currentConfig.dataRetentionDays !== originalConfig.dataRetentionDays;
-
-    // 发送配置到主进程
-    const isSuccess = await updateUserSettings(currentConfig);
-    if (isSuccess) {
-      /// 修改了通用设置页面
-      // 是否修改了【替换全局热键】
-      if (isUpdateReplaceGlobalHotkey) {
-        // 打开替换全局热键
-        if (currentConfig.replaceGlobalHotkey) {
-          const enable = await invoke('valid_clipboard_regedit');
-          if (!enable) {
-            await updateToSystemShortcutKeys();
-          } else {
-            // 有找到注册表配置，需要修改注册表，再修改快捷键
-            const backupResult = await invoke<boolean>('backup_clipboard_regedit');
-            if (!backupResult) {
-              console.log("备份注册表失败");
-              message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
-              // 回滚【替换全局热键】设置
-              currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
-              await updateUserSettings(currentConfig);
-            } else {
-              await updateToSystemShortcutKeys();
-              // 显示重启确认弹窗
-              restartModalVisible.value = true;
-            }
-          }
-        } else {
-          // 关闭全局热键，重置快捷键
-          info("唤醒程序快捷键已修改，重新注册");
-          const valid = await invoke('valid_clipboard_backup_regedit');
-          let isBackupSuccess = true;
-          if (valid) {
-            // 恢复注册表配置
-            const backupResult = await invoke<boolean>('recover_clipboard_regedit');
-            if (!backupResult) {
-              console.log("恢复注册表失败");
-              message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
-              // 回滚【替换全局热键】设置
-              currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
-              await updateUserSettings(currentConfig);
-              isBackupSuccess = false;
-            }
-          }
-          if (isBackupSuccess) {
-            // 注销快捷键
-            try {
-              const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
-              const registerKey = convertRegisterKey(keys);
-              if (await isRegistered(registerKey)) {
-                // 如果已经注册了快捷键，需要先取消注册，再重新注册
-                await unregister(registerKey);
-              }
-            } catch (e) {
-              info("快捷键注销失败" + e);
-            }
-
-            // 修改快捷键
-            currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c'];
-            await emit('update-open-window-key', {keys: currentShortcutKeys});
-            // 更新原始配置
-            Object.assign(originalConfig, currentConfig);
-
-            if (valid) {
-              // 显示重启确认弹窗
-              restartModalVisible.value = true;
-            }
-          }
-        }
+/**
+ * 修改开机自启配置
+ * @param powerOnSelfStart 是否开机自启
+ */
+async function onChangePowerOnSelfStart(powerOnSelfStart: boolean) {
+  onLoading.value = true;
+  try {
+    await savePowerOnSelfStart(powerOnSelfStart);
+    const enabled = await isEnabled();
+    if (powerOnSelfStart !== enabled) {
+      if (powerOnSelfStart) {
+        // 启用自启动
+        await enable();
+      } else {
+        // 禁用自启动
+        await disable();
       }
-      // 是否修改了【语言】
-      if (isUpdateLanguages) {
-        // 更新语言
-        await toggleLanguage(currentConfig.languages);
-        // 保存语言
-        await saveLanguageCache(getTray(currentConfig.languages));
-        // 重新加载托盘菜单
-        await invoke('reload_tray_menu');
-      }
-      // 是否修改了【开机自启】
-      if (isUpdatePowerOnSelfStart) {
-        const enabled = await isEnabled();
-        if (currentConfig.powerOnSelfStart !== enabled) {
-          if (currentConfig.powerOnSelfStart) {
-            // 启用自启动
-            await enable();
-          } else {
-            // 禁用自启动
-            await disable();
-          }
-        }
-      }
-      // 是否修改了【启用标签】或者【标签位置】
-      if (isUpdateEnableTag || isUpdateBindTagBtnShowLocation) {
-        // 发送更新了启用标签状态消息
-        await emit('update-tag-setting-state', {
-          isShow: currentConfig.enableTag,
-          location: currentConfig.bindTagBtnShowLocation,
-        });
-      }
-      // 是否修改了【自动隐藏窗口】
-      if (isUpdateAutoHideWindow) {
-        // 发送更新了启用标签状态消息
-        await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
-      }
-      // 是否修改了【窗口始终置顶】
-      if (isUpdateAlwaysOnTop) {
-        // 发送更新了窗口置顶状态消息
-        await emit('update-always-on-top', {isTop: currentConfig.alwaysOnTop});
-      }
-
-      /// 修改了更新设置页面
-      // 是否修改了【自动检查更新】或者【自动更新方式】或者【自动更新时间间隔】
-      if (isUpdateAutoCheckUpdate || isUpdateAutoUpdateMode || isUpdateAutoUpdateInterval) {
-        // 发送更新了自动检查更新状态消息
-        await emit('update-auto-check-update', {
-          isUpdate: currentConfig.autoCheckUpdate,
-          updateMode: currentConfig.updateMode,
-          interval: currentConfig.autoCheckUpdateInterval
-        });
-      }
-
-      /// 修改了存储设置页面
-      // 是否修改了【最大存储条数】或者【自动清理天数】
-      if (isUpdateMaxHistoryItems || isUpdateDataRetentionDays) {
-        await emit('update-data-history-restrict', {
-          maxHistoryItems: currentConfig.maxHistoryItems,
-          dataRetentionDays: currentConfig.dataRetentionDays
-        });
-      }
-
-      // 如果只修改了【替换全局热键】，不需要提示保存成功
-      if (isUpdateReplaceGlobalHotkey
-          && !isUpdateLanguages
-          && !isUpdatePowerOnSelfStart
-          && !isUpdateAutoCheckUpdate
-          && !isUpdateAutoUpdateMode
-          && !isUpdateAutoUpdateInterval
-          && !isUpdateEnableTag
-          && !isUpdateBindTagBtnShowLocation) {
-        return;
-      }
-      message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
-      // 更新原始配置
-      Object.assign(originalConfig, currentConfig);
-    } else {
-      message.error(currentLanguage.value.pages.settings.saveFailedMsg);
     }
+    originalConfig.powerOnSelfStart = powerOnSelfStart;
+    currentConfig.powerOnSelfStart = powerOnSelfStart;
+  } catch (e) {
+    error('修改自启动设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.powerOnSelfStart = originalConfig.powerOnSelfStart;
+  } finally {
+    onLoading.value = false;
   }
-  if (selectedKey.value === 'shortcut') {
-    // 是否修改了【唤醒程序】快捷键
-    const isUpdateWakeUpRoutine = originalShortcutKeys.wakeUpRoutine.key !== currentShortcutKeys.wakeUpRoutine.key;
-    const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
-    // 发送快捷键配置到主进程
-    try {
-      const isSuccess = await saveUserShortcutKeys(JSON.stringify(currentShortcutKeys));
-      if (isSuccess) {
-        message.success(currentLanguage.value.pages.settings.saveSuccessMsg);
-        // 更新原始快捷键配置，使用深拷贝确保两个对象不共享引用
-        Object.assign(originalShortcutKeys, JSON.parse(JSON.stringify(currentShortcutKeys)));
-        // 重新注册【唤醒程序】快捷键
-        if (isUpdateWakeUpRoutine) {
-          info("唤醒程序快捷键已修改，重新注册");
-          // 重新注册快捷键
+}
+
+/**
+ * 修改自动隐藏窗口配置
+ * @param autoHideWindow 是否自动隐藏窗口
+ */
+async function onChangeAutoHideWindow(autoHideWindow: boolean) {
+  onLoading.value = true;
+  try {
+    await saveAutoHideWindow(autoHideWindow);
+    originalConfig.autoHideWindow = autoHideWindow;
+    currentConfig.autoHideWindow = autoHideWindow;
+    // 发送更新了启用标签状态消息
+    await emit('update-auto-hide-window', {isAutoHide: currentConfig.autoHideWindow});
+  } catch (e) {
+    error('修改自动隐藏窗口设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.autoHideWindow = originalConfig.autoHideWindow;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改窗口置顶配置
+ * @param alwaysOnTop 是否置顶
+ */
+async function onChangeAlwaysOnTop(alwaysOnTop: boolean) {
+  onLoading.value = true;
+  try {
+    await saveAlwaysOnTop(alwaysOnTop);
+    // 发送更新了窗口置顶状态消息
+    await emit('update-always-on-top', {isTop: currentConfig.alwaysOnTop});
+    originalConfig.alwaysOnTop = alwaysOnTop;
+    currentConfig.alwaysOnTop = alwaysOnTop;
+  } catch (e) {
+    error('修改窗口置顶设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.alwaysOnTop = originalConfig.alwaysOnTop;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改替换全局热键配置
+ * @param replaceGlobalHotkey 是否替换全局热键
+ */
+async function onChangeReplaceGlobalHotkey(replaceGlobalHotkey: boolean) {
+  onLoading.value = true;
+  try {
+    // 打开替换全局热键
+    if (currentConfig.replaceGlobalHotkey) {
+      const enable = await invoke<boolean>('valid_clipboard_regedit');
+      if (!enable) {
+        await updateToSystemShortcutKeys();
+      } else {
+        // 有找到注册表配置，需要修改注册表，再修改快捷键
+        const backupResult = await invoke<boolean>('backup_clipboard_regedit');
+        if (!backupResult) {
+          console.log("备份注册表失败");
+          message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
+          // 回滚【替换全局热键】设置
+          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
+          return;
+        } else {
+          await updateToSystemShortcutKeys();
+          // 显示重启确认弹窗
+          restartModalVisible.value = true;
+        }
+      }
+    } else {
+      // 关闭全局热键，重置快捷键
+      info("唤醒程序快捷键已修改，重新注册");
+      const valid = await invoke<boolean>('valid_clipboard_backup_regedit');
+      let isBackupSuccess = true;
+      if (valid) {
+        // 恢复注册表配置
+        const backupResult = await invoke<boolean>('recover_clipboard_regedit');
+        if (!backupResult) {
+          console.log("恢复注册表失败");
+          message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
+          // 回滚【替换全局热键】设置
+          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
+          isBackupSuccess = false;
+        }
+      }
+
+      if (isBackupSuccess) {
+        // 注销快捷键
+        try {
+          const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
           const registerKey = convertRegisterKey(keys);
           if (await isRegistered(registerKey)) {
             // 如果已经注册了快捷键，需要先取消注册，再重新注册
             await unregister(registerKey);
           }
-          await emit('update-open-window-key', {keys: currentShortcutKeys});
+        } catch (e) {
+          info("快捷键注销失败" + e);
         }
-        // 关闭编辑模式
-        editingShortcut.value = null;
+
+        // 修改快捷键
+        currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c'];
+        await emit('update-open-window-key', {keys: currentShortcutKeys});
+
+        if (valid) {
+          // 显示重启确认弹窗
+          restartModalVisible.value = true;
+        }
       } else {
-        message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+        return;
       }
-    } catch (er) {
-      error('保存快捷键设置出错:' + er);
-      message.error(currentLanguage.value.pages.settings.shortcutSaveErrorMsg + er);
+    }
+    await saveReplaceGlobalHotkey(replaceGlobalHotkey);
+    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+  } catch (e) {
+    error('修改窗口置顶设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.replaceGlobalHotkey = originalConfig.replaceGlobalHotkey;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改语言
+ * @param languages 语言
+ */
+async function onChangeLanguages(languages: string) {
+  onLoading.value = true;
+  try {
+    await saveLanguage(languages);
+    // 更新语言
+    await toggleLanguage(currentConfig.languages);
+    // 保存语言
+    await saveLanguageCache(getTray(currentConfig.languages));
+    // 重新加载托盘菜单
+    await invoke('reload_tray_menu');
+    originalConfig.languages = languages;
+    currentConfig.languages = languages;
+  } catch (e) {
+    error('修改语言设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.languages = originalConfig.languages;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改是否启用标签
+ * @param enableTag 是否启用标签
+ */
+async function onChangeEnableTag(enableTag: boolean) {
+  onLoading.value = true;
+  try {
+    await saveEnableTag(enableTag);
+    // 发送更新了启用标签状态消息
+    await emit('update-tag-setting-state', {
+      isShow: currentConfig.enableTag,
+      location: currentConfig.bindTagBtnShowLocation,
+    });
+    originalConfig.enableTag = enableTag;
+    currentConfig.enableTag = enableTag;
+  } catch (e) {
+    error('修改是否启用标签设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.enableTag = originalConfig.enableTag;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改标签按钮显示位置
+ * @param bindTagBtnShowLocation 标签按钮显示位置
+ */
+async function onChangeBindTagBtnShowLocation(bindTagBtnShowLocation: string) {
+  onLoading.value = true;
+  try {
+    await saveBindTagBtnShowLocation(bindTagBtnShowLocation);
+    // 发送更新了启用标签状态消息
+    await emit('update-tag-setting-state', {
+      isShow: currentConfig.enableTag,
+      location: currentConfig.bindTagBtnShowLocation,
+    });
+    originalConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
+    currentConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
+  } catch (e) {
+    error('修改标签按钮显示位置设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.bindTagBtnShowLocation = originalConfig.bindTagBtnShowLocation;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改自动检查更新
+ * @param autoCheckUpdate 是否自动检查更新
+ */
+async function onChangeAutoCheckUpdate(autoCheckUpdate: boolean) {
+  onLoading.value = true;
+  try {
+    await saveAutoCheckUpdate(autoCheckUpdate);
+    // 发送更新了自动检查更新状态消息
+    await emit('update-auto-check-update', {
+      isUpdate: currentConfig.autoCheckUpdate,
+      updateMode: currentConfig.updateMode,
+      interval: currentConfig.autoCheckUpdateInterval
+    });
+    originalConfig.autoCheckUpdate = autoCheckUpdate;
+    currentConfig.autoCheckUpdate = autoCheckUpdate;
+  } catch (e) {
+    error('修改自动检查更新设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.autoCheckUpdate = originalConfig.autoCheckUpdate;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改更新模式
+ * @param updateMode 更新模式
+ */
+async function onChangeUpdateMode(updateMode: string) {
+  onLoading.value = true;
+  try {
+    await saveUpdateMode(updateMode);
+    // 发送更新了自动检查更新状态消息
+    await emit('update-auto-check-update', {
+      isUpdate: currentConfig.autoCheckUpdate,
+      updateMode: currentConfig.updateMode,
+      interval: currentConfig.autoCheckUpdateInterval
+    });
+    originalConfig.updateMode = updateMode;
+    currentConfig.updateMode = updateMode;
+  } catch (e) {
+    error('修改更新模式设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.updateMode = originalConfig.updateMode;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改自动检查更新间隔
+ */
+async function onChangeAutoCheckUpdateInterval() {
+  if (originalConfig.autoCheckUpdateInterval !== currentConfig.autoCheckUpdateInterval) {
+    onLoading.value = true;
+    try {
+      await saveAutoCheckUpdateInterval(currentConfig.autoCheckUpdateInterval);
+      // 发送更新了自动检查更新状态消息
+      await emit('update-auto-check-update', {
+        isUpdate: currentConfig.autoCheckUpdate,
+        updateMode: currentConfig.updateMode,
+        interval: currentConfig.autoCheckUpdateInterval
+      });
+      originalConfig.autoCheckUpdateInterval = currentConfig.autoCheckUpdateInterval;
+    } catch (e) {
+      error('修改自动检查更新间隔设置出错:' + e);
+      message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+      currentConfig.autoCheckUpdateInterval = originalConfig.autoCheckUpdateInterval;
+    } finally {
+      onLoading.value = false;
     }
   }
 }
 
-// 重置配置
-const resetConfig = () => {
-  if (selectedKey.value === 'shortcut') {
-    Object.assign(currentShortcutKeys, originalShortcutKeys);
-    // 关闭编辑模式
-    editingShortcut.value = null;
-    message.info(currentLanguage.value.pages.settings.resetSuccessMsg);
+/**
+ * 修改新版本提示模式
+ * @param newVersionAlertMode 新版本提示模式
+ */
+async function onChangeNewVersionAlertMode(newVersionAlertMode: string) {
+  onLoading.value = true;
+  try {
+    await saveNewVersionAlertMode(newVersionAlertMode);
+    // 发送更新了自动检查更新状态消息
+    await emit('update-auto-check-update', {
+      isUpdate: currentConfig.autoCheckUpdate,
+      updateMode: currentConfig.updateMode,
+      interval: currentConfig.autoCheckUpdateInterval
+    });
+    originalConfig.newVersionAlertMode = newVersionAlertMode;
+    currentConfig.newVersionAlertMode = newVersionAlertMode;
+  } catch (e) {
+    error('修改新版本提示模式设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.newVersionAlertMode = originalConfig.newVersionAlertMode;
+  } finally {
+    onLoading.value = false;
   }
-  if (selectedKey.value === 'general') {
-    Object.assign(currentConfig, originalConfig);
-    message.info(currentLanguage.value.pages.settings.resetSuccessMsg);
+}
+
+/**
+ * 修改最大历史记录项数
+ */
+async function onChangeMaxHistoryItems() {
+  if (currentConfig.maxHistoryItems !== originalConfig.maxHistoryItems) {
+    onLoading.value = true;
+    try {
+      await saveMaxHistoryItems(currentConfig.maxHistoryItems);
+      await emit('update-data-history-restrict', {
+        maxHistoryItems: currentConfig.maxHistoryItems,
+        dataRetentionDays: currentConfig.dataRetentionDays
+      });
+      originalConfig.maxHistoryItems = currentConfig.maxHistoryItems;
+    } catch (e) {
+      error('修改最大历史记录项数设置出错:' + e);
+      message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+      currentConfig.maxHistoryItems = originalConfig.maxHistoryItems;
+    } finally {
+      onLoading.value = false;
+    }
   }
-};
+}
+
+/**
+ * 修改数据保留天数
+ */
+async function onChangeDataRetentionDays() {
+  if (currentConfig.dataRetentionDays !== originalConfig.dataRetentionDays) {
+    onLoading.value = true;
+    try {
+      await saveDataRetentionDays(currentConfig.dataRetentionDays);
+      await emit('update-data-history-restrict', {
+        maxHistoryItems: currentConfig.maxHistoryItems,
+        dataRetentionDays: currentConfig.dataRetentionDays
+      });
+      originalConfig.dataRetentionDays = currentConfig.dataRetentionDays;
+    } catch (e) {
+      error('修改数据保留天数设置出错:' + e);
+      message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+      currentConfig.dataRetentionDays = originalConfig.dataRetentionDays;
+    } finally {
+      onLoading.value = false;
+    }
+  }
+}
 
 // 处理重启电脑
 const handleRestart = async () => {
@@ -467,19 +703,54 @@ const handleRestart = async () => {
 onMounted(async () => {
   try {
     // 初始化用户配置
-    const settings = await getSettings();
-    Object.assign(originalConfig, settings);
-    Object.assign(currentConfig, settings);
+    const powerOnSelfStart = await getPowerOnSelfStart();
+    originalConfig.powerOnSelfStart = powerOnSelfStart;
+    currentConfig.powerOnSelfStart = powerOnSelfStart;
+    const replaceGlobalHotkey = await getReplaceGlobalHotkey();
+    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+    const maxHistoryItems = await getMaxHistoryItems();
+    originalConfig.maxHistoryItems = maxHistoryItems;
+    currentConfig.maxHistoryItems = maxHistoryItems;
+    const dataRetentionDays = await getDataRetentionDays();
+    originalConfig.dataRetentionDays = dataRetentionDays;
+    currentConfig.dataRetentionDays = dataRetentionDays;
+    const autoCheckUpdate = await getAutoCheckUpdate();
+    originalConfig.autoCheckUpdate = autoCheckUpdate;
+    currentConfig.autoCheckUpdate = autoCheckUpdate;
+    const updateMode = await getUpdateMode();
+    originalConfig.updateMode = updateMode;
+    currentConfig.updateMode = updateMode;
+    const autoCheckUpdateInterval = await getAutoCheckUpdateInterval();
+    originalConfig.autoCheckUpdateInterval = autoCheckUpdateInterval;
+    currentConfig.autoCheckUpdateInterval = autoCheckUpdateInterval;
+    const enableTag = await getEnableTag();
+    originalConfig.enableTag = enableTag;
+    currentConfig.enableTag = enableTag;
+    const bindTagBtnShowLocation = await getBindTagBtnShowLocation();
+    originalConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
+    currentConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
+    const autoHideWindow = await getAutoHideWindow();
+    originalConfig.autoHideWindow = autoHideWindow;
+    currentConfig.autoHideWindow = autoHideWindow;
+    const alwaysOnTop = await getAlwaysOnTop();
+    originalConfig.alwaysOnTop = alwaysOnTop;
+    currentConfig.alwaysOnTop = alwaysOnTop;
+    const newVersionAlertMode = await getNewVersionAlertMode();
+    originalConfig.newVersionAlertMode = newVersionAlertMode;
+    currentConfig.newVersionAlertMode = newVersionAlertMode;
 
     // 初始化快捷键配置
-    const shortcutKeys = await getShortcutKeys();
-    // 使用深拷贝，避免更新一个后另外一个也会同时更新
-    Object.assign(originalShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));
-    Object.assign(currentShortcutKeys, JSON.parse(JSON.stringify(shortcutKeys)));
+    const searchKey = await getSearchKey();
+    originalShortcutKeys['search'] = structuredClone(searchKey);
+    currentShortcutKeys['search'] = structuredClone(searchKey);
+    const wakeUpRoutineKey = await getWakeUpRoutine();
+    originalShortcutKeys['wakeUpRoutine'] = structuredClone(wakeUpRoutineKey);
+    currentShortcutKeys['wakeUpRoutine'] = structuredClone(wakeUpRoutineKey);
 
     if (!isMac) {
       // 系统剪贴板快捷键占用检查
-      systemClipboardKeyOccupied.value = JSON.stringify(shortcutKeys.wakeUpRoutine.key) === JSON.stringify(['meta', 'v']);
+      systemClipboardKeyOccupied.value = JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(['meta', 'v']);
       if (!systemClipboardKeyOccupied.value) {
         // 检测系统剪贴板快捷键是否可用
         systemClipboardEnable.value = await invoke('valid_clipboard_regedit');
@@ -522,21 +793,33 @@ onMounted(async () => {
           <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
-            <n-switch v-model:value="currentConfig.powerOnSelfStart"/>
+            <n-switch :value="currentConfig.powerOnSelfStart"
+                      :loading="onLoading"
+                      @update:value="onChangePowerOnSelfStart"
+            />
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoHideWindow }}</span>
-            <n-switch v-model:value="currentConfig.autoHideWindow"/>
+            <n-switch :value="currentConfig.autoHideWindow"
+                      :loading="onLoading"
+                      @update:value="onChangeAutoHideWindow"
+            />
           </div>
           <div class="form-item" v-if="!currentConfig.autoHideWindow">
             <span class="label">{{ currentLanguage.pages.settings.alwaysOnTop }}</span>
-            <n-switch v-model:value="currentConfig.alwaysOnTop"/>
+            <n-switch :value="currentConfig.alwaysOnTop"
+                      :loading="onLoading"
+                      @update:value="onChangeAlwaysOnTop"
+            />
           </div>
           <div class="line" v-if="!isMac">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.replaceGlobalHotkey }}</span>
-              <n-switch v-model:value="currentConfig.replaceGlobalHotkey"
-                        :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered)"/>
+              <n-switch :value="currentConfig.replaceGlobalHotkey"
+                        :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered)"
+                        :loading="onLoading"
+                        @update:value="onChangeReplaceGlobalHotkey"
+              />
             </div>
             <div class="second-item"
                  v-if="!systemClipboardKeyOccupied && !systemClipboardEnable && systemClipboardKeysRegistered">
@@ -570,16 +853,28 @@ onMounted(async () => {
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.languages }}</span>
-            <n-select class="select" v-model:value="currentConfig.languages" :options="languageOptions"/>
+            <n-select class="select"
+                      :value="currentConfig.languages"
+                      :options="languageOptions"
+                      :loading="onLoading"
+                      @update:value="onChangeLanguages"
+            />
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.enableTag }}</span>
-            <n-switch v-model:value="currentConfig.enableTag"/>
+            <n-switch :value="currentConfig.enableTag"
+                      :loading="onLoading"
+                      @update:value="onChangeEnableTag"
+            />
           </div>
           <div class="form-item" v-if="currentConfig.enableTag">
             <span class="label">{{ currentLanguage.pages.settings.bindTagBtnShowLocation }}</span>
-            <n-select class="select" v-model:value="currentConfig.bindTagBtnShowLocation"
-                      :options="bindTagBtnShowLocation"/>
+            <n-select class="select"
+                      :value="currentConfig.bindTagBtnShowLocation"
+                      :options="bindTagBtnShowLocation"
+                      :loading="onLoading"
+                      @update:value="onChangeBindTagBtnShowLocation"
+            />
           </div>
         </div>
 
@@ -588,16 +883,30 @@ onMounted(async () => {
           <h2>{{ currentLanguage.pages.settings.updaterTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
-            <n-switch v-model:value="currentConfig.autoCheckUpdate"/>
+            <n-switch :value="currentConfig.autoCheckUpdate"
+                      :loading="onLoading"
+                      @update:value="onChangeAutoCheckUpdate"
+            />
           </div>
           <div class="form-item" v-if="currentConfig.autoCheckUpdate">
             <span class="label">{{ currentLanguage.pages.settings.checkUpdateMode }}</span>
-            <n-select class="select" v-model:value="currentConfig.updateMode" :options="autoUpdateMode"/>
+            <n-select class="select"
+                      :value="currentConfig.updateMode"
+                      :options="autoUpdateMode"
+                      :loading="onLoading"
+                      @update:value="onChangeUpdateMode"
+            />
           </div>
           <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === 'timing'">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.timeInterval }}</span>
-              <n-input-number v-model:value="currentConfig.autoCheckUpdateInterval" :min="1" :max="720">
+              <n-input-number :value="currentConfig.autoCheckUpdateInterval"
+                              :min="1"
+                              :max="720"
+                              :loading="onLoading"
+                              @keydown.enter="onChangeAutoCheckUpdateInterval"
+                              @blur="onChangeAutoCheckUpdateInterval"
+              >
                 <template #suffix>
                   {{ currentLanguage.pages.settings.timeIntervalUnit }}
                 </template>
@@ -612,7 +921,12 @@ onMounted(async () => {
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.newVersionAlertMode }}</span>
-            <n-select class="select" v-model:value="currentConfig.newVersionAlertMode" :options="updateHintMode"/>
+            <n-select class="select"
+                      :value="currentConfig.newVersionAlertMode"
+                      :options="updateHintMode"
+                      :loading="onLoading"
+                      @update:value="onChangeNewVersionAlertMode"
+            />
           </div>
         </div>
 
@@ -622,7 +936,13 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.maxHistoryItems }}</span>
-              <n-input-number v-model:value="currentConfig.maxHistoryItems" :min="0" :max="10000"/>
+              <n-input-number :value="currentConfig.maxHistoryItems"
+                              :min="0"
+                              :max="10000"
+                              :loading="onLoading"
+                              @keydown.enter="onChangeMaxHistoryItems"
+                              @blur="onChangeMaxHistoryItems"
+              />
             </div>
             <div class="second-item">
               <div class="hint">
@@ -634,7 +954,14 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.dataRetentionDays }}</span>
-              <n-input-number v-model:value="currentConfig.dataRetentionDays" :min="0" :max="365"/>
+              <n-input-number
+                  :value="currentConfig.dataRetentionDays"
+                  :min="0"
+                  :max="365"
+                  :loading="onLoading"
+                  @keydown.enter="onChangeDataRetentionDays"
+                  @blur="onChangeDataRetentionDays"
+              />
             </div>
             <div class="second-item">
               <div class="hint">
@@ -664,16 +991,6 @@ onMounted(async () => {
               </span>
             </div>
           </div>
-        </div>
-
-        <!-- 底部按钮 -->
-        <div class="settings-footer">
-          <n-button @click="resetConfig" :disabled="!hasChanges">
-            {{ currentLanguage.pages.settings.resetBtn }}
-          </n-button>
-          <n-button type="primary" :disabled="!hasChanges" @click="saveConfig">
-            {{ currentLanguage.pages.settings.saveBtn }}
-          </n-button>
         </div>
       </div>
     </div>
@@ -717,10 +1034,13 @@ onMounted(async () => {
         </div>
       </div>
       <template #action>
-        <n-button @click="cancelEditShortcut">
+        <n-button @click="cancelEditShortcut" :loading="onLoading">
           {{ currentLanguage.pages.settings.editHotkeyModalCancelBtn }}
         </n-button>
-        <n-button type="primary" :disabled="tempKeys.length === 0 || !availableKey" @click="confirmEditShortcut">
+        <n-button type="primary"
+                  :disabled="tempKeys.length === 0 || !availableKey"
+                  @click="confirmEditShortcut"
+                  :loading="onLoading">
           {{ currentLanguage.pages.settings.editHotkeyModalConfirmBtn }}
         </n-button>
       </template>

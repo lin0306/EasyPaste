@@ -1,6 +1,6 @@
-import { error, info } from '@tauri-apps/plugin-log';
-import { getSettings } from './FileService.ts';
+import {error, info} from '@tauri-apps/plugin-log';
 import ClipboardDBService from './ClipboardDBService';
+import {getDataRetentionDays, getMaxHistoryItems} from "../store/Settings.ts";
 
 /**
  * 数据清理服务
@@ -19,9 +19,8 @@ export default class DataClearService {
 
     private async initialize(): Promise<void> {
         try {
-            const settings = await getSettings();
-            this.dataRetentionDays = settings.dataRetentionDays;
-            this.maxHistoryItems = settings.maxHistoryItems;
+            this.dataRetentionDays = await getDataRetentionDays();
+            this.maxHistoryItems = await getMaxHistoryItems();
             info('[数据库进程] 数据库初始化完成');
         } catch (er) {
             error('[数据库进程] 数据库加载失败:' + er);

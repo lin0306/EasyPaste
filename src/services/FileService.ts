@@ -1,6 +1,8 @@
-import { BaseDirectory, create, exists, readFile, writeTextFile } from "@tauri-apps/plugin-fs";
-import { error, info } from "@tauri-apps/plugin-log";
-import { uint8ArrayToString } from "../utils/strUtil.ts";
+import {BaseDirectory, create, exists, readFile, writeTextFile} from "@tauri-apps/plugin-fs";
+import {error, info} from "@tauri-apps/plugin-log";
+import {uint8ArrayToString} from "../utils/strUtil.ts";
+import {fillSettingsData} from "../store/Settings.ts";
+import {fillKeyData} from "../store/ShortcutKeys.ts";
 
 let defaultSettings: Settings = {
     theme: "light",
@@ -79,7 +81,7 @@ export async function saveUserSettings(userSettings: string): Promise<boolean> {
  */
 export async function updateUserSettings(userSettings: Settings): Promise<boolean> {
     try {
-        const settings = { ...defaultSettings, ...userSettings };
+        const settings = {...defaultSettings, ...userSettings};
         await writeTextFile(userSettingsPath, JSON.stringify(settings), {
             baseDir: BaseDirectory.AppData,
         });
@@ -102,13 +104,13 @@ export async function saveLanguageCache(tray: any): Promise<boolean> {
         })
         if (exist) {
             // 有找到语言文件，直接写入
-            await writeTextFile(languageCachePathPath, JSON.stringify({ tray: tray }), {
+            await writeTextFile(languageCachePathPath, JSON.stringify({tray: tray}), {
                 baseDir: BaseDirectory.AppData,
             })
         } else {
             // 没有找到语言文件，创建文件
-            const file = await create(languageCachePathPath, { baseDir: BaseDirectory.AppData });
-            await file.write(new TextEncoder().encode(JSON.stringify({ tray: tray })));
+            const file = await create(languageCachePathPath, {baseDir: BaseDirectory.AppData});
+            await file.write(new TextEncoder().encode(JSON.stringify({tray: tray})));
             await file.close();
         }
         return true;
@@ -152,7 +154,8 @@ export async function getSettings(): Promise<Settings> {
     // 转成字符串
     const userSettingsString = uint8ArrayToString(userSettings);
     // 如果有加新的配置，则合并数据
-    const settings = { ...defaultSettings, ...JSON.parse(userSettingsString) };
+    const settings = {...defaultSettings, ...JSON.parse(userSettingsString)};
+    info("保存用户设置" + JSON.stringify(settings));
     // 重新保存配置
     await saveUserSettings(JSON.stringify(settings));
     return settings;
@@ -176,9 +179,19 @@ export async function getShortcutKeys(): Promise<ShortcutKeys> {
     // 转成字符串
     const userShortcutKeysString = uint8ArrayToString(userShortcutKeys);
     // 如果有加新的快捷键，则合并数据
-    const shortcutKeys = { ...defaultShortcutKeys, ...JSON.parse(userShortcutKeysString) };
+    const shortcutKeys = {...defaultShortcutKeys, ...JSON.parse(userShortcutKeysString)};
     // 重新保存快捷键
     await saveUserShortcutKeys(JSON.stringify(shortcutKeys));
 
     return shortcutKeys;
+}
+
+/**
+ * 填充数据
+ * todo 旧版本到新版本过渡，修改用户配置保存模式，后续这段代码也会删除
+ * @deprecated
+ */
+export async function fillData(toggleLanguage:any, toggleTheme:any) {
+    await fillSettingsData(toggleLanguage, toggleTheme);
+    await fillKeyData();
 }

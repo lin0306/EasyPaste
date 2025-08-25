@@ -5,7 +5,7 @@ import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-
 import {openUpdaterWindow} from '../utils/window';
 import {useLanguage} from "./LanguageService.ts";
 import {hasNewVersion} from "../pages/index/context/UpdaterContext.ts";
-import {getSettings} from "./FileService.ts";
+import {getNewVersionAlertMode} from "../store/Settings.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -77,8 +77,7 @@ export default class UpdaterService {
                     this.showUpdateWindow();
                 } else {
                     // 自动检查更新根据设置不同，进行不同的提示方式
-                    const settings = await getSettings();
-                    if (settings.newVersionAlertMode === 'toast') {
+                    if (await getNewVersionAlertMode() === 'toast') {
                         hasNewVersion.value = true;
                     } else {
                         this.showUpdateWindow();
@@ -93,14 +92,20 @@ export default class UpdaterService {
                     }
 
                     if (permissionGranted) {
-                        sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.update.alreadyLatestHint});
+                        sendNotification({
+                            title: 'EasyPaste',
+                            body: currentLanguage.value.pages.update.alreadyLatestHint
+                        });
                     }
                 }
             }
         } catch (error) {
             console.error('Error occurred while checking for updates:', error);
             if (isManual) {
-                sendNotification({title: 'EasyPaste', body: currentLanguage.value.pages.update.checkUpdateErrorHint + error});
+                sendNotification({
+                    title: 'EasyPaste',
+                    body: currentLanguage.value.pages.update.checkUpdateErrorHint + error
+                });
             }
         }
     }
@@ -117,7 +122,7 @@ export default class UpdaterService {
      * 下载并安装更新
      * @param options 下载选项
      */
-    static downloadAndInstall(options?: DownloadOptions) {
+    static async downloadAndInstall(options?: DownloadOptions) {
         return check().then(async (update) => {
             if (update) {
                 await update.downloadAndInstall(() => {
