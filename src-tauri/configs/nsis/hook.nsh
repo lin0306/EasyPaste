@@ -22,4 +22,6 @@
       FileWrite $1 '"}'
       FileClose $1
 
+      ; 删除程序启动记录
+      Delete "$APPDATA\com.lin.EasyPaste\run.json"
 !macroend
