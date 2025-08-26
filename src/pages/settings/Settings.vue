@@ -36,11 +36,11 @@ import {
   saveAutoCheckUpdateInterval,
   saveAutoHideWindow,
   saveBindTagBtnShowLocation,
-  saveDataRetentionDays,
+  saveDataRetentionDays, saveEnableAnimationEffects,
   saveEnableTag,
   saveLanguage,
   saveMaxHistoryItems,
-  saveNewVersionAlertMode,
+  saveNewVersionAlertMode, savePageTransitionEasing,
   savePowerOnSelfStart,
   saveReplaceGlobalHotkey,
   saveUpdateMode
@@ -57,6 +57,7 @@ const restartModalVisible = ref(false);
 const selectedKey = ref<string>('general');
 const menuItems = computed(() => [
   {key: 'general', label: currentLanguage.value.pages.settings.generalMenu},
+  {key: 'themes', label: currentLanguage.value.pages.settings.themesMenu},
   {key: 'updater', label: currentLanguage.value.pages.settings.updaterMenu},
   {key: 'storage', label: currentLanguage.value.pages.settings.storageMenu},
   {key: 'shortcut', label: currentLanguage.value.pages.settings.shortcutMenu},
@@ -77,7 +78,10 @@ const originalConfig = reactive<Settings>({
   bindTagBtnShowLocation: 'top-right',
   autoHideWindow: false,
   alwaysOnTop: true,
-  newVersionAlertMode: 'toast'
+  newVersionAlertMode: 'toast',
+  enableAnimationEffects: true,         // 默认启用动画
+  pageTransitionDuration: 350,        // 默认动画时长
+  pageTransitionEasing: 'ease-in-out', // 默认缓动函数
 });
 
 // 当前编辑的配置
@@ -95,7 +99,10 @@ const currentConfig = reactive<Settings>({
   bindTagBtnShowLocation: 'top-right',
   autoHideWindow: false,
   alwaysOnTop: true,
-  newVersionAlertMode: 'toast'
+  newVersionAlertMode: 'toast',
+  enableAnimationEffects: true,         // 默认启用动画
+  pageTransitionDuration: 350,        // 默认动画时长
+  pageTransitionEasing: 'ease-in-out', // 默认缓动函数
 });
 
 // 配置相关
@@ -166,6 +173,22 @@ const updateHintMode = computed(() => [{
   value: 'dialog',
   label: currentLanguage.value.pages.settings.dialog
 }])
+
+// 动画速度选项
+const transitionSpeedOptions = computed(() => [
+  {
+    label: currentLanguage.value.pages.settings.transitionSpeedFast,
+    value: 'fast',
+  },
+  {
+    label: currentLanguage.value.pages.settings.transitionSpeedNormal,
+    value: 'normal',
+  },
+  {
+    label: currentLanguage.value.pages.settings.transitionSpeedSlow,
+    value: 'slow',
+  },
+]);
 
 const onLoading = ref(false);
 
@@ -664,7 +687,7 @@ async function onChangeMaxHistoryItems() {
       message.error(currentLanguage.value.pages.settings.saveFailedMsg);
       currentConfig.maxHistoryItems = originalConfig.maxHistoryItems;
     } finally {
-        onLoading.value = false;
+      onLoading.value = false;
     }
   }
 }
@@ -692,6 +715,54 @@ async function onChangeDataRetentionDays() {
   }
 }
 
+/**
+ * 修改是否启用动画效果
+ * @param enableAnimationEffects 是否启用动画效果
+ */
+async function onChangeEnableAnimationEffects(enableAnimationEffects: boolean) {
+  onLoading.value = true;
+  try {
+    await saveEnableAnimationEffects(enableAnimationEffects);
+    // todo 发送全局消息
+    await emit('', {
+      isEnable: currentConfig.enableAnimationEffects,
+      speed: currentConfig.pageTransitionEasing,
+    });
+    originalConfig.enableAnimationEffects = enableAnimationEffects;
+    currentConfig.enableAnimationEffects = enableAnimationEffects;
+  } catch (e) {
+    error('修改是否启用动画效果设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.enableAnimationEffects = originalConfig.enableAnimationEffects;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
+/**
+ * 修改动画速度
+ * @param pageTransitionEasing 动画速度
+ */
+async function onChangePageTransitionEasing(pageTransitionEasing: string) {
+  onLoading.value = true;
+  try {
+    await savePageTransitionEasing(pageTransitionEasing);
+    // todo 发送全局消息
+    await emit('', {
+      isEnable: currentConfig.enableAnimationEffects,
+      speed: currentConfig.pageTransitionEasing,
+    });
+    originalConfig.pageTransitionEasing = pageTransitionEasing;
+    currentConfig.pageTransitionEasing = pageTransitionEasing;
+  } catch (e) {
+    error('修改动画速度设置出错:' + e);
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
+    currentConfig.pageTransitionEasing = originalConfig.pageTransitionEasing;
+  } finally {
+    onLoading.value = false;
+  }
+}
+
 // 处理重启电脑
 const handleRestart = async () => {
   restartModalVisible.value = false;
@@ -706,36 +777,47 @@ onMounted(async () => {
     const powerOnSelfStart = await getPowerOnSelfStart();
     originalConfig.powerOnSelfStart = powerOnSelfStart;
     currentConfig.powerOnSelfStart = powerOnSelfStart;
+
     const replaceGlobalHotkey = await getReplaceGlobalHotkey();
     originalConfig.replaceGlobalHotkey = replaceGlobalHotkey;
     currentConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+
     const maxHistoryItems = await getMaxHistoryItems();
     originalConfig.maxHistoryItems = maxHistoryItems;
     currentConfig.maxHistoryItems = maxHistoryItems;
+
     const dataRetentionDays = await getDataRetentionDays();
     originalConfig.dataRetentionDays = dataRetentionDays;
     currentConfig.dataRetentionDays = dataRetentionDays;
+
     const autoCheckUpdate = await getAutoCheckUpdate();
     originalConfig.autoCheckUpdate = autoCheckUpdate;
     currentConfig.autoCheckUpdate = autoCheckUpdate;
+
     const updateMode = await getUpdateMode();
     originalConfig.updateMode = updateMode;
     currentConfig.updateMode = updateMode;
+
     const autoCheckUpdateInterval = await getAutoCheckUpdateInterval();
     originalConfig.autoCheckUpdateInterval = autoCheckUpdateInterval;
     currentConfig.autoCheckUpdateInterval = autoCheckUpdateInterval;
+
     const enableTag = await getEnableTag();
     originalConfig.enableTag = enableTag;
     currentConfig.enableTag = enableTag;
+
     const bindTagBtnShowLocation = await getBindTagBtnShowLocation();
     originalConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
     currentConfig.bindTagBtnShowLocation = bindTagBtnShowLocation;
+
     const autoHideWindow = await getAutoHideWindow();
     originalConfig.autoHideWindow = autoHideWindow;
     currentConfig.autoHideWindow = autoHideWindow;
+
     const alwaysOnTop = await getAlwaysOnTop();
     originalConfig.alwaysOnTop = alwaysOnTop;
     currentConfig.alwaysOnTop = alwaysOnTop;
+
     const newVersionAlertMode = await getNewVersionAlertMode();
     originalConfig.newVersionAlertMode = newVersionAlertMode;
     currentConfig.newVersionAlertMode = newVersionAlertMode;
@@ -744,6 +826,7 @@ onMounted(async () => {
     const searchKey = await getSearchKey();
     originalShortcutKeys['search'] = structuredClone(searchKey);
     currentShortcutKeys['search'] = structuredClone(searchKey);
+
     const wakeUpRoutineKey = await getWakeUpRoutine();
     originalShortcutKeys['wakeUpRoutine'] = structuredClone(wakeUpRoutineKey);
     currentShortcutKeys['wakeUpRoutine'] = structuredClone(wakeUpRoutineKey);
@@ -783,13 +866,17 @@ onMounted(async () => {
     <div class="settings-content">
       <!-- 左侧菜单 -->
       <div class="settings-menu">
-        <n-menu v-model:value="selectedKey" :options="menuItems" mode="vertical"/>
+        <n-menu
+            v-model:value="selectedKey"
+            :options="menuItems"
+            mode="vertical"
+        />
       </div>
 
       <!-- 右侧内容 -->
       <div class="settings-form">
         <!-- 通用设置 -->
-        <div v-if="selectedKey === 'general'" class="settings-section">
+        <div v-if="selectedKey === 'general'" :key="'general'" class="settings-section">
           <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
@@ -884,8 +971,49 @@ onMounted(async () => {
           </div>
         </div>
 
+        <!-- 主题设置 -->
+        <div v-else-if="selectedKey === 'themes'" :key="'themes'" class="settings-section">
+          <h2>{{ currentLanguage.pages.settings.themesTitle }}</h2>
+
+          <!-- 动画配置选项 -->
+          <div class="form-item">
+            <span class="label">{{ currentLanguage.pages.settings.enableAnimationEffects }}</span>
+            <div class="switch-with-status">
+              <n-switch
+                  v-model:value="currentConfig.enableAnimationEffects"
+                  :loading="onLoading"
+                  @update:value="onChangeEnableAnimationEffects"
+              />
+            </div>
+          </div>
+
+          <!-- 配置动画速度 -->
+          <div class="form-item" v-if="currentConfig.enableAnimationEffects">
+            <span class="label">{{ currentLanguage.pages.settings.transitionSpeed }}</span>
+            <n-select
+                class="select"
+                v-model:value="currentConfig.pageTransitionEasing"
+                :loading="onLoading"
+                :options="transitionSpeedOptions"
+                @update:value="onChangePageTransitionEasing"
+            />
+          </div>
+
+          <!-- 动画配置提示 -->
+          <div class="line" v-if="currentConfig.enableAnimationEffects">
+            <div class="second-item">
+              <div class="hint">
+                <HintIcon class="hint-icon"/>
+                <span class="hint-text">
+                  {{ currentLanguage.pages.settings.animationHint }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 更新设置 -->
-        <div v-if="selectedKey === 'updater'" class="settings-section">
+        <div v-else-if="selectedKey === 'updater'" :key="'updater'" class="settings-section">
           <h2>{{ currentLanguage.pages.settings.updaterTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
@@ -943,7 +1071,7 @@ onMounted(async () => {
         </div>
 
         <!-- 存储设置 -->
-        <div v-if="selectedKey === 'storage'" class="settings-section">
+        <div v-else-if="selectedKey === 'storage'" :key="'storage'" class="settings-section">
           <h2>{{ currentLanguage.pages.settings.storageTitle }}</h2>
           <div class="line">
             <div class="main-item">
@@ -990,7 +1118,7 @@ onMounted(async () => {
         </div>
 
         <!-- 快捷键设置 -->
-        <div v-if="selectedKey === 'shortcut'" class="settings-section">
+        <div v-else-if="selectedKey === 'shortcut'" :key="'shortcut'" class="settings-section">
           <h2>{{ currentLanguage.pages.settings.shortcutTitle }}</h2>
 
           <div v-for="(shortcut, key) in currentShortcutKeys" :key="key" class="form-item">
@@ -1089,10 +1217,12 @@ onMounted(async () => {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  position: relative;
 }
 
 .settings-section {
   margin-bottom: 20px;
+  overflow-y: auto;
 }
 
 .settings-section h2 {

@@ -8,11 +8,13 @@ export const englishPageConfig: PageConfig = {
         updaterMenu: 'Update Settings',
         storageMenu: 'Storage Settings',
         shortcutMenu: 'Shortcuts',
+        themesMenu: 'Themes Settings',
 
         generalTitle: 'General Settings',
         storageTitle: 'Storage Settings',
         shortcutTitle: 'Shortcut Settings',
         updaterTitle: 'Update Settings',
+        themesTitle: 'Themes Settings',
 
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey',
@@ -72,6 +74,13 @@ export const englishPageConfig: PageConfig = {
         resetSuccessMsg: 'Reset Success',
         enableReplaceGlobalHotkeyFailedMsg: 'The "Replace Global Hotkeys" function failed to be enabled. Please confirm if the program was launched as an administrator.',
         disableReplaceGlobalHotkeyFailedMsg: 'The "Replace Global Hotkey" option failed to be closed. Please confirm if the program was launched as an administrator.',
+
+        enableAnimationEffects: 'Enable animation effects',
+        transitionSpeed: 'Animation Speed',
+        transitionSpeedFast: 'Fast',
+        transitionSpeedNormal: 'Normal',
+        transitionSpeedSlow: 'Slow',
+        animationHint: 'Page transition animations can enhance visual experience, but may affect fluency on low-performance devices',
     },
     list: {
         title: 'Clipboard',

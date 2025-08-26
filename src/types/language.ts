@@ -17,11 +17,13 @@ export interface PageConfig {
         storageMenu: string;
         shortcutMenu: string;
         updaterMenu: string;
+        themesMenu: string;
         // 设置页面右侧页面标题
         generalTitle: string;
         storageTitle: string;
         shortcutTitle: string;
         updaterTitle: string;
+        themesTitle: string;
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;
@@ -86,6 +88,14 @@ export interface PageConfig {
         resetSuccessMsg: string;
         enableReplaceGlobalHotkeyFailedMsg: string;
         disableReplaceGlobalHotkeyFailedMsg: string;
+        
+        // 动画相关设置
+        enableAnimationEffects: string;
+        transitionSpeed: string;
+        transitionSpeedFast: string;
+        transitionSpeedNormal: string;
+        transitionSpeedSlow: string;
+        animationHint: string;
     },
     list: {
         title: string;

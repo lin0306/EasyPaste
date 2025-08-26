@@ -9,11 +9,13 @@ export const chinesePageConfig: PageConfig = {
         storageMenu: '存储设置',
         shortcutMenu: '快捷键',
         updaterMenu: '更新设置',
+        themesMenu: '主题设置',
 
         generalTitle: '通用设置',
         storageTitle: '存储设置',
         shortcutTitle: '快捷键设置',
         updaterTitle: '更新设置',
+        themesTitle: '主题设置',
 
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键',
@@ -73,6 +75,14 @@ export const chinesePageConfig: PageConfig = {
         resetSuccessMsg: '已重置',
         enableReplaceGlobalHotkeyFailedMsg: '打开“替换全局热键”失败，请确认程序是否以管理员身份启动',
         disableReplaceGlobalHotkeyFailedMsg: '关闭“替换全局热键”失败，请确认程序是否以管理员身份启动',
+        
+        // 动画相关设置
+        enableAnimationEffects: '启用动画效果',
+        transitionSpeed: '动画速度',
+        transitionSpeedFast: '快速',
+        transitionSpeedNormal: '正常',
+        transitionSpeedSlow: '慢速',
+        animationHint: '页面切换动画可以提升视觉体验，但可能会影响低性能设备的流畅性',
     },
     list: {
         title: '剪贴板',
