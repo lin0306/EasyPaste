@@ -13,19 +13,18 @@ interface Settings {
     autoHideWindow: boolean,            // 自动隐藏窗口
     alwaysOnTop: boolean,               // 窗口是否始终置顶
     newVersionAlertMode: string,        // 检查到新版本提示方式
-    enableAnimationEffects: boolean,      // 启用动画效果
+    enableAnimationEffects: boolean,    // 启用动画效果
     pageTransitionDuration: number,     // 动画持续时间（毫秒）
-    pageTransitionEasing: string,       // 动画缓动函数
+    animationSpeedLevel: string,        // 动画速度级别
 }
 
 interface ShortcutKeys {
-    [x: string]: any;
-    search: {
-        name: string,
-        key: string[]
-    },
-    wakeUpRoutine: {
-        name: string,
-        key: string[]
-    }
+    [x: string]: ShortcutKey;
+    search: ShortcutKey;        // 搜索快捷键
+    wakeUpRoutine: ShortcutKey; // 唤醒程序快捷键
+}
+
+interface ShortcutKey {
+    name: string;
+    key: string[];
 }

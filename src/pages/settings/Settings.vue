@@ -40,7 +40,7 @@ import {
   saveEnableTag,
   saveLanguage,
   saveMaxHistoryItems,
-  saveNewVersionAlertMode, savePageTransitionEasing,
+  saveNewVersionAlertMode, saveAnimationSpeedLevel,
   savePowerOnSelfStart,
   saveReplaceGlobalHotkey,
   saveUpdateMode
@@ -81,7 +81,7 @@ const originalConfig = reactive<Settings>({
   newVersionAlertMode: 'toast',
   enableAnimationEffects: true,         // 默认启用动画
   pageTransitionDuration: 350,        // 默认动画时长
-  pageTransitionEasing: 'ease-in-out', // 默认缓动函数
+  animationSpeedLevel: 'normal', // 默认缓动函数
 });
 
 // 当前编辑的配置
@@ -102,7 +102,7 @@ const currentConfig = reactive<Settings>({
   newVersionAlertMode: 'toast',
   enableAnimationEffects: true,         // 默认启用动画
   pageTransitionDuration: 350,        // 默认动画时长
-  pageTransitionEasing: 'ease-in-out', // 默认缓动函数
+  animationSpeedLevel: 'normal', // 默认缓动函数
 });
 
 // 配置相关
@@ -195,7 +195,7 @@ const onLoading = ref(false);
 // 当前正在编辑的快捷键
 const editingShortcut = ref<keyof ShortcutKeys | ''>('');
 // 临时存储编辑中的按键
-const tempKeys = ref<any[]>([]);
+const tempKeys = ref<string[]>([]);
 // 快捷键编辑弹窗状态
 const shortcutModalVisible = ref(false);
 // 快捷键是否可用
@@ -315,7 +315,7 @@ function handleKeyDown(event: any) {
  */
 async function checkShortcutKeys() {
   const key = editingShortcut.value || "";
-  const isUpdate = currentShortcutKeys[key] === tempKeys.value;
+  const isUpdate = currentShortcutKeys[key].key === tempKeys.value;
   availableKey.value = !isUpdate || await isRegistered(convertRegisterKey(currentShortcutKeys[key].key));
 }
 
@@ -726,7 +726,7 @@ async function onChangeEnableAnimationEffects(enableAnimationEffects: boolean) {
     // todo 发送全局消息
     await emit('', {
       isEnable: currentConfig.enableAnimationEffects,
-      speed: currentConfig.pageTransitionEasing,
+      speed: currentConfig.animationSpeedLevel,
     });
     originalConfig.enableAnimationEffects = enableAnimationEffects;
     currentConfig.enableAnimationEffects = enableAnimationEffects;
@@ -741,23 +741,23 @@ async function onChangeEnableAnimationEffects(enableAnimationEffects: boolean) {
 
 /**
  * 修改动画速度
- * @param pageTransitionEasing 动画速度
+ * @param animationSpeedLevel 动画速度
  */
-async function onChangePageTransitionEasing(pageTransitionEasing: string) {
+async function onChangeAnimationSpeedLevel(animationSpeedLevel: string) {
   onLoading.value = true;
   try {
-    await savePageTransitionEasing(pageTransitionEasing);
+    await saveAnimationSpeedLevel(animationSpeedLevel);
     // todo 发送全局消息
     await emit('', {
       isEnable: currentConfig.enableAnimationEffects,
-      speed: currentConfig.pageTransitionEasing,
+      speed: currentConfig.animationSpeedLevel,
     });
-    originalConfig.pageTransitionEasing = pageTransitionEasing;
-    currentConfig.pageTransitionEasing = pageTransitionEasing;
+    originalConfig.animationSpeedLevel = animationSpeedLevel;
+    currentConfig.animationSpeedLevel = animationSpeedLevel;
   } catch (e) {
     error('修改动画速度设置出错:' + e);
     message.error(currentLanguage.value.pages.settings.saveFailedMsg);
-    currentConfig.pageTransitionEasing = originalConfig.pageTransitionEasing;
+    currentConfig.animationSpeedLevel = originalConfig.animationSpeedLevel;
   } finally {
     onLoading.value = false;
   }
@@ -992,10 +992,10 @@ onMounted(async () => {
             <span class="label">{{ currentLanguage.pages.settings.transitionSpeed }}</span>
             <n-select
                 class="select"
-                v-model:value="currentConfig.pageTransitionEasing"
+                v-model:value="currentConfig.animationSpeedLevel"
                 :loading="onLoading"
                 :options="transitionSpeedOptions"
-                @update:value="onChangePageTransitionEasing"
+                @update:value="onChangeAnimationSpeedLevel"
             />
           </div>
 
@@ -1083,7 +1083,6 @@ onMounted(async () => {
                   :max="10000"
                   :loading="onLoading"
                   :disabled="onLoading"
-                  @keydown.enter="onChangeMaxHistoryItems"
                   @blur="onChangeMaxHistoryItems"
               />
             </div>
@@ -1104,7 +1103,6 @@ onMounted(async () => {
                   :max="365"
                   :loading="onLoading"
                   :disabled="onLoading"
-                  @keydown.enter="onChangeDataRetentionDays"
                   @blur="onChangeDataRetentionDays"
               />
             </div>

@@ -23,7 +23,7 @@ const defaultSettings: Settings = {
     newVersionAlertMode: 'toast',
     enableAnimationEffects: true,
     pageTransitionDuration: 350,
-    pageTransitionEasing: 'ease-in-out',
+    animationSpeedLevel: 'normal',
 }
 
 /**
@@ -477,32 +477,32 @@ export async function getPageTransitionDuration(): Promise<number> {
 }
 
 /**
- * 保存页面切换动画缓动函数
- * @param pageTransitionEasing 动画缓动函数
+ * 保存页面动画速度级别
+ * @param animationSpeedLevel 页面动画速度级别
  */
-export async function savePageTransitionEasing(pageTransitionEasing: string) {
-    info("保存页面切换动画缓动函数: " + pageTransitionEasing);
+export async function saveAnimationSpeedLevel(animationSpeedLevel: string) {
+    info("保存页面动画速度级别: " + animationSpeedLevel);
     const settings = await load(fileName, {autoSave: true});
-    await settings.set("pageTransitionEasing", pageTransitionEasing);
+    await settings.set("animationSpeedLevel", animationSpeedLevel);
 }
 
 /**
  * 获取页面切换动画缓动函数
  */
-export async function getPageTransitionEasing(): Promise<string> {
+export async function getAnimationSpeedLevel(): Promise<string> {
     const store = await load(fileName, {autoSave: true});
     if (store == null) {
-        await info("没有找到用户配置，使用默认页面切换动画缓动函数设置");
-        await savePageTransitionEasing(defaultSettings.pageTransitionEasing);
-        return defaultSettings.pageTransitionEasing;
+        await info("没有找到用户配置，使用默认页面动画速度级别设置");
+        await saveAnimationSpeedLevel(defaultSettings.animationSpeedLevel);
+        return defaultSettings.animationSpeedLevel;
     }
-    const pageTransitionEasing = await store.get<string>("pageTransitionEasing");
-    if (pageTransitionEasing === undefined) {
-        await info("用户页面切换动画缓动函数未设置，使用默认值");
-        await savePageTransitionEasing(defaultSettings.pageTransitionEasing);
-        return defaultSettings.pageTransitionEasing;
+    const animationSpeedLevel = await store.get<string>("animationSpeedLevel");
+    if (animationSpeedLevel === undefined) {
+        await info("用户页面动画速度级别未设置，使用默认值");
+        await saveAnimationSpeedLevel(defaultSettings.animationSpeedLevel);
+        return defaultSettings.animationSpeedLevel;
     }
-    return pageTransitionEasing;
+    return animationSpeedLevel;
 }
 
 /**
@@ -597,21 +597,6 @@ export async function fillSettingsData(toggleLanguage: any, toggleTheme: any) {
                     await saveNewVersionAlertMode(settingsJson.newVersionAlertMode);
                 } else {
                     await saveNewVersionAlertMode(defaultSettings.newVersionAlertMode);
-                }
-                if (userSettingsString.includes("enableAnimationEffects")) {
-                    await saveEnableAnimationEffects(settingsJson.enableAnimationEffects);
-                } else {
-                    await saveEnableAnimationEffects(defaultSettings.enableAnimationEffects);
-                }
-                if (userSettingsString.includes("pageTransitionDuration")) {
-                    await savePageTransitionDuration(settingsJson.pageTransitionDuration);
-                } else {
-                    await savePageTransitionDuration(defaultSettings.pageTransitionDuration);
-                }
-                if (userSettingsString.includes("pageTransitionEasing")) {
-                    await savePageTransitionEasing(settingsJson.pageTransitionEasing);
-                } else {
-                    await savePageTransitionEasing(defaultSettings.pageTransitionEasing);
                 }
 
                 // 删除文件
