@@ -15,6 +15,7 @@ export const englishPageConfig: PageConfig = {
         shortcutTitle: 'Shortcut Settings',
         updaterTitle: 'Update Settings',
         themesTitle: 'Themes Settings',
+        animationTitle: 'Animation Settings',
 
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey',

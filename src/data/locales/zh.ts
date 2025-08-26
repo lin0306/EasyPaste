@@ -16,6 +16,7 @@ export const chinesePageConfig: PageConfig = {
         shortcutTitle: '快捷键设置',
         updaterTitle: '更新设置',
         themesTitle: '主题设置',
+        animationTitle: '动画设置',
 
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键',

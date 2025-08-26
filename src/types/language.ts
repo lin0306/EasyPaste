@@ -24,6 +24,7 @@ export interface PageConfig {
         shortcutTitle: string;
         updaterTitle: string;
         themesTitle: string;
+        animationTitle: string;
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;
