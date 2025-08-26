@@ -170,7 +170,7 @@ const updateHintMode = computed(() => [{
 const onLoading = ref(false);
 
 // 当前正在编辑的快捷键
-const editingShortcut = ref<string>('');
+const editingShortcut = ref<keyof ShortcutKeys | ''>('');
 // 临时存储编辑中的按键
 const tempKeys = ref<any[]>([]);
 // 快捷键编辑弹窗状态
@@ -190,7 +190,7 @@ const isAdminStart = ref(false);
  * 开始编辑快捷键
  * @param key 快捷键类型
  */
-function startEditShortcut(key: string) {
+function startEditShortcut(key: keyof ShortcutKeys) {
   editingShortcut.value = key;
   tempKeys.value = [...(currentShortcutKeys[key]?.key || [])];
   shortcutModalVisible.value = true;
