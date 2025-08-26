@@ -664,7 +664,7 @@ async function onChangeMaxHistoryItems() {
       message.error(currentLanguage.value.pages.settings.saveFailedMsg);
       currentConfig.maxHistoryItems = originalConfig.maxHistoryItems;
     } finally {
-      onLoading.value = false;
+        onLoading.value = false;
     }
   }
 }
@@ -793,30 +793,33 @@ onMounted(async () => {
           <h2>{{ currentLanguage.pages.settings.generalTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
-            <n-switch :value="currentConfig.powerOnSelfStart"
+            <n-switch v-model:value="currentConfig.powerOnSelfStart"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangePowerOnSelfStart"
             />
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoHideWindow }}</span>
-            <n-switch :value="currentConfig.autoHideWindow"
+            <n-switch v-model:value="currentConfig.autoHideWindow"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeAutoHideWindow"
             />
           </div>
           <div class="form-item" v-if="!currentConfig.autoHideWindow">
             <span class="label">{{ currentLanguage.pages.settings.alwaysOnTop }}</span>
-            <n-switch :value="currentConfig.alwaysOnTop"
+            <n-switch v-model:value="currentConfig.alwaysOnTop"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeAlwaysOnTop"
             />
           </div>
           <div class="line" v-if="!isMac">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.replaceGlobalHotkey }}</span>
-              <n-switch :value="currentConfig.replaceGlobalHotkey"
-                        :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered)"
+              <n-switch v-model:value="currentConfig.replaceGlobalHotkey"
+                        :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered) || onLoading"
                         :loading="onLoading"
                         @update:value="onChangeReplaceGlobalHotkey"
               />
@@ -854,25 +857,28 @@ onMounted(async () => {
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.languages }}</span>
             <n-select class="select"
-                      :value="currentConfig.languages"
+                      v-model:value="currentConfig.languages"
                       :options="languageOptions"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeLanguages"
             />
           </div>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.enableTag }}</span>
-            <n-switch :value="currentConfig.enableTag"
+            <n-switch v-model:value="currentConfig.enableTag"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeEnableTag"
             />
           </div>
           <div class="form-item" v-if="currentConfig.enableTag">
             <span class="label">{{ currentLanguage.pages.settings.bindTagBtnShowLocation }}</span>
             <n-select class="select"
-                      :value="currentConfig.bindTagBtnShowLocation"
+                      v-model:value="currentConfig.bindTagBtnShowLocation"
                       :options="bindTagBtnShowLocation"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeBindTagBtnShowLocation"
             />
           </div>
@@ -883,27 +889,30 @@ onMounted(async () => {
           <h2>{{ currentLanguage.pages.settings.updaterTitle }}</h2>
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.autoCheckUpdate }}</span>
-            <n-switch :value="currentConfig.autoCheckUpdate"
+            <n-switch v-model:value="currentConfig.autoCheckUpdate"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeAutoCheckUpdate"
             />
           </div>
           <div class="form-item" v-if="currentConfig.autoCheckUpdate">
             <span class="label">{{ currentLanguage.pages.settings.checkUpdateMode }}</span>
             <n-select class="select"
-                      :value="currentConfig.updateMode"
+                      v-model:value="currentConfig.updateMode"
                       :options="autoUpdateMode"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeUpdateMode"
             />
           </div>
           <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === 'timing'">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.timeInterval }}</span>
-              <n-input-number :value="currentConfig.autoCheckUpdateInterval"
+              <n-input-number v-model:value="currentConfig.autoCheckUpdateInterval"
                               :min="1"
                               :max="720"
                               :loading="onLoading"
+                              :disabled="onLoading"
                               @keydown.enter="onChangeAutoCheckUpdateInterval"
                               @blur="onChangeAutoCheckUpdateInterval"
               >
@@ -922,9 +931,10 @@ onMounted(async () => {
           <div class="form-item">
             <span class="label">{{ currentLanguage.pages.settings.newVersionAlertMode }}</span>
             <n-select class="select"
-                      :value="currentConfig.newVersionAlertMode"
+                      v-model:value="currentConfig.newVersionAlertMode"
                       :options="updateHintMode"
                       :loading="onLoading"
+                      :disabled="onLoading"
                       @update:value="onChangeNewVersionAlertMode"
             />
           </div>
@@ -936,10 +946,11 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.maxHistoryItems }}</span>
-              <n-input-number :value="currentConfig.maxHistoryItems"
+              <n-input-number v-model:value="currentConfig.maxHistoryItems"
                               :min="0"
                               :max="10000"
                               :loading="onLoading"
+                              :disabled="onLoading"
                               @keydown.enter="onChangeMaxHistoryItems"
                               @blur="onChangeMaxHistoryItems"
               />
@@ -955,10 +966,11 @@ onMounted(async () => {
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.dataRetentionDays }}</span>
               <n-input-number
-                  :value="currentConfig.dataRetentionDays"
+                  v-model:value="currentConfig.dataRetentionDays"
                   :min="0"
                   :max="365"
                   :loading="onLoading"
+                  :disabled="onLoading"
                   @keydown.enter="onChangeDataRetentionDays"
                   @blur="onChangeDataRetentionDays"
               />
@@ -1034,13 +1046,14 @@ onMounted(async () => {
         </div>
       </div>
       <template #action>
-        <n-button @click="cancelEditShortcut" :loading="onLoading">
+        <n-button @click="cancelEditShortcut" :loading="onLoading" :disabled="onLoading">
           {{ currentLanguage.pages.settings.editHotkeyModalCancelBtn }}
         </n-button>
         <n-button type="primary"
-                  :disabled="tempKeys.length === 0 || !availableKey"
+                  :disabled="tempKeys.length === 0 || !availableKey || onLoading"
                   @click="confirmEditShortcut"
-                  :loading="onLoading">
+                  :loading="onLoading"
+        >
           {{ currentLanguage.pages.settings.editHotkeyModalConfirmBtn }}
         </n-button>
       </template>
