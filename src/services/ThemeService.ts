@@ -1,13 +1,12 @@
 import {emit, listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
 import {ref} from 'vue';
-import {updateTheme} from './FileService.ts';
 import {ThemeConfig, ThemeConfigColors} from '../types/Themes.ts';
 import {lightTheme} from '../data/themes/light.ts';
 import {darkTheme} from '../data/themes/dark.ts';
 import {blueTheme} from '../data/themes/blue.ts';
 import {pinkTheme} from '../data/themes/pink.ts';
-import {getTheme} from "../store/Settings.ts";
+import {getTheme, saveTheme} from "../store/Settings.ts";
 
 // 所有可用主题
 export const themes: ThemeConfig[] = [
@@ -77,7 +76,7 @@ export function useTheme() {
             applyThemeToDOM(theme.colors);
 
             // 保存主题设置
-            await updateTheme(themeId);
+            await saveTheme(themeId);
 
             // 发送主题变更事件，通知所有窗口
             await emit('theme-changed', themeId);
