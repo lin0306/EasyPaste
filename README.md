@@ -9,7 +9,7 @@
   
   <p>
     <a href="https://github.com/lin0306/EasyPaste/releases/latest">
-      <img alt="Version" src="https://img.shields.io/badge/version-v0.1.2-blue.svg?cacheSeconds=2592000" />
+      <img alt="Version" src="https://img.shields.io/badge/version-v0.1.3-blue.svg?cacheSeconds=2592000" />
    </a>
    <a href="https://www.apache.org/licenses/LICENSE-2.0.html">
       <img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
@@ -22,7 +22,7 @@
 
 > ⚠️ **项目状态**
 > 
-> **当前版本**: v0.1.2 (开发测试阶段)
+> **当前版本**: v0.1.3 (开发测试阶段)
 > 
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
