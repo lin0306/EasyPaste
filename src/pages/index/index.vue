@@ -17,10 +17,10 @@ import {
   destroyClipboardDataContext,
   initializeClipboardDataContext,
   insertClipboardItem
-} from "./context/ClipboardDataContext.ts";
-import {destroyTagContext, initializeTagContext} from "./context/TagDataContext.ts";
-import {destroyUpdaterContext, hasNewVersion, initializeUpdaterContext} from "./context/UpdaterContext.ts";
-import {destroyWindowContext, initializeWindowContext, isAutoHideWindow} from "./context/WindowContext.ts";
+} from "./composables/ClipboardDataComposable.ts";
+import {destroyTagContext, initializeTagContext} from "./composables/TagDataComposable.ts";
+import {destroyUpdaterContext, hasNewVersion, initializeUpdaterContext} from "./composables/UpdaterComposable.ts";
+import {destroyWindowContext, initializeWindowContext, isAutoHideWindow} from "./composables/WindowComposable.ts";
 
 // 获取语言上下文
 const {currentLanguage, toggleLanguage} = useLanguage();
