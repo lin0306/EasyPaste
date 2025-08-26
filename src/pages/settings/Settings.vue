@@ -46,6 +46,7 @@ import {
   saveUpdateMode
 } from "../../store/Settings.ts";
 import {getSearchKey, getWakeUpRoutine, saveSearchKey, saveWakeUpRoutineKey} from "../../store/ShortcutKeys.ts";
+import {SETTINGS} from "../../constants/UserSettingsConstant.ts";
 
 const message = useMessage();
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -75,13 +76,13 @@ const originalConfig = reactive<Settings>({
   updateMode: "timing",
   autoCheckUpdateInterval: 1,
   enableTag: true,
-  bindTagBtnShowLocation: 'top-right',
+  bindTagBtnShowLocation: SETTINGS.GENERATE.BIND_TAG_LOCATION.TOP_RIGHT,
   autoHideWindow: false,
   alwaysOnTop: true,
-  newVersionAlertMode: 'toast',
+  newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
   enableAnimationEffects: true,         // 默认启用动画
   pageTransitionDuration: 350,        // 默认动画时长
-  animationSpeedLevel: 'normal', // 默认缓动函数
+  animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL, // 默认缓动函数
 });
 
 // 当前编辑的配置
@@ -96,13 +97,13 @@ const currentConfig = reactive<Settings>({
   updateMode: "timing",
   autoCheckUpdateInterval: 1,
   enableTag: true,
-  bindTagBtnShowLocation: 'top-right',
+  bindTagBtnShowLocation: SETTINGS.GENERATE.BIND_TAG_LOCATION.TOP_RIGHT,
   autoHideWindow: false,
   alwaysOnTop: true,
-  newVersionAlertMode: 'toast',
+  newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
   enableAnimationEffects: true,         // 默认启用动画
   pageTransitionDuration: 350,        // 默认动画时长
-  animationSpeedLevel: 'normal', // 默认缓动函数
+  animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL, // 默认缓动函数
 });
 
 // 配置相关
@@ -149,28 +150,28 @@ const languageOptions = languages.map(lang => ({
 
 // 标签绑定按钮位置
 const bindTagBtnShowLocation = computed(() => [{
-  value: 'top-right',
+  value: SETTINGS.GENERATE.BIND_TAG_LOCATION.TOP_RIGHT,
   label: currentLanguage.value.pages.settings.topRight,
 }, {
-  value: 'bottom-right',
+  value: SETTINGS.GENERATE.BIND_TAG_LOCATION.BOTTOM_RIGHT,
   label: currentLanguage.value.pages.settings.bottomRight,
 }]);
 
 // 自动检查更新方式
 const autoUpdateMode = computed(() => [{
-  value: 'timing',
+  value: SETTINGS.UPDATER.CHECK_MODE.TIMING,
   label: currentLanguage.value.pages.settings.regularCheck
 }, {
-  value: 'after-running',
+  value: SETTINGS.UPDATER.CHECK_MODE.AFTER_RUNNING,
   label: currentLanguage.value.pages.settings.afterRunningCheck
 }])
 
 // 更新提示显示方式
 const updateHintMode = computed(() => [{
-  value: 'toast',
+  value: SETTINGS.UPDATER.HINT_MODE.TOAST,
   label: currentLanguage.value.pages.settings.toast
 }, {
-  value: 'dialog',
+  value: SETTINGS.UPDATER.HINT_MODE.TOAST,
   label: currentLanguage.value.pages.settings.dialog
 }])
 
@@ -178,15 +179,15 @@ const updateHintMode = computed(() => [{
 const transitionSpeedOptions = computed(() => [
   {
     label: currentLanguage.value.pages.settings.transitionSpeedFast,
-    value: 'fast',
+    value: SETTINGS.THEME.ANIMATION.SPEED.FAST,
   },
   {
     label: currentLanguage.value.pages.settings.transitionSpeedNormal,
-    value: 'normal',
+    value: SETTINGS.THEME.ANIMATION.SPEED.NORMAL,
   },
   {
     label: currentLanguage.value.pages.settings.transitionSpeedSlow,
-    value: 'slow',
+    value: SETTINGS.THEME.ANIMATION.SPEED.SLOW,
   },
 ]);
 
@@ -1033,7 +1034,7 @@ onMounted(async () => {
                       @update:value="onChangeUpdateMode"
             />
           </div>
-          <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === 'timing'">
+          <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === SETTINGS.UPDATER.CHECK_MODE.TIMING">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.timeInterval }}</span>
               <n-input-number

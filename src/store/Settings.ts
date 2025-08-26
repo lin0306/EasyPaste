@@ -4,6 +4,7 @@ import {BaseDirectory, exists, readFile, remove} from "@tauri-apps/plugin-fs";
 import {uint8ArrayToString} from "../utils/strUtil.ts";
 import {lightTheme} from "../data/themes/light.ts";
 import {chinese} from "../services/LanguageService.ts";
+import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 
 const fileName = "settings.json";
 const defaultSettings: Settings = {
@@ -17,10 +18,10 @@ const defaultSettings: Settings = {
     updateMode: "timing",
     autoCheckUpdateInterval: 1,
     enableTag: true,
-    bindTagBtnShowLocation: 'top-right',
+    bindTagBtnShowLocation: SETTINGS.GENERATE.BIND_TAG_LOCATION.TOP_RIGHT,
     autoHideWindow: false,
     alwaysOnTop: true,
-    newVersionAlertMode: 'toast',
+    newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
     enableAnimationEffects: true,
     pageTransitionDuration: 350,
     animationSpeedLevel: 'normal',

@@ -6,6 +6,7 @@ import {openUpdaterWindow} from '../utils/window';
 import {useLanguage} from "./LanguageService.ts";
 import {hasNewVersion} from "../pages/index/composables/UpdaterComposable.ts";
 import {getNewVersionAlertMode} from "../store/Settings.ts";
+import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -77,7 +78,7 @@ export default class UpdaterService {
                     this.showUpdateWindow();
                 } else {
                     // 自动检查更新根据设置不同，进行不同的提示方式
-                    if (await getNewVersionAlertMode() === 'toast') {
+                    if (await getNewVersionAlertMode() === SETTINGS.UPDATER.HINT_MODE.TOAST) {
                         hasNewVersion.value = true;
                     } else {
                         this.showUpdateWindow();
