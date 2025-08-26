@@ -908,13 +908,15 @@ onMounted(async () => {
           <div class="line" v-if="currentConfig.autoCheckUpdate && currentConfig.updateMode === 'timing'">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.timeInterval }}</span>
-              <n-input-number v-model:value="currentConfig.autoCheckUpdateInterval"
-                              :min="1"
-                              :max="720"
-                              :loading="onLoading"
-                              :disabled="onLoading"
-                              @keydown.enter="onChangeAutoCheckUpdateInterval"
-                              @blur="onChangeAutoCheckUpdateInterval"
+              <n-input-number
+                  class="input-number"
+                  v-model:value="currentConfig.autoCheckUpdateInterval"
+                  :min="1"
+                  :max="720"
+                  :loading="onLoading"
+                  :disabled="onLoading"
+                  @keydown.enter="onChangeAutoCheckUpdateInterval"
+                  @blur="onChangeAutoCheckUpdateInterval"
               >
                 <template #suffix>
                   {{ currentLanguage.pages.settings.timeIntervalUnit }}
@@ -946,13 +948,15 @@ onMounted(async () => {
           <div class="line">
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.maxHistoryItems }}</span>
-              <n-input-number v-model:value="currentConfig.maxHistoryItems"
-                              :min="0"
-                              :max="10000"
-                              :loading="onLoading"
-                              :disabled="onLoading"
-                              @keydown.enter="onChangeMaxHistoryItems"
-                              @blur="onChangeMaxHistoryItems"
+              <n-input-number
+                  class="input-number"
+                  v-model:value="currentConfig.maxHistoryItems"
+                  :min="0"
+                  :max="10000"
+                  :loading="onLoading"
+                  :disabled="onLoading"
+                  @keydown.enter="onChangeMaxHistoryItems"
+                  @blur="onChangeMaxHistoryItems"
               />
             </div>
             <div class="second-item">
@@ -966,6 +970,7 @@ onMounted(async () => {
             <div class="main-item">
               <span class="label">{{ currentLanguage.pages.settings.dataRetentionDays }}</span>
               <n-input-number
+                  class="input-number"
                   v-model:value="currentConfig.dataRetentionDays"
                   :min="0"
                   :max="365"
@@ -1231,6 +1236,11 @@ onMounted(async () => {
 .select {
   width: 30%;
 }
+
+.input-number {
+  width: 30%;
+}
+
 
 .line {
   margin-bottom: 16px;
