@@ -17,7 +17,7 @@ pub fn create_main_window(app: AppHandle) {
                 .prevent_overflow() // 限制窗口内容超出范围
                 .always_on_top(data.auto_hide_window || data.always_on_top) // 窗口置顶
                 .decorations(false) // 窗口无边框
-                .visible(true) // 窗口默认不显示
+                .visible(false) // 窗口默认不显示
                 .skip_taskbar(!data.auto_hide_window) // 任务栏不显示
                 .drag_and_drop(true) // 允许拖拽
                 .focused(true) // 窗口聚焦
@@ -39,7 +39,7 @@ pub fn create_main_window(app: AppHandle) {
                 .prevent_overflow() // 限制窗口内容超出范围
                 .always_on_top(true) // 窗口置顶
                 .decorations(false) // 窗口无边框
-                .visible(true) // 窗口默认不显示
+                .visible(false) // 窗口默认不显示
                 .skip_taskbar(true) // 任务栏不显示
                 .drag_and_drop(true) // 允许拖拽
                 .focused(true) // 窗口聚焦
