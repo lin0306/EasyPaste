@@ -30,7 +30,7 @@ onMounted(async () => {
           currentLanguage.pages.about.problemFeedback
         }}</a>
       <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste')">GitHub</a>
-      <!-- <a href="#" @click="openLink('https://gitee.com/your-repo/clipboard')">Gitee</a> -->
+      <a href="#" @click="openLink('https://gitee.com/lin0306/easy-paste')">Gitee</a>
     </div>
   </div>
 </template>

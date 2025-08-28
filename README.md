@@ -8,13 +8,12 @@
   </p>
   
   <p>
-    <a href="https://github.com/lin0306/EasyPaste/releases/latest">
-      <img alt="Version" src="https://img.shields.io/badge/version-v0.1.3-blue.svg?cacheSeconds=2592000" />
-   </a>
-   <a href="https://www.apache.org/licenses/LICENSE-2.0.html">
-      <img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
-   </a>
-    <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey" />
+
+[![](https://img.shields.io/badge/GitHub%20version-v0.1.3-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/Gitee%20version-v0.1.3-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/easy-paste/releases/latest)
+[![](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey)
+
   </p>
 </div>
 
@@ -475,5 +474,8 @@ A: 目前支持：
   </p>
   <p>
     <em>您的支持是我们持续改进的动力</em>
+  </p>
+  <p>
+    <strong>仓库地址：</strong> <a href="https://github.com/lin0306/EasyPaste">GitHub</a> | <a href="https://gitee.com/lin0306/easy-paste">Gitee</a>
   </p>
 </div>
