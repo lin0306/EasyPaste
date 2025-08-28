@@ -14,7 +14,7 @@ interface Settings {
     alwaysOnTop: boolean,               // 窗口是否始终置顶
     newVersionAlertMode: string,        // 检查到新版本提示方式
     enableAnimationEffects: boolean,    // 启用动画效果
-    pageTransitionDuration: number,     // 动画持续时间（毫秒）
+    animationDuration: number,          // 动画持续时间（毫秒）
     animationSpeedLevel: string,        // 动画速度级别
 }
 

@@ -23,7 +23,7 @@ const defaultSettings: Settings = {
     alwaysOnTop: true,
     newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
     enableAnimationEffects: true,
-    pageTransitionDuration: 350,
+    animationDuration: 350,
     animationSpeedLevel: 'normal',
 }
 
@@ -449,32 +449,32 @@ export async function getEnableAnimationEffects(): Promise<boolean> {
 }
 
 /**
- * 保存页面切换动画持续时间
- * @param pageTransitionDuration 动画持续时间（毫秒）
+ * 保存动画持续时间
+ * @param animationDuration 动画持续时间（毫秒）
  */
-export async function savePageTransitionDuration(pageTransitionDuration: number) {
-    info("保存页面切换动画持续时间: " + pageTransitionDuration);
+export async function saveAnimationDuration(animationDuration: number) {
+    info("保存动画持续时间: " + animationDuration);
     const settings = await load(fileName, {autoSave: true});
-    await settings.set("pageTransitionDuration", pageTransitionDuration);
+    await settings.set("animationDuration", animationDuration);
 }
 
 /**
  * 获取页面切换动画持续时间
  */
-export async function getPageTransitionDuration(): Promise<number> {
+export async function getAnimationDuration(): Promise<number> {
     const store = await load(fileName, {autoSave: true});
     if (store == null) {
-        await info("没有找到用户配置，使用默认页面切换动画持续时间设置");
-        await savePageTransitionDuration(defaultSettings.pageTransitionDuration);
-        return defaultSettings.pageTransitionDuration;
+        await info("没有找到用户配置，使用默认i动画持续时间设置");
+        await saveAnimationDuration(defaultSettings.animationDuration);
+        return defaultSettings.animationDuration;
     }
-    const pageTransitionDuration = await store.get<number>("pageTransitionDuration");
-    if (pageTransitionDuration === undefined) {
-        await info("用户页面切换动画持续时间未设置，使用默认值");
-        await savePageTransitionDuration(defaultSettings.pageTransitionDuration);
-        return defaultSettings.pageTransitionDuration;
+    const animationDuration = await store.get<number>("animationDuration");
+    if (animationDuration === undefined) {
+        await info("用户动画持续时间未设置，使用默认值");
+        await saveAnimationDuration(defaultSettings.animationDuration);
+        return defaultSettings.animationDuration;
     }
-    return pageTransitionDuration;
+    return animationDuration;
 }
 
 /**

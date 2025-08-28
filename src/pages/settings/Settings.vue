@@ -81,7 +81,7 @@ const originalConfig = reactive<Settings>({
   alwaysOnTop: true,
   newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
   enableAnimationEffects: true,         // 默认启用动画
-  pageTransitionDuration: 350,        // 默认动画时长
+  animationDuration: 350,        // 默认动画时长
   animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL, // 默认缓动函数
 });
 
@@ -102,7 +102,7 @@ const currentConfig = reactive<Settings>({
   alwaysOnTop: true,
   newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
   enableAnimationEffects: true,         // 默认启用动画
-  pageTransitionDuration: 350,        // 默认动画时长
+  animationDuration: 350,        // 默认动画时长
   animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL, // 默认缓动函数
 });
 

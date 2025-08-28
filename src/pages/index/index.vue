@@ -21,6 +21,10 @@ import {
 import {destroyTagContext, initializeTagContext} from "./composables/TagDataComposable.ts";
 import {destroyUpdaterContext, hasNewVersion, initializeUpdaterContext} from "./composables/UpdaterComposable.ts";
 import {destroyWindowContext, initializeWindowContext, isAutoHideWindow} from "./composables/WindowComposable.ts";
+import {
+  destroyAnimationEffectContext,
+  initializeAnimationEffectContext
+} from "./composables/IndexAnimationComposable.ts";
 
 // 获取语言上下文
 const {currentLanguage, toggleLanguage} = useLanguage();
@@ -68,6 +72,9 @@ onMounted(async () => {
 
     // 初始化更新器上下文
     await initializeUpdaterContext();
+
+    // 初始化动画效果上下文
+    await initializeAnimationEffectContext();
   } catch (err) {
     console.error(err);
     error('初始化失败:' + err);
@@ -92,6 +99,9 @@ onUnmounted(async () => {
 
   // 销毁更新器上下文
   destroyUpdaterContext();
+
+  // 销毁动画效果上下文
+  destroyAnimationEffectContext();
 })
 </script>
 
