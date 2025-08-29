@@ -24,7 +24,7 @@ import {destroyWindowContext, initializeWindowContext, isAutoHideWindow} from ".
 import {
   destroyAnimationEffectContext,
   initializeAnimationEffectContext
-} from "./composables/IndexAnimationComposable.ts";
+} from "./composables/AnimationComposable.ts";
 
 // 获取语言上下文
 const {currentLanguage, toggleLanguage} = useLanguage();
