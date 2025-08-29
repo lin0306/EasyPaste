@@ -96,7 +96,7 @@ class ClipboardDBService {
     async saveClipboardItem(content: string, type: string) {
         try {
             // 覆盖相同内容的旧记录的复制时间
-            if (type === 'text') {
+            if (type === 'text' || type === 'code') {
                 const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ? AND type = ?', [content, type]) as [{
                     id: number
                 }];

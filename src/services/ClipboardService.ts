@@ -3,6 +3,7 @@ import {error, info} from '@tauri-apps/plugin-log';
 import {clipboardListenStore} from '../store/copyStatus';
 import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
+import {isCode} from "../utils/TextTypeUtil.ts";
 
 /**
  * 初始化剪贴板监听服务
@@ -20,7 +21,7 @@ export async function initClipboardListener() {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    await db.saveClipboardItem(content, 'text');
+                    await db.saveClipboardItem(content, (isCode(content) ? 'code' : 'text'));
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
@@ -53,7 +54,7 @@ export async function initClipboardListener() {
  * @param item 剪贴板内容对象
  */
 export async function copyToClipboard(item: ClipboardItem) {
-    if (item.type === 'text') {
+    if (item.type === 'text' || item.type === 'code') {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.content, format: 'text'});
     } else {
