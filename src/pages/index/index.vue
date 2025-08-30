@@ -14,16 +14,16 @@ import HeadNavigationBar from "./components/HeadNavigationBar.vue";
 import SearchBox from './components/SearchBox.vue';
 import TagList from './components/TagList.vue';
 import {
-  destroyClipboardDataContext,
-  initializeClipboardDataContext,
+  destroyClipboardData,
+  initializeClipboardData,
   insertClipboardItem
 } from "./composables/ClipboardDataComposable.ts";
-import {destroyTagContext, initializeTagContext} from "./composables/TagDataComposable.ts";
-import {destroyUpdaterContext, hasNewVersion, initializeUpdaterContext} from "./composables/UpdaterComposable.ts";
-import {destroyWindowContext, initializeWindowContext, isAutoHideWindow} from "./composables/WindowComposable.ts";
+import {destroyTag, initializeTag} from "./composables/TagDataComposable.ts";
+import {destroyUpdater, hasNewVersion, initializeUpdater} from "./composables/UpdaterComposable.ts";
+import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/WindowComposable.ts";
 import {
-  destroyAnimationEffectContext,
-  initializeAnimationEffectContext
+  destroyAnimationEffect,
+  initializeAnimationEffect
 } from "./composables/AnimationComposable.ts";
 
 // 获取语言上下文
@@ -61,20 +61,20 @@ onMounted(async () => {
       await fillData(toggleLanguage, toggleTheme);
     }
 
-    // 初始化剪贴板数据上下文
-    await initializeClipboardDataContext();
+    // 初始化剪贴板数据配置
+    await initializeClipboardData();
 
-    // 初始化标签上下文
-    await initializeTagContext();
+    // 初始化标签配置
+    await initializeTag();
 
-    // 初始化窗口上下文
-    await initializeWindowContext(currentLanguage.value);
+    // 初始化窗口配置
+    await initializeWindow(currentLanguage.value);
 
-    // 初始化更新器上下文
-    await initializeUpdaterContext();
+    // 初始化更新器配置
+    await initializeUpdater();
 
-    // 初始化动画效果上下文
-    await initializeAnimationEffectContext();
+    // 初始化动画效果配置
+    await initializeAnimationEffect();
   } catch (err) {
     console.error(err);
     error('初始化失败:' + err);
@@ -88,20 +88,20 @@ onMounted(async () => {
  * 组件卸载时清除事件监听
  */
 onUnmounted(async () => {
-  // 销毁剪贴板数据上下文
-  await destroyClipboardDataContext();
+  // 销毁剪贴板数据配置
+  await destroyClipboardData();
 
-  // 销毁标签上下文
-  destroyTagContext();
+  // 销毁标签配置
+  destroyTag();
 
-  // 销毁窗口上下文
-  destroyWindowContext();
+  // 销毁窗口配置
+  destroyWindow();
 
-  // 销毁更新器上下文
-  destroyUpdaterContext();
+  // 销毁更新器配置
+  destroyUpdater();
 
-  // 销毁动画效果上下文
-  destroyAnimationEffectContext();
+  // 销毁动画效果配置
+  destroyAnimationEffect();
 })
 </script>
 
