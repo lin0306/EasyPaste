@@ -16,7 +16,7 @@
       CreateDirectory "$APPDATA\com.lin.EasyPaste"
 
       ; 写入 JSON 文件
-      FileOpen $1 "$APPDATA\com.lin.EasyPaste\userSettings.json" w
+      FileOpen $1 "$APPDATA\com.lin.EasyPaste\settings.json" w
       FileWrite $1 '{"languages":"'
       FileWrite $1 $0
       FileWrite $1 '"}'
