@@ -19,14 +19,13 @@ pub fn create_main_window(app: AppHandle) {
                 .decorations(false) // 窗口无边框
                 .visible(false) // 窗口默认不显示
                 .skip_taskbar(!data.auto_hide_window) // 任务栏不显示
-                .drag_and_drop(true) // 允许拖拽
                 .focused(true) // 窗口聚焦
                 .fullscreen(false) // 禁止全屏
                 .incognito(true) // 隐私模式
                 .shadow(true) // 窗口阴影
                 .content_protected(false) // 禁止窗口被捕获
                 .resizable(true) // 窗口可自由拖放大小
-                .disable_drag_drop_handler()
+                .disable_drag_drop_handler() // 允许拖拽
                 .build();
             app.manage(window);
         }
@@ -41,14 +40,13 @@ pub fn create_main_window(app: AppHandle) {
                 .decorations(false) // 窗口无边框
                 .visible(false) // 窗口默认不显示
                 .skip_taskbar(true) // 任务栏不显示
-                .drag_and_drop(true) // 允许拖拽
                 .focused(true) // 窗口聚焦
                 .fullscreen(false) // 禁止全屏
                 .incognito(true) // 隐私模式
                 .shadow(true) // 窗口阴影
                 .content_protected(false) // 禁止窗口被捕获
                 .resizable(true) // 窗口可自由拖放大小
-                .disable_drag_drop_handler()
+                .disable_drag_drop_handler() // 允许拖拽
                 .build();
             app.manage(window);
         }
