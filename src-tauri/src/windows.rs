@@ -7,7 +7,7 @@ pub fn create_main_window(app: AppHandle) {
     let mut path = PathBuf::new();
     path.push("/list");
 
-    match file::load_file_content::<Settings>(app.clone(), "userSettings.json".into()) {
+    match file::load_file_content::<Settings>(app.clone(), "settings.json".into()) {
         Ok(data) => {
             let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
                 .title("main")
