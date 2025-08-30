@@ -18,4 +18,5 @@ export interface WindowOptions {
     visible?: boolean,              // 是否显示窗口
     focus?: boolean,                // 是否聚焦窗口
     resizable?: boolean,            // 是否允许窗口调整大小
+    skipTaskbar?: boolean,          // 是否在任务栏中隐藏窗口
 }

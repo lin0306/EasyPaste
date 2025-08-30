@@ -22,13 +22,14 @@ export const windowConfig: WindowOptions = {
     visible: true,
     focus: true,
     resizable: true,
+    skipTaskbar: false
 };
 
 /**
  * 创建新窗口
  * @param options 窗口参数
  */
-async function createWin(options: WindowOptions) {
+export async function createWin(options: WindowOptions) {
     console.log('-=-=-=-=-=开始创建窗口')
 
     const args: WindowOptions = Object.assign({}, windowConfig, options)
