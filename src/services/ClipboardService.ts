@@ -4,6 +4,10 @@ import {clipboardListenStore} from '../store/copyStatus';
 import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
 import {isCode} from "../utils/TextTypeUtil.ts";
+import {ref} from "vue";
+
+// 剪贴板内容缓存
+export const dataMap = ref<Map<{ type: string; content: string; file_path: string }, number>>(new Map());
 
 /**
  * 初始化剪贴板监听服务
@@ -11,10 +15,16 @@ import {isCode} from "../utils/TextTypeUtil.ts";
 export async function initClipboardListener() {
     // 监听剪贴板内容变化事件
     const unListen = await listen('clipboard-change', async (event) => {
+        const payload: any = event.payload;
+        const data = {type: payload.type, content: payload.content, file_path: payload.file_path};
+        if (dataMap.value.get(data)) {
+            info("触发重复复制，忽略本次内容：" + payload);
+            return;
+        }
+        dataMap.value.set(data, Date.now());
         const clipboardListen = clipboardListenStore();
         try {
             clipboardListen.coping();
-            const payload: any = event.payload;
 
             const db = await ClipboardDBService.getInstance();
             if (payload.type === 'text') {
@@ -30,6 +40,8 @@ export async function initClipboardListener() {
                     await db.saveClipboardItem(fileName, 'file');
                 }
             }
+            dataMap.value.delete(data);
+            info("剪贴板内容保存完成");
             // 延迟50毫米，让数据先入库完成
             setTimeout(async () => {
                 const latestItem = await db.getLatestItem();
@@ -37,8 +49,8 @@ export async function initClipboardListener() {
                     clipboardListen.setItem(latestItem[0]);
                 }
                 clipboardListen.success();
-                info("剪贴板内容保存完成");
-            }, 50);
+                info("剪贴板内容保存完成，更新复制状态");
+            }, 10);
         } catch (er) {
             error('处理剪贴板事件失败:' + er);
             clipboardListen.error();
