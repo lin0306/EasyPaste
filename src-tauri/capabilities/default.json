@@ -3,11 +3,7 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "main",
-    "settings",
-    "tags",
-    "about",
-    "updater"
+    "*"
   ],
   "permissions": [
     "core:default",
@@ -50,7 +46,7 @@
       "identifier": "fs:allow-exists",
       "allow": [
         {
-          "path": "/**"
+          "path": "**/*"
         }
       ]
     },
@@ -58,7 +54,7 @@
       "identifier": "fs:allow-read-file",
       "allow": [
         {
-          "path": "/**"
+          "path": "**/*"
         }
       ]
     },
