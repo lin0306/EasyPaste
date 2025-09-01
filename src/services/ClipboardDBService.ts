@@ -38,7 +38,7 @@ class ClipboardDBService {
                 CREATE TABLE IF NOT EXISTS clipboard_items
                 (
                     id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                    content   TEXT    NOT NULL,
+                    content   TEXT,
                     chars     INTEGER,
                     copy_time INTEGER NOT NULL,
                     is_topped BOOLEAN DEFAULT 0,
@@ -72,7 +72,8 @@ class ClipboardDBService {
 
             const clipboardItemsInfo = await this.db?.select<[{
                 cid: number,
-                name: string
+                name: string,
+                notnull: boolean
             }]>(`PRAGMA table_info(clipboard_items)`);
             const clipboardItemsColumnExists = clipboardItemsInfo?.some((col) => col.name === 'chars')
             if (!clipboardItemsColumnExists) {
@@ -81,6 +82,50 @@ class ClipboardDBService {
                     alter table clipboard_items
                         add chars integer;
                 `);
+            }
+            // 将content设置成可空字符串
+            const contentColumn = clipboardItemsInfo?.find((col) => col.name === 'content');
+            if (contentColumn) {
+                if (contentColumn.notnull) {
+                    // 1.备份数据
+                    await this.db?.execute(`CREATE TABLE clipboard_items_backup AS SELECT * FROM clipboard_items`);
+                    await this.db?.execute(`CREATE TABLE item_tags_backup AS SELECT * FROM item_tags`);
+                    // 2.删除原表数据
+                    await this.db?.execute(`DROP TABLE clipboard_items`);
+                    await this.db?.execute(`DROP TABLE item_tags`);
+                    // 3.重新创建表
+                    await this.db?.execute(`
+                        CREATE TABLE IF NOT EXISTS clipboard_items
+                        (
+                            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+                            content   TEXT,
+                            chars     INTEGER,
+                            copy_time INTEGER NOT NULL,
+                            is_topped BOOLEAN DEFAULT 0,
+                            top_time  INTEGER,
+                            type      TEXT    DEFAULT 'text',
+                            file_path TEXT
+                        )
+                    `);
+                    await this.db?.execute(`
+                        CREATE TABLE IF NOT EXISTS item_tags
+                        (
+                            item_id INTEGER,
+                            tag_id  INTEGER,
+                            FOREIGN KEY (item_id) REFERENCES clipboard_items (id) ON DELETE CASCADE,
+                            FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE,
+                            PRIMARY KEY (item_id, tag_id)
+                        )
+                    `);
+                    // 4.恢复数据
+                    await this.db?.execute(`INSERT INTO clipboard_items(id, content, chars, copy_time, is_topped, top_time, type, file_path)
+                                            SELECT id, content, chars, copy_time, is_topped, top_time, type, file_path FROM clipboard_items_backup`);
+                    await this.db?.execute(`INSERT INTO item_tags(item_id, tag_id)
+                                            SELECT item_id, tag_id FROM item_tags_backup`);
+                    // 5.删除备份表
+                    await this.db?.execute(`DROP TABLE clipboard_items_backup`);
+                    await this.db?.execute(`DROP TABLE item_tags_backup`);
+                }
             }
         } catch (er) {
             error('[数据库进程] 数据库表初始化失败:' + er);
