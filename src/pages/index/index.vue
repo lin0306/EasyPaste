@@ -25,6 +25,7 @@ import {
   destroyAnimationEffect,
   initializeAnimationEffect
 } from "./composables/AnimationComposable.ts";
+import {destroyFileData, initializeFileData} from "./composables/FileDataComposable.ts";
 
 // 获取语言上下文
 const {currentLanguage, toggleLanguage} = useLanguage();
