@@ -1,6 +1,6 @@
 {
   "version": "0.1.5-beta",
-  "notes": "",
+  "notes": "# v0.1.5-beta (2025-09-01)\n\n**此版本为补丁版本，只修复bug**\n\n## 更新内容\n\n### ✅ 修复Bug\n\n- 修复设置页面切换效果与实际不符问题",
   "pub_date": "2025-09-01T06:48:17.547Z",
   "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmtIaDZIWkRwN0tiRXZWanpVSWJ3UTZ3Z2dCWWFnc2pKYXpkSUZETDQ1dm8vR1I1NHJUbTdZVDRhWGpLQ05oUk0yYVZpZDducFo5ZDErWkJDWHRwcHdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2NzA5MDg0CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKQlE4QTFpeFdyTGFjMVVJdHRGUzdaa3BEV05LV3cvTm1NYkVzQ0d5aCtmc3pOMUh5QXV0Ulc0akRSTnhEaU1ybzdOYXBCOGxJdHpDelFUVkwrTlJsQVE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.5-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnFQMk80YytPTHFlbDhEek4xeVFqMG9Ld2RSU21kRlArTHZ4NG04UVZIWUo5d2ZaSlNweGdHc0F3enY3bmVGVFNCdzhrNEVKaStMYzN3cVF4YmFqZFFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2NzA5MjYxCWZpbGU6RWFzeVBhc3RlXzAuMS41X3g2NC1zZXR1cC5leGUKRVlqdVNVa2hHTzdsbFYxQWY2TnRjc0t2bGRhcEFHYUpodVpZZWFRdUxBb05ySHgweC9PUks5czMvYW5KNnBwa25TM05keExXaFJUMXBxQTBOVmpjRHc9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.5-beta/EasyPaste_0.1.5_x64-setup.exe"}}
 }
