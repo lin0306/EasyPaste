@@ -76,6 +76,9 @@ onMounted(async () => {
 
     // 初始化动画效果配置
     await initializeAnimationEffect();
+
+    // 初始化文件数据配置
+    initializeFileData();
   } catch (err) {
     console.error(err);
     error('初始化失败:' + err);
@@ -103,6 +106,9 @@ onUnmounted(async () => {
 
   // 销毁动画效果配置
   destroyAnimationEffect();
+
+  // 销毁文件数据配置
+  destroyFileData();
 })
 </script>
 
