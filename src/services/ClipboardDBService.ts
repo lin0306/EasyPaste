@@ -184,7 +184,6 @@ class ClipboardDBService {
 
     /**
      * 搜索剪贴板项目 - 游标分页，降低查询性能
-     * @link <a href="https://lxblog.com/qianwen/share?shareId=2d2509e7-a486-4b7a-a18d-49fb85826cfb">查询逻辑设计来源</a>
      * @param content 搜索内容
      * @param tagId 标签ID
      * @param pageSize 每页数量
@@ -225,74 +224,22 @@ class ClipboardDBService {
                 const items = await this.getItem(lastItemId);
                 if (items && items.length > 0) {
                     const latestItem = items[0];
-                    // sql有点复杂，具体解释如下：
-                    // -- 条件1：当前记录的“置顶状态” > 上一条（即从非置顶跳到置顶区不可能，所以只可能是同区或下一个区）
-                    // -- 我们分三种情况：
-                    //
-                    // -- 情况1：当前记录在“置顶区”，且比上一条的 top_time 更新
-                    // (ci.top_time IS NOT NULL
-                    //  AND (CASE WHEN ? IS NULL THEN 1 ELSE 0 END = 0)  -- 上一条不是置顶（即上一条在非置顶区）
-                    // )
-                    // OR
-                    // -- 情况2：都在置顶区，但 top_time 更晚，或 top_time 相同但 id 更小
-                    // (ci.top_time IS NOT NULL
-                    //  AND ? IS NOT NULL
-                    //  AND (
-                    //    ci.top_time < ?
-                    //    OR (ci.top_time = ? AND a.id < ?)
-                    //  )
-                    // )
-                    // OR
-                    // -- 情况3：当前在非置顶区（即上一条已经是非置顶区或当前就是非置顶）
-                    // (ci.top_time IS NULL
-                    //  AND (
-                    //    -- 上一条是置顶区：直接进入非置顶区
-                    //    ? IS NULL
-                    //    OR
-                    //    -- 上一条也是非置顶区：按 copy_time 和 id 继续
-                    //    (ci.copy_time < ?
-                    //     OR (ci.copy_time = ? AND ci.id < ?)
-                    //    )
-                    //  )
-                    // )
-                    //
-                    // 参数说明（按顺序传参）
-                    // 第一个 ? 参数：上一条记录的 top_time（用于判断是否还在置顶区）
-                    // 第二个 ? 参数：上一条记录的 top_time（用于比较）
-                    // 第三个 ? 参数：上一条记录的 top_time（用于 = 判断）
-                    // 第四个 ? 参数：上一条记录的 ci.id（用于 = 时 id 比较）
-                    // 第五个 ? 参数：上一条记录的 top_time（判断是否已进入非置顶区）
-                    // 第六个 ? 参数：上一条记录的 copy_time
-                    // 第七个 ? 参数：上一条记录的 copy_time
-                    // 第八个 ? 参数：上一条记录的 ci.id
-
-                    itemsSql += `
-                        AND 
-                        (
-                            (
-                                ci.top_time IS NOT NULL 
-                                AND (CASE WHEN ? IS NULL THEN 1 ELSE 0 END = 0)
+                    if (latestItem.top_time) {
+                        // 最后一条数据是置顶数据，如果当前数据有置顶时间，则需要过滤出比最后一条数据的置顶时间小的数据，否则按照复制时间排序
+                        itemsSql += `
+                            AND (
+                                (ci.top_time IS NOT NULL AND ci.top_time < ?) 
+                                OR (ci.top_time IS NULL)
                             )
-                            OR (
-                                ci.top_time IS NOT NULL 
-                                AND ? IS NOT NULL 
-                                AND ( ci.top_time < ? OR (ci.top_time = ? AND ci.id < ?) )
-                            )
-                            OR (
-                                ci.top_time IS NULL 
-                                AND ( ? IS NULL OR ( ci.copy_time < ? OR (ci.copy_time = ? AND ci.id < ?) ) )
-                            )
-                        )
-                    `;
-                    queryParams.push(latestItem.top_time);
-                    queryParams.push(latestItem.top_time);
-                    queryParams.push(latestItem.top_time);
-                    queryParams.push(latestItem.top_time);
-                    queryParams.push(latestItem.id);
-                    queryParams.push(latestItem.top_time);
-                    queryParams.push(latestItem.copy_time);
-                    queryParams.push(latestItem.copy_time);
-                    queryParams.push(latestItem.id);
+                        `;
+                        queryParams.push(latestItem.top_time);
+                    } else {
+                        // 最后一条数据不是置顶数据，根据复制时间排序，并排除有设置置顶时间的数据
+                        itemsSql += `
+                            AND ci.top_time IS NULL AND ci.copy_time < ?
+                        `;
+                        queryParams.push(latestItem.copy_time);
+                    }
                 }
             }
 
