@@ -58,6 +58,14 @@
         }
       ]
     },
+    {
+      "identifier": "fs:allow-read-dir",
+      "allow": [
+        {
+          "path": "**/*"
+        }
+      ]
+    },
     "core:webview:default",
     "core:webview:allow-create-webview",
     "core:webview:allow-internal-toggle-devtools",
