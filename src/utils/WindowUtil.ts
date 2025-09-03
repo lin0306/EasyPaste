@@ -1,5 +1,4 @@
 import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
-import {WindowOptions} from "../types/Window.ts";
 
 // 创建窗口参数配置
 export const windowConfig: WindowOptions = {

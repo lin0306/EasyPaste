@@ -1,5 +1,3 @@
-import { ThemeConfig } from "../../types/Themes";
-
 // 深色主题 - 灰阶色调
 export const darkTheme: ThemeConfig = {
     id: 'dark',

@@ -1,4 +1,4 @@
-export interface LanguageConfig {
+declare interface LanguageConfig {
     id: string;
     name: string;
     locale: any;
@@ -6,7 +6,7 @@ export interface LanguageConfig {
     pages: PageConfig;
 }
 
-export interface PageConfig {
+declare interface PageConfig {
     settings: {
         [x: string]: string;
         initFailedHint: string;

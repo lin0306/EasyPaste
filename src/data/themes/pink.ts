@@ -1,5 +1,3 @@
-import { ThemeConfig } from "../../types/Themes";
-
 // 粉色主题 - 更自然的粉色调
 export const pinkTheme: ThemeConfig = {
     id: 'pink',

@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import {reactive, ref} from 'vue';
-import { CopyState } from '../types/CopyState';
+import { COPY_STATE } from '../constants/CopyStateConstant.ts';
 
 /**
  * 复制状态
  */
 export const clipboardListenStore = defineStore('clipboardListen', () => {
-    const state = ref(CopyState.SUCCESS);
+    const state = ref(COPY_STATE.SUCCESS);
     const item = reactive<ClipboardItem>({} as ClipboardItem);
     const stateData = () => {
         return state.value
@@ -25,13 +25,13 @@ export const clipboardListenStore = defineStore('clipboardListen', () => {
         return item;
     }
     const coping = () => {
-        state.value = CopyState.COPING
+        state.value = COPY_STATE.COPING
     }
     const error = () => {
-        state.value = CopyState.ERROR
+        state.value = COPY_STATE.ERROR
     }
     const success = () => {
-        state.value = CopyState.SUCCESS
+        state.value = COPY_STATE.SUCCESS
     }
     //这里要记得返回出去，否则外面拿不到
     return { state, stateData, coping, error, success, setItem, getItem }

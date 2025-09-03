@@ -1,4 +1,4 @@
-export interface Settings {
+declare interface Settings {
     theme: string,                      // 主题
     powerOnSelfStart: boolean,          // 开机自启
     replaceGlobalHotkey: boolean,       // 替换全局快捷键（仅限Windows）
@@ -18,13 +18,13 @@ export interface Settings {
     animationSpeedLevel: string,        // 动画速度级别
 }
 
-export interface ShortcutKeys {
+declare interface ShortcutKeys {
     [x: string]: ShortcutKey;
     search: ShortcutKey;        // 搜索快捷键
     wakeUpRoutine: ShortcutKey; // 唤醒程序快捷键
 }
 
-interface ShortcutKey {
+declare interface ShortcutKey {
     name: string;
     key: string[];
 }

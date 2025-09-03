@@ -4,7 +4,6 @@ import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
 import {uint8ArrayToString} from "../utils/strUtil.ts";
 import {SETTINGS_KEYS} from "../constants/StoreKeyConstants.ts";
-import {Settings} from "../types/Configs.ts";
 
 export const SETTINGS_FILE_NAME = "settings.json";
 const defaultSettings: Settings = {

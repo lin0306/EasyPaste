@@ -1,4 +1,4 @@
-export interface WindowOptions {
+declare interface WindowOptions {
     label: string,                  // 窗口唯一label
     title?: string,                 // 窗口标题
     url: string,                    // 路由地址url

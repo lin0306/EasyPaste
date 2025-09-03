@@ -1,6 +1,6 @@
 import {listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
-import {clipboardListenStore} from '../store/copyStatus';
+import {clipboardListenStore} from '../store/CopyStatus';
 import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
 import {isCode} from "../utils/TextTypeUtil.ts";

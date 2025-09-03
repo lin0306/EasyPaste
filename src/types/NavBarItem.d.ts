@@ -1,4 +1,4 @@
-export interface NavBarItem {
+declare interface NavBarItem {
     key?: string;
     label?: string;
     children?: NavBarItem[];

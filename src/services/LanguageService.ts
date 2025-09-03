@@ -2,7 +2,6 @@ import {emit, listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
 import {dateEnUS, dateZhCN, enUS, zhCN} from 'naive-ui';
 import {ref} from 'vue';
-import {LanguageConfig} from '../types/language.ts';
 import {chinesePageConfig} from '../data/locales/zh.ts';
 import {englishPageConfig} from '../data/locales/en.ts';
 import {getLanguage, saveLanguage} from "../store/Settings.ts";

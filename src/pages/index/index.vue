@@ -5,8 +5,8 @@ import {onMounted, onUnmounted, ref, watch} from "vue";
 import TitleBar from '../../components/TitleBar.vue';
 import {useLanguage} from '../../services/LanguageService.ts';
 import {firstRun} from "../../store/FirstRun.ts";
-import {clipboardListenStore} from "../../store/copyStatus.ts";
-import {CopyState} from "../../types/CopyState.ts";
+import {clipboardListenStore} from "../../store/CopyStatus.ts";
+import {COPY_STATE} from "../../constants/CopyStateConstant.ts";
 import ClipboardListContent from './components/ClipboardListContent.vue';
 import HeadNavigationBar from "./components/HeadNavigationBar.vue";
 import SearchBox from './components/SearchBox.vue';
@@ -36,8 +36,8 @@ const isLoading = ref(false);
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
       newValue !== oldValue
-      && newValue === CopyState.SUCCESS
-      && oldValue === CopyState.COPING
+      && newValue === COPY_STATE.SUCCESS
+      && oldValue === COPY_STATE.COPING
   ) {
     console.log("检测到剪贴板有更新，插入新数据");
     insertClipboardItem(clipboardListen.getItem());

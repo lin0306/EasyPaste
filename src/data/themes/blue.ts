@@ -1,5 +1,3 @@
-import { ThemeConfig } from "../../types/Themes";
-
 // 蓝色主题 - 更自然的蓝色调
 export const blueTheme: ThemeConfig = {
     id: 'blue',

@@ -1,6 +1,6 @@
-import {PageConfig} from "../../types/language";
-
-// 导出中文页面配置
+/**
+ * 中文语言配置
+ */
 export const chinesePageConfig: PageConfig = {
     settings: {
         initFailedHint: '页面内容加载失败，请重新打开',

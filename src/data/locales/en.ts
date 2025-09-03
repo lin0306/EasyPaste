@@ -1,5 +1,6 @@
-import {PageConfig} from "../../types/language";
-
+/**
+ * 英文语言配置
+ */
 export const englishPageConfig: PageConfig = {
     settings: {
         initFailedHint: 'The page content loading failed. Please reload the page.',

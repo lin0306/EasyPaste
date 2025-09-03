@@ -1,7 +1,6 @@
 import {emit, listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
 import {ref} from 'vue';
-import {ThemeConfig, ThemeConfigColors} from '../types/Themes.ts';
 import {lightTheme} from '../data/themes/light.ts';
 import {darkTheme} from '../data/themes/dark.ts';
 import {blueTheme} from '../data/themes/blue.ts';

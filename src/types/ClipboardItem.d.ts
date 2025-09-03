@@ -1,4 +1,4 @@
-interface ClipboardItem {
+declare interface ClipboardItem {
   id: number;
   content: string;
   copy_time: number;
@@ -11,7 +11,7 @@ interface ClipboardItem {
   tags_json: string;
 }
 
-interface TagItem {
+declare interface TagItem {
   id: number;
   name: string;
   color: string;

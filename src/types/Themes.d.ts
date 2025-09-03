@@ -1,5 +1,5 @@
 // 主题配置文件
-export interface ThemeConfig {
+declare interface ThemeConfig {
     [x: string]: any;
     id: string;
     name: string;
@@ -7,7 +7,7 @@ export interface ThemeConfig {
 }
 
 // 颜色配置
-export interface ThemeConfigColors {
+declare interface ThemeConfigColors {
     primary: string;                        // 主色调
     secondary: string;                      // 次色调
     background: string;                     // 背景色
