@@ -45,18 +45,7 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 <div align="center">
    <p><em>主界面 - 剪贴板历史记录</em></p>
       <img src="./public/main-screenshot.png" width="300px" alt="主界面截图"/>
-   <p>🖼️ <em>截图将在后续版本中添加</em></p>
 </div>
-
-<details>
-<summary><strong>更多界面截图</strong></summary>
-
-- 🏷️ **标签管理界面**: 直观的标签创建和管理
-- ⚙️ **设置页面**: 丰富的个性化配置选项
-- 🔍 **搜索功能**: 快速定位所需内容
-- 🎨 **多主题支持**: 浅色、深色等多种主题
-
-</details>
 
 ### ✨ 核心特性
 
