@@ -3,9 +3,7 @@ import {error} from "@tauri-apps/plugin-log";
 import {useMessage} from 'naive-ui';
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import TitleBar from '../../components/TitleBar.vue';
-import {fillData} from "../../services/FileService.ts";
 import {useLanguage} from '../../services/LanguageService.ts';
-import {useTheme} from "../../services/ThemeService.ts";
 import {firstRun} from "../../store/FirstRun.ts";
 import {clipboardListenStore} from "../../store/copyStatus.ts";
 import {CopyState} from "../../types/CopyState.ts";
@@ -21,15 +19,11 @@ import {
 import {destroyTag, initializeTag} from "./composables/TagDataComposable.ts";
 import {destroyUpdater, hasNewVersion, initializeUpdater} from "./composables/UpdaterComposable.ts";
 import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/WindowComposable.ts";
-import {
-  destroyAnimationEffect,
-  initializeAnimationEffect
-} from "./composables/AnimationComposable.ts";
-import {destroyFileData, initializeFileData} from "./composables/FileDataComposable.ts";
+import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/AnimationComposable.ts";
+import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
 
 // 获取语言上下文
-const {currentLanguage, toggleLanguage} = useLanguage();
-const {toggleTheme} = useTheme();
+const {currentLanguage} = useLanguage();
 
 // Naive UI 框架的消息组件
 const message = useMessage();
@@ -58,8 +52,8 @@ onMounted(async () => {
     isLoading.value = true;
     const isFirstRun = await firstRun();
     if (isFirstRun) {
-      // 填充数据
-      await fillData(toggleLanguage, toggleTheme);
+      // 初始化数据
+      await initUserSettings();
     }
 
     // 初始化剪贴板数据配置

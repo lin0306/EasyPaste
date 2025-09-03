@@ -1,7 +1,5 @@
 import {BaseDirectory, create, exists, writeTextFile} from "@tauri-apps/plugin-fs";
 import {error} from "@tauri-apps/plugin-log";
-import {fillSettingsData} from "../store/Settings.ts";
-import {fillKeyData} from "../store/ShortcutKeys.ts";
 
 const languageCachePathPath = "language.json";
 
@@ -31,14 +29,4 @@ export async function saveLanguageCache(tray: any): Promise<boolean> {
         error("语言配置保存失败" + err);
         return false;
     }
-}
-
-/**
- * 填充数据
- * todo 旧版本到新版本过渡，修改用户配置保存模式，后续这段代码也会删除
- * @deprecated
- */
-export async function fillData(toggleLanguage: any, toggleTheme: any) {
-    await fillSettingsData(toggleLanguage, toggleTheme);
-    await fillKeyData();
 }

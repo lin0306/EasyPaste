@@ -1,12 +1,12 @@
 import {load} from "@tauri-apps/plugin-store";
-import {error, info} from "@tauri-apps/plugin-log";
-import {BaseDirectory, exists, readFile, remove} from "@tauri-apps/plugin-fs";
-import {uint8ArrayToString} from "../utils/strUtil.ts";
-import {lightTheme} from "../data/themes/light.ts";
-import {chinese} from "../services/LanguageService.ts";
+import {info} from "@tauri-apps/plugin-log";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
+import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
+import {uint8ArrayToString} from "../utils/strUtil.ts";
+import {SETTINGS_KEYS} from "../constants/StoreKeyConstants.ts";
+import {Settings} from "../types/Configs.ts";
 
-const fileName = "settings.json";
+export const SETTINGS_FILE_NAME = "settings.json";
 const defaultSettings: Settings = {
     theme: "light",
     powerOnSelfStart: false,
@@ -28,29 +28,21 @@ const defaultSettings: Settings = {
 }
 
 /**
- * 判断配置文件是否存在
- */
-export async function hasSettings() {
-    const store = await load(fileName);
-    return (await store.get("theme")) !== undefined;
-}
-
-/**
  * 保存主题
  * @param theme 主题
  */
 export async function saveTheme(theme: String) {
     info("保存主题: " + theme);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("theme", theme);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.THEME, theme);
 }
 
 /**
  * 获取主题
  */
 export async function getTheme(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    return await store.get<string>("theme") || lightTheme.id;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.THEME) || defaultSettings.theme;
 }
 
 /**
@@ -59,16 +51,16 @@ export async function getTheme(): Promise<string> {
  */
 export async function saveLanguage(language: String) {
     info("保存语言: " + language);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("language", language);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.LANGUAGES, language);
 }
 
 /**
  * 获取语言
  */
 export async function getLanguage(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    return await store.get<string>("language") || chinese.id;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.LANGUAGES) || defaultSettings.languages;
 }
 
 /**
@@ -77,27 +69,16 @@ export async function getLanguage(): Promise<string> {
  */
 export async function savePowerOnSelfStart(powerOnSelfStart: boolean) {
     info("保存开机自启: " + powerOnSelfStart);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("powerOnSelfStart", powerOnSelfStart);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, powerOnSelfStart);
 }
 
 /**
  * 获取开机自启参数
  */
 export async function getPowerOnSelfStart(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认开机自启设置");
-        await savePowerOnSelfStart(defaultSettings.powerOnSelfStart);
-        return defaultSettings.powerOnSelfStart;
-    }
-    const powerOnSelfStart = await store.get<boolean>("powerOnSelfStart");
-    if (powerOnSelfStart === undefined) {
-        await info("用户开机自启未设置，使用默认值");
-        await savePowerOnSelfStart(defaultSettings.powerOnSelfStart);
-        return defaultSettings.powerOnSelfStart;
-    }
-    return powerOnSelfStart;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.POWER_ON_SELF_START) || defaultSettings.powerOnSelfStart;
 }
 
 /**
@@ -106,27 +87,16 @@ export async function getPowerOnSelfStart(): Promise<boolean> {
  */
 export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean) {
     info("保存是否替换全局热键: " + replaceGlobalHotkey);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("replaceGlobalHotkey", replaceGlobalHotkey);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, replaceGlobalHotkey);
 }
 
 /**
  * 获取是否替换全局热键
  */
 export async function getReplaceGlobalHotkey(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认是否替换全局热键设置");
-        await saveReplaceGlobalHotkey(defaultSettings.replaceGlobalHotkey);
-        return defaultSettings.replaceGlobalHotkey;
-    }
-    const replaceGlobalHotkey = await store.get<boolean>("replaceGlobalHotkey");
-    if (replaceGlobalHotkey === undefined) {
-        await info("用户是否替换全局热键未设置，使用默认值");
-        await saveReplaceGlobalHotkey(defaultSettings.replaceGlobalHotkey);
-        return defaultSettings.replaceGlobalHotkey;
-    }
-    return replaceGlobalHotkey;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY) || defaultSettings.replaceGlobalHotkey;
 }
 
 /**
@@ -135,27 +105,16 @@ export async function getReplaceGlobalHotkey(): Promise<boolean> {
  */
 export async function saveMaxHistoryItems(maxHistoryItems: number) {
     info("保存最大历史记录项: " + maxHistoryItems);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("maxHistoryItems", maxHistoryItems);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, maxHistoryItems);
 }
 
 /**
  * 获取最大历史记录项
  */
 export async function getMaxHistoryItems(): Promise<number> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认用户最大历史记录项设置");
-        await saveMaxHistoryItems(defaultSettings.maxHistoryItems);
-        return defaultSettings.maxHistoryItems;
-    }
-    const maxHistoryItems = await store.get<number>("maxHistoryItems");
-    if (maxHistoryItems === undefined) {
-        await info("用户最大历史记录项未设置，使用默认值");
-        await saveMaxHistoryItems(defaultSettings.maxHistoryItems);
-        return defaultSettings.maxHistoryItems;
-    }
-    return maxHistoryItems;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<number>(SETTINGS_KEYS.MAX_HISTORY_ITEMS) || defaultSettings.maxHistoryItems;
 }
 
 /**
@@ -164,27 +123,16 @@ export async function getMaxHistoryItems(): Promise<number> {
  */
 export async function saveDataRetentionDays(dataRetentionDays: number) {
     info("保存数据保留天数: " + dataRetentionDays);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("dataRetentionDays", dataRetentionDays);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, dataRetentionDays);
 }
 
 /**
  * 获取数据保留天数
  */
 export async function getDataRetentionDays(): Promise<number> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认用户数据保留天数设置");
-        await saveDataRetentionDays(defaultSettings.dataRetentionDays);
-        return defaultSettings.dataRetentionDays;
-    }
-    const dataRetentionDays = await store.get<number>("dataRetentionDays");
-    if (dataRetentionDays === undefined) {
-        await info("用户数据保留天数未设置，使用默认值");
-        await saveDataRetentionDays(defaultSettings.dataRetentionDays);
-        return defaultSettings.dataRetentionDays;
-    }
-    return dataRetentionDays;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<number>(SETTINGS_KEYS.DATA_RETENTION_DAYS) || defaultSettings.dataRetentionDays;
 }
 
 /**
@@ -193,27 +141,16 @@ export async function getDataRetentionDays(): Promise<number> {
  */
 export async function saveAutoCheckUpdate(autoCheckUpdate: boolean) {
     info("保存自动检查更新: " + autoCheckUpdate);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("autoCheckUpdate", autoCheckUpdate);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, autoCheckUpdate);
 }
 
 /**
  * 获取自动检查更新
  */
 export async function getAutoCheckUpdate(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认用户自动检查更新设置");
-        await saveAutoCheckUpdate(defaultSettings.autoCheckUpdate);
-        return defaultSettings.autoCheckUpdate;
-    }
-    const autoCheckUpdate = await store.get<boolean>("autoCheckUpdate");
-    if (autoCheckUpdate === undefined) {
-        await info("用户自动检查更新未设置，使用默认值");
-        await saveAutoCheckUpdate(defaultSettings.autoCheckUpdate);
-        return defaultSettings.autoCheckUpdate;
-    }
-    return autoCheckUpdate;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.AUTO_CHECK_UPDATE) || defaultSettings.autoCheckUpdate;
 }
 
 /**
@@ -222,27 +159,16 @@ export async function getAutoCheckUpdate(): Promise<boolean> {
  */
 export async function saveUpdateMode(updateMode: string) {
     info("保存更新模式: " + updateMode);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("updateMode", updateMode);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.UPDATE_MODE, updateMode);
 }
 
 /**
  * 获取更新模式
  */
 export async function getUpdateMode(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认用户更新模式设置");
-        await saveUpdateMode(defaultSettings.updateMode);
-        return defaultSettings.updateMode;
-    }
-    const updateMode = await store.get<string>("updateMode");
-    if (updateMode === undefined) {
-        await info("用户更新模式未设置，使用默认值");
-        await saveUpdateMode(defaultSettings.updateMode);
-        return defaultSettings.updateMode;
-    }
-    return updateMode;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.UPDATE_MODE) || defaultSettings.updateMode;
 }
 
 /**
@@ -251,27 +177,16 @@ export async function getUpdateMode(): Promise<string> {
  */
 export async function saveAutoCheckUpdateInterval(autoCheckUpdateInterval: number) {
     info("保存自动检查更新间隔: " + autoCheckUpdateInterval);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("autoCheckUpdateInterval", autoCheckUpdateInterval);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, autoCheckUpdateInterval);
 }
 
 /**
  * 获取自动检查更新间隔
  */
 export async function getAutoCheckUpdateInterval(): Promise<number> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认用户自动检查更新间隔设置");
-        await saveAutoCheckUpdateInterval(defaultSettings.autoCheckUpdateInterval);
-        return defaultSettings.autoCheckUpdateInterval;
-    }
-    const autoCheckUpdateInterval = await store.get<number>("autoCheckUpdateInterval");
-    if (autoCheckUpdateInterval === undefined) {
-        await info("用户自动检查更新间隔未设置，使用默认值");
-        await saveAutoCheckUpdateInterval(defaultSettings.autoCheckUpdateInterval);
-        return defaultSettings.autoCheckUpdateInterval;
-    }
-    return autoCheckUpdateInterval;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<number>(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL) || defaultSettings.autoCheckUpdateInterval;
 }
 
 /**
@@ -280,27 +195,16 @@ export async function getAutoCheckUpdateInterval(): Promise<number> {
  */
 export async function saveEnableTag(enableTag: boolean) {
     info("保存是否启用标签: " + enableTag);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("enableTag", enableTag);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ENABLE_TAG, enableTag);
 }
 
 /**
  * 获取是否启用标签
  */
 export async function getEnableTag(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认是否启用标签设置");
-        await saveEnableTag(defaultSettings.enableTag);
-        return defaultSettings.enableTag;
-    }
-    const enableTag = await store.get<boolean>("enableTag");
-    if (enableTag === undefined) {
-        await info("用户是否启用标签未设置，使用默认值");
-        await saveEnableTag(defaultSettings.enableTag);
-        return defaultSettings.enableTag;
-    }
-    return enableTag;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_TAG) || defaultSettings.enableTag;
 }
 
 /**
@@ -309,27 +213,16 @@ export async function getEnableTag(): Promise<boolean> {
  */
 export async function saveBindTagBtnShowLocation(bindTagBtnShowLocation: string) {
     info("保存标签按钮显示位置: " + bindTagBtnShowLocation);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("bindTagBtnShowLocation", bindTagBtnShowLocation);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, bindTagBtnShowLocation);
 }
 
 /**
  * 获取标签按钮显示位置
  */
 export async function getBindTagBtnShowLocation(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认标签按钮显示位置设置");
-        await saveBindTagBtnShowLocation(defaultSettings.bindTagBtnShowLocation);
-        return defaultSettings.bindTagBtnShowLocation;
-    }
-    const bindTagBtnShowLocation = await store.get<string>("bindTagBtnShowLocation");
-    if (bindTagBtnShowLocation === undefined) {
-        await info("用户标签按钮显示位置未设置，使用默认值");
-        await saveBindTagBtnShowLocation(defaultSettings.bindTagBtnShowLocation);
-        return defaultSettings.bindTagBtnShowLocation;
-    }
-    return bindTagBtnShowLocation;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION) || defaultSettings.bindTagBtnShowLocation;
 }
 
 /**
@@ -338,27 +231,16 @@ export async function getBindTagBtnShowLocation(): Promise<string> {
  */
 export async function saveAutoHideWindow(autoHideWindow: boolean) {
     info("保存自动隐藏窗口: " + autoHideWindow);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("autoHideWindow", autoHideWindow);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, autoHideWindow);
 }
 
 /**
  * 获取自动隐藏窗口
  */
 export async function getAutoHideWindow(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认自动隐藏窗口设置");
-        await saveAutoHideWindow(defaultSettings.autoHideWindow);
-        return defaultSettings.autoHideWindow;
-    }
-    const autoHideWindow = await store.get<boolean>("autoHideWindow");
-    if (autoHideWindow === undefined) {
-        await info("用户自动隐藏窗口未设置，使用默认值");
-        await saveAutoHideWindow(defaultSettings.autoHideWindow);
-        return defaultSettings.autoHideWindow;
-    }
-    return autoHideWindow;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.AUTO_HIDE_WINDOW) || defaultSettings.autoHideWindow;
 }
 
 /**
@@ -367,27 +249,16 @@ export async function getAutoHideWindow(): Promise<boolean> {
  */
 export async function saveAlwaysOnTop(alwaysOnTop: boolean) {
     info("保存窗口是否始终置顶: " + alwaysOnTop);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("alwaysOnTop", alwaysOnTop);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, alwaysOnTop);
 }
 
 /**
  * 获取窗口是否始终置顶参数
  */
 export async function getAlwaysOnTop(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认窗口是否始终置顶设置");
-        await saveAlwaysOnTop(defaultSettings.alwaysOnTop);
-        return defaultSettings.alwaysOnTop;
-    }
-    const alwaysOnTop = await store.get<boolean>("alwaysOnTop");
-    if (alwaysOnTop === undefined) {
-        await info("用户窗口是否始终置顶未设置，使用默认值");
-        await saveAlwaysOnTop(defaultSettings.alwaysOnTop);
-        return defaultSettings.alwaysOnTop;
-    }
-    return alwaysOnTop;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.ALWAYS_ON_TOP) || defaultSettings.alwaysOnTop;
 }
 
 /**
@@ -396,27 +267,16 @@ export async function getAlwaysOnTop(): Promise<boolean> {
  */
 export async function saveNewVersionAlertMode(newVersionAlertMode: string) {
     info("保存有新版本提示方式: " + newVersionAlertMode);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("newVersionAlertMode", newVersionAlertMode);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, newVersionAlertMode);
 }
 
 /**
  * 获取有新版本提示方式
  */
 export async function getNewVersionAlertMode(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认有新版本提示方式设置");
-        await saveNewVersionAlertMode(defaultSettings.newVersionAlertMode);
-        return defaultSettings.newVersionAlertMode;
-    }
-    const newVersionAlertMode = await store.get<string>("newVersionAlertMode");
-    if (newVersionAlertMode === undefined) {
-        await info("用户有新版本提示方式未设置，使用默认值");
-        await saveNewVersionAlertMode(defaultSettings.newVersionAlertMode);
-        return defaultSettings.newVersionAlertMode;
-    }
-    return newVersionAlertMode;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE) || defaultSettings.newVersionAlertMode;
 }
 
 /**
@@ -425,27 +285,16 @@ export async function getNewVersionAlertMode(): Promise<string> {
  */
 export async function saveEnableAnimationEffects(enableAnimationEffects: boolean) {
     info("保存启用动画效果: " + enableAnimationEffects);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("enableAnimationEffects", enableAnimationEffects);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, enableAnimationEffects);
 }
 
 /**
  * 获取启用页面切换动画
  */
 export async function getEnableAnimationEffects(): Promise<boolean> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认启用页面切换动画设置");
-        await saveEnableAnimationEffects(defaultSettings.enableAnimationEffects);
-        return defaultSettings.enableAnimationEffects;
-    }
-    const enableAnimationEffects = await store.get<boolean>("enableAnimationEffects");
-    if (enableAnimationEffects === undefined) {
-        await info("用户启用页面切换动画未设置，使用默认值");
-        await saveEnableAnimationEffects(defaultSettings.enableAnimationEffects);
-        return defaultSettings.enableAnimationEffects;
-    }
-    return enableAnimationEffects;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS) || defaultSettings.enableAnimationEffects;
 }
 
 /**
@@ -454,27 +303,16 @@ export async function getEnableAnimationEffects(): Promise<boolean> {
  */
 export async function saveAnimationDuration(animationDuration: number) {
     info("保存动画持续时间: " + animationDuration);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("animationDuration", animationDuration);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, animationDuration);
 }
 
 /**
  * 获取页面切换动画持续时间
  */
 export async function getAnimationDuration(): Promise<number> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认i动画持续时间设置");
-        await saveAnimationDuration(defaultSettings.animationDuration);
-        return defaultSettings.animationDuration;
-    }
-    const animationDuration = await store.get<number>("animationDuration");
-    if (animationDuration === undefined) {
-        await info("用户动画持续时间未设置，使用默认值");
-        await saveAnimationDuration(defaultSettings.animationDuration);
-        return defaultSettings.animationDuration;
-    }
-    return animationDuration;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<number>(SETTINGS_KEYS.ANIMATION_DURATION) || defaultSettings.animationDuration;
 }
 
 /**
@@ -483,130 +321,107 @@ export async function getAnimationDuration(): Promise<number> {
  */
 export async function saveAnimationSpeedLevel(animationSpeedLevel: string) {
     info("保存页面动画速度级别: " + animationSpeedLevel);
-    const settings = await load(fileName, {autoSave: true});
-    await settings.set("animationSpeedLevel", animationSpeedLevel);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, animationSpeedLevel);
 }
 
 /**
  * 获取页面切换动画缓动函数
  */
 export async function getAnimationSpeedLevel(): Promise<string> {
-    const store = await load(fileName, {autoSave: true});
-    if (store == null) {
-        await info("没有找到用户配置，使用默认页面动画速度级别设置");
-        await saveAnimationSpeedLevel(defaultSettings.animationSpeedLevel);
-        return defaultSettings.animationSpeedLevel;
-    }
-    const animationSpeedLevel = await store.get<string>("animationSpeedLevel");
-    if (animationSpeedLevel === undefined) {
-        await info("用户页面动画速度级别未设置，使用默认值");
-        await saveAnimationSpeedLevel(defaultSettings.animationSpeedLevel);
-        return defaultSettings.animationSpeedLevel;
-    }
-    return animationSpeedLevel;
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL) || defaultSettings.animationSpeedLevel;
 }
 
 /**
- * 填充用户配置
- * @deprecated
+ * 初始化用户配置
  */
-export async function fillSettingsData(toggleLanguage: any, toggleTheme: any) {
-    try {
-        if (!(await hasSettings())) {
-            const userSettingsExists = await exists('userSettings.json', {
-                baseDir: BaseDirectory.AppData,
-            });
-            if (userSettingsExists) {
-                await info("程序第一次启动，从旧版本升级到新版本，填充用户配置store");
-                // 将用户配置的管理方式从json文件数据替换成store
-                const userSettings = await readFile('userSettings.json', {
-                    baseDir: BaseDirectory.AppData,
-                })
-                // 转成字符串
-                const userSettingsString = uint8ArrayToString(userSettings);
-                const settingsJson = JSON.parse(userSettingsString);
-                if (userSettingsString.includes("theme")) {
-                    await saveTheme(settingsJson.theme);
-                    await toggleTheme(settingsJson.theme);
-                } else {
-                    await saveTheme(defaultSettings.theme);
-                    await toggleTheme(defaultSettings.theme);
-                }
-                if (userSettingsString.includes("languages")) {
-                    await saveLanguage(settingsJson.languages);
-                    await toggleLanguage(settingsJson.languages);
-                } else {
-                    await saveLanguage(defaultSettings.languages);
-                    await toggleLanguage(defaultSettings.languages);
-                }
-                if (userSettingsString.includes("powerOnSelfStart")) {
-                    await savePowerOnSelfStart(settingsJson.powerOnSelfStart);
-                } else {
-                    await savePowerOnSelfStart(defaultSettings.powerOnSelfStart);
-                }
-                if (userSettingsString.includes("replaceGlobalHotkey")) {
-                    await saveReplaceGlobalHotkey(settingsJson.replaceGlobalHotkey);
-                } else {
-                    await saveReplaceGlobalHotkey(defaultSettings.replaceGlobalHotkey);
-                }
-                if (userSettingsString.includes("maxHistoryItems")) {
-                    await saveMaxHistoryItems(settingsJson.maxHistoryItems);
-                } else {
-                    await saveMaxHistoryItems(defaultSettings.maxHistoryItems);
-                }
-                if (userSettingsString.includes("dataRetentionDays")) {
-                    await saveDataRetentionDays(settingsJson.dataRetentionDays);
-                } else {
-                    await saveDataRetentionDays(defaultSettings.dataRetentionDays);
-                }
-                if (userSettingsString.includes("autoCheckUpdate")) {
-                    await saveAutoCheckUpdate(settingsJson.autoCheckUpdate);
-                } else {
-                    await saveAutoCheckUpdate(defaultSettings.autoCheckUpdate);
-                }
-                if (userSettingsString.includes("updateMode")) {
-                    await saveUpdateMode(settingsJson.updateMode);
-                } else {
-                    await saveUpdateMode(defaultSettings.updateMode);
-                }
-                if (userSettingsString.includes("autoCheckUpdateInterval")) {
-                    await saveAutoCheckUpdateInterval(settingsJson.autoCheckUpdateInterval);
-                } else {
-                    await saveAutoCheckUpdateInterval(defaultSettings.autoCheckUpdateInterval);
-                }
-                if (userSettingsString.includes("enableTag")) {
-                    await saveEnableTag(settingsJson.enableTag);
-                } else {
-                    await saveEnableTag(defaultSettings.enableTag);
-                }
-                if (userSettingsString.includes("bindTagBtnShowLocation")) {
-                    await saveBindTagBtnShowLocation(settingsJson.bindTagBtnShowLocation);
-                } else {
-                    await saveBindTagBtnShowLocation(defaultSettings.bindTagBtnShowLocation);
-                }
-                if (userSettingsString.includes("autoHideWindow")) {
-                    await saveAutoHideWindow(settingsJson.autoHideWindow);
-                } else {
-                    await saveAutoHideWindow(defaultSettings.autoHideWindow);
-                }
-                if (userSettingsString.includes("alwaysOnTop")) {
-                    await saveAlwaysOnTop(settingsJson.alwaysOnTop);
-                } else {
-                    await saveAlwaysOnTop(defaultSettings.alwaysOnTop);
-                }
-                if (userSettingsString.includes("newVersionAlertMode")) {
-                    await saveNewVersionAlertMode(settingsJson.newVersionAlertMode);
-                } else {
-                    await saveNewVersionAlertMode(defaultSettings.newVersionAlertMode);
-                }
-
-                // 删除文件
-                await remove('userSettings.json', {
-                    baseDir: BaseDirectory.AppData,
-                })
-            }
+export async function initSettings() {
+    const settingsExist = await exists(SETTINGS_FILE_NAME, {
+        baseDir: BaseDirectory.AppData,
+    });
+    if (settingsExist) {
+        const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+        // 用户配置文件存在
+        const userSettings = await readFile(SETTINGS_FILE_NAME, {
+            baseDir: BaseDirectory.AppData,
+        })
+        // 转成字符串
+        const userSettingsString = uint8ArrayToString(userSettings);
+        if (!userSettingsString.includes(SETTINGS_KEYS.THEME)) {
+            await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
         }
-    } catch (e) {
-        error("用户配置更新失败" + e);
+        if (!userSettingsString.includes(SETTINGS_KEYS.POWER_ON_SELF_START)) {
+            await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)) {
+            await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.LANGUAGES)) {
+            await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.MAX_HISTORY_ITEMS)) {
+            await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.DATA_RETENTION_DAYS)) {
+            await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE)) {
+            await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.UPDATE_MODE)) {
+            await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL)) {
+            await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, defaultSettings.autoCheckUpdateInterval);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_TAG)) {
+            await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION)) {
+            await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, defaultSettings.bindTagBtnShowLocation);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) {
+            await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ALWAYS_ON_TOP)) {
+            await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE)) {
+            await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)) {
+            await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, defaultSettings.enableAnimationEffects);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_DURATION)) {
+            await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) {
+            await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
+        }
+        await settings.save();
+    } else {
+        // 用户配置文件不存在
+        const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+
+        await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
+        await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart);
+        await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey);
+        await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages);
+        await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems);
+        await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays);
+        await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate);
+        await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode);
+        await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, defaultSettings.autoCheckUpdateInterval);
+        await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag);
+        await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, defaultSettings.bindTagBtnShowLocation);
+        await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow);
+        await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop);
+        await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode);
+        await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, defaultSettings.enableAnimationEffects);
+        await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration);
+        await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
+
+        await settings.save();
     }
 }
