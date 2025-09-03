@@ -18,7 +18,7 @@ pub fn create_main_window(app: AppHandle) {
                 .always_on_top(data.auto_hide_window || data.always_on_top) // 窗口置顶
                 .decorations(false) // 窗口无边框
                 .visible(false) // 窗口默认不显示
-                .skip_taskbar(!data.auto_hide_window) // 任务栏不显示
+                .skip_taskbar(data.auto_hide_window) // 任务栏不显示
                 .focused(true) // 窗口聚焦
                 .fullscreen(false) // 禁止全屏
                 .incognito(true) // 隐私模式
