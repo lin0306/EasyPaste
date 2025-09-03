@@ -16,6 +16,7 @@ declare interface Settings {
     enableAnimationEffects: boolean,    // 启用动画效果
     animationDuration: number,          // 动画持续时间（毫秒）
     animationSpeedLevel: string,        // 动画速度级别
+    autoGoToLatestData: boolean,        // 自动跳转到最新数据
 }
 
 declare interface ShortcutKeys {

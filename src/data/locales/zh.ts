@@ -31,6 +31,7 @@ export const chinesePageConfig: PageConfig = {
         bindTagBtnShowLocation: '标签绑定按钮位置',
         topRight: '右上角',
         bottomRight: '右下角',
+        autoGoToLatestData: '自动跳转到最新数据',
 
         autoCheckUpdate: '自动检查更新',
         checkUpdateMode: '检查更新方式',

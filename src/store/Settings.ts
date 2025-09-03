@@ -24,6 +24,7 @@ const defaultSettings: Settings = {
     enableAnimationEffects: true,
     animationDuration: 350,
     animationSpeedLevel: 'normal',
+    autoGoToLatestData: true,
 }
 
 /**
@@ -333,6 +334,24 @@ export async function getAnimationSpeedLevel(): Promise<string> {
 }
 
 /**
+ * 保存是否自动跳转到最新数据
+ * @param autoGoToLatestData 是否自动跳转到最新数据
+ */
+export async function saveAutoGoToLatestData(autoGoToLatestData: boolean) {
+    info("保存是否自动跳转到最新数据: " + autoGoToLatestData);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, autoGoToLatestData);
+}
+
+/**
+ * 获取是否自动跳转到最新数据
+ */
+export async function getAutoGoToLatestData(): Promise<boolean> {
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA) || defaultSettings.autoGoToLatestData;
+}
+
+/**
  * 初始化用户配置
  */
 export async function initSettings() {
@@ -398,6 +417,9 @@ export async function initSettings() {
         if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) {
             await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
         }
+        if (userSettingsString.includes(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) {
+            await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
+        }
         await settings.save();
     } else {
         // 用户配置文件不存在
@@ -420,6 +442,7 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, defaultSettings.enableAnimationEffects);
         await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration);
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
+        await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
 
         await settings.save();
     }

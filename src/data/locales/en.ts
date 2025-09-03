@@ -31,6 +31,7 @@ export const englishPageConfig: PageConfig = {
         bindTagBtnShowLocation: 'Tag Binding Button Location',
         topRight: 'Top Right',
         bottomRight: 'Bottom Right',
+        autoGoToLatestData: 'Auto Go to Latest Data',
 
         autoCheckUpdate: 'Automatically Check Updates',
         checkUpdateMode: 'Check Update Mode',

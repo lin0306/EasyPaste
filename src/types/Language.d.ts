@@ -39,6 +39,7 @@ declare interface PageConfig {
         bindTagBtnShowLocation: string;
         topRight: string;
         bottomRight: string;
+        autoGoToLatestData: string;
         // 更新设置页面文字
         autoCheckUpdate: string;
         checkUpdateMode: string;
