@@ -183,4 +183,8 @@ export const englishPageConfig: PageConfig = {
         exit: 'Exit',
         clipboardMonitor: 'Clipboard Monitor',
     },
+    preview: {
+        title: 'Preview',
+        filePathLabel: 'File Path: ',
+    }
 }

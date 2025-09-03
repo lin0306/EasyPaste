@@ -6,6 +6,7 @@ const routes = [
     {path: '/tags', component: () => import('../pages/tags/index.vue')},
     {path: '/about', component: () => import('../pages/about/About.vue')},
     {path: '/updater', component: () => import('../pages/updater/Updater.vue')},
+    {path: '/preview', component: () => import('../pages/preview/index.vue')},
 ]
 
 const router = createRouter({

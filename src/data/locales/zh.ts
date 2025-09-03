@@ -184,4 +184,8 @@ export const chinesePageConfig: PageConfig = {
         exit: '退出',
         clipboardMonitor: "剪贴板监听",
     },
+    preview: {
+        title: '预览',
+        filePathLabel: '文件路径：',
+    }
 }

@@ -197,5 +197,9 @@ declare interface PageConfig {
         restart: string,
         exit: string,
         clipboardMonitor: string,
+    },
+    preview: {
+        title: string;
+        filePathLabel: string;
     }
 }
