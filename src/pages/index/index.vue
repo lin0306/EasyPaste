@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {error} from "@tauri-apps/plugin-log";
+import {error, info} from "@tauri-apps/plugin-log";
 import {useMessage} from 'naive-ui';
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import TitleBar from '../../components/TitleBar.vue';
@@ -30,7 +30,7 @@ const message = useMessage();
 
 // 监听系统复制状态
 const clipboardListen = clipboardListenStore();
-const isLoading = ref(false);
+const isLoading = ref(true);
 
 // 监听系统是否复制内容
 watch(() => clipboardListen.state, (newValue, oldValue) => {
@@ -49,7 +49,7 @@ watch(() => clipboardListen.state, (newValue, oldValue) => {
  */
 onMounted(async () => {
   try {
-    isLoading.value = true;
+    info("列表页面初始化...")
     const isFirstRun = await firstRun();
     if (isFirstRun) {
       // 初始化数据
@@ -75,10 +75,11 @@ onMounted(async () => {
     initializeFileData();
   } catch (err) {
     console.error(err);
-    error('初始化失败:' + err);
+    error('列表页面初始化失败:' + err);
     message.error(currentLanguage.value.pages.list.initFailedHint);
   } finally {
     isLoading.value = false;
+    info("列表页面初始化完成")
   }
 })
 
