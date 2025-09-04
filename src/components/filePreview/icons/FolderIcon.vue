@@ -8,7 +8,7 @@
   </svg>
 </template>
 <script lang="ts" setup>
-import {useTheme} from '../../services/ThemeService.ts';
+import {useTheme} from '../../../services/ThemeService.ts';
 // 获取主题颜色
 const {themeColors} = useTheme();
 </script>
