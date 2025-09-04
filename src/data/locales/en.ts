@@ -185,6 +185,6 @@ export const englishPageConfig: PageConfig = {
     },
     preview: {
         title: 'Preview',
-        filePathLabel: 'File Path: ',
+        filePathLabel: 'File Name: ',
     }
 }

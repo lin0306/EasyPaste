@@ -186,6 +186,6 @@ export const chinesePageConfig: PageConfig = {
     },
     preview: {
         title: '预览',
-        filePathLabel: '文件路径：',
+        filePathLabel: '文件名称：',
     }
 }
