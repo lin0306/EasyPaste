@@ -56,6 +56,7 @@ pub fn run() {
             #[cfg(target_os = "windows")]
             regedit::recover_clipboard_regedit,
             permission::check_admin,
+            file::open_folder,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");

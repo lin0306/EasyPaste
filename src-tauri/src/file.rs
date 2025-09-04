@@ -29,3 +29,22 @@ pub fn load_file_content<T: DeserializeOwned>(
         )))
     }
 }
+
+/**
+ * 打开文件夹
+ */
+#[tauri::command]
+pub async fn open_folder(path: String) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    let command = "open";
+
+    #[cfg(target_os = "windows")]
+    let command = "explorer";
+
+    std::process::Command::new(command)
+        .arg(&path)
+        .spawn()
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
