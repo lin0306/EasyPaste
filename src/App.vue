@@ -5,6 +5,8 @@ import { computed, onMounted } from 'vue';
 import { error, info } from '@tauri-apps/plugin-log';
 import { useLanguage } from './services/LanguageService.ts';
 import { useTheme } from './services/ThemeService.ts';
+
+// 代码高亮引入
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
 

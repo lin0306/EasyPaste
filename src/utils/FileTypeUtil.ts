@@ -59,9 +59,27 @@ export function isTXT(filePath: string) {
         || filePath.toLowerCase().endsWith('.log')
         || filePath.toLowerCase().endsWith('.csv')
         || filePath.toLowerCase().endsWith('.tsv')
-        || filePath.toLowerCase().endsWith('.md')
-        || filePath.toLowerCase().endsWith('.rtf')
+        || filePath.toLowerCase().endsWith('.env')
+        || filePath.toLowerCase().endsWith('.dockerignore')
+        || filePath.toLowerCase().endsWith('.gitignore')
+        || filePath.toLowerCase().endsWith('.conf')
         ;
+}
+
+/**
+ * 判断文件是否是Markdown文件
+ * @param filePath 文件路径
+ */
+export function isMarkdown(filePath: string) {
+    return filePath.toLowerCase().endsWith('.md');
+}
+
+/**
+ * 判断文件是否是RTF文件
+ * @param filePath 文件路径
+ */
+export function isRTF(filePath: string) {
+    return filePath.toLowerCase().endsWith('.rtf');
 }
 
 /**
@@ -112,5 +130,6 @@ export function isPackage(filePath: string) {
 export function isProgram(filePath: string) {
     return filePath.toLowerCase().endsWith('.exe')
         || filePath.toLowerCase().endsWith('.msi')
+        || filePath.toLowerCase().endsWith('.app')
     ;
 }
