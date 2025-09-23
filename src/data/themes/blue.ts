@@ -36,5 +36,9 @@ export const blueTheme: ThemeConfig = {
       dialogCloseIconColorHover: 'rgb(40, 83, 153)',
       dialogCloseColorHover: 'rgba(127, 148, 192, 0.54)',
       togglePanelBtnBackgroundColor: 'rgba(138, 157, 221, 1)',
+      oscillogramWaveColor: 'rgb(74,97,147)',
+      oscillogramCursorColor: 'rgb(171,224,251)',
+      oscillogramProgressColor: 'rgb(65,144,200)',
+      sliderRailColor: 'rgba(200,220,240,1)',
     },
   };

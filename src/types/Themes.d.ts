@@ -41,4 +41,8 @@ declare interface ThemeConfigColors {
     dialogCloseIconColorHover: string;      // 对话框关闭图标悬浮图标色
     dialogCloseColorHover: string;          // 对话框关闭按钮悬浮背景色
     togglePanelBtnBackgroundColor: string;  // 切换按钮背景色
+    oscillogramWaveColor: string;           // 波形图波色
+    oscillogramCursorColor: string;         // 波形图光标色
+    oscillogramProgressColor: string;       // 波形图进度色
+    sliderRailColor: string;                // 滑块轨道色
 }

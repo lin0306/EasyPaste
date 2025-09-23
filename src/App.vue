@@ -143,6 +143,10 @@ const theme = computed(() => {
     Scrollbar: {
       color: themeColors.value.scrollBarColor,
       colorHover: themeColors.value.scrollBarColorHover,
+    },
+    Slider: {
+      railColor:themeColors.value.sliderRailColor,
+      railColorHover:themeColors.value.sliderRailColor,
     }
   } as GlobalThemeOverrides;
 });

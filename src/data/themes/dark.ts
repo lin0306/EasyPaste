@@ -36,5 +36,9 @@ export const darkTheme: ThemeConfig = {
       dialogCloseIconColorHover: 'rgba(144, 147, 153, 0.5)',
       dialogCloseColorHover: 'rgba(144, 147, 153, 0.5)',
       togglePanelBtnBackgroundColor: 'rgba(72, 72, 72, 1)',
+      oscillogramWaveColor: 'rgb(83,83,83)',
+      oscillogramCursorColor: 'rgb(163,163,163)',
+      oscillogramProgressColor: 'rgb(50,50,50)',
+      sliderRailColor: 'rgba(144, 147, 153, 0.3)',
     },
   };

@@ -36,5 +36,9 @@ export const pinkTheme: ThemeConfig = {
       dialogCloseIconColorHover: 'rgb(198, 65, 132)',
       dialogCloseColorHover: 'rgba(211, 122, 200, 0.38)',
       togglePanelBtnBackgroundColor: 'rgb(181, 124, 143)',
+      oscillogramWaveColor: 'rgb(179,30,133)',
+      oscillogramCursorColor: 'rgb(236,129,188)',
+      oscillogramProgressColor: 'rgb(197,110,153)',
+      sliderRailColor: 'rgba(240,210,225,1)',
     },
   };

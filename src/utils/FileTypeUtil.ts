@@ -83,34 +83,6 @@ export function isRTF(filePath: string) {
 }
 
 /**
- * 判断文件是否是音频文件
- * @param filePath 文件路径
- */
-export function isAudio(filePath: string) {
-    return filePath.toLowerCase().endsWith('.mp3')
-        || filePath.toLowerCase().endsWith('.wav')
-        || filePath.toLowerCase().endsWith('.aac')
-        || filePath.toLowerCase().endsWith('.flac')
-        || filePath.toLowerCase().endsWith('.ogg')
-        || filePath.toLowerCase().endsWith('.wma')
-        ;
-}
-
-/**
- * 判断文件是否是视频文件
- * @param filePath 文件路径
- */
-export function isVideo(filePath: string) {
-    return filePath.toLowerCase().endsWith('.mp4')
-        || filePath.toLowerCase().endsWith('.avi')
-        || filePath.toLowerCase().endsWith('.mkv')
-        || filePath.toLowerCase().endsWith('.mov')
-        || filePath.toLowerCase().endsWith('.wmv')
-        || filePath.toLowerCase().endsWith('.flv')
-        ;
-}
-
-/**
  * 判断文件是否是压缩文件
  * @param filePath 文件路径
  */
