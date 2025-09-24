@@ -1,6 +1,7 @@
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
   border-radius: 10px;
 }
 
