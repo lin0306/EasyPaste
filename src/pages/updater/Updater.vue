@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { open } from '@tauri-apps/plugin-shell';
+import {open} from '@tauri-apps/plugin-shell';
 import TitleBar from '../../components/TitleBar.vue';
 
-import { check } from '@tauri-apps/plugin-updater';
-import {nextTick, onMounted, reactive, ref} from 'vue';
-import { useLanguage } from '../../services/LanguageService.ts';
+import {check, Update} from '@tauri-apps/plugin-updater';
+import {onMounted, reactive, ref} from 'vue';
+import {useLanguage} from '../../services/LanguageService.ts';
 import UpdaterService from '../../services/UpdaterService.ts';
-import {covertMarkdown} from "../../utils/strUtil.ts";
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
+import {marked} from "marked";
+import {getRenderer} from "../../utils/MarkedUtil.ts";
 
-const { currentLanguage } = useLanguage();
-let updater: any = null;
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  renderer: getRenderer()
+});
+
+
+const {currentLanguage} = useLanguage();
+let updater: Update;
 const updaterVer: UpdaterInfo = reactive({
   version: '',
   pubDate: '',
   notes: ''
 });
-
-const markdownContent = ref<any>(null);
+const onLoading = ref(true);
 
 // 下载状态
 const isDownloading = ref(false);
@@ -87,46 +94,27 @@ function installNow() {
   UpdaterService.install(updater);
 }
 
-// 在 nextTick 中为超链接添加点击事件监听器
-function handleLinks() {
-  nextTick(() => {
-    if (markdownContent.value) {
-      const links = markdownContent.value.querySelectorAll('a[href]');
-      // @ts-ignore
-      links.forEach(link => {
-        // @ts-ignore
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const href = link.getAttribute('href');
-          if (href) {
-            open(href);
-          }
-        });
-      });
-    }
-  });
-}
-
-
 onMounted(async () => {
-  updater = await check();
-  updaterVer.version = updater.version;
-  updaterVer.pubDate = updater.date;
-  updaterVer.notes = updater.body;
-
-  // 在数据更新后处理链接
-  nextTick(() => {
-    handleLinks();
-  });
+  const updateInfo = await check();
+  if (!updateInfo) {
+    return;
+  }
+  updater = updateInfo;
+  console.log(updater);
+  updaterVer.version = updateInfo.version;
+  updaterVer.pubDate = updateInfo.date || '';
+  updaterVer.notes = await marked(updateInfo.body || '');
+  onLoading.value = false;
 })
 
 </script>
 <template>
   <div class="update-container">
     <TitleBar :title="currentLanguage.pages.update.title" :showMinimizeBtn="true" :showCloseBtn="true"
-      :dev-tool="`updater`" />
+              :dev-tool="`updater`"/>
     <!-- 更新内容展示区域 -->
-    <div class="update-content">
+    <div v-if="onLoading" class="loading-container"><n-spin /></div>
+    <div v-else class="update-content">
       <div class="release-header">
         <h2 class="release-version">{{ updaterVer.version || currentLanguage.pages.update.versionName }}</h2>
         <span class="release-tag" v-if="updaterVer.version && updaterVer.version.includes('beta')">Pre-release</span>
@@ -135,7 +123,7 @@ onMounted(async () => {
         {{ new Date(updaterVer.pubDate).toLocaleDateString() }}
       </div>
       <div class="divider"></div>
-      <vue-markdown ref="markdownContent" class="release-notes github-markdown" v-if="updaterVer.notes" v-html="covertMarkdown(updaterVer.notes)" />
+      <div v-if="updaterVer.notes" class="release-notes github-markdown" v-html="updaterVer.notes"/>
       <div class="release-notes" v-else>
         {{ currentLanguage.pages.update.updateNotes }}
       </div>
@@ -149,7 +137,7 @@ onMounted(async () => {
     </div>
 
     <!-- 下载进度条 -->
-    <div class="download-progress" v-if="isDownloading">
+    <div class="download-progress" v-if="!onLoading && isDownloading">
       <div class="progress-title">{{ currentLanguage.pages.update.downloadingTitle }}</div>
       <div class="progress-bar">
         <div class="progress-inner" :style="{ width: downloadProgress + '%' }"></div>
@@ -157,15 +145,17 @@ onMounted(async () => {
       <div class="progress-info">
         <div class="progress-text">{{ downloadProgress.toFixed(1) }}%</div>
         <div class="download-details">
-          <span>{{ Number(Number(downloadedSize) / 1024 / 1024).toFixed(2) }}MB / {{ Number(Number(totalSize) / 1024 /
-            1024).toFixed(2) }}MB</span>
+          <span>{{ Number(Number(downloadedSize) / 1024 / 1024).toFixed(2) }}MB / {{
+              Number(Number(totalSize) / 1024 /
+                  1024).toFixed(2)
+            }}MB</span>
           <span class="download-speed">{{ downloadSpeed }} {{ downloadSpeedUnit }}</span>
         </div>
       </div>
     </div>
 
     <!-- 底部按钮区域 -->
-    <div class="update-footer" v-show="!isDownloading">
+    <div class="update-footer" v-show="!onLoading && !isDownloading">
       <!-- 初始状态：显示暂不更新和立即下载按钮 -->
       <div class="update-actions">
         <div class="left-action">
@@ -192,6 +182,14 @@ onMounted(async () => {
   overflow: hidden;
   background-color: var(--theme-background);
   color: var(--theme-text);
+}
+
+.loading-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .update-content {

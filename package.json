@@ -30,6 +30,7 @@
     "@vue-office/excel": "^1.7.14",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "marked": "^16.2.1",
     "naive-ui": "^2.41.0",
     "pinia": "^3.0.2",
     "plyr": "^3.8.3",
