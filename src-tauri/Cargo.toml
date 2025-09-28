@@ -39,6 +39,8 @@ dirs = "6.0.0"
 # 剪贴板操作
 clipboard-rs = "0.3.0"
 lazy_static = "1.5.0"
+# RAR 文件处理
+unrar = "0.5.8"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"

@@ -1,8 +1,10 @@
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use serde_json::from_reader;
 use std::fs::File;
 use std::path::PathBuf;
 use tauri::AppHandle;
+use unrar::Archive;
 
 /**
  * 加载文件内容
@@ -47,4 +49,34 @@ pub async fn open_folder(path: String) -> Result<(), String> {
         .map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+pub fn read_rar_data(path: String) -> Result<String, ()> {
+    let mut data_list: Vec<TreeOption> = Vec::new();
+    for entry in Archive::new(&path).open_for_listing().unwrap() {
+        let file_info = entry.unwrap();
+        data_list.push(TreeOption {
+            path: file_info.filename.to_str().unwrap().to_string().replace("\\", "/"), // 统一使用左斜杠
+            dir: file_info.is_directory(),
+            date: file_info.file_time,
+            size: file_info.unpacked_size,
+        });
+    }
+    // 按照文件名长短进行排序，保证文件夹的顺序在文件前面
+    data_list.sort_by(|a, b| a.path.len().cmp(&b.path.len()));
+
+    Ok(serde_json::to_string(&data_list).unwrap())
+}
+
+/**
+ * 文件树节点
+ */
+#[derive(Deserialize)]
+#[derive(Serialize)]
+pub struct TreeOption {
+    pub(crate) path: String,
+    dir: bool,
+    date: u32,
+    size: u64,
 }

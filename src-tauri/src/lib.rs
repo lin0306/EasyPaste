@@ -57,6 +57,7 @@ pub fn run() {
             regedit::recover_clipboard_regedit,
             permission::check_admin,
             file::open_folder,
+            file::read_rar_data,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
