@@ -58,6 +58,7 @@ pub fn run() {
             permission::check_admin,
             file::open_folder,
             file::read_rar_data,
+            file::read_tar_data,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");

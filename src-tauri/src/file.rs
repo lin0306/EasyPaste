@@ -51,6 +51,9 @@ pub async fn open_folder(path: String) -> Result<(), String> {
     Ok(())
 }
 
+/**
+ * 读取rar文件内容
+ */
 #[tauri::command]
 pub fn read_rar_data(path: String) -> Result<String, ()> {
     let mut data_list: Vec<TreeOption> = Vec::new();
@@ -59,13 +62,34 @@ pub fn read_rar_data(path: String) -> Result<String, ()> {
         data_list.push(TreeOption {
             path: file_info.filename.to_str().unwrap().to_string().replace("\\", "/"), // 统一使用左斜杠
             dir: file_info.is_directory(),
-            date: file_info.file_time,
+            date: file_info.file_time as u64,
             size: file_info.unpacked_size,
         });
     }
     // 按照文件名长短进行排序，保证文件夹的顺序在文件前面
     data_list.sort_by(|a, b| a.path.len().cmp(&b.path.len()));
 
+    Ok(serde_json::to_string(&data_list).unwrap())
+}
+
+/**
+ * 读取tar文件内容
+ */
+#[tauri::command]
+pub fn read_tar_data(path: String) -> Result<String, ()> {
+    let mut data_list: Vec<TreeOption> = Vec::new();
+    tar::Archive::new(File::open(path).unwrap())
+        .entries()
+        .unwrap()
+        .for_each(|entry| {
+            let entry = entry.unwrap();
+            data_list.push(TreeOption {
+                path: entry.path().unwrap().to_str().unwrap().to_string(),
+                dir: entry.header().entry_type().is_dir(),
+                date: entry.header().mtime().unwrap(),
+                size: entry.header().size().unwrap(),
+            });
+        });
     Ok(serde_json::to_string(&data_list).unwrap())
 }
 
@@ -77,6 +101,6 @@ pub fn read_rar_data(path: String) -> Result<String, ()> {
 pub struct TreeOption {
     pub(crate) path: String,
     dir: bool,
-    date: u32,
+    date: u64,
     size: u64,
 }

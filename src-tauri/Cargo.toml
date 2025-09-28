@@ -41,6 +41,8 @@ clipboard-rs = "0.3.0"
 lazy_static = "1.5.0"
 # RAR 文件处理
 unrar = "0.5.8"
+# TAR 文件处理
+tar = "0.4.44"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"
