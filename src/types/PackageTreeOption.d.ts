@@ -1,0 +1,1 @@
+import type {VNodeChild} from "vue";declare interface PackageTreeOption {    key: string;    label: string;    children?: PackageTreeOption[];    date?: Date;    fileCount? : number;    prefix?: () => VNodeChild;    suffix?: () => VNodeChild;}
