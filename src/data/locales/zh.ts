@@ -187,5 +187,19 @@ export const chinesePageConfig: PageConfig = {
     preview: {
         title: '预览',
         filePathLabel: '文件名称：',
+        cannotPreview: '文件暂不支持预览，请点击右上角打开文件所在位置进行浏览',
+        searchPlaceholder: '输入关键词进行搜索',
+        cannotPreviewRtf: '暂不支持预览rtf格式的文件，请点击右上角打开文件所在位置进行浏览',
+        cannotPreviewText: '文件大小超过 10M，暂不支持预览，请点击右上角打开文件所在位置进行浏览',
+        fileSize: '文件大小：',
+        fileType: '文件类型：',
+        playbackRate: '播放速度：',
+        volume: '音量：',
+        fileCount: ' 个文件',
+        cannotPreviewOffice: '暂时只支持预览docx、xlsx、pdf格式的文件，请点击右上角打开文件所在位置进行浏览',
+        fileReadFailed: '文件读取失败',
+        packageDecompressionFailed: '文件解压缩失败，错误原因：',
+        cannotPreviewPackage: '文件大小超过 1G，暂不支持预览，请点击右上角打开文件所在位置进行浏览',
+        cannotPreview7z: '暂不支持预览7z格式的文件，请点击右上角打开文件所在位置进行浏览',
     }
 }

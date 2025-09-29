@@ -186,5 +186,19 @@ export const englishPageConfig: PageConfig = {
     preview: {
         title: 'Preview',
         filePathLabel: 'File Name: ',
+        cannotPreview: 'The file does not support preview, please click the upper right corner to open the file location for browsing',
+        searchPlaceholder: 'Input keywords to search',
+        cannotPreviewRtf: 'The rtf file does not support preview, please click the upper right corner to open the file location for browsing.',
+        cannotPreviewText: 'The file size exceeds 10M and cannot be previewed. Please click the upper right corner to open the file location for browsing.',
+        fileSize: 'File Size: ',
+        fileType: 'File Type: ',
+        playbackRate: 'Playback Rate: ',
+        volume: 'Volume: ',
+        fileCount: ' files',
+        cannotPreviewOffice: 'Currently, only files in docx, xlsx and pdf formats are supported for preview. Please click the upper right corner to browse the location where the file is stored.',
+        fileReadFailed: 'File Read Failed',
+        packageDecompressionFailed: 'File decompression failed. Error reason: ',
+        cannotPreviewPackage: 'The file size exceeds 1G and cannot be previewed. Please click the upper right corner to open the file location for browsing.',
+        cannotPreview7z: 'The 7z file does not support preview, please click the upper right corner to open the file location for browsing.',
     }
 }

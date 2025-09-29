@@ -90,7 +90,7 @@ declare interface PageConfig {
         resetSuccessMsg: string;
         enableReplaceGlobalHotkeyFailedMsg: string;
         disableReplaceGlobalHotkeyFailedMsg: string;
-        
+
         // 动画相关设置
         enableAnimationEffects: string;
         transitionSpeed: string;
@@ -201,5 +201,19 @@ declare interface PageConfig {
     preview: {
         title: string;
         filePathLabel: string;
+        cannotPreview: string;
+        searchPlaceholder: string;
+        cannotPreviewRtf: string;
+        cannotPreviewText: string;
+        fileSize: string;
+        fileType: string;
+        playbackRate: string;
+        volume: string;
+        fileCount: string;
+        cannotPreviewOffice: string;
+        fileReadFailed: string;
+        packageDecompressionFailed: string;
+        cannotPreviewPackage: string;
+        cannotPreview7z: string;
     }
 }
