@@ -29,7 +29,7 @@ export function isImage(filePath: string): boolean {
  * @param { string } filePath 文件路径
  * @returns  { string } MIME类型
  */
-export function getMimeTypeFromPath(filePath: string): string {
+export function getType(filePath: string): string {
     const suffix = filePath.toLowerCase().split('.').pop() || '';
 
     return mimeTypes[suffix] || 'application/octet-stream';

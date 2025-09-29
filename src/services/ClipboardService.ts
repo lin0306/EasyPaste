@@ -3,7 +3,7 @@ import {error, info} from '@tauri-apps/plugin-log';
 import {clipboardListenStore} from '../store/CopyStatus';
 import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
-import {isCode} from "../utils/TextTypeUtil.ts";
+import {isCode} from "../utils/TextUtil.ts";
 import {ref} from "vue";
 
 // 剪贴板内容缓存

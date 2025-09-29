@@ -2,8 +2,8 @@ import {load} from "@tauri-apps/plugin-store";
 import {info} from "@tauri-apps/plugin-log";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
-import {uint8ArrayToString} from "../utils/strUtil.ts";
 import {SETTINGS_KEYS} from "../constants/StoreKeyConstants.ts";
+import {utf8Decoder} from "../constants/PublicConstants.ts";
 
 export const SETTINGS_FILE_NAME = "settings.json";
 const defaultSettings: Settings = {
@@ -365,7 +365,7 @@ export async function initSettings() {
             baseDir: BaseDirectory.AppData,
         })
         // 转成字符串
-        const userSettingsString = uint8ArrayToString(userSettings);
+        const userSettingsString = utf8Decoder.decode(userSettings);
         if (!userSettingsString.includes(SETTINGS_KEYS.THEME)) {
             await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
         }

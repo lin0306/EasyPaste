@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {open} from '@tauri-apps/plugin-shell';
 import TitleBar from '../../components/TitleBar.vue';
 
 import {check, Update} from '@tauri-apps/plugin-updater';
@@ -8,7 +7,8 @@ import {useLanguage} from '../../services/LanguageService.ts';
 import UpdaterService from '../../services/UpdaterService.ts';
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 import {marked} from "marked";
-import {getRenderer} from "../../utils/MarkedUtil.ts";
+import {getRenderer} from "../../utils/MarkdownUtil.ts";
+import {openLink} from "../../utils/LinkUtil.ts";
 
 marked.setOptions({
   breaks: true,
@@ -39,8 +39,7 @@ const totalSize = ref<any>(0); // 总大小 (MB)
 
 // 打开GitHub发布页面
 function openGitHubReleases() {
-  // 使用electron的shell模块打开外部链接
-  open('https://github.com/lin0306/EasyPaste/releases');
+  openLink('https://github.com/lin0306/EasyPaste/releases');
 }
 
 // 下载更新
@@ -113,7 +112,9 @@ onMounted(async () => {
     <TitleBar :title="currentLanguage.pages.update.title" :showMinimizeBtn="true" :showCloseBtn="true"
               :dev-tool="`updater`"/>
     <!-- 更新内容展示区域 -->
-    <div v-if="onLoading" class="loading-container"><n-spin /></div>
+    <div v-if="onLoading" class="loading-container">
+      <n-spin/>
+    </div>
     <div v-else class="update-content">
       <div class="release-header">
         <h2 class="release-version">{{ updaterVer.version || currentLanguage.pages.update.versionName }}</h2>
