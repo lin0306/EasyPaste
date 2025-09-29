@@ -4,7 +4,7 @@ import {relaunch} from '@tauri-apps/plugin-process';
 import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-updater';
 import {openUpdaterWindow} from '../utils/WindowUtil.ts';
 import {useLanguage} from "./LanguageService.ts";
-import {hasNewVersion} from "../pages/index/composables/UpdaterComposable.ts";
+import {hasNewVersion} from "../pages/list/composables/UpdaterComposable.ts";
 import {getNewVersionAlertMode} from "../store/Settings.ts";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 
