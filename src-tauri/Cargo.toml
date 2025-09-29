@@ -43,6 +43,7 @@ lazy_static = "1.5.0"
 unrar = "0.5.8"
 # TAR 文件处理
 tar = "0.4.44"
+flate2 = "1.1.2"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"

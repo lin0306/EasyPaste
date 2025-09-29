@@ -2,6 +2,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::from_reader;
 use std::fs::File;
+use std::io::BufReader;
 use std::path::PathBuf;
 use tauri::AppHandle;
 use unrar::Archive;
@@ -94,10 +95,37 @@ pub fn read_tar_data(path: String) -> Result<String, ()> {
 }
 
 /**
+ * 读取gzip文件内容
+ */
+#[tauri::command]
+pub fn read_gzip_data(path: String) -> Result<String, ()> {
+    let mut data_list: Vec<TreeOption> = Vec::new();
+    // 打开 .tar.gz 文件
+    let file = File::open(&path).unwrap();
+    let buf_reader = BufReader::new(file);
+
+    // 使用 flate2 解压 Gzip 流
+    let gz_decoder = flate2::read::GzDecoder::new(buf_reader);
+
+    // 使用 tar 读取解压后的 tar 流
+    let mut archive = tar::Archive::new(gz_decoder);
+
+    archive.entries().unwrap().for_each(|entry| {
+        let entry = entry.unwrap();
+        data_list.push(TreeOption {
+            path: entry.path().unwrap().to_str().unwrap().to_string(),
+            dir: entry.header().entry_type().is_dir(),
+            date: entry.header().mtime().unwrap(),
+            size: entry.header().size().unwrap(),
+        });
+    });
+    Ok(serde_json::to_string(&data_list).unwrap())
+}
+
+/**
  * 文件树节点
  */
-#[derive(Deserialize)]
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 pub struct TreeOption {
     pub(crate) path: String,
     dir: bool,

@@ -59,6 +59,7 @@ pub fn run() {
             file::open_folder,
             file::read_rar_data,
             file::read_tar_data,
+            file::read_gzip_data,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
