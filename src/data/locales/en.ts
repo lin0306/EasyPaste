@@ -200,5 +200,6 @@ export const englishPageConfig: PageConfig = {
         packageDecompressionFailed: 'File decompression failed. Error reason: ',
         cannotPreviewPackage: 'The file size exceeds 1G and cannot be previewed. Please click the upper right corner to open the file location for browsing.',
         cannotPreview7z: 'The 7z file does not support preview, please click the upper right corner to open the file location for browsing.',
+        folder: 'Folder',
     }
 }

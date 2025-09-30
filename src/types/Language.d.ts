@@ -215,5 +215,6 @@ declare interface PageConfig {
         packageDecompressionFailed: string;
         cannotPreviewPackage: string;
         cannotPreview7z: string;
+        folder: string;
     }
 }
