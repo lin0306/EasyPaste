@@ -1,7 +1,8 @@
 import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
+import {WebViewWindowOptions} from "../types/Window";
 
 // 创建窗口参数配置
-export const windowConfig: WindowOptions = {
+export const windowConfig: WebViewWindowOptions = {
     label: '',
     title: '',
     url: '',
@@ -21,17 +22,21 @@ export const windowConfig: WindowOptions = {
     visible: true,
     focus: true,
     resizable: true,
-    skipTaskbar: false
+    skipTaskbar: false,
+    fullscreen: false,
+    contentProtected: false,
+    preventOverflow: true,
+    incognito: true,
 };
 
 /**
  * 创建新窗口
  * @param options 窗口参数
  */
-export async function createWin(options: WindowOptions) {
+export async function createWin(options: WebViewWindowOptions) {
     console.log('-=-=-=-=-=开始创建窗口')
 
-    const args: WindowOptions = Object.assign({}, windowConfig, options)
+    const args: WebViewWindowOptions = Object.assign({}, windowConfig, options)
 
     // 判断窗口是否存在
     const existWin = await WebviewWindow.getByLabel(args.label)

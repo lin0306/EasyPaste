@@ -42,7 +42,7 @@ export async function initClipboardListener() {
             }
             dataMap.value.delete(data);
             info("剪贴板内容保存完成");
-            // 延迟50毫米，让数据先入库完成
+            // 延迟10毫秒，让数据先入库完成
             setTimeout(async () => {
                 const latestItem = await db.getLatestItem();
                 if (latestItem) {

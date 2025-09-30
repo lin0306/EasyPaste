@@ -84,7 +84,17 @@ pub fn create_tray(app: AppHandle) {
                 button: MouseButton::Left,
                 button_state: MouseButtonState::Up,
             } => {
-                // todo 已知bug：事件只有在松开鼠标的时候才会触发
+                let mut state_new = LOAD_STATE.lock().unwrap();
+                // 判断窗口是否可显示/隐藏
+                if state_new.win_enter_visible
+                    && state_new.win_current_visible == false
+                    && state_new.is_first_hide
+                {
+                    // 鼠标移到托盘图标上时，窗口是显示的
+                    state_new.is_first_hide = false;
+                    return;
+                }
+                println!("鼠标松开");
                 // 打开主窗口
                 let win = tray
                     .app_handle()
@@ -96,13 +106,35 @@ pub fn create_tray(app: AppHandle) {
                             println!("显示窗口");
                             win.show().expect("窗口显示失败");
                             win.set_focus().expect("窗口聚焦失败");
+
+                            state_new.win_current_visible = true;
+                            state_new.win_enter_visible = true;
+                            state_new.is_first_hide = false;
                         } else {
                             println!("隐藏窗口");
-                            win.hide().expect("窗口隐藏失败")
+                            win.hide().expect("窗口隐藏失败");
+
+                            state_new.win_current_visible = false;
+                            state_new.win_enter_visible = false;
+                            state_new.is_first_hide = true;
                         }
                     }
                     Err(e) => eprintln!("窗口可见性错误: {}", e),
                 };
+            }
+            TrayIconEvent::Enter {
+                id: _,
+                position: _,
+                rect: _,
+            } => {
+                let mut state_new = LOAD_STATE.lock().unwrap();
+                match tray.app_handle().get_webview_window("main") {
+                    Some(win) => {
+                        // 鼠标移到托盘图标上时，设置移入时窗口是否可见
+                        state_new.win_enter_visible = win.is_visible().unwrap();
+                    }
+                    None => {}
+                }
             }
             _ => {}
         })
@@ -139,6 +171,8 @@ pub fn create_tray(app: AppHandle) {
     // 保存新的托盘实例到状态
     state.is_loaded = true;
     state.tray = Some(tray);
+    state.win_current_visible = false;
+    state.is_first_hide = false;
 }
 
 // 重新加载托盘菜单的命令
@@ -150,13 +184,21 @@ pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
 }
 
 /**
+ * 接收窗口隐藏消息
+ */
+#[tauri::command]
+pub fn hide_win_msg() {
+    let mut state = LOAD_STATE.lock().unwrap();
+    state.win_current_visible = false;
+    state.is_first_hide = true;
+}
+
+/**
  * 加载语言配置
  */
 fn load_language(app: &AppHandle) -> Tray {
     match file::load_file_content::<LanguageConfig>(app.clone(), "language.json".into()) {
-        Ok(data) => {
-            data.tray
-        }
+        Ok(data) => data.tray,
         Err(_e) => {
             info!("使用默认托盘语言配置");
             let default_json = r#"{
@@ -192,8 +234,11 @@ pub struct Tray {
 // 全局状态管理结构体
 #[derive(Default)]
 struct LoadState {
-    tray: Option<TrayIcon>,
-    is_loaded: bool,
+    tray: Option<TrayIcon>,    // 托盘图标实例
+    is_loaded: bool,           // 托盘图标是否已加载
+    win_current_visible: bool, // 窗口当前是否可见
+    win_enter_visible: bool,   // 鼠标进入托盘图标时，窗口是否可见
+    is_first_hide: bool,       // 鼠标进入托盘图标时，窗口是否第一次隐藏
 }
 
 // 使用 Arc + Mutex 实现线程安全共享
