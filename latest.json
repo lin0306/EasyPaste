@@ -1,15 +1,6 @@
 {
-  "version": "0.1.6-beta",
-  "notes": "# v0.1.6-beta (2025-09-03)\n\n## 更新内容\n\n### \uD83C\uDF89 新功能\n- 根据文件后缀不同，显示不同的图标，方便快速区分文件类型\n- 双击复制内容后，自动跳转到内容最新的位置，避免复制完后找不到内容\n\n### \uD83D\uDE80 优化\n- 定时查询文件是否存在，避免出现文件被删除后，列表还是显示文件存在，但是双击复制时却提示文件不存在\n- 优化图片展示\n- 统一单文件复制和复制整个文件的窗口隐藏逻辑\n\n### ✅ 修复Bug\n- 修复文件、文件夹无法记录问题\n- 修复文件复制后，显示文件被删除的样式问题\n- 修复进入列表页面会进行多次查询，拖慢页面加载速度问题\n- 修复翻页时，显示的数据与前一页的数据一致问题\n- 修复当存在多条置顶内容时，双击中间的内容，复制完后内容会在最后一条置顶内容的位置问题\n\n### \uD83D\uDCC5 下一步计划\n- 实现各个文件的预览功能",
-  "pub_date": "2025-09-03T02:31:25.309Z",
-  "platforms": {
-    "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnF6OUlVVmpKMURjbDlhTld2V1ltQkFiVG1aR1JLZGlyMVo3ZzBTb3IwcnJydVNSVjk3UVFGWS90bHlRRzZqZ2RpQnZseUlaMXU2aWVOQUN6ZzBRY1FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2ODY2NDMyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKNFVpUWYxbXhPL1c2L3pSVkpwYWxRRnZqK0FSdHVoNk5zSTBJNmFEM2R2MCsvWW5mOHI2RFI3RHJBd3RKdVRPcE5qanZGTXFncEFUVFdWRHptSEd5REE9PQo=",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.6-beta/EasyPaste.app.tar.gz"
-    },
-    "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmtvVy8zK1FQQkdNK0RVV0lqcnYzL0VMZm96UnJLNnBWTml3TThRbFJ1VUpCYkRNZmUrMXR6RThRc0l3R3A4aURmMlBxUmFVQjhTZ0F5dWIrU1FUV3cwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU2ODY2NjU1CWZpbGU6RWFzeVBhc3RlXzAuMS42X3g2NC1zZXR1cC5leGUKcW05Z3UrTlZ2WExaUnJrajNaeTR6d1J0dS9VaVJGQUZTdXB5citYcGlJcXUza1VBcGJnaDluenhGZXhPbGsrWEY0dzk0REtIWVptV2ZNNU1aTXo5REE9PQo=",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.6-beta/EasyPaste_0.1.6_x64-setup.exe"
-    }
-  }
+  "version": "0.1.7-beta",
+  "notes": "",
+  "pub_date": "2025-10-10T09:25:44.699Z",
+  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnBKblJkOHBNaGhGb09BYXFZVWI5aTBrclZTaEtWWGI4UzJPUEl1Qjdnai8yK1NQL3JBY3pQQndYdXo5cHlaTkJHVURubkl3cFBTQ0I2MmVLQ2dHdndFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYwMDg3ODQyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKa1cyaHlMY3QyQmdGWW5JMFpKcllVRlkxWnRIb0lPQ2oxWEZwK2xsZ255Z0ZpUlhSNDNlR2J1OVFIUlJrTE92QlkyRTdUSkZvSmxJR25JeS9XNjBmQVE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.7-beta/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnBKSWwyNko2ekFpN21OTUh4Vk4yNFBDWEJKMkU4WXhiOGtIOEJJSFdJeTNLalprOC9NUlpXOE9rOU9iRW0wWmRENzFaZFREb0lmNy9vUktlcmZyVWc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYwMDg4MzAxCWZpbGU6RWFzeVBhc3RlXzAuMS43X3g2NC1zZXR1cC5leGUKZHBCT2Q2RlVRbmtzd3RpeTZOTjVXWlFMRVhvc2hqZGhOK2lSck1vVXVpQ0dSaEtYMzEramJNbnZEWjR6dXZmYzI0RFVYVkRad2VkOW9oR3JxY29mQ3c9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.1.7-beta/EasyPaste_0.1.7_x64-setup.exe"}}
 }
