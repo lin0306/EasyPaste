@@ -7,6 +7,7 @@ const routes = [
     {path: '/about', component: () => import('../pages/about/About.vue')},
     {path: '/updater', component: () => import('../pages/updater/Updater.vue')},
     {path: '/preview', component: () => import('../pages/preview/index.vue')},
+    {path: '/icon-preview', component: () => import('../pages/icon/preview.vue')},
 ]
 
 const router = createRouter({

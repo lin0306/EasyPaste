@@ -122,3 +122,16 @@ export function openUpdaterWindow() {
         resizable: false
     })
 }
+
+/**
+ * 打开图标预览窗口
+ */
+export function openIconPreviewWindow() {
+    return createWin({
+        label: 'icon-preview',
+        url: '/icon-preview',
+        width: 1000,
+        height: 700,
+        resizable: false
+    })
+}
