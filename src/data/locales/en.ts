@@ -103,6 +103,7 @@ export const englishPageConfig: PageConfig = {
         empty: 'No clipboard record exists',
         initFailedHint: 'The program initialization failed. Please run the program again.',
         updateTxt: 'New',
+        totalData: 'A total of {total} pieces of data',
         menu: {
             program: 'Program',
             settings: 'Settings',

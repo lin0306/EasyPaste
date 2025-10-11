@@ -14,7 +14,8 @@ import TagList from './components/TagList.vue';
 import {
   destroyClipboardData,
   initializeClipboardData,
-  insertClipboardItem
+  insertClipboardItem,
+  scrollState,
 } from "./composables/ClipboardDataComposable.ts";
 import {destroyTag, initializeTag} from "./composables/TagDataComposable.ts";
 import {destroyUpdater, hasNewVersion, initializeUpdater} from "./composables/UpdaterComposable.ts";
@@ -129,6 +130,10 @@ onUnmounted(async () => {
 
   <!-- 数据列表 -->
   <ClipboardListContent v-if="!isLoading"/>
+  <div class="footer">
+    <div></div>
+    <div>{{ currentLanguage.pages.list.totalData.replace('{total}', scrollState.total.toString()) }}</div>
+  </div>
 </template>
 <style scoped>
 .loading {
@@ -137,5 +142,23 @@ onUnmounted(async () => {
   height: 100vh;
   align-content: center;
   justify-content: center;
+}
+
+.footer {
+  z-index: 999;
+  width: 96%;
+  height: 16px;
+  position: fixed;
+  bottom: 0;
+  font-size: 11px;
+  padding: 4px 7px;
+  color: var(--theme-textHint);
+  background-color: var(--theme-background);
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--theme-border);
+  border-radius: 6px;
+  box-shadow: 0 -1px 5px var(--theme-border);
+
 }
 </style>

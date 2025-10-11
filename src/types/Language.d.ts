@@ -117,6 +117,7 @@ declare interface PageConfig {
         empty: string;
         initFailedHint: string;
         updateTxt: string;
+        totalData: string;
         menu: {
             [x: string]: string;
             program: string;

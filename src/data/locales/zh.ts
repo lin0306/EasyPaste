@@ -104,6 +104,7 @@ export const chinesePageConfig: PageConfig = {
         empty: '暂无剪贴板记录',
         initFailedHint: '程序初始化失败，请重新运行程序',
         updateTxt: '新版本',
+        totalData: '共 {total} 条数据',
         menu: {
             program: '程序',
             settings: '偏好设置',
