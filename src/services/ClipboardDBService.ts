@@ -188,8 +188,9 @@ class ClipboardDBService {
      * @param tagId 标签ID
      * @param pageSize 每页数量
      * @param lastItemId 上一页最后一个条目ID
+     * @param selectTypes 筛选的数据类型
      */
-    async searchItems(content?: string, tagId?: number, pageSize: number = 10, lastItemId?: number): Promise<{
+    async searchItems(content?: string, tagId?: number, pageSize: number = 10, lastItemId?: number, selectTypes?: string[]): Promise<{
         total: number;
         items: ClipboardItem[];
     }> {
@@ -260,6 +261,12 @@ class ClipboardDBService {
                 countParams.push(`%${content}%`);
             }
 
+            if (selectTypes && selectTypes.length > 0) {
+                itemsSql += `and ci.type in (${selectTypes.map(() => '?').join(',')})`;
+                countSql += `and ci.type in (${selectTypes.map(() => '?').join(',')})`;
+                queryParams.push(...selectTypes);
+                countParams.push(...selectTypes);
+            }
 
             // 拼接过滤参数
             itemsSql += `
