@@ -10,7 +10,7 @@ export const pinkTheme: ThemeConfig = {
       textHint: 'rgba(153,51,102,0.6)',
       textDelete: 'rgb(255, 68, 68)',
       border: 'rgba(219, 112, 147, 0.1)',
-      titleBarBackground: 'rgba(245,225,235,0.6)',
+      titleBarBackground: 'rgb(245,225,235)',
       titleBarIconColor: '#E6A5C4',
       navBackground: 'rgba(252,242,248,1)',
       cardBackground: 'rgba(255,255,255,1)',

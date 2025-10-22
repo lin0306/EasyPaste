@@ -10,7 +10,7 @@ export const lightTheme: ThemeConfig = {
         textHint: 'rgba(51,51,51,0.6)',
         textDelete: 'rgb(178, 20, 20)',
         border: 'rgba(5, 5, 5, 0.06)',
-        titleBarBackground: 'rgba(166,166,166,0.13)',
+        titleBarBackground: 'rgb(239,239,239)',
         titleBarIconColor: '#333333',
         navBackground: 'rgba(248,248,248,1)',
         cardBackground: 'rgba(255,255,255,1)',
