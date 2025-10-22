@@ -12,7 +12,8 @@ export const englishPageConfig: PageConfig = {
         themesMenu: 'Themes Settings',
         tagMenu: 'Tag Settings',
 
-        generalTitle: 'General Settings',
+        programTitle: 'Program Settings',
+        mainWindowTitle: 'Main Window Settings',
         storageTitle: 'Storage Settings',
         shortcutTitle: 'Shortcut Settings',
         updaterTitle: 'Update Settings',
@@ -33,7 +34,8 @@ export const englishPageConfig: PageConfig = {
         bindTagBtnShowLocation: 'Tag Binding Button Location',
         topRight: 'Top Right',
         bottomRight: 'Bottom Right',
-        autoGoToLatestData: 'Auto Go to Latest Data',
+        autoGoToLatestData: 'Automatically scroll to the latest data',
+        autoGoToLatestDataHint: 'After opening, each time you copy a new item, the list will scroll to the latest copied item\'s position, and after closing this function, each time you copy a new item, the list will not automatically scroll.',
 
         autoCheckUpdate: 'Automatically Check Updates',
         checkUpdateMode: 'Check Update Mode',

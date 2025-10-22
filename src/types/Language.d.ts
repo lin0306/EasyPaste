@@ -20,7 +20,8 @@ declare interface PageConfig {
         themesMenu: string;
         tagMenu: string;
         // 设置页面右侧页面标题
-        generalTitle: string;
+        programTitle: string;
+        mainWindowTitle: string;
         storageTitle: string;
         shortcutTitle: string;
         updaterTitle: string;
@@ -42,6 +43,7 @@ declare interface PageConfig {
         topRight: string;
         bottomRight: string;
         autoGoToLatestData: string;
+        autoGoToLatestDataHint: string;
         // 更新设置页面文字
         autoCheckUpdate: string;
         checkUpdateMode: string;

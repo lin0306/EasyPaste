@@ -12,7 +12,8 @@ export const chinesePageConfig: PageConfig = {
         themesMenu: '主题设置',
         tagMenu: '标签设置',
 
-        generalTitle: '常规设置',
+        programTitle: '程序设置',
+        mainWindowTitle: '主窗口设置',
         storageTitle: '存储设置',
         shortcutTitle: '快捷键设置',
         updaterTitle: '更新设置',
@@ -33,7 +34,8 @@ export const chinesePageConfig: PageConfig = {
         bindTagBtnShowLocation: '标签绑定按钮位置',
         topRight: '右上角',
         bottomRight: '右下角',
-        autoGoToLatestData: '自动跳转到最新数据',
+        autoGoToLatestData: '自动滚动到最新数据',
+        autoGoToLatestDataHint: '打开后，每次复制新内容时，列表都会滚动到最新复制的内容所在的位置，关闭此功能后，每次复制新内容时，列表不会自动滚动',
 
         autoCheckUpdate: '自动检查更新',
         checkUpdateMode: '检查更新方式',
