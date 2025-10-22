@@ -18,6 +18,7 @@ declare interface PageConfig {
         shortcutMenu: string;
         updaterMenu: string;
         themesMenu: string;
+        tagMenu: string;
         // 设置页面右侧页面标题
         generalTitle: string;
         storageTitle: string;
@@ -25,6 +26,7 @@ declare interface PageConfig {
         updaterTitle: string;
         themesTitle: string;
         animationTitle: string;
+        tagTitle: string;
         // 通用设置页面文字
         powerOnSelfStart: string;
         replaceGlobalHotkey: string;

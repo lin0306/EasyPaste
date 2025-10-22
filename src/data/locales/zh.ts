@@ -5,18 +5,20 @@ export const chinesePageConfig: PageConfig = {
     settings: {
         initFailedHint: '页面内容加载失败，请重新打开',
         title: '设置',
-        generalMenu: '通用设置',
+        generalMenu: '常规设置',
         storageMenu: '存储设置',
         shortcutMenu: '快捷键',
         updaterMenu: '更新设置',
         themesMenu: '主题设置',
+        tagMenu: '标签设置',
 
-        generalTitle: '通用设置',
+        generalTitle: '常规设置',
         storageTitle: '存储设置',
         shortcutTitle: '快捷键设置',
         updaterTitle: '更新设置',
         themesTitle: '主题设置',
         animationTitle: '动画设置',
+        tagTitle: '标签设置',
 
         powerOnSelfStart: '开机自启',
         replaceGlobalHotkey: '替换全局热键',
@@ -77,7 +79,7 @@ export const chinesePageConfig: PageConfig = {
         resetSuccessMsg: '已重置',
         enableReplaceGlobalHotkeyFailedMsg: '打开“替换全局热键”失败，请确认程序是否以管理员身份启动',
         disableReplaceGlobalHotkeyFailedMsg: '关闭“替换全局热键”失败，请确认程序是否以管理员身份启动',
-        
+
         // 动画相关设置
         enableAnimationEffects: '启用动画效果',
         transitionSpeed: '动画速度',

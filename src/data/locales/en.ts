@@ -10,6 +10,7 @@ export const englishPageConfig: PageConfig = {
         storageMenu: 'Storage Settings',
         shortcutMenu: 'Shortcuts',
         themesMenu: 'Themes Settings',
+        tagMenu: 'Tag Settings',
 
         generalTitle: 'General Settings',
         storageTitle: 'Storage Settings',
@@ -17,6 +18,7 @@ export const englishPageConfig: PageConfig = {
         updaterTitle: 'Update Settings',
         themesTitle: 'Themes Settings',
         animationTitle: 'Animation Settings',
+        tagTitle: 'Tag Settings',
 
         powerOnSelfStart: 'Power On Self Start',
         replaceGlobalHotkey: 'Replace Global Hotkey',
