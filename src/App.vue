@@ -162,6 +162,10 @@ const theme = computed(() => {
     Slider: {
       railColor: themeColors.value.sliderRailColor,
       railColorHover: themeColors.value.sliderRailColor,
+    },
+    Divider: {
+      color: themeColors.value.divider,
+      textColor: themeColors.value.text,
     }
   } as GlobalThemeOverrides;
 });
