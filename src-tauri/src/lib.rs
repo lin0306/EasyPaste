@@ -1,18 +1,19 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 
+mod file;
 mod listener;
 mod log;
+mod permission;
 #[cfg(target_os = "windows")]
 mod regedit;
 mod tray;
-mod permission;
 mod windows;
-mod file;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .setup(|app| {
             // 自启动配置
             let _ = app.handle().plugin(tauri_plugin_autostart::init(
@@ -86,7 +87,8 @@ async fn restart_computer() -> Result<(), String> {
         std::process::Command::new("shutdown")
             .args(["/r", "/t", "0"]) // 立即重启
             .status()
-            .map_err(|e| e.to_string()).expect("重启失败");
+            .map_err(|e| e.to_string())
+            .expect("重启失败");
     }
 
     #[cfg(target_os = "macos")]
@@ -94,7 +96,8 @@ async fn restart_computer() -> Result<(), String> {
         std::process::Command::new("sudo")
             .args(["shutdown", "-r", "now"])
             .status()
-            .map_err(|e| e.to_string()).expect("重启失败");
+            .map_err(|e| e.to_string())
+            .expect("重启失败");
     }
 
     Ok(())

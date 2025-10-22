@@ -61,7 +61,12 @@ pub fn read_rar_data(path: String) -> Result<String, ()> {
     for entry in Archive::new(&path).open_for_listing().unwrap() {
         let file_info = entry.unwrap();
         data_list.push(TreeOption {
-            path: file_info.filename.to_str().unwrap().to_string().replace("\\", "/"), // 统一使用左斜杠
+            path: file_info
+                .filename
+                .to_str()
+                .unwrap()
+                .to_string()
+                .replace("\\", "/"), // 统一使用左斜杠
             dir: file_info.is_directory(),
             date: file_info.file_time as u64,
             size: file_info.unpacked_size,

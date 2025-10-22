@@ -120,6 +120,7 @@
     "updater:allow-download",
     "updater:allow-download-and-install",
     "updater:allow-install",
-    "notification:default"
+    "notification:default",
+    "os:default"
   ]
 }

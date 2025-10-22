@@ -5,14 +5,13 @@ import { computed, onMounted } from 'vue';
 import { error, info } from '@tauri-apps/plugin-log';
 import { useLanguage } from './services/LanguageService.ts';
 import { useTheme } from './services/ThemeService.ts';
+import {env} from "./data/SystemParams.ts";
 
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
 
 hljs.registerLanguage('html', html)
-
-const env = process.env.NODE_ENV;
 
 // 屏蔽鼠标右键菜单（开发环境除外）
 document.oncontextmenu = function () {
