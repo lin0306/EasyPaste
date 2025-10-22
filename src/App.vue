@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { GlobalThemeOverrides, NConfigProvider, NMessageProvider } from 'naive-ui';
-import { computed, onMounted } from 'vue';
+import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
+import {computed, onMounted} from 'vue';
 
-import { error, info } from '@tauri-apps/plugin-log';
-import { useLanguage } from './services/LanguageService.ts';
-import { useTheme } from './services/ThemeService.ts';
+import {error, info} from '@tauri-apps/plugin-log';
+import {useLanguage} from './services/LanguageService.ts';
+import {useTheme} from './services/ThemeService.ts';
 import {env} from "./data/SystemParams.ts";
 
 // 代码高亮引入
@@ -19,8 +19,8 @@ document.oncontextmenu = function () {
 };
 
 // 创建主题上下文
-const { themeColors, initializeTheme, setupThemeListener } = useTheme()
-const { currentLanguage, initializeLanguage, setupLanguageListener } = useLanguage()
+const {themeColors, initializeTheme, setupThemeListener} = useTheme()
+const {currentLanguage, initializeLanguage, setupLanguageListener} = useLanguage()
 
 const theme = computed(() => {
   return {
@@ -30,8 +30,24 @@ const theme = computed(() => {
       primaryColorPressed: themeColors.value.primary,
     },
     Button: {
-      textColor: themeColors.value.text,
-      textColorDisabled: `${themeColors.value.text}80`,
+      color: themeColors.value.button.normal.backgroundColor,
+      colorHover: themeColors.value.button.normal.hoverBackgroundColor,
+      colorDisabled: themeColors.value.button.normal.disabledBackgroundColor,
+      textColor: themeColors.value.button.normal.textColor,
+      textColorHover: themeColors.value.button.normal.hoverTextColor,
+      textColorDisabled: themeColors.value.button.normal.disabledTextColor,
+      border: '0px',
+      borderHover: '0px',
+      borderDisabled: '0px',
+      colorPrimary: themeColors.value.button.primary.backgroundColor,
+      colorHoverPrimary: themeColors.value.button.primary.hoverBackgroundColor,
+      colorDisabledPrimary: themeColors.value.button.primary.disabledBackgroundColor,
+      textColorPrimary: themeColors.value.button.primary.textColor,
+      textColorHoverPrimary: themeColors.value.button.primary.hoverTextColor,
+      textColorDisabledPrimary: themeColors.value.button.primary.disabledTextColor,
+      borderPrimary: '0px',
+      borderHoverPrimary: '0px',
+      borderDisabledPrimary: '0px',
     },
     Input: {
       color: themeColors.value.cardBackground,
@@ -144,8 +160,8 @@ const theme = computed(() => {
       colorHover: themeColors.value.scrollBarColorHover,
     },
     Slider: {
-      railColor:themeColors.value.sliderRailColor,
-      railColorHover:themeColors.value.sliderRailColor,
+      railColor: themeColors.value.sliderRailColor,
+      railColorHover: themeColors.value.sliderRailColor,
     }
   } as GlobalThemeOverrides;
 });
@@ -183,7 +199,7 @@ onMounted(async () => {
 <template>
   <n-config-provider :theme-overrides="theme" :locale="locale" :date-locale="dateLocale" :hljs="hljs">
     <n-message-provider>
-      <router-view />
+      <router-view/>
     </n-message-provider>
   </n-config-provider>
 
@@ -199,11 +215,11 @@ body {
   color: var(--theme-text);
   transition: background-color 0.3s, color 0.3s;
   overflow-y: hidden;
-  -moz-user-select: none;  /* Firefox私有属性 */
-  -webkit-user-select: none;  /* WebKit内核私有属性 */
-  -ms-user-select: none;  /* IE私有属性(IE10及以后) */
-  -khtml-user-select: none;  /* KHTML内核私有属性 */
-  -o-user-select: none;  /* Opera私有属性 */
-  user-select: none;  /* CSS3属性 */
+  -moz-user-select: none; /* Firefox私有属性 */
+  -webkit-user-select: none; /* WebKit内核私有属性 */
+  -ms-user-select: none; /* IE私有属性(IE10及以后) */
+  -khtml-user-select: none; /* KHTML内核私有属性 */
+  -o-user-select: none; /* Opera私有属性 */
+  user-select: none; /* CSS3属性 */
 }
 </style>
