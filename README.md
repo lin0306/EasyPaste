@@ -425,7 +425,7 @@ EasyPaste/
 │   │   ├── CopyStateConstant.ts    # 复制状态常量
 │   │   ├── FileTypeConstants.ts    # 文件类型常量
 │   │   ├── PublicConstants.ts      # 公共常量
-│   │   ├── StoreKeyConstants.ts    # 存储键常量
+│   │   ├── KeysConstants.ts        # 存储键常量
 │   │   └── UserSettingsConstant.ts # 用户设置常量
 │   ├── 📁 assets/             # 静态资源
 │   │   ├── 📁 css/            # 样式文件

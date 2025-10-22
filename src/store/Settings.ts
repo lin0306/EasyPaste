@@ -2,30 +2,30 @@ import {load} from "@tauri-apps/plugin-store";
 import {info} from "@tauri-apps/plugin-log";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
-import {SETTINGS_KEYS} from "../constants/StoreKeyConstants.ts";
+import {SETTINGS_KEYS} from "../constants/KeysConstants.ts";
 import {utf8Decoder} from "../constants/PublicConstants.ts";
 
 export const SETTINGS_FILE_NAME = "settings.json";
 const defaultSettings: Settings = {
-    theme: "light",
+    theme: SETTINGS.THEME.DEFAULT_THEME,
     powerOnSelfStart: false,
     replaceGlobalHotkey: false,
-    languages: "chinese",
+    languages: SETTINGS.LANGUAGE.DEFAULT_LANGUAGE,
     maxHistoryItems: 2000,
     dataRetentionDays: 30,
     autoCheckUpdate: true,
-    updateMode: "timing",
+    updateMode: SETTINGS.UPDATER.CHECK_MODE.TIMING,
     autoCheckUpdateInterval: 1,
     enableTag: true,
-    bindTagBtnShowLocation: SETTINGS.GENERATE.BIND_TAG_LOCATION.TOP_RIGHT,
+    bindTagBtnShowLocation: SETTINGS.TAG.BIND_TAG_LOCATION.TOP_RIGHT,
     autoHideWindow: false,
     alwaysOnTop: true,
     newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
     enableAnimationEffects: true,
     animationDuration: 350,
-    animationSpeedLevel: 'normal',
+    animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL.key,
     autoGoToLatestData: true,
-    tagListLocation: SETTINGS.GENERATE.TAG_LIST_LOCATION.TOP_LEFT,
+    tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
 }
 
 /**

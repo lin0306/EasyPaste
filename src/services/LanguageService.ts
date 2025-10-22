@@ -5,6 +5,7 @@ import {ref} from 'vue';
 import {chinesePageConfig} from '../data/locales/zh.ts';
 import {englishPageConfig} from '../data/locales/en.ts';
 import {getLanguage, saveLanguage} from "../store/Settings.ts";
+import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 
 // 简体中文配置
 export const chinese: LanguageConfig = {
@@ -30,7 +31,7 @@ export const languages: LanguageConfig[] = [
 ]
 
 // 创建一个全局的主题状态管理
-const currentLanguageId = ref<string>(chinese.id);
+const currentLanguageId = ref<string>(SETTINGS.LANGUAGE.DEFAULT_LANGUAGE);
 const currentLanguage = ref<LanguageConfig>(chinese);
 
 // 主题上下文
@@ -52,7 +53,7 @@ export function useLanguage() {
         } catch (err) {
             error('加载主题失败:' + err);
             // 使用默认语言
-            currentLanguageId.value = chinese.id;
+            currentLanguageId.value = SETTINGS.LANGUAGE.DEFAULT_LANGUAGE;
             currentLanguage.value = chinese;
         }
     };

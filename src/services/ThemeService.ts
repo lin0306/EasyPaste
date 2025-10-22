@@ -6,6 +6,7 @@ import {darkTheme} from '../data/themes/dark.ts';
 import {blueTheme} from '../data/themes/blue.ts';
 import {pinkTheme} from '../data/themes/pink.ts';
 import {getTheme, saveTheme} from "../store/Settings.ts";
+import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 
 // 所有可用主题
 export const themes: ThemeConfig[] = [
@@ -17,7 +18,7 @@ export const themes: ThemeConfig[] = [
 
 
 // 创建一个全局的主题状态管理
-const currentThemeId = ref<string>(lightTheme.id);
+const currentThemeId = ref<string>(SETTINGS.THEME.DEFAULT_THEME);
 const themeColors = ref<ThemeConfigColors>(lightTheme.colors);
 
 // 主题上下文
@@ -41,7 +42,7 @@ export function useTheme() {
         } catch (err) {
             error('加载主题失败:' + err);
             // 使用默认主题
-            currentThemeId.value = lightTheme.id;
+            currentThemeId.value = SETTINGS.THEME.DEFAULT_THEME;
             themeColors.value = lightTheme.colors;
             applyThemeToDOM(lightTheme.colors);
         }
