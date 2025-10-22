@@ -40,5 +40,23 @@ export const lightTheme: ThemeConfig = {
         oscillogramCursorColor: 'rgb(220,220,220)',
         oscillogramProgressColor: 'rgb(166,166,166)',
         sliderRailColor: 'rgba(144, 147, 153, 0.3)',
+        button: {
+            normal: {
+                backgroundColor: 'rgb(218,218,218)',
+                disabledBackgroundColor: 'rgb(161,161,161)',
+                hoverBackgroundColor: 'rgb(209,209,209)',
+                textColor: 'rgb(92,92,92)',
+                disabledTextColor: 'rgba(81,81,81,0.75)',
+                hoverTextColor: 'rgba(51,51,51,1)',
+            },
+            primary: {
+                backgroundColor: 'rgb(92,92,92)',
+                disabledBackgroundColor: 'rgba(43,43,43,0.85)',
+                hoverBackgroundColor: 'rgba(25,25,25,0.86)',
+                textColor: 'rgb(218,218,218)',
+                disabledTextColor: 'rgba(232,232,232,0.77)',
+                hoverTextColor: 'rgba(255,255,255,1)',
+            }
+        },
     },
 }

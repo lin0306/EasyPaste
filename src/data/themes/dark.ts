@@ -40,5 +40,23 @@ export const darkTheme: ThemeConfig = {
       oscillogramCursorColor: 'rgb(163,163,163)',
       oscillogramProgressColor: 'rgb(50,50,50)',
       sliderRailColor: 'rgba(144, 147, 153, 0.3)',
+      button: {
+        normal: {
+          backgroundColor: 'rgb(35,35,35)',
+          disabledBackgroundColor: 'rgb(23,23,23)',
+          hoverBackgroundColor: 'rgb(66,66,66)',
+          textColor: 'rgb(96,96,96)',
+          disabledTextColor: 'rgb(154,154,154)',
+          hoverTextColor: 'rgb(151,151,151)',
+        },
+        primary: {
+          backgroundColor: 'rgb(67,67,67)',
+          disabledBackgroundColor: 'rgba(35,35,35,1)',
+          hoverBackgroundColor: 'rgb(99,99,99)',
+          textColor: 'rgb(166,166,166)',
+          disabledTextColor: 'rgb(177,177,177)',
+          hoverTextColor: 'rgb(191,191,191)',
+        },
+      }
     },
   };

@@ -40,5 +40,23 @@ export const pinkTheme: ThemeConfig = {
       oscillogramCursorColor: 'rgb(236,129,188)',
       oscillogramProgressColor: 'rgb(197,110,153)',
       sliderRailColor: 'rgba(240,210,225,1)',
+      button: {
+        normal: {
+          backgroundColor: 'rgba(219,112,147,0.07)',
+          disabledBackgroundColor: 'rgba(219, 112, 147, 0.1)',
+          hoverBackgroundColor: 'rgba(219,112,147,0.25)',
+          textColor: 'rgba(153,51,102,0.7)',
+          disabledTextColor: 'rgba(153,51,102,0.6)',
+          hoverTextColor: 'rgba(153,51,102,1)',
+        },
+        primary: {
+          backgroundColor: 'rgba(219, 112, 147, 1)',
+          disabledBackgroundColor: 'rgb(219,112,147)',
+          hoverBackgroundColor: 'rgb(177,94,122)',
+          textColor: 'rgba(255,255,255,1)',
+          disabledTextColor: 'rgba(255,255,255,0.71)',
+          hoverTextColor: 'rgba(255,255,255,1)',
+        }
+      }
     },
   };

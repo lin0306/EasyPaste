@@ -45,4 +45,22 @@ declare interface ThemeConfigColors {
     oscillogramCursorColor: string;         // 波形图光标色
     oscillogramProgressColor: string;       // 波形图进度色
     sliderRailColor: string;                // 滑块轨道色
+    button: {
+        normal: {
+            backgroundColor: string;        // 普通按钮背景色
+            disabledBackgroundColor: string;// 普通按钮禁用背景色
+            hoverBackgroundColor: string;   // 普通按钮悬浮背景色
+            textColor: string;              // 普通按钮文字色
+            disabledTextColor: string;      // 普通按钮禁用文字色
+            hoverTextColor: string;         // 普通按钮悬浮文字色
+        },
+        primary: {
+            backgroundColor: string;        // 主按钮背景色
+            disabledBackgroundColor: string;// 主按钮禁用背景色
+            hoverBackgroundColor: string;   // 主按钮悬浮背景色
+            textColor: string;              // 主按钮文字色
+            disabledTextColor: string;      // 主按钮禁用文字色
+            hoverTextColor: string;         // 主按钮悬浮文字色
+        },
+    }
 }

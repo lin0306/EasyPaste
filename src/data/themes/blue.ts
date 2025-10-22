@@ -40,5 +40,23 @@ export const blueTheme: ThemeConfig = {
       oscillogramCursorColor: 'rgb(171,224,251)',
       oscillogramProgressColor: 'rgb(65,144,200)',
       sliderRailColor: 'rgba(200,220,240,1)',
+      button: {
+        normal: {
+          backgroundColor: 'rgba(208,221,255,0.7)',
+          disabledBackgroundColor: 'rgba(195,211,255,0.86)',
+          hoverBackgroundColor: 'rgba(115,153,255,0.76)',
+          textColor: 'rgba(255,255,255,1)',
+          disabledTextColor: 'rgba(255,255,255,0.78)',
+          hoverTextColor: 'rgb(255,255,255)',
+        },
+        primary: {
+          backgroundColor: 'rgba(64,115,251,0.8)',
+          disabledBackgroundColor: 'rgb(41,98,255)',
+          hoverBackgroundColor: 'rgba(41,98,255,1)',
+          textColor: 'rgba(255,255,255,1)',
+          disabledTextColor: 'rgba(255,255,255,0.5)',
+          hoverTextColor: 'rgba(255,255,255,1)',
+        }
+      },
     },
   };
