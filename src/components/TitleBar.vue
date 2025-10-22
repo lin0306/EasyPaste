@@ -131,7 +131,7 @@ onMounted(() => {
   padding: 0 5px;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
-  z-index: 1000;
+  z-index: 10000;
   position: fixed;
   top: 0;
   background-color: var(--theme-titleBarBackground);
