@@ -30,12 +30,16 @@ export const chinesePageConfig: PageConfig = {
         replaceGlobalHotkeyLinkHint: '如何以管理员身份运行程序',
         replaceGlobalHotkeyHint: '打开后会关闭系统自带的剪贴板功能，卸载程序前请先关闭此功能，否则无法使用剪贴板功能，关闭此功能后，默认快捷键会恢复成“Alt + C”',
         languages: '语言',
+        autoGoToLatestData: '自动滚动到最新数据',
+        autoGoToLatestDataHint: '打开后，每次复制新内容时，列表都会滚动到最新复制的内容所在的位置，关闭此功能后，每次复制新内容时，列表不会自动滚动',
+
         enableTag: '启用标签功能',
         bindTagBtnShowLocation: '标签绑定按钮位置',
         topRight: '右上角',
         bottomRight: '右下角',
-        autoGoToLatestData: '自动滚动到最新数据',
-        autoGoToLatestDataHint: '打开后，每次复制新内容时，列表都会滚动到最新复制的内容所在的位置，关闭此功能后，每次复制新内容时，列表不会自动滚动',
+        tagListLocation: '标签列表位置',
+        topLeft: '左上角',
+        bottomLeft: '左下角',
 
         autoCheckUpdate: '自动检查更新',
         checkUpdateMode: '检查更新方式',

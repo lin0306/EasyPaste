@@ -38,12 +38,16 @@ declare interface PageConfig {
         replaceGlobalHotkeyLinkHint: string;
         replaceGlobalHotkeyHint: string;
         languages: string;
+        autoGoToLatestData: string;
+        autoGoToLatestDataHint: string;
+        // 标签设置页面文字
         enableTag: string;
         bindTagBtnShowLocation: string;
         topRight: string;
         bottomRight: string;
-        autoGoToLatestData: string;
-        autoGoToLatestDataHint: string;
+        tagListLocation: string;
+        topLeft: string;
+        bottomLeft: string;
         // 更新设置页面文字
         autoCheckUpdate: string;
         checkUpdateMode: string;

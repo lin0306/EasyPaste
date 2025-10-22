@@ -30,12 +30,16 @@ export const englishPageConfig: PageConfig = {
         replaceGlobalHotkeyLinkHint: 'How to run a program as an administrator',
         replaceGlobalHotkeyHint: 'After opening, the system\'s built-in clipboard function will be disabled. Before uninstalling the program, please turn off this function first. Otherwise, the clipboard function will not be usable. After turning off this function, the default shortcut key will revert to "Alt + C".',
         languages: 'Languages',
+        autoGoToLatestData: 'Automatically scroll to the latest data',
+        autoGoToLatestDataHint: 'After opening, each time you copy a new item, the list will scroll to the latest copied item\'s position, and after closing this function, each time you copy a new item, the list will not automatically scroll.',
+
         enableTag: 'Enable Tag Function',
         bindTagBtnShowLocation: 'Tag Binding Button Location',
         topRight: 'Top Right',
         bottomRight: 'Bottom Right',
-        autoGoToLatestData: 'Automatically scroll to the latest data',
-        autoGoToLatestDataHint: 'After opening, each time you copy a new item, the list will scroll to the latest copied item\'s position, and after closing this function, each time you copy a new item, the list will not automatically scroll.',
+        tagListLocation: 'Tag List Location',
+        topLeft: 'Top Left',
+        bottomLeft: 'Bottom Left',
 
         autoCheckUpdate: 'Automatically Check Updates',
         checkUpdateMode: 'Check Update Mode',
