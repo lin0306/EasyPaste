@@ -1,29 +1,10 @@
 import {emit, listen} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
-import {dateEnUS, dateZhCN, enUS, zhCN} from 'naive-ui';
 import {ref} from 'vue';
-import {chinesePageConfig} from '../data/locales/zh.ts';
-import {englishPageConfig} from '../data/locales/en.ts';
+import {chinese} from '../data/locales/zh.ts';
+import {english} from '../data/locales/en.ts';
 import {getLanguage, saveLanguage} from "../store/Settings.ts";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
-
-// 简体中文配置
-export const chinese: LanguageConfig = {
-    id: 'chinese',
-    name: '简体中文',
-    locale: zhCN,
-    dateLocale: dateZhCN,
-    pages: chinesePageConfig,
-}
-
-// 英文配置
-export const english: LanguageConfig = {
-    id: 'english',
-    name: 'English',
-    locale: enUS,
-    dateLocale: dateEnUS,
-    pages: englishPageConfig
-}
 
 export const languages: LanguageConfig[] = [
     chinese,
