@@ -28,6 +28,7 @@ const theme = computed(() => {
       primaryColor: themeColors.value.primary,
       primaryColorHover: themeColors.value.primary,
       primaryColorPressed: themeColors.value.primary,
+      borderRadius: '5px',
     },
     Button: {
       color: themeColors.value.button.normal.backgroundColor,
@@ -61,7 +62,7 @@ const theme = computed(() => {
       textColorDisabled: themeColors.value.textHint,
       placeholderColor: themeColors.value.textHint,
       placeholderColorDisabled: themeColors.value.textHint,
-      borderRadius: '5px'
+      borderRadius: '5px',
     },
     Tag: {
       colorBordered: themeColors.value.background, // 背景色
@@ -70,62 +71,29 @@ const theme = computed(() => {
       fontWeightStrong: 400 // 字体粗细
     },
     Select: {
-      color: themeColors.value.cardBackground,
-      colorActive: themeColors.value.cardBackground,
-      colorDisabled: `${themeColors.value.cardBackground}80`,
-      textColor: themeColors.value.text,
-      textColorDisabled: `${themeColors.value.text}80`,
-      placeholderColor: `${themeColors.value.text}80`,
-      placeholderColorDisabled: `${themeColors.value.text}50`,
-      border: themeColors.value.border,
-      borderHover: themeColors.value.primary,
-      borderActive: themeColors.value.primary,
-      borderFocus: themeColors.value.primary,
-      borderDisabled: themeColors.value.border,
-      boxShadowFocus: `0 0 0 2px ${themeColors.value.primary}20`,
-      menuColor: themeColors.value.cardBackground,
-      menuBoxShadow: '0 3px 6px -4px rgba(0, 0, 0, .12), 0 6px 16px 0 rgba(0, 0, 0, .08), 0 9px 28px 8px rgba(0, 0, 0, .05)',
-      menuDividerColor: themeColors.value.divider,
-      menuHeight: '200px',
-      menuBorderRadius: '4px',
-      menuBoxShadowPopoverInner: '0 3px 6px -4px rgba(0, 0, 0, .12), 0 6px 16px 0 rgba(0, 0, 0, .08), 0 9px 28px 8px rgba(0, 0, 0, .05)',
-      optionHeight: '36px',
-      optionFontSize: '14px',
-      optionColor: themeColors.value.cardBackground,
-      optionColorPressed: themeColors.value.cardBackground,
-      optionColorActive: `${themeColors.value.primary}20`,
-      optionColorHover: `${themeColors.value.primary}10`,
-      optionTextColor: themeColors.value.text,
-      optionTextColorPressed: themeColors.value.primary,
-      optionTextColorDisabled: `${themeColors.value.text}40`,
-      optionTextColorActive: themeColors.value.primary,
-      optionTextColorHover: themeColors.value.primary,
-      optionOpacityDisabled: '0.6',
-      loadingColor: themeColors.value.primary,
       peers: {
         InternalSelection: {
           textColor: themeColors.value.text,
-          textColorDisabled: `${themeColors.value.text}80`,
-          color: themeColors.value.cardBackground,
-          colorActive: themeColors.value.cardBackground,
-          colorDisabled: `${themeColors.value.cardBackground}80`,
-          borderHover: themeColors.value.primary,
-          borderActive: themeColors.value.primary,
-          borderFocus: themeColors.value.primary,
-          borderDisabled: themeColors.value.border,
-          caretColor: themeColors.value.primary,
-          placeholderColor: `${themeColors.value.text}80`,
-          placeholderColorDisabled: `${themeColors.value.text}50`,
-          boxShadowFocus: `0 0 0 2px ${themeColors.value.primary}20`
+          color: themeColors.value.background,
+          colorActive: themeColors.value.background,
+          textColorDisabled: themeColors.value.select.input.disabledTextColor,
+          colorDisabled: themeColors.value.select.input.disabledBackgroundColor,
+          border: `1px solid ${themeColors.value.select.input.borderColor}`,
+          borderHover: themeColors.value.select.input.hoverBorderColor,
+          borderActive: themeColors.value.select.input.hoverBorderColor,
+          borderFocus: themeColors.value.select.input.hoverBorderColor,
+          borderDisabled:  themeColors.value.select.input.disabledBorderColor,
+          placeholderColor: themeColors.value.textHint,
+          placeholderColorDisabled: themeColors.value.textHint,
         },
         InternalSelectMenu: {
           color: themeColors.value.background,
           optionTextColor: themeColors.value.text, // 未选中状态下的文字颜色
           optionTextColorActive: themeColors.value.text, // 选中状态下的文字颜色
           optionOpacityDisabled: '0.6',
-          optionColorPending: themeColors.value.hoverBackground, // 悬浮再未选中的选项上的背景色
-          optionColorActive: themeColors.value.secondary, // 选中的选项背景色
-          optionColorActivePending: themeColors.value.secondary, // 悬浮在选中的选项上的背景色
+          optionColorPending: themeColors.value.select.options.hoverBackgroundColor, // 悬浮再未选中的选项上的背景色
+          optionColorActive: themeColors.value.select.options.selectBackgroundColor, // 选中的选项背景色
+          optionColorActivePending: themeColors.value.select.options.selectBackgroundColor, // 悬浮在选中的选项上的背景色
         }
       }
     },

@@ -1,6 +1,7 @@
 // 主题配置文件
 declare interface ThemeConfig {
     [x: string]: any;
+
     id: string;
     name: string;
     colors: ThemeConfigColors;
@@ -45,7 +46,7 @@ declare interface ThemeConfigColors {
     oscillogramCursorColor: string;         // 波形图光标色
     oscillogramProgressColor: string;       // 波形图进度色
     sliderRailColor: string;                // 滑块轨道色
-    button: {
+    button: {                               // 按钮颜色
         normal: {
             backgroundColor: string;        // 普通按钮背景色
             disabledBackgroundColor: string;// 普通按钮禁用背景色
@@ -62,5 +63,19 @@ declare interface ThemeConfigColors {
             disabledTextColor: string;      // 主按钮禁用文字色
             hoverTextColor: string;         // 主按钮悬浮文字色
         },
+    },
+    select: {                               // 输入框颜色
+        input: {
+            borderColor: string;            // 边框色
+            hoverBorderColor: string;       // 边框悬浮色
+            disabledBackgroundColor: string;// 禁用背景色
+            disabledTextColor: string;      // 禁用文字色
+            disabledBorderColor: string;    // 禁用边框色
+        },
+        options: {
+            disabledBackgroundColor: string;// 禁用背景色
+            hoverBackgroundColor: string;   // 悬浮背景色
+            selectBackgroundColor: string;  // 选中背景色
+        }
     }
 }

@@ -58,5 +58,19 @@ export const lightTheme: ThemeConfig = {
                 hoverTextColor: 'rgba(255,255,255,1)',
             }
         },
+        select: {
+            input: {
+                borderColor: 'rgb(230,230,230)',
+                hoverBorderColor: 'rgb(163,163,163)',
+                disabledBackgroundColor: 'rgb(230,230,230)',
+                disabledTextColor: 'rgb(51,51,51)',
+                disabledBorderColor: 'rgb(230,230,230)',
+            },
+            options: {
+                disabledBackgroundColor: 'rgb(230,230,230)',
+                hoverBackgroundColor: 'rgb(230,230,230)',
+                selectBackgroundColor: 'rgb(216,216,216)',
+            }
+        }
     },
 }

@@ -58,5 +58,19 @@ export const blueTheme: ThemeConfig = {
           hoverTextColor: 'rgba(255,255,255,1)',
         }
       },
+      select: {
+        input: {
+          borderColor: 'rgba(200,220,240,1)',
+          hoverBorderColor: 'rgba(127, 148, 192, 0.54)',
+          disabledBackgroundColor: 'rgba(230,240,250,1)',
+          disabledTextColor: 'rgba(24,51,93,0.5)',
+          disabledBorderColor: 'rgba(230,240,250,1)',
+        },
+        options: {
+          disabledBackgroundColor: 'rgba(230,240,250,1)',
+          hoverBackgroundColor: 'rgb(219,231,241)',
+          selectBackgroundColor: 'rgb(197,209,228)',
+        }
+      }
     },
   };

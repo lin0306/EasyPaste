@@ -57,6 +57,20 @@ export const pinkTheme: ThemeConfig = {
           disabledTextColor: 'rgba(255,255,255,0.71)',
           hoverTextColor: 'rgba(255,255,255,1)',
         }
+      },
+      select: {
+        input: {
+          borderColor: 'rgba(240,210,225,1)',
+          hoverBorderColor: 'rgba(240,210,225,1)',
+          disabledBackgroundColor: 'rgba(240,210,225,1)',
+          disabledTextColor: 'rgba(153,51,102,0.6)',
+          disabledBorderColor: 'rgba(240,210,225,1)',
+        },
+        options: {
+          disabledBackgroundColor: 'rgba(240,210,225,1)',
+          hoverBackgroundColor: 'rgb(246,216,230)',
+          selectBackgroundColor: 'rgb(225,193,209)',
+        }
       }
     },
   };
