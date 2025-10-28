@@ -3,8 +3,8 @@ import {error, info} from '@tauri-apps/plugin-log';
 import {clipboardListenStore} from '../store/CopyStatus';
 import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
-import {isCode} from "../utils/TextUtil.ts";
 import {ref} from "vue";
+import {isCodeText} from "../utils/CodeUtil.ts";
 
 // 剪贴板内容缓存
 export const dataMap = ref<Map<{ type: string; content: string; file_path: string }, number>>(new Map());
@@ -31,7 +31,7 @@ export async function initClipboardListener() {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    await db.saveClipboardItem(content, (isCode(content) ? 'code' : 'text'));
+                    await db.saveClipboardItem(content, (isCodeText(content) ? 'code' : 'text'));
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
