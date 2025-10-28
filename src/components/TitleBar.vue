@@ -134,8 +134,8 @@ onMounted(() => {
   z-index: 10000;
   position: fixed;
   top: 0;
-  background-color: var(--theme-titleBarBackground);
-  color: var(--theme-text);
+  background-color: var(--theme-titleBar-background);
+  color: var(--theme-universal-text);
   cursor: move;
 }
 

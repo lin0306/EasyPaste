@@ -49,12 +49,22 @@ export function useTheme() {
     };
 
     // 将主题应用到DOM
-    const applyThemeToDOM = (colors: ThemeConfigColors) => {
+    const applyThemeToDOM = (colors: ThemeConfigColors, suffix: string = '') => {
         const root = document.documentElement;
 
         // 将主题颜色应用到CSS变量
         Object.entries(colors).forEach(([key, value]) => {
-            root.style.setProperty(`--theme-${key}`, value as string);
+            // 判断值是否是字符串
+            if (typeof value === 'string') {
+                if (suffix) {
+                    root.style.setProperty(`--theme-${suffix}-${key}`, value as string);
+                } else {
+                    root.style.setProperty(`--theme-${key}`, value as string);
+                }
+            } else {
+                // 递归处理嵌套对象
+                applyThemeToDOM(value, suffix ? (suffix + '-' + key) : key);
+            }
         });
     };
 

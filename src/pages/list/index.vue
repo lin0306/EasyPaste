@@ -152,13 +152,13 @@ onUnmounted(async () => {
   bottom: 0;
   font-size: 11px;
   padding: 4px 7px;
-  color: var(--theme-textHint);
-  background-color: var(--theme-background);
+  color: var(--theme-universal-textHint);
+  background-color: var(--theme-universal-background);
   display: flex;
   justify-content: flex-end;
-  border-top: 1px solid var(--theme-border);
+  border-top: 1px solid var(--theme-universal-border);
   border-radius: 6px;
-  box-shadow: 0 -1px 5px var(--theme-border);
+  box-shadow: 0 -1px 5px var(--theme-universal-border);
 
 }
 </style>

@@ -57,39 +57,39 @@ const theme = computed(() => {
       colorDisabled: themeColors.value.cardBackground,
       borderHover: themeColors.value.primary,
       borderFocus: themeColors.value.primary,
-      borderDisabled: themeColors.value.border,
-      textColor: themeColors.value.text,
-      textColorDisabled: themeColors.value.textHint,
-      placeholderColor: themeColors.value.textHint,
-      placeholderColorDisabled: themeColors.value.textHint,
+      borderDisabled: themeColors.value.universal.border,
+      textColor: themeColors.value.universal.text,
+      textColorDisabled: themeColors.value.universal.textHint,
+      placeholderColor: themeColors.value.universal.textHint,
+      placeholderColorDisabled: themeColors.value.universal.textHint,
       borderRadius: '5px',
     },
     Tag: {
-      colorBordered: themeColors.value.background, // 背景色
+      colorBordered: themeColors.value.universal.background, // 背景色
       textColor: themeColors.value.tagTextColor, // 文字颜色
-      border: `1px solid ${themeColors.value.border}`, // 边框
+      border: `1px solid ${themeColors.value.universal.border}`, // 边框
       fontWeightStrong: 400 // 字体粗细
     },
     Select: {
       peers: {
         InternalSelection: {
-          textColor: themeColors.value.text,
-          color: themeColors.value.background,
-          colorActive: themeColors.value.background,
-          textColorDisabled: themeColors.value.textDisabled,
-          colorDisabled: themeColors.value.select.input.disabledBackgroundColor,
-          border: `1px solid ${themeColors.value.select.input.borderColor}`,
-          borderHover: themeColors.value.select.input.hoverBorderColor,
-          borderActive: themeColors.value.select.input.hoverBorderColor,
-          borderFocus: themeColors.value.select.input.hoverBorderColor,
-          borderDisabled:  themeColors.value.select.input.disabledBorderColor,
-          placeholderColor: themeColors.value.textHint,
-          placeholderColorDisabled: themeColors.value.textHint,
+          textColor: themeColors.value.universal.text,
+          color: themeColors.value.universal.background,
+          colorActive: themeColors.value.universal.background,
+          textColorDisabled: themeColors.value.universal.textDisabled,
+          colorDisabled: themeColors.value.universal.disabledBackgroundColor,
+          border: `1px solid ${themeColors.value.universal.border}`,
+          borderHover: themeColors.value.universal.borderHoverColor,
+          borderActive: themeColors.value.universal.borderHoverColor,
+          borderFocus: themeColors.value.universal.borderHoverColor,
+          borderDisabled:  themeColors.value.universal.borderDisabledColor,
+          placeholderColor: themeColors.value.universal.textHint,
+          placeholderColorDisabled: themeColors.value.universal.textHint,
         },
         InternalSelectMenu: {
-          color: themeColors.value.background,
-          optionTextColor: themeColors.value.text, // 未选中状态下的文字颜色
-          optionTextColorActive: themeColors.value.text, // 选中状态下的文字颜色
+          color: themeColors.value.universal.background,
+          optionTextColor: themeColors.value.universal.text, // 未选中状态下的文字颜色
+          optionTextColorActive: themeColors.value.universal.text, // 选中状态下的文字颜色
           optionOpacityDisabled: '0.6',
           optionColorPending: themeColors.value.select.options.hoverBackgroundColor, // 悬浮再未选中的选项上的背景色
           optionColorActive: themeColors.value.select.options.selectBackgroundColor, // 选中的选项背景色
@@ -120,8 +120,8 @@ const theme = computed(() => {
       closeColorHover: themeColors.value.dialogCloseColorHover,
     },
     Empty: {
-      textColor: themeColors.value.textHint,
-      iconColor: themeColors.value.textHint,
+      textColor: themeColors.value.universal.textHint,
+      iconColor: themeColors.value.universal.textHint,
     },
     Scrollbar: {
       color: themeColors.value.scrollBarColor,
@@ -133,7 +133,7 @@ const theme = computed(() => {
     },
     Divider: {
       color: themeColors.value.divider,
-      textColor: themeColors.value.text,
+      textColor: themeColors.value.universal.text,
     }
   } as GlobalThemeOverrides;
 });
@@ -183,8 +183,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--theme-background);
-  color: var(--theme-text);
+  background-color: var(--theme-universal-background);
+  color: var(--theme-universal-text);
   transition: background-color 0.3s, color 0.3s;
   overflow-y: hidden;
   -moz-user-select: none; /* Firefox私有属性 */

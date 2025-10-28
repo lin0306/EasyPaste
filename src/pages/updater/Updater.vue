@@ -181,8 +181,8 @@ onMounted(async () => {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--theme-background);
-  color: var(--theme-text);
+  background-color: var(--theme-universal-background);
+  color: var(--theme-universal-text);
 }
 
 .loading-container {
@@ -233,7 +233,7 @@ onMounted(async () => {
 
 .divider {
   width: 100%;
-  border-bottom: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-universal-border);
 }
 
 .release-notes {
@@ -243,7 +243,7 @@ onMounted(async () => {
 
 /* GitHub风格的Markdown样式 */
 .github-markdown {
-  color: var(--theme-text);
+  color: var(--theme-universal-text);
 }
 
 .github-markdown h1,
@@ -260,13 +260,13 @@ onMounted(async () => {
 
 .github-markdown h1 {
   font-size: 2em;
-  border-bottom: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-universal-border);
   padding-bottom: 0.3em;
 }
 
 .github-markdown h2 {
   font-size: 1.5em;
-  border-bottom: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-universal-border);
   padding-bottom: 0.3em;
 }
 
@@ -317,7 +317,7 @@ onMounted(async () => {
 
 .update-footer {
   padding: 15px 20px;
-  border-top: 1px solid var(--theme-border);
+  border-top: 1px solid var(--theme-universal-border);
   background-color: var(--theme-cardBackground);
   position: fixed;
   bottom: 0;
@@ -352,15 +352,15 @@ onMounted(async () => {
 .days-selector select {
   padding: 2px 5px;
   border-radius: 4px;
-  border: 1px solid var(--theme-border);
+  border: 1px solid var(--theme-universal-border);
   background-color: var(--theme-inputBackground);
-  color: var(--theme-text);
+  color: var(--theme-universal-text);
 }
 
 .download-progress,
 .backup-progress {
   padding: 15px 20px;
-  border-top: 1px solid var(--theme-border);
+  border-top: 1px solid var(--theme-universal-border);
   background-color: var(--theme-cardBackground);
   position: fixed;
   bottom: 0;
@@ -380,13 +380,13 @@ onMounted(async () => {
 
 .progress-bar {
   height: 10px;
-  background-color: var(--theme-background);
+  background-color: var(--theme-universal-background);
   /* 使用固定颜色而非变量 */
   border-radius: 4px;
   overflow: visible;
   /* 确保内容不被裁剪 */
   margin-bottom: 8px;
-  border: 1px solid var(--theme-border);
+  border: 1px solid var(--theme-universal-border);
   position: relative;
   /* 添加相对定位 */
   z-index: 95;

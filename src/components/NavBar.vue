@@ -107,7 +107,7 @@ onUnmounted(() => {
   width: 100%;
   z-index: 1000;
   background-color: var(--theme-navBackground);
-  border-bottom: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-universal-border);
 }
 
 .navbar-menu {
@@ -129,7 +129,7 @@ onUnmounted(() => {
 
 .navbar-link {
   display: block;
-  color: var(--theme-text);
+  color: var(--theme-universal-text);
   text-decoration: none;
   transition: color 0.3s;
 }
@@ -187,7 +187,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 0 12px;
-  color: var(--theme-text);
+  color: var(--theme-universal-text);
   text-decoration: none;
   transition: background-color 0.3s;
   white-space: nowrap;

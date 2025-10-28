@@ -5,14 +5,6 @@ export const pinkTheme: ThemeConfig = {
     colors: {
       primary: 'rgba(219,112,147,1)',
       secondary: 'rgba(155,89,182,1)',
-      background: 'rgba(253,245,250,1)',
-      text: 'rgba(153,51,102,1)',
-      textHint: 'rgba(153,51,102,0.6)',
-      textDelete: 'rgb(255, 68, 68)',
-      textDisabled: 'rgba(153,51,102,0.6)',
-      border: 'rgba(219, 112, 147, 0.1)',
-      titleBarBackground: 'rgb(245,225,235)',
-      titleBarIconColor: '#E6A5C4',
       navBackground: 'rgba(252,242,248,1)',
       cardBackground: 'rgba(255,255,255,1)',
       hoverBackground: 'rgba(248,230,240,1)',
@@ -41,6 +33,20 @@ export const pinkTheme: ThemeConfig = {
       oscillogramCursorColor: 'rgb(236,129,188)',
       oscillogramProgressColor: 'rgb(197,110,153)',
       sliderRailColor: 'rgba(240,210,225,1)',
+      universal: {
+        background: 'rgba(253,245,250,1)',
+        disabledBackgroundColor: 'rgba(240,210,225,1)',
+        text: 'rgba(153,51,102,1)',
+        textHint: 'rgba(153,51,102,0.6)',
+        textDelete: 'rgb(255, 68, 68)',
+        textDisabled: 'rgba(153,51,102,0.6)',
+        border: 'rgba(219, 112, 147, 0.1)',
+        borderHoverColor: 'rgba(240,210,225,1)',
+        borderDisabledColor: 'rgba(240,210,225,1)',
+      },
+      titleBar: {
+        background: 'rgb(245,225,235)',
+      },
       button: {
         normal: {
           backgroundColor: 'rgba(219,112,147,0.07)',
@@ -60,14 +66,7 @@ export const pinkTheme: ThemeConfig = {
         }
       },
       select: {
-        input: {
-          borderColor: 'rgba(240,210,225,1)',
-          hoverBorderColor: 'rgba(240,210,225,1)',
-          disabledBackgroundColor: 'rgba(240,210,225,1)',
-          disabledBorderColor: 'rgba(240,210,225,1)',
-        },
         options: {
-          disabledBackgroundColor: 'rgba(240,210,225,1)',
           hoverBackgroundColor: 'rgb(246,216,230)',
           selectBackgroundColor: 'rgb(225,193,209)',
         }

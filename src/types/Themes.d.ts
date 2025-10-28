@@ -11,14 +11,6 @@ declare interface ThemeConfig {
 declare interface ThemeConfigColors {
     primary: string;                        // 主色调
     secondary: string;                      // 次色调
-    background: string;                     // 背景色
-    text: string;                           // 文字色
-    textHint: string;                       // 提示文字色
-    textDelete: string;                     // 删除文字色
-    textDisabled: string;                   // 禁用文字色
-    border: string;                         // 边框色
-    titleBarBackground: string;             // 标题栏背景色
-    titleBarIconColor: string;              // 标题栏图标色
     navBackground: string;                  // 导航栏背景色  
     cardBackground: string;                 // 卡片背景色
     hoverBackground: string;                // 悬浮背景色
@@ -47,8 +39,22 @@ declare interface ThemeConfigColors {
     oscillogramCursorColor: string;         // 波形图光标色
     oscillogramProgressColor: string;       // 波形图进度色
     sliderRailColor: string;                // 滑块轨道色
+    universal: {                            // 全局通用色
+        background: string;                 // 背景色
+        disabledBackgroundColor: string;    // 禁用背景色
+        text: string;                       // 文字色
+        textHint: string;                   // 提示文字色
+        textDelete: string;                 // 删除文字色
+        textDisabled: string;               // 禁用文字色
+        border: string;                     // 边框色
+        borderHoverColor: string;           // 边框悬浮色
+        borderDisabledColor: string;        // 边框禁用色
+    },
+    titleBar: {                             // 标题栏颜色
+        background: string;                 // 标题栏背景色
+    },
     button: {                               // 按钮颜色
-        normal: {
+        normal: {                           // 普通按钮颜色
             backgroundColor: string;        // 普通按钮背景色
             disabledBackgroundColor: string;// 普通按钮禁用背景色
             hoverBackgroundColor: string;   // 普通按钮悬浮背景色
@@ -56,7 +62,7 @@ declare interface ThemeConfigColors {
             disabledTextColor: string;      // 普通按钮禁用文字色
             hoverTextColor: string;         // 普通按钮悬浮文字色
         },
-        primary: {
+        primary: {                          // 主按钮颜色
             backgroundColor: string;        // 主按钮背景色
             disabledBackgroundColor: string;// 主按钮禁用背景色
             hoverBackgroundColor: string;   // 主按钮悬浮背景色
@@ -66,14 +72,7 @@ declare interface ThemeConfigColors {
         },
     },
     select: {                               // 下拉选择框颜色
-        input: {
-            borderColor: string;            // 边框色
-            hoverBorderColor: string;       // 边框悬浮色
-            disabledBackgroundColor: string;// 禁用背景色
-            disabledBorderColor: string;    // 禁用边框色
-        },
-        options: {
-            disabledBackgroundColor: string;// 禁用背景色
+        options: {                          // 选项颜色
             hoverBackgroundColor: string;   // 悬浮背景色
             selectBackgroundColor: string;  // 选中背景色
         }

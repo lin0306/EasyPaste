@@ -3,7 +3,7 @@
        p-id="4768" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
     <path
         d="M759.14 198.61V64l178.78 178.78-178.78 178.78V286.95H391.06l-90.44-88.34h458.52z m0 357.56h88.34v189.3l-88.34-90.44v-98.86zM86.09 209.13l56.79-56.79 750.87 750.87L836.96 960 702.35 825.39H309.03V960L130.25 781.22l178.78-178.78v134.61H611.9L309.03 434.18v33.65H220.7V343.74L86.09 209.13z"
-        p-id="4769" :fill="themeColors.text"></path>
+        p-id="4769" :fill="themeColors.universal.text"></path>
   </svg>
 </template>
 <script lang="ts" setup>

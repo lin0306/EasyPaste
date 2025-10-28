@@ -5,14 +5,6 @@ export const lightTheme: ThemeConfig = {
     colors: {
         primary: 'rgba(90,90,90,1)',
         secondary: 'rgba(130,130,130,1)',
-        background: 'rgba(255,255,255,1)',
-        text: 'rgba(51,51,51,1)',
-        textHint: 'rgba(51,51,51,0.6)',
-        textDelete: 'rgb(178, 20, 20)',
-        textDisabled: 'rgba(51,51,51,0.6)',
-        border: 'rgba(5, 5, 5, 0.06)',
-        titleBarBackground: 'rgb(239,239,239)',
-        titleBarIconColor: '#333333',
         navBackground: 'rgba(248,248,248,1)',
         cardBackground: 'rgba(255,255,255,1)',
         hoverBackground: 'rgba(240,240,240,1)',
@@ -41,6 +33,20 @@ export const lightTheme: ThemeConfig = {
         oscillogramCursorColor: 'rgb(220,220,220)',
         oscillogramProgressColor: 'rgb(166,166,166)',
         sliderRailColor: 'rgba(144, 147, 153, 0.3)',
+        universal: {
+            background: 'rgba(255,255,255,1)',
+            disabledBackgroundColor: 'rgba(240,210,225,1)',
+            text: 'rgba(51,51,51,1)',
+            textHint: 'rgba(51,51,51,0.6)',
+            textDelete: 'rgb(178, 20, 20)',
+            textDisabled: 'rgba(51,51,51,0.6)',
+            border: 'rgba(5, 5, 5, 0.06)',
+            borderHoverColor: 'rgb(163,163,163)',
+            borderDisabledColor: 'rgb(230,230,230)',
+        },
+        titleBar: {
+            background: 'rgb(239,239,239)',
+        },
         button: {
             normal: {
                 backgroundColor: 'rgb(218,218,218)',
@@ -60,14 +66,7 @@ export const lightTheme: ThemeConfig = {
             }
         },
         select: {
-            input: {
-                borderColor: 'rgb(230,230,230)',
-                hoverBorderColor: 'rgb(163,163,163)',
-                disabledBackgroundColor: 'rgb(230,230,230)',
-                disabledBorderColor: 'rgb(230,230,230)',
-            },
             options: {
-                disabledBackgroundColor: 'rgb(230,230,230)',
                 hoverBackgroundColor: 'rgb(230,230,230)',
                 selectBackgroundColor: 'rgb(216,216,216)',
             }
