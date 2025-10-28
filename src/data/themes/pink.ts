@@ -9,6 +9,7 @@ export const pinkTheme: ThemeConfig = {
       text: 'rgba(153,51,102,1)',
       textHint: 'rgba(153,51,102,0.6)',
       textDelete: 'rgb(255, 68, 68)',
+      textDisabled: 'rgba(153,51,102,0.6)',
       border: 'rgba(219, 112, 147, 0.1)',
       titleBarBackground: 'rgb(245,225,235)',
       titleBarIconColor: '#E6A5C4',
@@ -63,7 +64,6 @@ export const pinkTheme: ThemeConfig = {
           borderColor: 'rgba(240,210,225,1)',
           hoverBorderColor: 'rgba(240,210,225,1)',
           disabledBackgroundColor: 'rgba(240,210,225,1)',
-          disabledTextColor: 'rgba(153,51,102,0.6)',
           disabledBorderColor: 'rgba(240,210,225,1)',
         },
         options: {

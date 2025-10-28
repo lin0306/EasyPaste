@@ -76,7 +76,7 @@ const theme = computed(() => {
           textColor: themeColors.value.text,
           color: themeColors.value.background,
           colorActive: themeColors.value.background,
-          textColorDisabled: themeColors.value.select.input.disabledTextColor,
+          textColorDisabled: themeColors.value.textDisabled,
           colorDisabled: themeColors.value.select.input.disabledBackgroundColor,
           border: `1px solid ${themeColors.value.select.input.borderColor}`,
           borderHover: themeColors.value.select.input.hoverBorderColor,

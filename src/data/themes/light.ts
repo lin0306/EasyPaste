@@ -9,6 +9,7 @@ export const lightTheme: ThemeConfig = {
         text: 'rgba(51,51,51,1)',
         textHint: 'rgba(51,51,51,0.6)',
         textDelete: 'rgb(178, 20, 20)',
+        textDisabled: 'rgba(51,51,51,0.6)',
         border: 'rgba(5, 5, 5, 0.06)',
         titleBarBackground: 'rgb(239,239,239)',
         titleBarIconColor: '#333333',
@@ -63,7 +64,6 @@ export const lightTheme: ThemeConfig = {
                 borderColor: 'rgb(230,230,230)',
                 hoverBorderColor: 'rgb(163,163,163)',
                 disabledBackgroundColor: 'rgb(230,230,230)',
-                disabledTextColor: 'rgb(51,51,51)',
                 disabledBorderColor: 'rgb(230,230,230)',
             },
             options: {

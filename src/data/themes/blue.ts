@@ -9,6 +9,7 @@ export const blueTheme: ThemeConfig = {
       text: 'rgba(24,51,93,1)',
       textHint: 'rgba(24,51,93,0.6)',
       textDelete: 'rgb(209, 85, 85)',
+      textDisabled: 'rgba(24,51,93,0.6)',
       border: 'rgba(41, 98, 255, 0.1)',
       titleBarBackground: 'rgb(221,243,255)',
       titleBarIconColor: '#4B89DC',
@@ -63,7 +64,6 @@ export const blueTheme: ThemeConfig = {
           borderColor: 'rgba(200,220,240,1)',
           hoverBorderColor: 'rgba(127, 148, 192, 0.54)',
           disabledBackgroundColor: 'rgba(230,240,250,1)',
-          disabledTextColor: 'rgba(24,51,93,0.5)',
           disabledBorderColor: 'rgba(230,240,250,1)',
         },
         options: {

@@ -9,6 +9,7 @@ export const darkTheme: ThemeConfig = {
       text: 'rgba(230,230,230,1)',
       textHint: 'rgba(230,230,230,0.6)',
       textDelete: 'rgb(243, 57, 57)',
+      textDisabled: 'rgba(230,230,230,0.6)',
       border: 'rgba(253, 253, 253, 0.12)',
       titleBarBackground: 'rgb(53,53,53)',
       titleBarIconColor: '#ffffff',
@@ -63,7 +64,6 @@ export const darkTheme: ThemeConfig = {
           borderColor: 'rgb(46,46,46)',
           hoverBorderColor: 'rgb(35,35,35)',
           disabledBackgroundColor: 'rgb(35,35,35)',
-          disabledTextColor: 'rgb(230,230,230)',
           disabledBorderColor: 'rgb(35,35,35)',
         },
         options: {
