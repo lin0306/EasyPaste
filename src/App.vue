@@ -148,6 +148,14 @@ const dateLocale = computed(() => {
   return currentLanguage.value.dateLocale;
 });
 
+async function handleKeyDown(event: KeyboardEvent) {
+  // 忽略浏览器默认的搜索快捷键
+  if (event.key.toLowerCase() === 'f' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+}
+
 // 应用启动时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
@@ -165,7 +173,14 @@ onMounted(async () => {
   } catch (er) {
     error('应用初始化失败:' + er);
   }
+  // 增加键盘点击事件监听
+  document.addEventListener('keydown', handleKeyDown);
 });
+
+onUnmounted(() => {
+  // 移除键盘点击时间监听
+  document.removeEventListener('keydown', handleKeyDown);
+})
 </script>
 
 <template>
