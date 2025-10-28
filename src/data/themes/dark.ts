@@ -5,7 +5,6 @@ export const darkTheme: ThemeConfig = {
     colors: {
       primary: 'rgba(160,160,160,1)',
       secondary: 'rgba(120,120,120,1)',
-      navBackground: 'rgba(28,28,28,1)',
       cardBackground: 'rgba(35,35,35,1)',
       hoverBackground: 'rgba(45,45,45,1)',
       divider: 'rgba(55,55,55,1)',
@@ -13,11 +12,6 @@ export const darkTheme: ThemeConfig = {
       tagTextColor: 'rgba(230,230,230,1)',
       scrollBarColor: 'rgba(255, 255, 255, 0.3)',
       scrollBarColorHover: 'rgba(144, 147, 153, 0.5)',
-      menuItemBackground: 'rgba(28,28,28,1)',
-      menuItemHover: 'rgba(45,45,45,1)',
-      menuItemTextColor: 'rgba(230,230,230,1)',
-      menuItemTextActive: 'rgba(230,230,230,1)',
-      menuItemTextHover: 'rgba(230,230,230,1)',
       switchRailColor: 'rgba(144, 147, 153, 0.3)',
       switchRailColorActive: 'rgba(144, 147, 153, 0.5)',
       switchButtonColor: 'rgba(255,255,255,1)',
@@ -46,6 +40,11 @@ export const darkTheme: ThemeConfig = {
       },
       titleBar: {
         background: 'rgb(53,53,53)',
+      },
+      menu: {
+        background: 'rgba(28,28,28,1)',
+        itemActive: 'rgb(64,64,64)',
+        itemHover: 'rgba(45,45,45,1)',
       },
       button: {
         normal: {

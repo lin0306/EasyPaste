@@ -16,12 +16,15 @@ import {
   initializeClipboardData,
   insertClipboardItem,
   scrollState,
+  searchBoxState,
+  toggleSearchBox,
 } from "./composables/ClipboardDataComposable.ts";
 import {destroyTag, initializeTag} from "./composables/TagDataComposable.ts";
 import {destroyUpdater, hasNewVersion, initializeUpdater} from "./composables/UpdaterComposable.ts";
 import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/WindowComposable.ts";
 import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/AnimationComposable.ts";
 import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
+import {getSearchKey} from "../../store/ShortcutKeys.ts";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -33,7 +36,55 @@ const message = useMessage();
 const clipboardListen = clipboardListenStore();
 const isLoading = ref(true);
 
-// 监听系统是否复制内容
+/**
+ * 处理键盘事件
+ * @param {KeyboardEvent} event - 键盘事件
+ */
+let lastKeyDownTime = 0;
+
+/**
+ * 监听键盘点击事件
+ */
+async function handleKeyDown(event: KeyboardEvent) {
+  // 忽略重复的按键事件
+  if (event.timeStamp - lastKeyDownTime < 100) {
+    return;
+  }
+  lastKeyDownTime = event.timeStamp;
+
+  const searchKey = await getSearchKey();
+  // 如果没有快捷键配置，则不处理
+  if (!searchKey) return;
+
+  // 当搜索框显示时，按ESC键隐藏
+  if (searchBoxState.visible && event.key === 'Escape') {
+    toggleSearchBox();
+    return;
+  }
+
+  const keys: string[] = searchKey.key;
+
+  let isCtrl = keys.includes("ctrl");
+  let isAlt = keys.includes("alt");
+  let isShift = keys.includes("shift");
+  // mac上是command键，windows上是win键
+  let isMeta = keys.includes("meta");
+  let character = keys[keys.length - 1];
+  if (
+      event.key.toLowerCase() === character.toLowerCase()
+      && event.ctrlKey === isCtrl
+      && event.altKey === isAlt
+      && event.shiftKey === isShift
+      && event.metaKey === isMeta
+  ) {
+    toggleSearchBox();
+    return;
+  }
+}
+
+/**
+ * 监听系统是否复制内容
+ */
 watch(() => clipboardListen.state, (newValue, oldValue) => {
   if (
       newValue !== oldValue
@@ -74,6 +125,9 @@ onMounted(async () => {
 
     // 初始化文件数据配置
     initializeFileData();
+
+    // 增加事件监听
+    document.addEventListener('keydown', handleKeyDown);
   } catch (err) {
     console.error(err);
     error('列表页面初始化失败:' + err);
@@ -105,6 +159,9 @@ onUnmounted(async () => {
 
   // 销毁文件数据配置
   destroyFileData();
+
+  // 移除事件监听
+  document.removeEventListener('keydown', handleKeyDown);
 })
 </script>
 
@@ -125,15 +182,16 @@ onUnmounted(async () => {
   <!-- 搜索框 -->
   <SearchBox v-if="!isLoading"/>
 
-  <!-- 标签列表 -->
-  <TagList v-if="!isLoading"/>
-
   <!-- 数据列表 -->
   <ClipboardListContent v-if="!isLoading"/>
+
+  <!-- 底部展示 -->
   <div class="footer">
-    <div></div>
     <div>{{ currentLanguage.pages.list.totalData.replace('{total}', scrollState.total.toString()) }}</div>
   </div>
+
+  <!-- 标签列表 -->
+  <TagList v-if="!isLoading"/>
 </template>
 <style scoped>
 .loading {
@@ -159,6 +217,5 @@ onUnmounted(async () => {
   border-top: 1px solid var(--theme-universal-border);
   border-radius: 6px;
   box-shadow: 0 -1px 5px var(--theme-universal-border);
-
 }
 </style>

@@ -5,7 +5,6 @@ export const blueTheme: ThemeConfig = {
     colors: {
         primary: 'rgba(41,98,255,1)',
         secondary: 'rgba(72,166,184,1)',
-        navBackground: 'rgba(245,250,255,1)',
         cardBackground: 'rgba(255,255,255,1)',
         hoverBackground: 'rgba(230,240,250,1)',
         divider: 'rgba(200,220,240,1)',
@@ -13,11 +12,6 @@ export const blueTheme: ThemeConfig = {
         tagTextColor: 'rgba(24,51,93,1)',
         scrollBarColor: 'rgba(127, 148, 192, 0.54)',
         scrollBarColorHover: 'rgba(49, 61, 84, 0.5)',
-        menuItemBackground: 'rgba(245,250,255,1)',
-        menuItemHover: 'rgba(230,240,250,1)',
-        menuItemTextColor: 'rgba(24,51,93,1)',
-        menuItemTextActive: 'rgba(24,51,93,1)',
-        menuItemTextHover: 'rgba(24,51,93,1)',
         switchRailColor: 'rgba(200,220,240,1)',
         switchRailColorActive: 'rgba(127, 148, 192, 0.54)',
         switchButtonColor: 'rgba(87, 106, 146, 0.54)',
@@ -46,6 +40,11 @@ export const blueTheme: ThemeConfig = {
         },
         titleBar: {
             background: 'rgb(221,243,255)',
+        },
+        menu: {
+            background: 'rgba(245,250,255,1)',
+            itemActive: 'rgb(216,230,246)',
+            itemHover: 'rgba(230,240,250,1)',
         },
         button: {
             normal: {

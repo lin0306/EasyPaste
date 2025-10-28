@@ -11,7 +11,6 @@ declare interface ThemeConfig {
 declare interface ThemeConfigColors {
     primary: string;                        // 主色调
     secondary: string;                      // 次色调
-    navBackground: string;                  // 导航栏背景色  
     cardBackground: string;                 // 卡片背景色
     hoverBackground: string;                // 悬浮背景色
     divider: string;                        // 分割线色
@@ -19,11 +18,6 @@ declare interface ThemeConfigColors {
     tagTextColor: string;                   // 标签文字色
     scrollBarColor: string;                 // 滚动条色
     scrollBarColorHover: string;            // 滚动条悬浮色
-    menuItemBackground: string;             // 菜单项背景色
-    menuItemHover: string;                  // 菜单项悬浮色
-    menuItemTextColor: string;              // 菜单项文字色
-    menuItemTextActive: string;             // 菜单项选中项文字色
-    menuItemTextHover: string;              // 菜单项悬浮文字色
     switchRailColor: string;                // 开关关闭状态下的轨道色
     switchRailColorActive: string;          // 开关选中状态下的轨道色
     switchButtonColor: string;              // 开关按钮色
@@ -53,6 +47,11 @@ declare interface ThemeConfigColors {
     titleBar: {                             // 标题栏颜色
         background: string;                 // 标题栏背景色
     },
+    menu: {                                 // 菜单颜色
+        background: string;                 // 背景色
+        itemActive: string;                 // 菜单项选中色
+        itemHover: string;                  // 菜单项悬浮色
+    }
     button: {                               // 按钮颜色
         normal: {                           // 普通按钮颜色
             backgroundColor: string;        // 普通按钮背景色

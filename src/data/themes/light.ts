@@ -5,7 +5,6 @@ export const lightTheme: ThemeConfig = {
     colors: {
         primary: 'rgba(90,90,90,1)',
         secondary: 'rgba(130,130,130,1)',
-        navBackground: 'rgba(248,248,248,1)',
         cardBackground: 'rgba(255,255,255,1)',
         hoverBackground: 'rgba(240,240,240,1)',
         divider: 'rgba(230,230,230,1)',
@@ -13,11 +12,6 @@ export const lightTheme: ThemeConfig = {
         tagTextColor: 'rgba(51,51,51,1)',
         scrollBarColor: 'rgba(144, 147, 153, 0.3)',
         scrollBarColorHover: 'rgba(144, 147, 153, 0.5)',
-        menuItemBackground: 'rgba(248,248,248,1)',
-        menuItemHover: 'rgba(240,240,240,1)',
-        menuItemTextColor: 'rgba(51,51,51,1)',
-        menuItemTextActive: 'rgba(51,51,51,1)',
-        menuItemTextHover: 'rgba(51,51,51,1)',
         switchRailColor: 'rgba(144, 147, 153, 0.3)',
         switchRailColorActive: 'rgba(144, 147, 153, 0.5)',
         switchButtonColor: 'rgba(255,255,255,1)',
@@ -46,6 +40,11 @@ export const lightTheme: ThemeConfig = {
         },
         titleBar: {
             background: 'rgb(239,239,239)',
+        },
+        menu: {
+            background: 'rgba(248,248,248,1)',
+            itemActive: 'rgb(216,216,216)',
+            itemHover: 'rgba(240,240,240,1)',
         },
         button: {
             normal: {

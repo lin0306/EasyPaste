@@ -1,5 +1,8 @@
 <template>
-  <div id="title-bar" :class="{ 'fixed': isFixed }" :data-tauri-drag-region="!isFixed">
+  <div id="title-bar"
+       :class="{ 'fixed': isFixed }"
+       :data-tauri-drag-region="!isFixed"
+  >
     <div class="window-title">
       <span>
       {{ title }}
@@ -28,7 +31,6 @@
       </div>
     </div>
   </div>
-  <div style="width: 100%;height: 25px;"></div>
 </template>
 <script lang="ts" setup>
 import CloseIcon from '../assets/icons/CloseIcon.vue'
@@ -120,7 +122,7 @@ onMounted(() => {
 /* 标题栏样式 */
 #title-bar {
   height: 25px;
-  width: 100%;
+  width: 96%;
   user-select: none;
   touch-action: none;
   -webkit-user-select: none;
@@ -128,15 +130,14 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5px;
+  padding: 0 2%;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
   z-index: 10000;
-  position: fixed;
-  top: 0;
   background-color: var(--theme-titleBar-background);
   color: var(--theme-universal-text);
   cursor: move;
+  position: relative;
 }
 
 #title-bar.fixed {
@@ -167,7 +168,6 @@ onMounted(() => {
   display: flex;
   gap: 8px;
   -webkit-app-region: no-drag;
-  padding-right: 10px;
 }
 
 .control-button {

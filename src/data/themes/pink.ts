@@ -5,7 +5,6 @@ export const pinkTheme: ThemeConfig = {
     colors: {
       primary: 'rgba(219,112,147,1)',
       secondary: 'rgba(155,89,182,1)',
-      navBackground: 'rgba(252,242,248,1)',
       cardBackground: 'rgba(255,255,255,1)',
       hoverBackground: 'rgba(248,230,240,1)',
       divider: 'rgba(240,210,225,1)',
@@ -13,11 +12,6 @@ export const pinkTheme: ThemeConfig = {
       tagTextColor: 'rgba(153,51,102,1)',
       scrollBarColor: 'rgba(214, 157, 206, 0.38)',
       scrollBarColorHover: 'rgba(153, 100, 140, 0.5)',
-      menuItemBackground: 'rgba(252,242,248,1)',
-      menuItemHover: 'rgba(248,230,240,1)',
-      menuItemTextColor: 'rgba(153,51,102,1)',
-      menuItemTextActive: 'rgba(153,51,102,1)',
-      menuItemTextHover: 'rgba(153,51,102,1)',
       switchRailColor: 'rgb(249, 219, 234)',
       switchRailColorActive: 'rgba(211, 122, 200, 0.38)',
       switchButtonColor: 'rgba(156, 100, 149, 0.38)',
@@ -46,6 +40,11 @@ export const pinkTheme: ThemeConfig = {
       },
       titleBar: {
         background: 'rgb(245,225,235)',
+      },
+      menu: {
+        background: 'rgba(252,242,248,1)',
+        itemActive: 'rgb(246,191,219)',
+        itemHover: 'rgba(248,230,240,1)',
       },
       button: {
         normal: {

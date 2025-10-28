@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
-import {computed, onMounted} from 'vue';
+import {computed, onMounted, onUnmounted} from 'vue';
 
 import {error, info} from '@tauri-apps/plugin-log';
 import {useLanguage} from './services/LanguageService.ts';
@@ -82,7 +82,7 @@ const theme = computed(() => {
           borderHover: themeColors.value.universal.borderHoverColor,
           borderActive: themeColors.value.universal.borderHoverColor,
           borderFocus: themeColors.value.universal.borderHoverColor,
-          borderDisabled:  themeColors.value.universal.borderDisabledColor,
+          borderDisabled: themeColors.value.universal.borderDisabledColor,
           placeholderColor: themeColors.value.universal.textHint,
           placeholderColorDisabled: themeColors.value.universal.textHint,
         },
@@ -98,12 +98,13 @@ const theme = computed(() => {
       }
     },
     Menu: {
-      color: themeColors.value.menuItemBackground,
-      itemColorHover: themeColors.value.menuItemHover,
-      itemTextColor: themeColors.value.menuItemTextColor,
-      itemTextColorActive: themeColors.value.menuItemTextActive,
-      itemTextColorHover: themeColors.value.menuItemTextHover,
-
+      color: themeColors.value.menu.background,
+      itemColorHover: themeColors.value.menu.itemHover,
+      itemColorActive: themeColors.value.menu.itemActive,
+      itemTextColor: themeColors.value.universal.text,
+      itemTextColorActive: themeColors.value.universal.text,
+      itemTextColorHover: themeColors.value.universal.text,
+      itemTextColorActiveHover: themeColors.value.universal.text,
     },
     Switch: {
       railColor: themeColors.value.switchRailColor,
