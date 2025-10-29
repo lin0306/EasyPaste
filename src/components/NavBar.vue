@@ -170,7 +170,7 @@ onUnmounted(() => {
 <style scoped>
 .custom-navbar {
   width: 98%;
-  z-index: 10000;
+  z-index: 3000;
   font-size: 12px;
   padding: 0 1%;
   position: relative;

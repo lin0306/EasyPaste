@@ -133,7 +133,7 @@ onMounted(() => {
   padding: 0 2%;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
-  z-index: 10000;
+  z-index: 3000;
   background-color: var(--theme-titleBar-background);
   color: var(--theme-universal-text);
   cursor: move;
