@@ -25,6 +25,8 @@ import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/W
 import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/AnimationComposable.ts";
 import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
 import {getSearchKey} from "../../store/ShortcutKeys.ts";
+import ClearIcon from "../../assets/icons/ClearIcon.vue";
+import ClipboardFooter from "./components/ClipboardFooter.vue";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -186,9 +188,7 @@ onUnmounted(async () => {
   <ClipboardListContent v-if="!isLoading"/>
 
   <!-- 底部展示 -->
-  <div class="footer">
-    <div>{{ currentLanguage.pages.list.totalData.replace('{total}', scrollState.total.toString()) }}</div>
-  </div>
+  <ClipboardFooter />
 
   <!-- 标签列表 -->
   <TagList v-if="!isLoading"/>
@@ -200,22 +200,5 @@ onUnmounted(async () => {
   height: 100vh;
   align-content: center;
   justify-content: center;
-}
-
-.footer {
-  z-index: 999;
-  width: 96%;
-  height: 16px;
-  position: fixed;
-  bottom: 0;
-  font-size: 11px;
-  padding: 4px 7px;
-  color: var(--theme-universal-textHint);
-  background-color: var(--theme-universal-background);
-  display: flex;
-  justify-content: flex-end;
-  border-top: 1px solid var(--theme-universal-border);
-  border-radius: 6px;
-  box-shadow: 0 -1px 5px var(--theme-universal-border);
 }
 </style>

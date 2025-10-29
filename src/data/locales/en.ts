@@ -119,6 +119,10 @@ export const english: LanguageConfig = {
             initFailedHint: 'The program initialization failed. Please run the program again.',
             updateTxt: 'New',
             totalData: 'A total of {total} pieces of data',
+            clearDataModalTitle: 'Clear Data Confirmation',
+            clearDataModalContent: 'Are you sure you want to clear all data?',
+            clearDataModalCancelBtn: 'Cancel',
+            clearDataModalConfirmBtn: 'Confirm',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

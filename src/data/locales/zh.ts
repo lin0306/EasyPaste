@@ -102,7 +102,7 @@ export const chinese: LanguageConfig = {
             animationHint: '页面切换动画可以提升视觉体验，但可能会影响低性能设备的流畅性',
         },
         list: {
-            title: '剪贴板',
+            title: '剪贴板列表',
             copySuccessMsg: '复制成功',
             copyFailedMsg: '复制失败',
             fileNotExistCopyFailedMsg: '文件不存在，复制失败',
@@ -120,6 +120,10 @@ export const chinese: LanguageConfig = {
             initFailedHint: '程序初始化失败，请重新运行程序',
             updateTxt: '新版本',
             totalData: '共 {total} 条数据',
+            clearDataModalTitle: '清空剪贴板',
+            clearDataModalContent: '此操作将清空剪贴板中的所有数据，请确认是否继续？',
+            clearDataModalCancelBtn: '取消',
+            clearDataModalConfirmBtn: '确认',
             menu: {
                 program: '程序',
                 settings: '偏好设置',

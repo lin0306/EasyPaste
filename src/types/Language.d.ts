@@ -126,6 +126,10 @@ declare interface PageConfig {
         initFailedHint: string;
         updateTxt: string;
         totalData: string;
+        clearDataModalTitle: string;
+        clearDataModalContent: string;
+        clearDataModalCancelBtn: string;
+        clearDataModalConfirmBtn: string;
         menu: {
             [x: string]: string;
             program: string;
