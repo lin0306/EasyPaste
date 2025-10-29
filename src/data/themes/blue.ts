@@ -8,7 +8,7 @@ export const blueTheme: ThemeConfig = {
             secondary: 'rgba(255,255,255,1)',
             background: 'rgba(240,248,255,1)',
             hoverBackgroundColor: 'rgba(230,240,250,1)',
-            disabledBackgroundColor: 'rgba(240,210,225,1)',
+            disabledBackgroundColor: 'rgb(210,227,240)',
             text: 'rgba(24,51,93,1)',
             textHint: 'rgba(24,51,93,0.6)',
             textDelete: 'rgb(209, 85, 85)',
@@ -66,6 +66,9 @@ export const blueTheme: ThemeConfig = {
             waveColor: 'rgb(74,97,147)',
             cursorColor: 'rgb(171,224,251)',
             progressColor: 'rgb(65,144,200)',
+        },
+        tooltip: {
+            color: 'rgba(180,208,255,0.9)',
         }
     },
 };

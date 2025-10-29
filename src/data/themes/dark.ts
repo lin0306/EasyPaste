@@ -8,8 +8,8 @@ export const darkTheme: ThemeConfig = {
             secondary: 'rgba(35,35,35,1)',
             background: 'rgba(20,20,20,1)',
             hoverBackgroundColor: 'rgba(45,45,45,1)',
-            disabledBackgroundColor: 'rgba(240,210,225,1)',
-            text: 'rgba(230,230,230,1)',
+            disabledBackgroundColor: 'rgb(30,30,30)',
+            text: 'rgb(188,188,188)',
             textHint: 'rgba(230,230,230,0.6)',
             textDelete: 'rgb(243, 57, 57)',
             textHover: 'rgba(144, 147, 153, 0.5)',
@@ -66,6 +66,9 @@ export const darkTheme: ThemeConfig = {
             waveColor: 'rgb(83,83,83)',
             cursorColor: 'rgb(163,163,163)',
             progressColor: 'rgb(50,50,50)',
+        },
+        tooltip: {
+            color: 'rgb(53,53,53)',
         }
     },
 };

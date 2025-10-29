@@ -138,6 +138,12 @@ const theme = computed(() => {
     Divider: {
       color: themeColors.value.universal.border,
       textColor: themeColors.value.universal.text,
+    },
+    Tooltip: {
+      color: themeColors.value.tooltip.color,
+      textColor: themeColors.value.universal.text,
+      fontSize: '12px',
+      padding: '4px 8px',
     }
   } as GlobalThemeOverrides;
 });

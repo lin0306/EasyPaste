@@ -66,6 +66,9 @@ export const pinkTheme: ThemeConfig = {
             waveColor: 'rgb(179,30,133)',
             cursorColor: 'rgb(236,129,188)',
             progressColor: 'rgb(197,110,153)',
+        },
+        tooltip: {
+            color: 'rgb(251,229,243)',
         }
     },
 };

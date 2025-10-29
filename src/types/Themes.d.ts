@@ -72,5 +72,8 @@ declare interface ThemeConfigColors {
         waveColor: string;                  // 波形图波色
         cursorColor: string;                // 波形图光标色
         progressColor: string;              // 波形图进度色
+    },
+    tooltip: {
+        color: string;                      // 提示框色
     }
 }

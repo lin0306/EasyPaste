@@ -9,7 +9,7 @@ export const lightTheme: ThemeConfig = {
             background: 'rgb(248,248,248)',
             hoverBackgroundColor: 'rgb(236,236,236)',
             disabledBackgroundColor: 'rgb(216,216,216)',
-            text: 'rgba(51,51,51,1)',
+            text: 'rgb(83,83,83)',
             textHint: 'rgba(51,51,51,0.6)',
             textDelete: 'rgb(178, 20, 20)',
             textDisabled: 'rgba(51,51,51,0.6)',
@@ -66,6 +66,9 @@ export const lightTheme: ThemeConfig = {
             waveColor: 'rgba(104,104,104, 1)',
             cursorColor: 'rgb(220,220,220)',
             progressColor: 'rgb(166,166,166)',
+        },
+        tooltip: {
+            color: 'rgb(244,244,244)',
         }
     },
 }
