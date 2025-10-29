@@ -20,13 +20,13 @@
            ref="submenuRef"
            :style="{ left: submenuLeft + 'px' }">
         <ul>
-          <template v-for="(subItem, _index) in subMenuItems" :key="subItem.key">
+          <template v-for="subItem in subMenuItems" :key="subItem.key">
             <li v-if="subItem.type === 'divider'" class="divider"/>
-            <li v-if="subItem.type === 'theme'" class="submenu-item">
+            <li v-else-if="subItem.type === 'theme'" class="submenu-item">
               <a @click="handleSubMenuClick(subItem)" class="submenu-link">
+                {{ subItem.label }}
                 <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.primary" class="checked-icon"/>
                 <div v-else class="unchecked-icon"></div>
-                {{ subItem.label }}
               </a>
             </li>
             <li v-else class="submenu-item">
@@ -239,7 +239,7 @@ onUnmounted(() => {
 .checked-icon {
   width: 14px;
   height: 14px;
-  margin-right: 5px;
+  margin-left: 10px;
   display: inline-block;
   vertical-align: middle;
 }
@@ -247,7 +247,7 @@ onUnmounted(() => {
 .unchecked-icon {
   width: 14px;
   height: 14px;
-  margin-right: 5px;
+  margin-left: 10px;
   display: inline-block;
   vertical-align: middle;
 }
@@ -255,7 +255,8 @@ onUnmounted(() => {
 .submenu-link {
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 2px 7px;
+  margin: 4px;
   color: var(--theme-universal-text);
   text-decoration: none;
   transition: background-color 0.3s;
@@ -263,6 +264,7 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 24px;
+  border-radius: 5px;
 }
 
 .submenu-link:hover {
@@ -273,7 +275,6 @@ onUnmounted(() => {
   height: 1px;
   background-color: var(--theme-divider);
 }
-
 
 /*内容列表动画效果start*/
 /* 进入动画 - 显示 */
