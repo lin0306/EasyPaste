@@ -122,7 +122,7 @@ onMounted(() => {
 /* 标题栏样式 */
 #title-bar {
   height: 25px;
-  width: 96%;
+  width: 98%;
   user-select: none;
   touch-action: none;
   -webkit-user-select: none;
@@ -130,7 +130,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2%;
+  padding: 0 1%;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
   z-index: 3000;
