@@ -123,6 +123,7 @@ export const english: LanguageConfig = {
             clearDataModalContent: 'Are you sure you want to clear all data?',
             clearDataModalCancelBtn: 'Cancel',
             clearDataModalConfirmBtn: 'Confirm',
+            tagManager: 'Tag Manager',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

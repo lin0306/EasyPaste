@@ -124,6 +124,7 @@ export const chinese: LanguageConfig = {
             clearDataModalContent: '此操作将清空剪贴板中的所有数据，请确认是否继续？',
             clearDataModalCancelBtn: '取消',
             clearDataModalConfirmBtn: '确认',
+            tagManager: '标签管理',
             menu: {
                 program: '程序',
                 settings: '偏好设置',
