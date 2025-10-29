@@ -25,9 +25,9 @@ const {currentLanguage, initializeLanguage, setupLanguageListener} = useLanguage
 const theme = computed(() => {
   return {
     common: {
-      primaryColor: themeColors.value.primary,
-      primaryColorHover: themeColors.value.primary,
-      primaryColorPressed: themeColors.value.primary,
+      primaryColor: themeColors.value.universal.primary,
+      primaryColorHover: themeColors.value.universal.primary,
+      primaryColorPressed: themeColors.value.universal.primary,
       borderRadius: '5px',
     },
     Button: {
@@ -51,12 +51,13 @@ const theme = computed(() => {
       borderDisabledPrimary: '0px',
     },
     Input: {
-      color: themeColors.value.cardBackground,
-      colorFocus: themeColors.value.cardBackground,
-      colorHover: themeColors.value.primary,
-      colorDisabled: themeColors.value.cardBackground,
-      borderHover: themeColors.value.primary,
-      borderFocus: themeColors.value.primary,
+      color: themeColors.value.universal.background,
+      colorFocus: themeColors.value.universal.background,
+      colorHover: themeColors.value.universal.background,
+      colorDisabled: themeColors.value.universal.background,
+      border: `1px solid ${themeColors.value.universal.border}`,
+      borderHover: themeColors.value.universal.border,
+      borderFocus: themeColors.value.universal.border,
       borderDisabled: themeColors.value.universal.border,
       textColor: themeColors.value.universal.text,
       textColorDisabled: themeColors.value.universal.textHint,
@@ -65,8 +66,8 @@ const theme = computed(() => {
       borderRadius: '5px',
     },
     Tag: {
-      colorBordered: themeColors.value.universal.background, // 背景色
-      textColor: themeColors.value.tagTextColor, // 文字颜色
+      colorBordered: themeColors.value.universal.secondary, // 背景色
+      textColor: themeColors.value.universal.textHint, // 文字颜色
       border: `1px solid ${themeColors.value.universal.border}`, // 边框
       fontWeightStrong: 400 // 字体粗细
     },
@@ -107,33 +108,35 @@ const theme = computed(() => {
       itemTextColorActiveHover: themeColors.value.universal.text,
     },
     Switch: {
-      railColor: themeColors.value.switchRailColor,
-      railColorActive: themeColors.value.switchRailColorActive,
-      buttonColor: themeColors.value.switchButtonColor,
+      railColor: themeColors.value.switch.railColor,
+      railColorActive: themeColors.value.switch.railColorActive,
+      buttonColor: themeColors.value.switch.buttonColor,
     },
     Dialog: {
-      titleTextColor: themeColors.value.dialogTitleTextColor,
-      textColor: themeColors.value.dialogTextColor,
-      color: themeColors.value.dialogColor,
-      iconColor: themeColors.value.dialogIconColor,
-      closeIconColor: themeColors.value.dialogCloseIconColor,
-      closeIconColorHover: themeColors.value.dialogCloseIconColorHover,
-      closeColorHover: themeColors.value.dialogCloseColorHover,
+      titleTextColor: themeColors.value.universal.text,             // 标题颜色
+      textColor: themeColors.value.universal.text,                  // 文本颜色
+      color: themeColors.value.universal.secondary,                 // 背景色
+      iconColor: themeColors.value.universal.text,                  // 图标颜色
+      closeColorHover: themeColors.value.universal.secondary,       // 关闭按钮背景色
+      closeColorPressed: themeColors.value.universal.secondary,     // 关闭按钮背景色
+      closeIconColor: themeColors.value.universal.text,             // 关闭图标颜色
+      closeIconColorHover: themeColors.value.universal.textHover,   // 关闭图标悬浮颜色
+      closeIconColorPressed: themeColors.value.universal.textHover, // 关闭图标悬浮颜色
     },
     Empty: {
       textColor: themeColors.value.universal.textHint,
       iconColor: themeColors.value.universal.textHint,
     },
     Scrollbar: {
-      color: themeColors.value.scrollBarColor,
-      colorHover: themeColors.value.scrollBarColorHover,
+      color: themeColors.value.scrollBar.color,
+      colorHover: themeColors.value.scrollBar.colorHover,
     },
     Slider: {
-      railColor: themeColors.value.sliderRailColor,
-      railColorHover: themeColors.value.sliderRailColor,
+      railColor: themeColors.value.slider.railColor,
+      railColorHover: themeColors.value.slider.railColor,
     },
     Divider: {
-      color: themeColors.value.divider,
+      color: themeColors.value.universal.border,
       textColor: themeColors.value.universal.text,
     }
   } as GlobalThemeOverrides;

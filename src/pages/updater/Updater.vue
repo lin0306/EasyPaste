@@ -227,7 +227,7 @@ onMounted(async () => {
 
 .release-date {
   font-size: 12px;
-  color: var(--theme-secondaryText);
+  color: var(--theme-universal-text);
   margin-bottom: 15px;
 }
 
@@ -318,7 +318,7 @@ onMounted(async () => {
 .update-footer {
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
-  background-color: var(--theme-cardBackground);
+  background-color: var(--theme-universal-secondary);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -342,7 +342,7 @@ onMounted(async () => {
 .remind-text {
   margin-left: 10px;
   font-size: 12px;
-  color: var(--theme-secondaryText);
+  color: var(--theme-universal-text);
 }
 
 .days-selector {
@@ -353,15 +353,14 @@ onMounted(async () => {
   padding: 2px 5px;
   border-radius: 4px;
   border: 1px solid var(--theme-universal-border);
-  background-color: var(--theme-inputBackground);
+  background-color: var(--theme-universal-background);
   color: var(--theme-universal-text);
 }
 
-.download-progress,
-.backup-progress {
+.download-progress {
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
-  background-color: var(--theme-cardBackground);
+  background-color: var(--theme-universal-secondary);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -375,7 +374,7 @@ onMounted(async () => {
 .progress-title {
   font-weight: 600;
   margin-bottom: 10px;
-  color: var(--theme-primary);
+  color: var(--theme-universal-primary);
 }
 
 .progress-bar {
@@ -395,7 +394,7 @@ onMounted(async () => {
 
 .progress-inner {
   height: 100%;
-  background-color: var(--theme-primary);
+  background-color: var(--theme-universal-primary);
   /* 使用固定颜色而非变量 */
   transition: width 0.3s ease;
   min-width: 2px;
@@ -423,13 +422,13 @@ onMounted(async () => {
 
 .progress-text {
   font-size: 12px;
-  color: var(--theme-secondaryText);
+  color: var(--theme-universal-text);
 }
 
 .download-details {
   display: flex;
   font-size: 12px;
-  color: var(--theme-secondaryText);
+  color: var(--theme-universal-text);
 }
 
 .download-speed {

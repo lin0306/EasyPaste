@@ -21,7 +21,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--theme-scrollBarColor);
+  background-color: var(--theme-scrollBar-color);
   border-radius: 10px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -29,7 +29,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--theme-scrollBarColorHover);
+  background-color: var(--theme-scrollBar-colorHover);
   border-width: 0px;
 }
 

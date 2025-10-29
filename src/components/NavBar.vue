@@ -25,7 +25,7 @@
             <li v-else-if="subItem.type === 'theme'" class="submenu-item">
               <a @click="handleSubMenuClick(subItem)" class="submenu-link">
                 {{ subItem.label }}
-                <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.primary" class="checked-icon"/>
+                <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.universal.text" class="checked-icon"/>
                 <div v-else class="unchecked-icon"></div>
               </a>
             </li>
@@ -169,18 +169,19 @@ onUnmounted(() => {
 
 <style scoped>
 .custom-navbar {
-  width: 98%;
+  width: 100%;
   z-index: 3000;
   font-size: 12px;
-  padding: 0 1%;
+
   position: relative;
 }
 
 .navbar-menu {
+  width: 98%;
+  padding: 0 1%;
   display: flex;
   list-style: none;
   margin: 0;
-  padding: 0;
   height: 30px;
   line-height: 30px;
   background-color: var(--theme-menu-background);
@@ -214,13 +215,13 @@ onUnmounted(() => {
 .submenu {
   width: fit-content;
   max-height: calc(100vh - 100px);
-  background-color: var(--theme-cardBackground);
+  background-color: var(--theme-universal-secondary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   overflow: hidden;
   z-index: 1050;
   white-space: nowrap;
-  transition: opacity var(--animation-duration, 0.3s) ease;
+  transition: all var(--animation-duration, 0.3s) ease;
   position: fixed;
   margin-top: 2px;
 }
@@ -268,12 +269,12 @@ onUnmounted(() => {
 }
 
 .submenu-link:hover {
-  background-color: var(--theme-hoverBackground);
+  background-color: var(--theme-menu-itemHover);
 }
 
 .divider {
   height: 1px;
-  background-color: var(--theme-divider);
+  background-color: var(--theme-universal-border);
 }
 
 /*内容列表动画效果start*/
