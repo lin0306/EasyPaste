@@ -51,8 +51,8 @@ export const pinkTheme: ThemeConfig = {
             }
         },
         scrollBar: {
-            color: 'rgba(144, 147, 153, 0.3)',
-            colorHover: 'rgba(144, 147, 153, 0.5)',
+            color: 'rgba(156,126,146,0.3)',
+            colorHover: 'rgba(197,137,170,0.5)',
         },
         switch: {
             railColor: 'rgb(249, 219, 234)',
