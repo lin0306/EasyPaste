@@ -90,6 +90,7 @@ function handleMenuClick(item: NavBarItem) {
     if (activeMenuItem.value === item.key) {
       activeMenuItem.value = '';
       subMenuItems.value = [];
+      submenuLeft.value = 0;
     } else {
       subMenuItems.value = item.children;
       activeMenuItem.value = item.key || '';
@@ -155,6 +156,7 @@ function handleClickOutside(event: MouseEvent) {
   if (!target.closest('.navbar-item.has-submenu')) {
     activeMenuItem.value = '';
     subMenuItems.value = [];
+    submenuLeft.value = 0;
   }
 }
 
