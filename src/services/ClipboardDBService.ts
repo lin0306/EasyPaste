@@ -369,7 +369,7 @@ class ClipboardDBService {
      * 删除所有图片文件并清空数据库记录
      * @returns {Promise<void>} 完成清空操作的Promise
      */
-    clearAll(): Promise<void> {
+    clearAllItems(): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
                 // 清空数据库记录
