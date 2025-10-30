@@ -5,7 +5,6 @@ import {computed, onMounted, onUnmounted} from 'vue';
 import {error, info} from '@tauri-apps/plugin-log';
 import {useLanguage} from './services/LanguageService.ts';
 import {useTheme} from './services/ThemeService.ts';
-import {env} from "./data/SystemParams.ts";
 
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
@@ -15,7 +14,7 @@ hljs.registerLanguage('html', html)
 
 // 屏蔽鼠标右键菜单（开发环境除外）
 document.oncontextmenu = function () {
-  return env === 'development';
+  return false;
 };
 
 // 创建主题上下文

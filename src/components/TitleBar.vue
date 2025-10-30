@@ -10,6 +10,9 @@
       <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="checkUpdate"/>
     </div>
     <div class="window-controls">
+      <div v-if="isDev" class="control-button" @click="onRefresh">
+        <RefreshIcon class="program-btn" id="devtool-button-img"/>
+      </div>
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
         <DevToolIcon class="program-btn" id="devtool-button-img"/>
       </div>
@@ -39,12 +42,13 @@ import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
 import {invoke} from '@tauri-apps/api/core'
-import {nextTick, onMounted, ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {isDev} from "../data/SystemParams.ts"
 import {listFixedStore} from '../store/fixed'
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 import UpdateIcon from "../assets/icons/UpdateIcon.vue";
 import UpdaterService from "../services/UpdaterService.ts";
+import RefreshIcon from "../assets/icons/RefreshIcon.vue";
 
 const props = withDefaults(defineProps<{
   title: string;
@@ -62,7 +66,9 @@ const isFixed = ref(false);
 
 let listFixedListen = listFixedStore();
 
-// 固定窗口
+/**
+ * 固定窗口
+ */
 function onFixWindow() {
   if (props.showFixedBtn) {
     isFixed.value = true;
@@ -70,7 +76,9 @@ function onFixWindow() {
   }
 }
 
-// 取消固定窗口
+/**
+ * 取消固定窗口
+ */
 function onUnfixWindow() {
   if (props.showFixedBtn) {
     isFixed.value = false;
@@ -78,24 +86,36 @@ function onUnfixWindow() {
   }
 }
 
+/**
+ * 最小化窗口
+ */
 function onMinimizeWindow() {
   if (props.showMinimizeBtn) {
     getCurrentWebviewWindow().minimize();
   }
 }
 
+/**
+ * 关闭窗口
+ */
 function onClose() {
   if (props.showCloseBtn) {
     getCurrentWebviewWindow().close();
   }
 }
 
+/**
+ * 隐藏窗口
+ */
 function onHide() {
   if (props.showHideBtn) {
     getCurrentWebviewWindow().hide();
   }
 }
 
+/**
+ * 打开开发者工具
+ */
 async function openDevTool() {
   if (props.devTool) {
     await invoke('open_dev_tool', {windowName: props.devTool});
@@ -108,6 +128,14 @@ async function openDevTool() {
 async function checkUpdate() {
   const update = UpdaterService.getInstance();
   await update.checkForUpdates(true);
+}
+
+/**
+ * 刷新页面
+ */
+function onRefresh() {
+  // 刷新当前页面
+  window.location.reload();
 }
 
 onMounted(() => {
