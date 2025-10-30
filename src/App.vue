@@ -144,6 +144,17 @@ const theme = computed(() => {
       textColor: themeColors.value.universal.text,
       fontSize: '12px',
       padding: '4px 8px',
+    },
+    Tree: {
+      nodeTextColor: themeColors.value.universal.text,
+      loadingColor: themeColors.value.universal.text,
+      arrowColor: themeColors.value.universal.text,
+      nodeTextColorDisabled: themeColors.value.universal.textDisabled,
+      dropMarkColor: themeColors.value.universal.text,
+      lineColor: themeColors.value.universal.text,
+      nodeColorHover: themeColors.value.universal.hoverBackgroundColor,
+      nodeColorPressed: themeColors.value.universal.hoverBackgroundColor,
+      nodeColorActive: themeColors.value.universal.hoverBackgroundColor,
     }
   } as GlobalThemeOverrides;
 });
