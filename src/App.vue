@@ -229,5 +229,8 @@ body {
   -khtml-user-select: none; /* KHTML内核私有属性 */
   -o-user-select: none; /* Opera私有属性 */
   user-select: none; /* CSS3属性 */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
 }
 </style>

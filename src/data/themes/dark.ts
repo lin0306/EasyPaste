@@ -19,7 +19,9 @@ export const darkTheme: ThemeConfig = {
             borderDisabledColor: 'rgb(35,35,35)',
         },
         titleBar: {
-            background: 'rgb(53,53,53)',
+            backgroundColor: 'rgb(53,53,53)',
+            btnHoverBackgroundColor: 'rgb(106,106,106)',
+            closeBtnHoverBackgroundColor: 'rgb(131,55,55)',
         },
         menu: {
             background: 'rgba(28,28,28,1)',

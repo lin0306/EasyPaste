@@ -10,7 +10,6 @@
       <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="checkUpdate"/>
     </div>
     <div class="window-controls">
-
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
         <DevToolIcon class="program-btn" id="devtool-button-img"/>
       </div>
@@ -23,11 +22,11 @@
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
         <MinimizeIcon class="program-btn" id="minimize-button-img"/>
       </div>
+      <div v-if="showHideBtn" class="control-button" @click="onHide">
+        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
+      </div>
       <div v-if="showCloseBtn" class="control-button close-button" @click="onClose">
         <CloseIcon class="program-btn" id="close-button-img"/>
-      </div>
-      <div v-if="showHideBtn" class="control-button close-button" @click="onHide">
-        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
       </div>
     </div>
   </div>
@@ -40,7 +39,7 @@ import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
 import {invoke} from '@tauri-apps/api/core'
-import {onMounted, ref} from 'vue'
+import {nextTick, onMounted, ref} from 'vue'
 import {isDev} from "../data/SystemParams.ts"
 import {listFixedStore} from '../store/fixed'
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
@@ -123,10 +122,6 @@ onMounted(() => {
 #title-bar {
   height: 25px;
   width: 98%;
-  user-select: none;
-  touch-action: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -134,10 +129,11 @@ onMounted(() => {
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
   z-index: 3000;
-  background-color: var(--theme-titleBar-background);
+  background-color: var(--theme-titleBar-backgroundColor);
   color: var(--theme-universal-text);
   cursor: move;
   position: relative;
+  pointer-events: auto;
 }
 
 #title-bar.fixed {
@@ -166,8 +162,9 @@ onMounted(() => {
 
 .window-controls {
   display: flex;
-  gap: 8px;
+  gap: 5px;
   -webkit-app-region: no-drag;
+  cursor: pointer;
 }
 
 .control-button {
@@ -176,10 +173,20 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--animation-duration, 0.3s) ease;
   width: 20px;
   height: 20px;
   -webkit-app-region: no-drag;
+  opacity: 0.3;
+}
+
+.control-button:hover {
+  background-color: var(--theme-titleBar-btnHoverBackgroundColor);
+  opacity: 1;
+}
+
+.close-button:hover {
+  background-color: var(--theme-titleBar-closeBtnHoverBackgroundColor) !important;
 }
 
 .program-btn {
@@ -188,8 +195,7 @@ onMounted(() => {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0.3;
+  transition: transform var(--animation-duration, 0.3s) ease;
 }
 
 .fixation-button,
@@ -201,26 +207,5 @@ onMounted(() => {
 
 #close-button-img:hover {
   transform: rotate(180deg);
-  opacity: 1;
-}
-
-#fixation-button-img:hover {
-  opacity: 1;
-}
-
-#unfixation-button-img {
-  opacity: 1;
-}
-
-#devtool-button-img:hover {
-  opacity: 1;
-}
-
-#minimize-button-img:hover {
-  opacity: 1;
-}
-
-#hide-button-img:hover {
-  opacity: 1;
 }
 </style>

@@ -19,7 +19,9 @@ export const lightTheme: ThemeConfig = {
             borderDisabledColor: 'rgb(230,230,230)',
         },
         titleBar: {
-            background: 'rgb(239,239,239)',
+            backgroundColor: 'rgb(239,239,239)',
+            btnHoverBackgroundColor: 'rgb(225,225,225)',
+            closeBtnHoverBackgroundColor: 'rgb(248,196,196)',
         },
         menu: {
             background: 'rgba(248,248,248,1)',

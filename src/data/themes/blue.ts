@@ -19,7 +19,9 @@ export const blueTheme: ThemeConfig = {
             borderDisabledColor: 'rgba(230,240,250,1)',
         },
         titleBar: {
-            background: 'rgb(221,243,255)',
+            backgroundColor: 'rgb(221,243,255)',
+            btnHoverBackgroundColor: 'rgb(213,229,248)',
+            closeBtnHoverBackgroundColor: 'rgb(237,210,210)',
         },
         menu: {
             background: 'rgba(245,250,255,1)',

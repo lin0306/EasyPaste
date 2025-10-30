@@ -19,7 +19,9 @@ export const pinkTheme: ThemeConfig = {
             borderDisabledColor: 'rgba(240,210,225,1)',
         },
         titleBar: {
-            background: 'rgb(245,225,235)',
+            backgroundColor: 'rgb(245,225,235)',
+            btnHoverBackgroundColor: 'rgb(243,205,223)',
+            closeBtnHoverBackgroundColor: 'rgb(255,136,136)',
         },
         menu: {
             background: 'rgba(252,242,248,1)',
