@@ -46,6 +46,7 @@ import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue';
 import HookIcon from '../assets/icons/HookIcon.vue';
 import {useTheme} from '../services/ThemeService.ts';
 import {animationEffect} from "../pages/list/composables/AnimationComposable.ts";
+import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 
 const {themeColors} = useTheme();
 
@@ -88,12 +89,11 @@ const submenuLeft = ref(0);
 function handleMenuClick(item: NavBarItem) {
   if (item.children && item.children.length > 0) {
     if (activeMenuItem.value === item.key) {
-      activeMenuItem.value = '';
-      subMenuItems.value = [];
-      submenuLeft.value = 0;
+      hideSubMenu();
     } else {
       subMenuItems.value = item.children;
       activeMenuItem.value = item.key || '';
+      webFocusStatus = true;
       nextTick(() => {
         calculateSubmenuPosition(activeMenuItem.value);
       })
@@ -148,24 +148,71 @@ function handleSubMenuClick(item: NavBarItem) {
 }
 
 /**
+ * 隐藏子菜单
+ */
+function hideSubMenu() {
+  activeMenuItem.value = '';
+  subMenuItems.value = [];
+  submenuLeft.value = 0;
+}
+
+/**
  * 点击外部关闭子菜单
  * @param event 点击事件对象
  */
 function handleClickOutside(event: MouseEvent) {
   const target = event.target as HTMLElement;
   if (!target.closest('.navbar-item.has-submenu')) {
-    activeMenuItem.value = '';
-    subMenuItems.value = [];
-    submenuLeft.value = 0;
+    hideSubMenu();
   }
 }
 
+
+/**
+ * 初始化窗口失焦定时任务，失焦自动隐藏子菜单
+ */
+let focusState = false; // 窗口聚焦状态
+let webFocusStatus = false; // web网页聚焦状态
+let blurTimer: any = null;
+
+function initBlurTimer() {
+  return setInterval(async () => {
+    window.onfocus = () => {
+      webFocusStatus = true;
+    }
+    window.onblur = () => {
+      webFocusStatus = false;
+    }
+
+    const win = getCurrentWebviewWindow();
+    const focused = await win.isFocused();
+    if (!webFocusStatus && ((focusState && !focused) || (!focusState && !focused))) {
+      const visible = await win.isVisible();
+      if (visible) {
+        console.log(focusState, webFocusStatus, visible)
+        hideSubMenu();
+      }
+    }
+    if (focused !== focusState) {
+      focusState = focused;
+    }
+  }, 200); // 时间可调整
+}
+
 onMounted(() => {
+  console.log('初始化菜单')
   document.addEventListener('click', handleClickOutside);
+  window.focus();
+  blurTimer = initBlurTimer();
 });
 
 onUnmounted(() => {
+  console.log('销毁菜单')
   document.removeEventListener('click', handleClickOutside);
+  // 清除窗口失焦定时任务
+  if (blurTimer) {
+    clearInterval(blurTimer);
+  }
 });
 </script>
 
