@@ -155,6 +155,21 @@ const theme = computed(() => {
       nodeColorHover: themeColors.value.universal.hoverBackgroundColor,
       nodeColorPressed: themeColors.value.universal.hoverBackgroundColor,
       nodeColorActive: themeColors.value.universal.hoverBackgroundColor,
+    },
+    Message: {
+      color: themeColors.value.universal.background,
+      colorInfo: themeColors.value.universal.background,
+      colorSuccess: themeColors.value.universal.background,
+      colorError: themeColors.value.universal.background,
+      colorWarning: themeColors.value.universal.background,
+      colorLoading: themeColors.value.universal.background,
+      textColor: themeColors.value.universal.text,
+      textColorInfo: themeColors.value.universal.text,
+      textColorSuccess: themeColors.value.universal.text,
+      textColorError: themeColors.value.universal.text,
+      textColorWarning: themeColors.value.universal.text,
+      textColorLoading: themeColors.value.universal.text,
+      margin: '40px 0',
     }
   } as GlobalThemeOverrides;
 });
