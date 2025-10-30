@@ -101,7 +101,7 @@ export const english: LanguageConfig = {
             animationHint: 'Page transition animations can enhance visual experience, but may affect fluency on low-performance devices',
         },
         list: {
-            title: 'Clipboard',
+            title: 'Clipboard List',
             copySuccessMsg: 'Copy Success',
             copyFailedMsg: 'Copy Failed',
             fileNotExistCopyFailedMsg: 'File Not Exist, Copy Failed',
