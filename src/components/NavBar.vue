@@ -189,7 +189,6 @@ function initBlurTimer() {
     if (!webFocusStatus && ((focusState && !focused) || (!focusState && !focused))) {
       const visible = await win.isVisible();
       if (visible) {
-        console.log(focusState, webFocusStatus, visible)
         hideSubMenu();
       }
     }
