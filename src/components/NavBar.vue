@@ -265,7 +265,7 @@ onUnmounted(() => {
   width: fit-content;
   max-height: calc(100vh - 100px);
   background-color: var(--theme-universal-secondary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   overflow: hidden;
   z-index: 1050;
