@@ -15,7 +15,6 @@ import {
   destroyClipboardData,
   initializeClipboardData,
   insertClipboardItem,
-  scrollState,
   searchBoxState,
   toggleSearchBox,
 } from "./composables/ClipboardDataComposable.ts";
@@ -25,7 +24,6 @@ import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/W
 import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/AnimationComposable.ts";
 import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
 import {getSearchKey} from "../../store/ShortcutKeys.ts";
-import ClearIcon from "../../assets/icons/ClearIcon.vue";
 import ClipboardFooter from "./components/ClipboardFooter.vue";
 
 // 获取语言上下文
@@ -188,7 +186,7 @@ onUnmounted(async () => {
   <ClipboardListContent v-if="!isLoading"/>
 
   <!-- 底部展示 -->
-  <ClipboardFooter />
+  <ClipboardFooter/>
 
   <!-- 标签列表 -->
   <TagList v-if="!isLoading"/>
