@@ -366,7 +366,6 @@ class ClipboardDBService {
 
     /**
      * 清空所有剪贴板条目
-     * 删除所有图片文件并清空数据库记录
      * @returns {Promise<void>} 完成清空操作的Promise
      */
     clearAllItems(): Promise<void> {
@@ -375,6 +374,26 @@ class ClipboardDBService {
                 // 清空数据库记录
                 info('[数据库进程] 正在清空数据库记录...');
                 await this.db?.execute('DELETE FROM clipboard_items');
+
+                info('[数据库进程] 剪贴板内容清理完成');
+                resolve();
+            } catch (err) {
+                error('[数据库进程] 清空剪贴板时发生错误:' + err);
+                reject(err);
+            }
+        });
+    }
+
+    /**
+     * 清空所有标签
+     * @returns {Promise<void>} 完成清空操作的Promise
+     */
+    clearAllTags(): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                // 清空数据库记录
+                info('[数据库进程] 正在清空数据库记录...');
+                await this.db?.execute('DELETE FROM tags');
 
                 info('[数据库进程] 剪贴板内容清理完成');
                 resolve();

@@ -180,6 +180,11 @@ declare interface PageConfig {
         editFailedMsg: string;
         deleteSuccessMsg: string;
         deleteFailedMsg: string;
+        totalData: string;
+        clearDataModalTitle: string;
+        clearDataModalContent: string;
+        clearDataModalCancelBtn: string;
+        clearDataModalConfirmBtn: string;
     },
     about: {
         title: string;

@@ -172,6 +172,11 @@ export const english: LanguageConfig = {
             editFailedMsg: 'Update Failed',
             deleteSuccessMsg: 'Delete Success',
             deleteFailedMsg: 'Delete Failed',
+            totalData: 'A total of {total} pieces of data',
+            clearDataModalTitle: 'Delete Tag Confirmation',
+            clearDataModalContent: 'This operation will clear all data in the tag list. Please confirm if you want to continue?',
+            clearDataModalCancelBtn: 'Cancel',
+            clearDataModalConfirmBtn: 'Confirm',
         },
         about: {
             title: 'About',

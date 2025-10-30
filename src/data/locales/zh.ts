@@ -173,6 +173,11 @@ export const chinese: LanguageConfig = {
             editFailedMsg: '更新失败',
             deleteSuccessMsg: '删除成功',
             deleteFailedMsg: '删除失败',
+            totalData: '共 {total} 条数据',
+            clearDataModalTitle: '清空标签',
+            clearDataModalContent: '此操作将清空标签列表中的所有数据，请确认是否继续？',
+            clearDataModalCancelBtn: '取消',
+            clearDataModalConfirmBtn: '确认',
         },
         about: {
             title: '关于',
