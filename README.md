@@ -629,6 +629,9 @@ A: 目前支持：
 | [v-viewer](https://github.com/mirari/v-viewer) | 图片查看组件 | MIT | 实现了图片的缩放和查看功能 |
 | [WaveSurfer.js](https://wavesurfer-js.org/) | 音频波形可视化 | BSD-3-Clause | 提供了音频文件的波形显示 |
 | [@zip.js/zip.js](https://gildas-lormeau.github.io/zip.js/) | ZIP 文件处理库 | BSD-3-Clause | 支持压缩文件的解析和预览 |
+| [unrar](https://github.com/muja/unrar.rs) | RAR 文件解压库 | MIT | 支持 RAR 压缩文件的处理 |
+| [tar](https://github.com/alexcrichton/tar-rs) | TAR 归档文件处理 | MIT/Apache-2.0 | 处理 TAR 格式的归档文件 |
+| [flate2](https://github.com/rust-lang/flate2-rs) | 压缩算法库 | MIT/Apache-2.0 | 提供 GZIP/DEFLATE 压缩支持 |
 
 ### 🗄️ 数据存储与系统集成
 
@@ -645,9 +648,6 @@ A: 目前支持：
 | 项目 | 描述 | 许可证 | 贡献 |
 |------|------|--------|------|
 | [winreg-rs](https://github.com/gentoo90/winreg-rs) | Windows 注册表操作 | MIT | 实现了 Windows 注册表的读写功能 |
-| [unrar](https://github.com/muja/unrar.rs) | RAR 文件解压库 | MIT | 支持 RAR 压缩文件的处理 |
-| [tar](https://github.com/alexcrichton/tar-rs) | TAR 归档文件处理 | MIT/Apache-2.0 | 处理 TAR 格式的归档文件 |
-| [flate2](https://github.com/rust-lang/flate2-rs) | 压缩算法库 | MIT/Apache-2.0 | 提供 GZIP/DEFLATE 压缩支持 |
 
 ### 🌟 特别感谢
 
