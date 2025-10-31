@@ -25,6 +25,8 @@ import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/A
 import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
 import {getSearchKey} from "../../store/ShortcutKeys.ts";
 import ClipboardFooter from "./components/ClipboardFooter.vue";
+import {getPowerOnSelfStart} from "../../store/Settings.ts";
+import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -106,6 +108,20 @@ onMounted(async () => {
     if (isFirstRun) {
       // 初始化数据
       await initUserSettings();
+      // 重新配置开机自启
+      const powerOnSelfStart = await getPowerOnSelfStart();
+      if(powerOnSelfStart) {
+        const enabled = await isEnabled();
+        if (powerOnSelfStart !== enabled) {
+          if (powerOnSelfStart) {
+            // 启用自启动
+            await enable();
+          } else {
+            // 禁用自启动
+            await disable();
+          }
+        }
+      }
     }
 
     // 初始化剪贴板数据配置
