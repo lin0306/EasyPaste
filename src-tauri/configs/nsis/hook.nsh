@@ -15,12 +15,14 @@
       ; 创建目录（如果不存在）
       CreateDirectory "$APPDATA\com.lin.EasyPaste"
 
-      ; 写入 JSON 文件
-      FileOpen $1 "$APPDATA\com.lin.EasyPaste\settings.json" w
-      FileWrite $1 '{"languages":"'
-      FileWrite $1 $0
-      FileWrite $1 '"}'
-      FileClose $1
+      ; 判断 settings.json 是否已存在，若不存在才执行写入操作
+      IfFileExists "$APPDATA\com.lin.EasyPaste\settings.json" +3 0
+          ; 文件不存在时的操作
+          FileOpen $1 "$APPDATA\com.lin.EasyPaste\settings.json" w
+          FileWrite $1 '{"languages":"'
+          FileWrite $1 $0
+          FileWrite $1 '"}'
+          FileClose $1
 
       ; 删除程序启动记录
       Delete "$APPDATA\com.lin.EasyPaste\run.json"
