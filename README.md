@@ -9,8 +9,8 @@
   
   <p>
 
-[![](https://img.shields.io/badge/GitHub%20version-v0.1.7--beta-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
-[![](https://img.shields.io/badge/Gitee%20version-v0.1.7--beta-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/easy-paste/releases/latest)
+[![](https://img.shields.io/badge/GitHub%20version-v0.1.8--beta-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/Gitee%20version-v0.1.8--beta-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/easy-paste/releases/latest)
 [![](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey)
 
@@ -21,13 +21,12 @@
 
 > ⚠️ **项目状态**
 > 
-> **当前版本**: v0.1.7-beta (开发测试阶段)
+> **当前版本**: v0.1.8-beta (开发测试阶段)
 > 
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
 > - 📖 **系统集成**: 如需完全替换 Windows 剪贴板，请打开程序设置，开启`替换全局热键`功能，功能实现逻辑请参考 [FAQ 文档](./FAQ/replace_global_hotkey_theory/replace_global_hotkey_theory.md)
 > - 💡 **反馈欢迎**: 由于是个人项目，可能部分边缘性测试场景没有覆盖到，欢迎提 Issue 和 PR
-
 
 ## 📖 项目简介
 
@@ -204,7 +203,7 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 </details>
 
 <details>
-<summmary><strong>Tauri 核心插件</strong></sumary>
+<summary><strong>Tauri 核心插件</strong></summary>
 
 | 插件 | 版本 | 功能描述 |
 |------|------|----------|
@@ -221,6 +220,8 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 | `tauri-plugin-clipboard-manager` | ~2 | 剪贴板内容管理 |
 | `tauri-plugin-fs` | ~2 | 文件系统安全操作 |
 | `tauri-plugin-window-state` | ~2 | 窗口状态持久化 |
+| `tauri-plugin-os` | ~2.3.1 | 操作系统信息获取 |
+| `tauri-plugin-single-instance` | ~2 | 单实例应用管理 |
 
 </details>
 
@@ -345,6 +346,7 @@ pnpm tauri build
 | `pnpm build` | 前端构建 | 构建前端资源 |
 | `pnpm tauri build` | 生产构建 | 构建可分发的应用程序 |
 | `pnpm preview` | 预览构建 | 预览构建后的前端应用 |
+| `pnpm tauri` | Tauri CLI | 直接调用 Tauri 命令行工具 |
 
 ### 📁 项目结构
 
@@ -423,7 +425,7 @@ EasyPaste/
 │   │   └── SystemParams.ts    # 系统参数
 │   ├── 📁 constants/          # 常量定义
 │   │   ├── CopyStateConstant.ts    # 复制状态常量
-│   │   ├── FileTypeConstants.ts    # 文件类型常量
+│   │   ├── FileTypeConstatnts.ts   # 文件类型常量
 │   │   ├── PublicConstants.ts      # 公共常量
 │   │   ├── KeysConstants.ts        # 存储键常量
 │   │   └── UserSettingsConstant.ts # 用户设置常量
@@ -520,12 +522,15 @@ EasyPaste/
 - **代码高亮**: `highlight.js` 支持 190+ 编程语言语法高亮
 - **构建分析**: `rollup-plugin-visualizer` 可视化分析构建产物和依赖关系
 - **热模块替换**: Vite HMR 实时更新，支持状态保持
+- **工作区管理**: pnpm workspace 配置，优化依赖管理和构建性能
 
 #### 构建优化
 - **代码分割**: 智能 chunk 分割，第三方库单独打包
 - **资源优化**: 自动压缩 CSS/JS，支持 gzip 和 brotli 压缩
 - **Tree Shaking**: 移除未使用代码，减小最终包体积
 - **生产优化**: 自动移除 console 和 debugger 语句
+- **构建分析**: 集成 rollup-plugin-visualizer，可视化分析构建产物
+- **平台优化**: 针对不同平台优化构建目标（Windows: Chrome105, macOS/Linux: Safari15）
 
 #### 类型安全
 - **严格模式**: 启用 TypeScript 所有严格检查选项
