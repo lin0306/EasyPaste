@@ -1,58 +1,56 @@
 <template>
-  <div class="custom-navbar">
-    <!-- 主菜单 -->
-    <ul class="navbar-menu">
-      <li v-for="item in menus" :key="item.key"
-          class="navbar-item"
-          :class="{ 'has-submenu': item.children,'active':item.key === activeMenuItem }"
-          @click="handleMenuClick(item)"
-          :data-key="item.key"
+  <nav class="navbar">
+    <ul class="nav-menu">
+      <li
+          v-for="item in menus"
+          :key="item.key"
+          class="nav-item"
+          @mouseenter="handleMouseEnter(item, $event)"
+          @mouseleave="handleMouseLeave"
       >
-        <div class="navbar-link">
-          {{ item.label }}
-        </div>
+        {{ item.label }}
+
+        <!-- 二级菜单 -->
+        <transition name="slide-fade" :css="animationEffect.enabled">
+          <ul
+              v-if="item.children && activeMenu === item.key"
+              class="dropdown-menu"
+              :style="dropdownStyle"
+          >
+            <li
+                v-for="child in item.children"
+                :key="child.key"
+                class="dropdown-item"
+                @click="child.onClick"
+            >
+              <div v-if="child.type === 'divider'" class="divider"/>
+              <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
+                {{ child.label }}
+                <HookIcon v-if="child.isCheck" :color="themeColors.universal.text" class="checked-icon"/>
+                <div v-else class="unchecked-icon"></div>
+              </div>
+              <div v-else class="dropdown-link">{{ child.label }}</div>
+            </li>
+
+          </ul>
+        </transition>
       </li>
     </ul>
-    <!-- 子菜单 -->
-    <transition-group name="sub-menu-list" :css="animationEffect.enabled">
-      <div v-if="activeMenuItem && subMenuItems && subMenuItems.length > 0"
-           class="submenu"
-           ref="submenuRef"
-           :style="{ left: submenuLeft + 'px' }">
-        <ul>
-          <template v-for="subItem in subMenuItems" :key="subItem.key">
-            <li v-if="subItem.type === 'divider'" class="divider"/>
-            <li v-else-if="subItem.type === 'theme'" class="submenu-item">
-              <a @click="handleSubMenuClick(subItem)" class="submenu-link">
-                {{ subItem.label }}
-                <HookIcon v-if="subItem.isCurrentTheme" :color="themeColors.universal.text" class="checked-icon"/>
-                <div v-else class="unchecked-icon"></div>
-              </a>
-            </li>
-            <li v-else class="submenu-item">
-              <a @click="handleSubMenuClick(subItem)" class="submenu-link">
-                {{ subItem.label }}
-              </a>
-            </li>
-          </template>
-        </ul>
-      </div>
-    </transition-group>
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue';
-import HookIcon from '../assets/icons/HookIcon.vue';
+import {computed, ref} from 'vue';
 import {useTheme} from '../services/ThemeService.ts';
+import HookIcon from '../assets/icons/HookIcon.vue';
 import {animationEffect} from "../pages/list/composables/AnimationComposable.ts";
-import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 
 const {themeColors} = useTheme();
 
 const props = defineProps<{
   menuItems: NavBarItem[];
 }>();
+
 
 /**
  * 菜单项
@@ -71,218 +69,92 @@ const menus = computed(() => {
   });
 });
 
-/**
- * 选中的主菜单项
- */
-const activeMenuItem = ref('');
-/**
- * 当前展示的子菜单项
- */
-const subMenuItems = ref<NavBarItem[]>([]);
-const submenuRef = ref<HTMLElement | null>(null);
-const submenuLeft = ref(0);
+// 状态管理
+const activeMenu = ref<string>('')
+const dropdownStyle = ref({})
 
-/**
- * 处理主菜单点击
- * @param item 菜单项
- */
-function handleMenuClick(item: NavBarItem) {
-  if (item.children && item.children.length > 0) {
-    if (activeMenuItem.value === item.key) {
-      hideSubMenu();
-    } else {
-      subMenuItems.value = item.children;
-      activeMenuItem.value = item.key || '';
-      webFocusStatus = true;
-      nextTick(() => {
-        calculateSubmenuPosition(activeMenuItem.value);
-      })
-    }
-  } else {
-    // 如果存在onClike方法，则调用
-    if (item.onClick) {
-      item.onClick();
-    }
-    activeMenuItem.value = '';
-  }
-}
+// 处理鼠标进入事件
+const handleMouseEnter = (menuItem: NavBarItem, event: any) => {
+  const hasChildren = menuItem.children;
+  if (hasChildren) {
+    activeMenu.value = menuItem.key;
 
-/**
- * 计算子菜单位置
- * @param menuKey 菜单项的key
- */
-function calculateSubmenuPosition(menuKey: string | null) {
-  console.log('menuKey', menuKey)
-  if (!menuKey) return;
-
-  const menuItemElement = document.querySelector(`.navbar-item[data-key="${menuKey}"]`);
-  if (menuItemElement && submenuRef.value) {
-    const rect = menuItemElement.getBoundingClientRect();
-    const submenuRect = submenuRef.value.getBoundingClientRect();
-
-    // 默认位置为菜单项左侧
-    let leftPos = rect.left;
-
-    // 检查右侧是否足够显示子菜单
-    if (leftPos + submenuRect.width > window.innerWidth) {
-      // 如果不够，向左调整
-      leftPos = window.innerWidth - submenuRect.width - 10;
-    }
-
-    // 确保不会超出左边界
-    submenuLeft.value = Math.max(5, leftPos);
-    console.log('submenuLeft', submenuLeft.value)
-  }
-}
-
-/**
- * 处理子菜单点击
- * @param item 子菜单项
- */
-function handleSubMenuClick(item: NavBarItem) {
-  // 如果存在onClike方法，则调用
-  if (item.onClick) {
-    item.onClick();
-  }
-  activeMenuItem.value = '';
-}
-
-/**
- * 隐藏子菜单
- */
-function hideSubMenu() {
-  activeMenuItem.value = '';
-  subMenuItems.value = [];
-  submenuLeft.value = 0;
-}
-
-/**
- * 点击外部关闭子菜单
- * @param event 点击事件对象
- */
-function handleClickOutside(event: MouseEvent) {
-  const target = event.target as HTMLElement;
-  if (!target.closest('.navbar-item.has-submenu')) {
-    hideSubMenu();
-  }
-}
-
-
-/**
- * 初始化窗口失焦定时任务，失焦自动隐藏子菜单
- */
-let focusState = false; // 窗口聚焦状态
-let webFocusStatus = false; // web网页聚焦状态
-let blurTimer: any = null;
-
-function initBlurTimer() {
-  return setInterval(async () => {
-    window.onfocus = () => {
-      webFocusStatus = true;
-    }
-    window.onblur = () => {
-      webFocusStatus = false;
-    }
-
-    const win = getCurrentWebviewWindow();
-    const focused = await win.isFocused();
-    if (!webFocusStatus && ((focusState && !focused) || (!focusState && !focused))) {
-      const visible = await win.isVisible();
-      if (visible) {
-        hideSubMenu();
+    // 计算下拉菜单位置
+    const navItem = event.target.closest('.nav-item')
+    if (navItem) {
+      const rect = navItem.getBoundingClientRect()
+      dropdownStyle.value = {
+        left: `${rect.left}px`,
+        top: `${rect.bottom}px`
       }
     }
-    if (focused !== focusState) {
-      focusState = focused;
-    }
-  }, 200); // 时间可调整
+  }
 }
 
-onMounted(() => {
-  console.log('初始化菜单')
-  document.addEventListener('click', handleClickOutside);
-  window.focus();
-  blurTimer = initBlurTimer();
-});
-
-onUnmounted(() => {
-  console.log('销毁菜单')
-  document.removeEventListener('click', handleClickOutside);
-  // 清除窗口失焦定时任务
-  if (blurTimer) {
-    clearInterval(blurTimer);
-  }
-});
+// 处理鼠标离开事件
+const handleMouseLeave = () => {
+  activeMenu.value = ''
+}
 </script>
 
 <style scoped>
-.custom-navbar {
-  width: 100%;
-  z-index: 3000;
+.navbar {
+  background-color: var(--theme-menu-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   font-size: 12px;
-
-  position: relative;
 }
 
-.navbar-menu {
-  width: 98%;
-  padding: 0 1%;
+.nav-menu {
   display: flex;
   list-style: none;
   margin: 0;
-  height: 30px;
-  line-height: 30px;
-  background-color: var(--theme-menu-background);
-  border-bottom: 1px solid var(--theme-universal-border);
+  padding: 0;
 }
 
-.navbar-item {
-  display: inline-block;
-  padding: 0 7px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 2px;
-  height: 25px;
-  width: auto;
-  transition: background-color var(--animation-duration, 0.3s) ease;
+.nav-item {
+  position: relative;
+  padding: 3px 5px;
+  display: block;
+  color: var(--theme-universal-text);
+  text-decoration: none;
+  transition: all var(--animation-duration, 0.3s) ease;
 }
 
-.navbar-item:hover {
+.nav-item:hover {
   background-color: var(--theme-menu-itemHover);
 }
 
-.navbar-item.active {
-  background-color: var(--theme-menu-itemActive) !important;
-}
-
-.navbar-link {
-  height: 25px;
-  line-height: 25px;
-}
-
-.submenu {
-  width: fit-content;
-  max-height: calc(100vh - 100px);
-  background-color: var(--theme-universal-secondary);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-  z-index: 1050;
-  white-space: nowrap;
-  transition: all var(--animation-duration, 0.3s) ease;
+.dropdown-menu {
   position: fixed;
-  margin-top: 2px;
-}
-
-.submenu ul {
+  background-color: var(--theme-universal-secondary);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, .1);
   list-style: none;
-  margin: 0;
+  padding: 5px 0;
+  border-radius: 4px;
+}
+
+.dropdown-item {
   padding: 0;
 }
 
-.submenu-item {
-  padding: 0;
-  margin: 0;
+.dropdown-link {
+  display: block;
+  padding: 4px 10px;
+  color: var(--theme-universal-text);
+  text-decoration: none;
+  transition: background-color var(--animation-duration, 0.3s);
+}
+
+.dropdown-link:hover {
+  background-color: var(--theme-menu-itemHover);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--theme-universal-border);
 }
 
 .checked-icon {
@@ -301,53 +173,22 @@ onUnmounted(() => {
   vertical-align: middle;
 }
 
-.submenu-link {
-  display: flex;
-  align-items: center;
-  padding: 2px 7px;
-  margin: 4px;
-  color: var(--theme-universal-text);
-  text-decoration: none;
-  transition: background-color 0.3s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 24px;
-  border-radius: 5px;
+/* 动画效果 */
+.slide-fade-enter-active {
+  transition: all var(--animation-duration, 0.3s) ease-out;
 }
 
-.submenu-link:hover {
-  background-color: var(--theme-menu-itemHover);
+.slide-fade-leave-active {
+  transition: all var(--animation-duration, 0.3s) cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.divider {
-  height: 1px;
-  background-color: var(--theme-universal-border);
-}
-
-/*内容列表动画效果start*/
-/* 进入动画 - 显示 */
-.sub-menu-list-enter-from {
+.slide-fade-enter-from {
+  transform: translateY(-10px);
   opacity: 0;
 }
 
-.sub-menu-list-enter-to {
-  opacity: 1;
-}
-
-/* 离开动画 - 隐藏 */
-.sub-menu-list-leave-from {
-  opacity: 1;
-}
-
-.sub-menu-list-leave-to {
+.slide-fade-leave-to {
+  transform: translateY(-10px);
   opacity: 0;
 }
-
-/* 离开中 */
-.sub-menu-list-leave-active {
-  position: fixed;
-}
-
-/*内容列表动画效果end*/
 </style>
