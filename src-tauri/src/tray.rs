@@ -110,6 +110,7 @@ pub fn create_tray(app: AppHandle) {
                             state_new.win_current_visible = true;
                             state_new.win_enter_visible = true;
                             state_new.is_first_hide = false;
+                            tray.app_handle().emit("tray-open-window", "".to_string()).unwrap();
                         } else {
                             println!("隐藏窗口");
                             win.hide().expect("窗口隐藏失败");
