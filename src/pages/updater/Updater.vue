@@ -44,6 +44,7 @@ function openGitHubReleases() {
 
 // 下载更新
 function downloadUpdate() {
+  isDownloading.value = true;
   downloadProgress.value = 0; // 初始化进度值
   console.log('设置isDownloading为true', isDownloading.value);
   // 触发下载操作
@@ -82,6 +83,7 @@ function downloadUpdate() {
         console.log('下载完成');
         // 窗口最小化了，下载完成后自动取消最小化
         getCurrentWebviewWindow().unminimize();
+        getCurrentWebviewWindow().setFocus();
         break;
     }
   }, undefined);
@@ -111,11 +113,13 @@ onMounted(async () => {
   <div class="update-container">
     <TitleBar :title="currentLanguage.pages.update.title" :showMinimizeBtn="true" :showCloseBtn="true"
               :dev-tool="`updater`"/>
-    <!-- 更新内容展示区域 -->
+    <!-- 加载展示 -->
     <div v-if="onLoading" class="loading-container">
       <n-spin/>
     </div>
-    <div v-else class="update-content">
+    <!-- 更新内容展示区域 -->
+    <div v-else class="update-content"
+         :style="{height: isDownloading ? `calc(100% - 160px)`: 'calc(100% - 120px)'}">
       <div class="release-header">
         <h2 class="release-version">{{ updaterVer.version || currentLanguage.pages.update.versionName }}</h2>
         <span class="release-tag" v-if="updaterVer.version && updaterVer.version.includes('beta')">Pre-release</span>
@@ -124,13 +128,13 @@ onMounted(async () => {
         {{ new Date(updaterVer.pubDate).toLocaleDateString() }}
       </div>
       <div class="divider"></div>
-      <div v-if="updaterVer.notes" class="release-notes github-markdown" v-html="updaterVer.notes"/>
+      <div v-if="updaterVer.notes" class="release-notes" v-html="updaterVer.notes"/>
       <div class="release-notes" v-else>
         {{ currentLanguage.pages.update.updateNotes }}
       </div>
       <!-- 查看更多按钮 -->
       <div class="view-more-container">
-        <n-button quaternary @click="openGitHubReleases">
+        <n-button type="primary" quaternary @click="openGitHubReleases">
           {{ currentLanguage.pages.update.viewMoreBtn }}
           <span class="view-more-icon">→</span>
         </n-button>
@@ -194,11 +198,11 @@ onMounted(async () => {
 }
 
 .update-content {
+  position: absolute;
   flex: 1;
   padding: 20px;
-  margin-bottom: 100px;
-  /* 为标题栏留出空间 */
   overflow-y: auto;
+  margin-top: 20px;
 }
 
 .release-header {
@@ -241,80 +245,6 @@ onMounted(async () => {
   line-height: 1.5;
 }
 
-/* GitHub风格的Markdown样式 */
-.github-markdown {
-  color: var(--theme-universal-text);
-}
-
-.github-markdown h1,
-.github-markdown h2,
-.github-markdown h3,
-.github-markdown h4,
-.github-markdown h5,
-.github-markdown h6 {
-  margin-top: 24px;
-  margin-bottom: 16px;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.github-markdown h1 {
-  font-size: 2em;
-  border-bottom: 1px solid var(--theme-universal-border);
-  padding-bottom: 0.3em;
-}
-
-.github-markdown h2 {
-  font-size: 1.5em;
-  border-bottom: 1px solid var(--theme-universal-border);
-  padding-bottom: 0.3em;
-}
-
-.github-markdown h3 {
-  font-size: 1.25em;
-}
-
-.github-markdown ul,
-.github-markdown ol {
-  padding-left: 2em;
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.github-markdown li {
-  margin-top: 0.25em;
-}
-
-.github-markdown p {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.github-markdown code {
-  padding: 0.2em 0.4em;
-  margin: 0;
-  font-size: 85%;
-  background-color: rgba(175, 184, 193, 0.2);
-  border-radius: 6px;
-}
-
-.github-markdown pre {
-  padding: 16px;
-  overflow: auto;
-  font-size: 85%;
-  line-height: 1.45;
-  background-color: #f6f8fa;
-  border-radius: 6px;
-  margin-bottom: 16px;
-}
-
-.github-markdown blockquote {
-  padding: 0 1em;
-  color: #57606a;
-  border-left: 0.25em solid #d0d7de;
-  margin: 0 0 16px 0;
-}
-
 .update-footer {
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
@@ -323,6 +253,7 @@ onMounted(async () => {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 65px;
   box-sizing: border-box;
   z-index: 90;
 }
@@ -339,24 +270,6 @@ onMounted(async () => {
   align-items: center;
 }
 
-.remind-text {
-  margin-left: 10px;
-  font-size: 12px;
-  color: var(--theme-universal-text);
-}
-
-.days-selector {
-  margin-left: 5px;
-}
-
-.days-selector select {
-  padding: 2px 5px;
-  border-radius: 4px;
-  border: 1px solid var(--theme-universal-border);
-  background-color: var(--theme-universal-background);
-  color: var(--theme-universal-text);
-}
-
 .download-progress {
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
@@ -365,10 +278,11 @@ onMounted(async () => {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 105px;
   box-sizing: border-box;
   z-index: 200;
-  display: block !important;
   /* 强制显示 */
+  display: block !important;
 }
 
 .progress-title {
@@ -380,37 +294,30 @@ onMounted(async () => {
 .progress-bar {
   height: 10px;
   background-color: var(--theme-universal-background);
-  /* 使用固定颜色而非变量 */
   border-radius: 4px;
   overflow: visible;
-  /* 确保内容不被裁剪 */
   margin-bottom: 8px;
   border: 1px solid var(--theme-universal-border);
   position: relative;
-  /* 添加相对定位 */
   z-index: 95;
-  /* 确保进度条容器有较高的z-index */
 }
 
 .progress-inner {
   height: 100%;
   background-color: var(--theme-universal-primary);
-  /* 使用固定颜色而非变量 */
-  transition: width 0.3s ease;
   min-width: 2px;
-  /* 确保即使是0%也能看到一点点 */
-  position: absolute;
   /* 使用绝对定位 */
+  position: absolute;
   left: 0;
   top: 0;
-  z-index: 100;
   /* 提高z-index确保进度条内容可见 */
-  border-radius: 4px;
+  z-index: 100;
   /* 添加圆角与外层一致 */
-  display: block !important;
+  border-radius: 4px;
   /* 强制显示 */
-  opacity: 1 !important;
+  display: block !important;
   /* 确保不透明 */
+  opacity: 1 !important;
 }
 
 .progress-info {
@@ -446,16 +353,10 @@ onMounted(async () => {
 .view-more-icon {
   margin-left: 5px;
   font-size: 16px;
-  transition: transform 0.3s ease;
+  transition: transform var(--animation-duration, 0.3s) ease;
 }
 
 :deep(.n-button:hover) .view-more-icon {
   transform: translateX(3px);
-}
-
-.restart-button-container {
-  margin-top: 15px;
-  display: flex;
-  justify-content: flex-end;
 }
 </style>
