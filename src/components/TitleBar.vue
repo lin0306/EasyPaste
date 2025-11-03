@@ -233,7 +233,7 @@ onMounted(() => {
   display: flex;
 }
 
-#close-button-img:hover {
+.close-button:hover #close-button-img {
   transform: rotate(180deg);
 }
 </style>
