@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
 import {computed, onMounted, onUnmounted} from 'vue';
-
 import {error, info} from '@tauri-apps/plugin-log';
 import {useLanguage} from './services/LanguageService.ts';
 import {useTheme} from './services/ThemeService.ts';
+import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
-import html from "highlight.js/lib/languages/vbscript-html";
-
-hljs.registerLanguage('html', html)
 
 // 屏蔽鼠标右键菜单（开发环境除外）
 document.oncontextmenu = function () {
@@ -21,6 +18,9 @@ document.oncontextmenu = function () {
 const {themeColors, initializeTheme, setupThemeListener} = useTheme()
 const {currentLanguage, initializeLanguage, setupLanguageListener} = useLanguage()
 
+/**
+ * 定义全局组件主题色
+ */
 const theme = computed(() => {
   return {
     common: {
@@ -173,16 +173,23 @@ const theme = computed(() => {
   } as GlobalThemeOverrides;
 });
 
-// 计算 Naive UI 的语言配置
+/**
+ * 计算 Naive UI 的语言配置
+ */
 const locale = computed(() => {
   return currentLanguage.value.locale;
 });
 
-// 计算 Naive UI 的语言配置
+/**
+ * 计算 Naive UI 的语言配置
+ */
 const dateLocale = computed(() => {
   return currentLanguage.value.dateLocale;
 });
 
+/**
+ * 忽略浏览器默认的搜索快捷键
+ */
 async function handleKeyDown(event: KeyboardEvent) {
   // 忽略浏览器默认的搜索快捷键
   if (event.key.toLowerCase() === 'f' && (event.ctrlKey || event.metaKey)) {
@@ -197,13 +204,18 @@ onMounted(async () => {
     info("应用启动中...");
     // 初始化主题
     await initializeTheme();
-    // 设置主题监听器
-    await setupThemeListener();
     // 初始化语言
     await initializeLanguage();
+    // 初始化动画效果配置
+    await initializeAnimationEffect();
+    // 设置主题监听器
+    setupThemeListener().catch(e => {
+      error('主题监听器初始化失败:' + e);
+    });
     // 设置语言监听器
-    await setupLanguageListener();
-
+    setupLanguageListener().catch(e => {
+      error('语言监听器初始化失败:' + e);
+    });
     info('应用初始化完成');
   } catch (er) {
     error('应用初始化失败:' + er);
@@ -213,6 +225,8 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  // 销毁动画效果配置
+  destroyAnimationEffect();
   // 移除键盘点击时间监听
   document.removeEventListener('keydown', handleKeyDown);
 })

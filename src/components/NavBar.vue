@@ -43,7 +43,7 @@
 import {computed, ref} from 'vue';
 import {useTheme} from '../services/ThemeService.ts';
 import HookIcon from '../assets/icons/HookIcon.vue';
-import {animationEffect} from "../pages/list/composables/AnimationComposable.ts";
+import {animationEffect} from "./composables/AnimationComposable.ts";
 
 const {themeColors} = useTheme();
 

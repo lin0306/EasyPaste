@@ -21,12 +21,17 @@ import {
 import {destroyTag, initializeTag} from "./composables/TagDataComposable.ts";
 import {destroyUpdater, hasNewVersion, initializeUpdater} from "./composables/UpdaterComposable.ts";
 import {destroyWindow, initializeWindow, isAutoHideWindow} from "./composables/WindowComposable.ts";
-import {destroyAnimationEffect, initializeAnimationEffect} from "./composables/AnimationComposable.ts";
 import {destroyFileData, initializeFileData, initUserSettings} from "./composables/FileDataComposable.ts";
 import {getSearchKey} from "../../store/ShortcutKeys.ts";
 import ClipboardFooter from "./components/ClipboardFooter.vue";
 import {getPowerOnSelfStart} from "../../store/Settings.ts";
 import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
+
+// 代码高亮引入
+import hljs from 'highlight.js/lib/core';
+import html from "highlight.js/lib/languages/vbscript-html";
+
+hljs.registerLanguage('html', html)
 
 // 获取语言上下文
 const {currentLanguage} = useLanguage();
@@ -136,9 +141,6 @@ onMounted(async () => {
     // 初始化更新器配置
     await initializeUpdater();
 
-    // 初始化动画效果配置
-    await initializeAnimationEffect();
-
     // 初始化文件数据配置
     initializeFileData();
 
@@ -169,9 +171,6 @@ onUnmounted(async () => {
 
   // 销毁更新器配置
   destroyUpdater();
-
-  // 销毁动画效果配置
-  destroyAnimationEffect();
 
   // 销毁文件数据配置
   destroyFileData();
