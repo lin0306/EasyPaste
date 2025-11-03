@@ -114,26 +114,33 @@ onMounted(async () => {
       // 初始化数据
       await initUserSettings();
       // 重新配置开机自启
-      const powerOnSelfStart = await getPowerOnSelfStart();
-      if(powerOnSelfStart) {
-        const enabled = await isEnabled();
-        if (powerOnSelfStart !== enabled) {
-          if (powerOnSelfStart) {
-            // 启用自启动
-            await enable();
-          } else {
-            // 禁用自启动
-            await disable();
-          }
+      getPowerOnSelfStart().then(powerOnSelfStart => {
+        if(powerOnSelfStart) {
+          isEnabled().then(enabled => {
+            if (powerOnSelfStart !== enabled) {
+              if (powerOnSelfStart) {
+                // 启用自启动
+                enable().catch(e => {
+                  error("开启自启动失败:" + e);
+                });
+              } else {
+                // 禁用自启动
+                disable().catch(e => {
+                  error("关闭自启动失败:" + e);
+                });
+              }
+            }
+          });
+
         }
-      }
+      });
     }
 
     // 初始化剪贴板数据配置
     await initializeClipboardData();
 
     // 初始化标签配置
-    await initializeTag();
+    await initializeTag(message, currentLanguage.value);
 
     // 初始化窗口配置
     await initializeWindow(currentLanguage.value);

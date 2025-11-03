@@ -124,6 +124,7 @@ export const english: LanguageConfig = {
             clearDataModalCancelBtn: 'Cancel',
             clearDataModalConfirmBtn: 'Confirm',
             tagManager: 'Tag Manager',
+            tagLoadFailed: 'Tag Load Failed.',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

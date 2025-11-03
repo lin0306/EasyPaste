@@ -30,6 +30,7 @@ declare interface ShortcutKeys {
     [x: string]: ShortcutKey;
     search: ShortcutKey;        // 搜索快捷键
     wakeUpRoutine: ShortcutKey; // 唤醒程序快捷键
+    quickPaste: ShortcutKey;    // 快速粘贴快捷键
 }
 
 declare interface ShortcutKey {
