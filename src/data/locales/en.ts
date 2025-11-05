@@ -86,6 +86,7 @@ export const english: LanguageConfig = {
             keyAvailableHint: 'The shortcut keys can be used normally.',
             keyNotAvailableHint: 'The shortcut keys are not available. Please check if they are being used by another program.',
             quickPasteKeyNotAvailableHint: '[{keys}] The shortcut key is unavailable. Please check if it is being used by another program.',
+            keyRepeatHint: 'The shortcut key conflicts with the [{keys}] shortcut key and saving is not allowed.',
             shortcutHint: 'The Win key combined with letter keys are mostly system keys and cannot be directly used. If you need to replace the clipboard function provided by the system, please go to "General Settings" and enable the "Replace Global Hotkeys" setting.',
 
             saveSuccessMsg: 'Save Success',

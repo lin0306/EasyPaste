@@ -86,6 +86,7 @@ export const chinese: LanguageConfig = {
             keyAvailableHint: '快捷键可正常使用',
             keyNotAvailableHint: '快捷键不可用，请检查快捷键是否被其他程序占用',
             quickPasteKeyNotAvailableHint: '【{keys}】快捷键不可用，请检查快捷键是否被其他程序占用',
+            keyRepeatHint: '快捷键与【{keys}】快捷键冲突，不允许保存',
             shortcutHint: 'Win键加字母键大部分都是系统键位，无法直接使用，如果需要替换系统自带的剪贴板功能，请到“通用设置”中打开“替换全局热键”设置',
 
             saveSuccessMsg: '保存成功',

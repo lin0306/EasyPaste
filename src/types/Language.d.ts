@@ -91,6 +91,7 @@ declare interface PageConfig {
         keyAvailableHint: string;
         keyNotAvailableHint: string;
         quickPasteKeyNotAvailableHint: string;
+        keyRepeatHint: string;
         shortcutHint: string;
 
         // 提示信息
