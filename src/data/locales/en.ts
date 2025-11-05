@@ -66,6 +66,7 @@ export const english: LanguageConfig = {
 
             search: 'Search',
             wakeUpRoutine: 'Wake Up Routine',
+            quickPaste: 'Quick Paste',
             emptyShortcutConfig: 'No Shortcut Config',
             resetBtn: 'Reset',
             saveBtn: 'Save',
@@ -84,6 +85,7 @@ export const english: LanguageConfig = {
             editHotkeyModalConfirmBtn: 'Confirm',
             keyAvailableHint: 'The shortcut keys can be used normally.',
             keyNotAvailableHint: 'The shortcut keys are not available. Please check if they are being used by another program.',
+            quickPasteKeyNotAvailableHint: '[{keys}] The shortcut key is unavailable. Please check if it is being used by another program.',
             shortcutHint: 'The Win key combined with letter keys are mostly system keys and cannot be directly used. If you need to replace the clipboard function provided by the system, please go to "General Settings" and enable the "Replace Global Hotkeys" setting.',
 
             saveSuccessMsg: 'Save Success',
@@ -113,7 +115,8 @@ export const english: LanguageConfig = {
             typeText: 'Text',
             typeCode: 'Code',
             typeFile: 'File',
-            registerShortcutKeysErrorHint: 'The registration of the "Wake Up Routine" shortcut key failed. Please check if this shortcut key is already in use. You can make the adjustment on the "Settings - Shortcuts" page here.',
+            registerOpenWindowShortcutKeysErrorHint: 'The registration of the shortcut key [{keys}] for the wake-up program failed. Please check if the shortcut key is occupied by other programs. You can adjust it on the 【Settings - Shortcut Keys】 page.',
+            registerQuickPasteShortcutKeysErrorHint: 'The quick paste shortcut key [{keys}] failed to register. Please check if the shortcut key is already in use by another program. You can adjust it on the "Settings - Shortcuts" page.',
             chars: 'chars',
             empty: 'No clipboard record exists',
             initFailedHint: 'The program initialization failed. Please run the program again.',

@@ -143,7 +143,7 @@ onMounted(async () => {
     await initializeTag(message, currentLanguage.value);
 
     // 初始化窗口配置
-    await initializeWindow(currentLanguage.value);
+    await initializeWindow(message, currentLanguage.value);
 
     // 初始化更新器配置
     await initializeUpdater();

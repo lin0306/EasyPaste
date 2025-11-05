@@ -66,6 +66,7 @@ export const chinese: LanguageConfig = {
 
             search: '搜索',
             wakeUpRoutine: '唤醒程序',
+            quickPaste: '快速粘贴',
             emptyShortcutConfig: '暂无快捷键配置',
             resetBtn: '重置',
             saveBtn: '保存',
@@ -84,6 +85,7 @@ export const chinese: LanguageConfig = {
             editHotkeyModalConfirmBtn: '确认',
             keyAvailableHint: '快捷键可正常使用',
             keyNotAvailableHint: '快捷键不可用，请检查快捷键是否被其他程序占用',
+            quickPasteKeyNotAvailableHint: '【{keys}】快捷键不可用，请检查快捷键是否被其他程序占用',
             shortcutHint: 'Win键加字母键大部分都是系统键位，无法直接使用，如果需要替换系统自带的剪贴板功能，请到“通用设置”中打开“替换全局热键”设置',
 
             saveSuccessMsg: '保存成功',
@@ -114,7 +116,8 @@ export const chinese: LanguageConfig = {
             typeText: '文本',
             typeCode: '代码',
             typeFile: '文件',
-            registerShortcutKeysErrorHint: '唤醒程序快捷键注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
+            registerOpenWindowShortcutKeysErrorHint: '唤醒程序快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
+            registerQuickPasteShortcutKeysErrorHint: '快速粘贴快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
             chars: '字符',
             empty: '暂无剪贴板记录',
             initFailedHint: '程序初始化失败，请重新运行程序',

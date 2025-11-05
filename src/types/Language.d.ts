@@ -67,6 +67,7 @@ declare interface PageConfig {
         // 快捷键设置页面文字
         search: string;
         wakeUpRoutine: string;
+        quickPaste: string;
         emptyShortcutConfig: string;
         // 设置页面底部按钮
         resetBtn: string;
@@ -89,6 +90,7 @@ declare interface PageConfig {
         editHotkeyModalConfirmBtn: string;
         keyAvailableHint: string;
         keyNotAvailableHint: string;
+        quickPasteKeyNotAvailableHint: string;
         shortcutHint: string;
 
         // 提示信息
@@ -120,7 +122,8 @@ declare interface PageConfig {
         typeText: string;
         typeCode: string;
         typeFile: string;
-        registerShortcutKeysErrorHint: string;
+        registerOpenWindowShortcutKeysErrorHint: string;
+        registerQuickPasteShortcutKeysErrorHint: string;
         chars: string;
         empty: string;
         initFailedHint: string;
