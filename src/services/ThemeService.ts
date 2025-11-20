@@ -26,7 +26,9 @@ export const currentThemeId = ref<string>(SETTINGS.THEME.DEFAULT_THEME);
  */
 export const themeColors = ref<ThemeConfigColors>(lightTheme.colors);
 
-// 初始化主题
+/**
+ * 初始化主题
+ */
 export async function initializeTheme() {
     try {
         // 设置当前主题
@@ -51,7 +53,11 @@ export async function initializeTheme() {
     }
 }
 
-// 将主题应用到DOM
+/**
+ * 将主题应用到DOM
+ * @param colors 主题颜色
+ * @param suffix CSS变量后缀
+ */
 export function applyThemeToDOM(colors: ThemeConfigColors, suffix: string = '') {
     const root = document.documentElement;
 
