@@ -10,7 +10,7 @@ import './assets/css/scrollbarGlobal.css';
 // 语言
 import {initializeLanguage} from './services/LanguageService.ts';
 // 主题
-import {useTheme} from './services/ThemeService.ts';
+import {initializeTheme} from './services/ThemeService.ts';
 // 图片预览
 import VueViewer from 'v-viewer';
 
@@ -22,8 +22,6 @@ app.use(router);
 app.use(VueViewer);
 
 // 在挂载前初始化主题和语言
-const {initializeTheme} = useTheme()
-
 initializeTheme().then(() => {
     initializeLanguage().then(() => {
         app.mount('#app')

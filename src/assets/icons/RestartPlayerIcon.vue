@@ -10,9 +10,7 @@
   </svg>
 </template>
 <script lang="ts" setup>
-import {useTheme} from '../../services/ThemeService.ts';
-// 获取主题颜色
-const {themeColors} = useTheme();
+import {themeColors} from "../../services/ThemeService.ts";
 </script>
 <style>
 svg {

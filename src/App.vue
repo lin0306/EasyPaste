@@ -3,7 +3,7 @@ import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui'
 import {computed, onMounted, onUnmounted} from 'vue';
 import {error, info} from '@tauri-apps/plugin-log';
 import {currentLanguage, initializeLanguage, setupLanguageListener} from './services/LanguageService.ts';
-import {useTheme} from './services/ThemeService.ts';
+import {initializeTheme, setupThemeListener, themeColors} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 
 // 代码高亮引入
@@ -13,9 +13,6 @@ import hljs from 'highlight.js/lib/core';
 document.oncontextmenu = function () {
   return false;
 };
-
-// 创建主题上下文
-const {themeColors, initializeTheme, setupThemeListener} = useTheme()
 
 /**
  * 定义全局组件主题色
