@@ -9,7 +9,7 @@ import {destroyAnimationEffect, initializeAnimationEffect} from "./components/co
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
 
-// 屏蔽鼠标右键菜单（开发环境除外）
+// 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
   return false;
 };
