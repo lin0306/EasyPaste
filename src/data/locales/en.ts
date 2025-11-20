@@ -158,7 +158,17 @@ export const english: LanguageConfig = {
                 updateLog: 'Update Log',
                 checkForUpdate: 'Check For Update',
                 about: 'About',
-            }
+            },
+            contextMenu: {
+                copy: 'Copy Whole Content',
+                onTop: 'On Top',
+                unTop: 'UnTop',
+                filePreview: 'File Preview',
+                copyFile: 'Copy Selected File',
+                ocr: 'OCR',
+                edit: 'Edit',
+                delete: 'Delete',
+            },
         },
         tags: {
             title: 'Tag Manager',

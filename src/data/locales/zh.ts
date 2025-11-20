@@ -159,7 +159,17 @@ export const chinese: LanguageConfig = {
                 updateLog: '更新日志',
                 checkForUpdate: '检查更新',
                 about: '关于',
-            }
+            },
+            contextMenu: {
+                copy: '复制整个内容',
+                onTop: '置顶',
+                unTop: '取消置顶',
+                filePreview: '文件预览',
+                copyFile: '复制所选文件',
+                ocr: '识别图片内容',
+                edit: '修改内容',
+                delete: '删除',
+            },
         },
         tags: {
             title: '标签管理',

@@ -167,6 +167,16 @@ declare interface PageConfig {
             checkForUpdate: string;
             about: string;
         },
+        contextMenu: {
+            copy: string;
+            onTop: string;
+            unTop: string;
+            filePreview: string;
+            copyFile: string;
+            ocr: string;
+            edit: string;
+            delete: string;
+        },
     },
     tags: {
         title: string;

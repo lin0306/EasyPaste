@@ -13,7 +13,7 @@ export const languages: LanguageConfig[] = [
 
 // 创建一个全局的主题状态管理
 const currentLanguageId = ref<string>(SETTINGS.LANGUAGE.DEFAULT_LANGUAGE);
-const currentLanguage = ref<LanguageConfig>(chinese);
+export const currentLanguage = ref<LanguageConfig>(chinese);
 
 // 主题上下文
 export function useLanguage() {
