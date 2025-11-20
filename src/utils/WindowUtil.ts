@@ -1,5 +1,6 @@
 import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
 import {WebViewWindowOptions} from "../types/Window";
+import {emit} from "@tauri-apps/api/event";
 
 // 创建窗口参数配置
 export const windowConfig: WebViewWindowOptions = {
@@ -134,4 +135,25 @@ export function openIconPreviewWindow() {
         height: 700,
         resizable: false
     })
+}
+
+/**
+ * 文件预览
+ */
+export async function openPreviewWindow(filePath: string, isFolder: boolean) {
+    const existWin = await WebviewWindow.getByLabel("preview");
+    if (existWin) {
+        await emit('reload-preview', {filePath: filePath, isFolder: isFolder});
+        await existWin.show();
+        await existWin.setFocus();
+    } else {
+        await createWin({
+            label: 'preview',
+            url: '/preview?filePath=' + encodeURIComponent(filePath) + '&isFolder=' + isFolder,
+            width: 600,
+            height: 500,
+            resizable: true,
+            visible: true,
+        });
+    }
 }
