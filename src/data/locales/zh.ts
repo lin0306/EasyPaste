@@ -130,6 +130,9 @@ export const chinese: LanguageConfig = {
             clearDataModalConfirmBtn: '确认',
             tagManager: '标签管理',
             tagLoadFailed: '标签加载失败',
+            deleteSuccessMsg: '删除成功',
+            bindSuccessMsg: '绑定成功',
+            unBindSuccessMsg: '取消绑定成功',
             menu: {
                 program: '程序',
                 settings: '偏好设置',

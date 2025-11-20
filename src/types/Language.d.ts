@@ -136,6 +136,9 @@ declare interface PageConfig {
         clearDataModalConfirmBtn: string;
         tagManager: string;
         tagLoadFailed: string;
+        deleteSuccessMsg: string;
+        bindSuccessMsg: string;
+        unBindSuccessMsg: string;
         menu: {
             [x: string]: string;
             program: string;
