@@ -3,12 +3,12 @@ import TitleBar from '../../components/TitleBar.vue';
 
 import {check, Update} from '@tauri-apps/plugin-updater';
 import {onMounted, reactive, ref} from 'vue';
-import {useLanguage} from '../../services/LanguageService.ts';
 import UpdaterService from '../../services/UpdaterService.ts';
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 import {marked} from "marked";
 import {getRenderer} from "../../utils/MarkdownUtil.ts";
 import {openLink} from "../../utils/LinkUtil.ts";
+import {currentLanguage} from "../../services/LanguageService.ts";
 
 marked.setOptions({
   breaks: true,
@@ -16,8 +16,6 @@ marked.setOptions({
   renderer: getRenderer()
 });
 
-
-const {currentLanguage} = useLanguage();
 let updater: Update;
 const updaterVer: UpdaterInfo = reactive({
   version: '',

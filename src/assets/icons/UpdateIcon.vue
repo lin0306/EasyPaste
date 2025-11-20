@@ -20,10 +20,7 @@
   </svg>
 </template>
 <script lang="ts" setup>
-
-import {useLanguage} from "../../services/LanguageService.ts";
-
-const {currentLanguage} = useLanguage();
+import {currentLanguage} from "../../services/LanguageService.ts";
 </script>
 <style>
 svg {

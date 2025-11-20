@@ -2,7 +2,7 @@
 import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
 import {computed, onMounted, onUnmounted} from 'vue';
 import {error, info} from '@tauri-apps/plugin-log';
-import {useLanguage} from './services/LanguageService.ts';
+import {currentLanguage, initializeLanguage, setupLanguageListener} from './services/LanguageService.ts';
 import {useTheme} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 
@@ -16,7 +16,6 @@ document.oncontextmenu = function () {
 
 // 创建主题上下文
 const {themeColors, initializeTheme, setupThemeListener} = useTheme()
-const {currentLanguage, initializeLanguage, setupLanguageListener} = useLanguage()
 
 /**
  * 定义全局组件主题色

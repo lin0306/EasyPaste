@@ -3,7 +3,6 @@ import {error, info} from "@tauri-apps/plugin-log";
 import {useMessage} from 'naive-ui';
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import TitleBar from '../../components/TitleBar.vue';
-import {useLanguage} from '../../services/LanguageService.ts';
 import {firstRun} from "../../store/FirstRun.ts";
 import {clipboardListenStore} from "../../store/CopyStatus.ts";
 import {COPY_STATE} from "../../constants/CopyStateConstant.ts";
@@ -30,11 +29,9 @@ import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
+import {currentLanguage} from "../../services/LanguageService.ts";
 
 hljs.registerLanguage('html', html)
-
-// 获取语言上下文
-const {currentLanguage} = useLanguage();
 
 // Naive UI 框架的消息组件
 const message = useMessage();
@@ -140,10 +137,10 @@ onMounted(async () => {
     await initializeClipboardData();
 
     // 初始化标签配置
-    await initializeTag(message, currentLanguage.value);
+    await initializeTag(message);
 
     // 初始化窗口配置
-    await initializeWindow(message, currentLanguage.value);
+    await initializeWindow(message);
 
     // 初始化更新器配置
     await initializeUpdater();

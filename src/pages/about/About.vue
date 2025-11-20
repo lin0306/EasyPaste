@@ -3,10 +3,8 @@ import TitleBar from '../../components/TitleBar.vue';
 
 import {getVersion} from '@tauri-apps/api/app';
 import {onMounted, ref} from 'vue';
-import {useLanguage} from '../../services/LanguageService.ts';
 import {openLink} from "../../utils/LinkUtil.ts";
-
-const {currentLanguage} = useLanguage();
+import {currentLanguage} from "../../services/LanguageService.ts";
 
 // @ts-ignore
 const appVersion = ref<string>("");
