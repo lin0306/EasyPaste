@@ -170,6 +170,13 @@ export const chinese: LanguageConfig = {
                 edit: '修改内容',
                 delete: '删除',
             },
+            editor: {
+                title: '编辑文本内容',
+                saveBtn: '保存',
+                resetBtn: '重置',
+                saveSuccessMsg: '保存成功',
+                saveFailedMsg: '保存失败',
+            }
         },
         tags: {
             title: '标签管理',

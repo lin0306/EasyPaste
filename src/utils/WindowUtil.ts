@@ -157,3 +157,24 @@ export async function openPreviewWindow(filePath: string, isFolder: boolean) {
         });
     }
 }
+
+/**
+ * 文件预览
+ */
+export async function openItemEditWindow(itemId: number) {
+    const existWin = await WebviewWindow.getByLabel("item-editor");
+    if (existWin) {
+        await emit('reload-editor', {itemId: itemId});
+        await existWin.show();
+        await existWin.setFocus();
+    } else {
+        await createWin({
+            label: 'item-editor',
+            url: '/item-editor?itemId=' + itemId,
+            width: 600,
+            height: 500,
+            resizable: true,
+            visible: true,
+        });
+    }
+}

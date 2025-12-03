@@ -327,6 +327,21 @@ class ClipboardDBService {
     }
 
     /**
+     * 更新剪贴板项目内容
+     * @param id 项目id
+     * @param content 项目内容
+     */
+    async updateItemContent(id: number, content: string) {
+        try {
+            await this.db?.execute('UPDATE clipboard_items SET content = ? WHERE id = ?', [content, id]);
+            return true;
+        } catch (err) {
+            error('[数据库进程] 更新剪贴板项目内容失败:' + err);
+            return false;
+        }
+    }
+
+    /**
      * 删除剪贴板项目
      */
     async deleteClipboardItem(id: number) {

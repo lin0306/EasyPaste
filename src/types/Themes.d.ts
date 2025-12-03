@@ -77,5 +77,10 @@ declare interface ThemeConfigColors {
     },
     tooltip: {
         color: string;                          // 提示框色
+    },
+    editor: {
+        backgroundColor: string;
+        lineNumberBackgroundColor: string;
+        lineNumberBackgroundColorActive: string;
     }
 }

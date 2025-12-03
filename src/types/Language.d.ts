@@ -177,6 +177,13 @@ declare interface PageConfig {
             edit: string;
             delete: string;
         },
+        editor: {
+            title: string;
+            saveBtn: string;
+            resetBtn: string;
+            saveSuccessMsg: string;
+            saveFailedMsg: string;
+        },
     },
     tags: {
         title: string;

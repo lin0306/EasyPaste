@@ -71,6 +71,11 @@ export const lightTheme: ThemeConfig = {
         },
         tooltip: {
             color: 'rgb(244,244,244)',
+        },
+        editor: {
+            backgroundColor: 'rgb(255,255,255)',
+            lineNumberBackgroundColor: 'rgb(241,241,241)',
+            lineNumberBackgroundColorActive: 'rgb(255,255,255)',
         }
     },
 }

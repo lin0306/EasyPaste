@@ -71,6 +71,11 @@ export const pinkTheme: ThemeConfig = {
         },
         tooltip: {
             color: 'rgb(251,229,243)',
+        },
+        editor: {
+            backgroundColor: 'rgb(251,242,242)',
+            lineNumberBackgroundColor: 'rgb(246,229,229)',
+            lineNumberBackgroundColorActive: 'rgb(253,244,244)',
         }
     },
 };

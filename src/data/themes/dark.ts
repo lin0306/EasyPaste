@@ -71,6 +71,11 @@ export const darkTheme: ThemeConfig = {
         },
         tooltip: {
             color: 'rgb(53,53,53)',
+        },
+        editor: {
+            backgroundColor: 'rgb(35,35,35)',
+            lineNumberBackgroundColor: 'rgb(53,53,53)',
+            lineNumberBackgroundColorActive: 'rgb(35,35,35)',
         }
     },
 };

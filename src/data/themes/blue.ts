@@ -71,6 +71,11 @@ export const blueTheme: ThemeConfig = {
         },
         tooltip: {
             color: 'rgba(180,208,255,0.9)',
+        },
+        editor: {
+            backgroundColor: 'rgba(240,248,255,1)',
+            lineNumberBackgroundColor: 'rgb(231,238,244)',
+            lineNumberBackgroundColorActive: 'rgb(245,250,255)',
         }
     },
 };

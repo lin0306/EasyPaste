@@ -8,6 +8,7 @@ const routes = [
     {path: '/updater', component: () => import('../pages/updater/Updater.vue')},
     {path: '/preview', component: () => import('../pages/preview/index.vue')},
     {path: '/icon-preview', component: () => import('../pages/icon/preview.vue')},
+    {path: '/item-editor', component: () => import('../pages/list/ItemEditor.vue')},
 ]
 
 const router = createRouter({

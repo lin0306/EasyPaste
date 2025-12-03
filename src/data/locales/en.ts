@@ -169,6 +169,13 @@ export const english: LanguageConfig = {
                 edit: 'Edit',
                 delete: 'Delete',
             },
+            editor: {
+                title: 'Edit Text Content',
+                saveBtn: 'Save',
+                resetBtn: 'Reset',
+                saveSuccessMsg: 'Save Success',
+                saveFailedMsg: 'Save Failed',
+            },
         },
         tags: {
             title: 'Tag Manager',
