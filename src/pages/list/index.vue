@@ -146,7 +146,7 @@ onMounted(async () => {
     await initializeUpdater();
 
     // 初始化文件数据配置
-    initializeFileData();
+    await initializeFileData();
 
     // 增加事件监听
     document.addEventListener('keydown', handleKeyDown);

@@ -10,7 +10,7 @@
   </svg>
 </template>
 <script lang="ts" setup>
-import {themeColors} from "../../../services/ThemeService.ts";
+import {themeColors} from "../../../../../services/ThemeService.ts";
 </script>
 <style>
 svg {

@@ -39,6 +39,7 @@ export const chinese: LanguageConfig = {
             languages: '语言',
             autoGoToLatestData: '自动滚动到最新数据',
             autoGoToLatestDataHint: '打开后，每次复制新内容时，列表都会滚动到最新复制的内容所在的位置，关闭此功能后，每次复制新内容时，列表不会自动滚动',
+            displayThumbnailImage: '显示缩略图',
 
             enableTag: '启用标签功能',
             bindTagBtnShowLocation: '标签绑定按钮位置',

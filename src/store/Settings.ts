@@ -26,6 +26,7 @@ const defaultSettings: Settings = {
     animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL.key,
     autoGoToLatestData: true,
     tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
+    displayThumbnailImage: true,
 }
 
 /**
@@ -371,6 +372,24 @@ export async function getTagListLocation(): Promise<string> {
 }
 
 /**
+ * 保存是否显示图片缩略图
+ * @param displayThumbnailImage 是否显示图片缩略图
+ */
+export async function saveDisplayThumbnailImage(displayThumbnailImage: boolean) {
+    info("保存标签列表位置: " + displayThumbnailImage);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, displayThumbnailImage);
+}
+
+/**
+ * 获取是否显示图片缩略图
+ */
+export async function getDisplayThumbnailImage(): Promise<boolean> {
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE) || defaultSettings.displayThumbnailImage;
+}
+
+/**
  * 初始化用户配置
  */
 export async function initSettings() {
@@ -442,6 +461,9 @@ export async function initSettings() {
         if (userSettingsString.includes(SETTINGS_KEYS.TAG_LIST_LOCATION)) {
             await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         }
+        if (userSettingsString.includes(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) {
+            await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
+        }
         await settings.save();
     } else {
         // 用户配置文件不存在
@@ -466,6 +488,7 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
         await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
+        await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
 
         await settings.save();
     }

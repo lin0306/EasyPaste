@@ -40,6 +40,7 @@ declare interface PageConfig {
         languages: string;
         autoGoToLatestData: string;
         autoGoToLatestDataHint: string;
+        displayThumbnailImage: string;
         // 标签设置页面文字
         enableTag: string;
         bindTagBtnShowLocation: string;

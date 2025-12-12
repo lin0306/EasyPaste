@@ -39,6 +39,7 @@ export const english: LanguageConfig = {
             languages: 'Languages',
             autoGoToLatestData: 'Automatically scroll to the latest data',
             autoGoToLatestDataHint: 'After opening, each time you copy a new item, the list will scroll to the latest copied item\'s position, and after closing this function, each time you copy a new item, the list will not automatically scroll.',
+            displayThumbnailImage: 'Display Thumbnail Image',
 
             enableTag: 'Enable Tag Function',
             bindTagBtnShowLocation: 'Tag Binding Button Location',
