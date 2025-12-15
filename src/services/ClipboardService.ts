@@ -39,6 +39,12 @@ export async function initClipboardListener() {
                     // 直接将文件路径保存到数据库
                     await db.saveClipboardItem(fileName, 'file');
                 }
+            } else if(payload.type === 'image') {
+                const fileName = payload.file_path;
+                if (fileName) {
+                    // 直接将文件路径保存到数据库
+                    await db.saveClipboardItem(fileName, 'image');
+                }
             }
             dataMap.value.delete(data);
             info("剪贴板内容保存完成");
@@ -69,7 +75,10 @@ export async function copyToClipboard(item: ClipboardItem) {
     if (item.type === 'text' || item.type === 'code') {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.content, format: 'text'});
-    } else {
+    } else if(item.type === 'image') {
+        // 调用后端接口
+        return await invoke('write_to_clipboard', {content: item.file_path, format: 'image'});
+    }else {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.file_path, format: 'files'});
     }

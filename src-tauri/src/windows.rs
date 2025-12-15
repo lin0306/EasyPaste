@@ -61,4 +61,6 @@ pub struct Settings {
     auto_hide_window: bool,
     #[serde(rename = "alwaysOnTop")]
     always_on_top: bool,
+    #[serde(rename = "imageBasePath")]
+    pub image_base_path: String,
 }

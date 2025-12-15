@@ -1,6 +1,7 @@
 import {error, info} from '@tauri-apps/plugin-log';
 import Database from '@tauri-apps/plugin-sql';
 import DataClearService from './DataClearService';
+import {deleteFile} from "../utils/FileUtil.ts";
 
 class ClipboardDBService {
     private db: Database | undefined;
@@ -152,7 +153,7 @@ class ClipboardDBService {
                 }
                 await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path, chars) VALUES (?, ?, ?, ?, ?)', [content, Date.now(), type, null, content.length]);
             }
-            if (type === 'file') {
+            if (type === 'file' || type === 'image') {
                 const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{
                     id: number
                 }];
@@ -160,6 +161,18 @@ class ClipboardDBService {
                     await this.updateItemTime(row[0].id, Date.now());
                     info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
                     return;
+                }
+                // 将图片复制到剪贴板了，查看数据库有没有对应的图片记录，有则更新复制时间
+                const filePaths = JSON.parse(content);
+                if (type === 'file' && filePaths.length === 1) {
+                    const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = \'image\' AND file_path = ?', [filePaths[0]]) as [{
+                        id: number
+                    }];
+                    if (row && row.length > 0) {
+                        await this.updateItemTime(row[0].id, Date.now());
+                        info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                        return;
+                    }
                 }
                 await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [null, Date.now(), type, content]);
             }
@@ -469,9 +482,8 @@ class ClipboardDBService {
      */
     async getAllTags(): Promise<TagItem[] | undefined> {
         return this.db?.select(`
-            select 
-                t.*,
-                sum(iif(it.item_id is null , 0, 1)) as stats
+            select t.*,
+                   sum(iif(it.item_id is null, 0, 1)) as stats
             from tags t
                      left join item_tags it on t.id = it.tag_id
             group by t.id, t.created_at
@@ -523,6 +535,15 @@ class ClipboardDBService {
             }];
             if (counts && counts.length > 0 && counts[0].count > 0) {
                 info('[数据库进程] 清理过期剪贴板条目');
+                // 删除图片
+                const imageItems = await this.db?.select('SELECT * FROM clipboard_items WHERE copy_time < ? AND type = \'image\'', [now.getTime()]) as ClipboardItem[];
+                if (imageItems) {
+                    for (let item of imageItems) {
+                        if (item.file_path) {
+                            deleteFile(item.file_path);
+                        }
+                    }
+                }
                 await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [now.getTime()]);
                 return counts[0].count;
             }
@@ -544,6 +565,15 @@ class ClipboardDBService {
                 }];
                 if (counts && counts.length > 0 && counts[0].count) {
                     info('[数据库进程] 清理超过保留时长的数据');
+                    // 删除图片
+                    const imageItems = await this.db?.select('SELECT * FROM clipboard_items WHERE copy_time < ? AND type = \'image\'', [items[0].copy_time]) as ClipboardItem[];
+                    if (imageItems) {
+                        for (let item of imageItems) {
+                            if (item.file_path) {
+                                deleteFile(item.file_path);
+                            }
+                        }
+                    }
                     await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [items[0].copy_time]);
                     return counts[0].count;
                 }
