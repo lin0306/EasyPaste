@@ -122,6 +122,7 @@
     "updater:allow-download-and-install",
     "updater:allow-install",
     "notification:default",
-    "os:default"
+    "os:default",
+    "dialog:default"
   ]
 }

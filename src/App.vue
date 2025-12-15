@@ -5,9 +5,11 @@ import {error, info} from '@tauri-apps/plugin-log';
 import {currentLanguage, initializeLanguage, setupLanguageListener} from './services/LanguageService.ts';
 import {initializeTheme, setupThemeListener, themeColors} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
-
+import {appDataDir} from "@tauri-apps/api/path";
+import {isMac} from "./data/SystemParams.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
+import {getImageBasePath, saveImageBasePath} from "./store/Settings.ts";
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
@@ -198,6 +200,11 @@ async function handleKeyDown(event: KeyboardEvent) {
 onMounted(async () => {
   try {
     info("应用启动中...");
+    // 设置图片默认保存位置
+    const imagePath = await getImageBasePath();
+    if (!imagePath || imagePath === '') {
+      await saveImageBasePath(await appDataDir() + (isMac ? '/' : '\\') + 'images');
+    }
     // 初始化主题
     await initializeTheme();
     // 初始化语言

@@ -65,6 +65,8 @@ declare interface PageConfig {
         maxHistoryItemsHint: string,
         dataRetentionDays: string,
         dataRetentionDaysHint: string,
+        imageStorageLocation: string,
+        imageStorageLocationHint: string,
         // 快捷键设置页面文字
         search: string;
         wakeUpRoutine: string;

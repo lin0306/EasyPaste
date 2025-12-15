@@ -64,6 +64,8 @@ export const chinese: LanguageConfig = {
             maxHistoryItemsHint: '限制数据存储的上限，超过条数上限将自动清理旧数据，0表示不清理，最多保留10000条',
             dataRetentionDays: '记录保留时长',
             dataRetentionDaysHint: '限制数据保留时长，超过天数上限将自动清理，0表示不清理，最大保留365天',
+            imageStorageLocation: '图片存储位置',
+            imageStorageLocationHint: '由于部分图片是通过第三方截图工具生成的，系统只能获取原始图像数据，无法保留来源信息，因此需要将其存储到本地，默认路径：{path}',
 
             search: '搜索',
             wakeUpRoutine: '唤醒程序',

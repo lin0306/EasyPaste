@@ -64,6 +64,8 @@ export const english: LanguageConfig = {
             maxHistoryItemsHint: 'Limit the upper limit of data storage, 0 means no cleanup, maximum 10000 items',
             dataRetentionDays: 'Max Record Days',
             dataRetentionDaysHint: 'Limit data retention time, exceeding the number of days will automatically clean up, 0 means no cleanup, maximum retention time is 365 days',
+            imageStorageLocation: 'Image Storage Location',
+            imageStorageLocationHint: 'Since some of the images were generated using third-party screenshot tools, the system can only obtain the original image data but cannot retain the source information. Therefore, they need to be stored locally. The default path is: {path}',
 
             search: 'Search',
             wakeUpRoutine: 'Wake Up Routine',

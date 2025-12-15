@@ -27,6 +27,7 @@ const defaultSettings: Settings = {
     autoGoToLatestData: true,
     tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
     displayThumbnailImage: true,
+    imageBasePath: '',
 }
 
 /**
@@ -390,6 +391,24 @@ export async function getDisplayThumbnailImage(): Promise<boolean> {
 }
 
 /**
+ * 保存图片存储位置
+ * @param imageBasePath 图片存储位置
+ */
+export async function saveImageBasePath(imageBasePath: string) {
+    info("保存图片存储位置: " + imageBasePath);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, imageBasePath);
+}
+
+/**
+ * 获取图片存储位置
+ */
+export async function getImageBasePath(): Promise<string> {
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.IMAGE_BASE_PATH) || '';
+}
+
+/**
  * 初始化用户配置
  */
 export async function initSettings() {
@@ -455,14 +474,17 @@ export async function initSettings() {
         if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) {
             await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
         }
-        if (userSettingsString.includes(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) {
+        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) {
             await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, defaultSettings.autoGoToLatestData);
         }
-        if (userSettingsString.includes(SETTINGS_KEYS.TAG_LIST_LOCATION)) {
+        if (!userSettingsString.includes(SETTINGS_KEYS.TAG_LIST_LOCATION)) {
             await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         }
-        if (userSettingsString.includes(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) {
+        if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) {
             await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.IMAGE_BASE_PATH)) {
+            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, defaultSettings.imageBasePath);
         }
         await settings.save();
     } else {
@@ -489,6 +511,7 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
         await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
+        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, defaultSettings.imageBasePath);
 
         await settings.save();
     }
