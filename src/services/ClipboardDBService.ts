@@ -357,6 +357,21 @@ class ClipboardDBService {
     }
 
     /**
+     * 更新剪贴板项目文件地址
+     * @param id 项目id
+     * @param filePath 文件地址
+     */
+    async updateItemFilePath(id: number, filePath: string) {
+        try {
+            await this.db?.execute('UPDATE clipboard_items SET file_path = ? WHERE id = ?', [filePath, id]);
+            return true;
+        } catch (err) {
+            error('[数据库进程] 更新剪贴板项目文件地址失败:' + err);
+            return false;
+        }
+    }
+
+    /**
      * 删除剪贴板项目
      */
     async deleteClipboardItem(id: number) {
@@ -444,10 +459,27 @@ class ClipboardDBService {
     }
 
     /**
+     * 获取指定类型的所有条目
+     * @param type 条目类型
+     */
+    async getItems(type: string): Promise<ClipboardItem[] | undefined> {
+        return await this.db?.select('SELECT * FROM clipboard_items WHERE type = ?', [type]) as ClipboardItem[];
+    }
+
+    /**
      * 获取最新条目
      */
     async getLatestItem(): Promise<ClipboardItem[] | undefined> {
         return this.db?.select('SELECT * FROM clipboard_items ORDER BY copy_time DESC LIMIT 1');
+    }
+
+    /**
+     * 获取条目数量
+     */
+    async getItemCount(type: string): Promise<[{ count: number }]> {
+        return await this.db?.select('SELECT COUNT(*) as count FROM clipboard_items WHERE type = ?', [type]) as [{
+            count: number
+        }];
     }
 
     // 标签相关的方法
@@ -542,7 +574,7 @@ class ClipboardDBService {
                 if (imageItems) {
                     for (let item of imageItems) {
                         if (item.file_path) {
-                            deleteFile(item.file_path);
+                            await deleteFile(item.file_path);
                         }
                     }
                 }
@@ -572,7 +604,7 @@ class ClipboardDBService {
                     if (imageItems) {
                         for (let item of imageItems) {
                             if (item.file_path) {
-                                deleteFile(item.file_path);
+                                await deleteFile(item.file_path);
                             }
                         }
                     }

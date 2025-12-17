@@ -66,6 +66,22 @@
         }
       ]
     },
+    {
+      "identifier": "fs:allow-copy-file",
+      "allow": [
+        {
+          "path": "**/*"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-remove",
+      "allow": [
+        {
+          "path": "**/*"
+        }
+      ]
+    },
     "core:webview:default",
     "core:webview:allow-create-webview",
     "core:webview:allow-internal-toggle-devtools",

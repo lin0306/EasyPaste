@@ -67,24 +67,22 @@ declare interface PageConfig {
         dataRetentionDaysHint: string,
         imageStorageLocation: string,
         imageStorageLocationHint: string,
+        // 旧图片地址替换弹窗内容
+        replaceImageStorageLocationTitle: string,
+        replaceImageStorageLocationConfirm: string,
+        replaceImageStorageLocationProcessing: string,
+        replaceImageStorageLocationConfirmBtn: string,
+        replaceImageStorageLocationCancelBtn: string,
         // 快捷键设置页面文字
         search: string;
         wakeUpRoutine: string;
         quickPaste: string;
         emptyShortcutConfig: string;
-        // 设置页面底部按钮
-        resetBtn: string;
-        saveBtn: string;
         // 确认重启弹窗内容
         restartModalTitle: string;
         restartModalContent: string;
         restartModalCancelBtn: string;
         restartModalConfirmBtn: string;
-        // 硬件加速设置对话框内容
-        hardwareAccelerationDialogTitle: string;
-        hardwareAccelerationDialogContent: string;
-        hardwareAccelerationDialogRestartNow: string;
-        hardwareAccelerationDialogRestartLater: string;
         // 快捷键编辑弹窗内容
         editHotkeyModalTitle: string;
         editHotkeyModalHint: string;
