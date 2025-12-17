@@ -163,15 +163,17 @@ class ClipboardDBService {
                     return;
                 }
                 // 将图片复制到剪贴板了，查看数据库有没有对应的图片记录，有则更新复制时间
-                const filePaths = JSON.parse(content);
-                if (type === 'file' && filePaths.length === 1) {
-                    const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = \'image\' AND file_path = ?', [filePaths[0]]) as [{
-                        id: number
-                    }];
-                    if (row && row.length > 0) {
-                        await this.updateItemTime(row[0].id, Date.now());
-                        info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
-                        return;
+                if (type === 'file') {
+                    const filePaths = JSON.parse(content);
+                    if (filePaths.length === 1) {
+                        const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = \'image\' AND file_path = ?', [filePaths[0]]) as [{
+                            id: number
+                        }];
+                        if (row && row.length > 0) {
+                            await this.updateItemTime(row[0].id, Date.now());
+                            info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                            return;
+                        }
                     }
                 }
                 await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [null, Date.now(), type, content]);
