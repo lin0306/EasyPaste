@@ -125,6 +125,7 @@ declare interface PageConfig {
         typeText: string;
         typeCode: string;
         typeFile: string;
+        typeImage: string;
         registerOpenWindowShortcutKeysErrorHint: string;
         registerQuickPasteShortcutKeysErrorHint: string;
         chars: string;

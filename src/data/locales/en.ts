@@ -119,6 +119,7 @@ export const english: LanguageConfig = {
             typeText: 'Text',
             typeCode: 'Code',
             typeFile: 'File',
+            typeImage: 'Image',
             registerOpenWindowShortcutKeysErrorHint: 'The registration of the shortcut key [{keys}] for the wake-up program failed. Please check if the shortcut key is occupied by other programs. You can adjust it on the 【Settings - Shortcut Keys】 page.',
             registerQuickPasteShortcutKeysErrorHint: 'The quick paste shortcut key [{keys}] failed to register. Please check if the shortcut key is already in use by another program. You can adjust it on the "Settings - Shortcuts" page.',
             chars: 'chars',

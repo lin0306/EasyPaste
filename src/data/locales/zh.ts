@@ -120,6 +120,7 @@ export const chinese: LanguageConfig = {
             typeText: '文本',
             typeCode: '代码',
             typeFile: '文件',
+            typeImage: '图片',
             registerOpenWindowShortcutKeysErrorHint: '唤醒程序快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
             registerQuickPasteShortcutKeysErrorHint: '快速粘贴快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
             chars: '字符',
