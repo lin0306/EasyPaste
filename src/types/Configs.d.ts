@@ -25,6 +25,7 @@ declare interface Settings {
     // 存储设置
     maxHistoryItems: number,            // 最大历史记录数
     dataRetentionDays: number,          // 数据保留时长
+    enableImageSave: boolean,           // 启用图片保存
     imageBasePath: string,              // 图片保存路径
 }
 

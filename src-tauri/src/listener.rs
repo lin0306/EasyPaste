@@ -52,39 +52,29 @@ impl ClipboardHandler for Manager {
 
         // 3.检测图片
         if let Ok(image) = self.ctx.get_image() {
-            // 尝试从 settings.json 获取路径
-            let mut settings_image_path: Option<PathBuf> = None;
-
-            if let Ok(data) =
-                file::load_file_content::<Settings>(self.app.clone(), "settings.json".into())
-            {
-                if !data.image_base_path.trim().is_empty() {
-                    // 如果配置中的路径非空，尝试使用它
-                    settings_image_path = Some(PathBuf::from(&data.image_base_path));
+            // 如果配置中未开启保存图片功能，则不保存图片
+            let mut is_save_image = false;
+            if let Ok(data) = file::load_file_content::<Settings>(self.app.clone(), "settings.json".into()) {
+                if data.enable_image_save {
+                    is_save_image = true;
                 }
             }
+            if !is_save_image {
+                info!("剪贴板有复制到新的图片，但未开启保存图片功能");
+                return;
+            }
 
-            // 如果没拿到有效路径，使用默认路径
-            let mut path = if let Some(path) = settings_image_path {
-                path
-            } else {
-                let appdata_dir = dirs::data_dir().expect("未找到数据目录");
-                let mut path = PathBuf::new();
-                path.push(appdata_dir);
-                path.push(&self.app.config().identifier);
-                path.push("images");
-                if !path.exists() {
-                    create_dir_all(&path).expect("图片文件夹创建失败");
-                }
-                path
-            };
+            // 获取图片保存路径
+            let mut path = get_image_base_path(self.app.clone());
             // 拼接文件名：EasyPaste_当前时间.jpg
             let image_file_name = format!(
                 "EasyPaste_{}.jpg",
                 chrono::Local::now().format("%Y-%m-%d_%H-%M-%S-%3f")
             );
+            // 文件路径拼接
             path.push(image_file_name);
             let path = path.to_str().expect("图片保存路径转换失败").to_owned();
+            // 保存图片
             if image.save_to_path(&path).is_ok() {
                 info!("检测到剪贴板有复制到新的图片，image_path:{}", path);
                 let mut map = Map::new();
@@ -169,7 +159,7 @@ pub fn write_to_clipboard(content: String, format: String) -> bool {
     match format.as_str() {
         "text" => ctx.set_text(content).is_ok(),
         "image" => {
-            let mut paths:Vec<String> = Vec::new();
+            let mut paths: Vec<String> = Vec::new();
             paths.push(content);
             ctx.set_files(paths).is_ok()
         }
@@ -182,4 +172,33 @@ pub fn write_to_clipboard(content: String, format: String) -> bool {
             return false;
         }
     }
+}
+
+/**
+ * 获取图片保存路径
+ */
+fn get_image_base_path(app: AppHandle) -> PathBuf {
+    let mut settings_image_path: Option<PathBuf> = None;
+    if let Ok(data) =
+        file::load_file_content::<Settings>(app.clone(), "settings.json".into())
+    {
+        if !data.image_base_path.trim().is_empty() {
+            // 如果配置中的路径非空，尝试使用它
+            settings_image_path = Some(PathBuf::from(&data.image_base_path));
+        }
+    }
+
+    // 如果没拿到有效路径，使用默认路径
+    if let Some(path) = settings_image_path {
+        return path;
+    };
+    let appdata_dir = dirs::data_dir().expect("未找到数据目录");
+    let mut path = PathBuf::new();
+    path.push(appdata_dir);
+    path.push(app.config().identifier.clone());
+    path.push("images");
+    if !path.exists() {
+        create_dir_all(&path).expect("图片文件夹创建失败");
+    }
+    path
 }

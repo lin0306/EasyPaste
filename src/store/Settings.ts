@@ -4,6 +4,8 @@ import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
 import {SETTINGS_KEYS} from "../constants/KeysConstants.ts";
 import {utf8Decoder} from "../constants/PublicConstants.ts";
+import {appDataDir} from "@tauri-apps/api/path";
+import {isMac} from "../data/SystemParams.ts";
 
 export const SETTINGS_FILE_NAME = "settings.json";
 const defaultSettings: Settings = {
@@ -28,6 +30,7 @@ const defaultSettings: Settings = {
     tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
     displayThumbnailImage: true,
     imageBasePath: '',
+    enableImageSave: true,
 }
 
 /**
@@ -408,6 +411,25 @@ export async function getImageBasePath(): Promise<string> {
     return await store.get<string>(SETTINGS_KEYS.IMAGE_BASE_PATH) || '';
 }
 
+
+/**
+ * 保存是否存储图片
+ * @param enableImageSave 图片存储位置
+ */
+export async function saveEnableImageSave(enableImageSave: boolean) {
+    info("保存是否存储图片: " + enableImageSave);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, enableImageSave);
+}
+
+/**
+ * 获取是否存储图片
+ */
+export async function getEnableImageSave(): Promise<boolean> {
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE) || defaultSettings.enableImageSave;
+}
+
 /**
  * 初始化用户配置
  */
@@ -484,7 +506,10 @@ export async function initSettings() {
             await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
         }
         if (!userSettingsString.includes(SETTINGS_KEYS.IMAGE_BASE_PATH)) {
-            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, defaultSettings.imageBasePath);
+            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appDataDir() + (isMac ? '/' : '\\') + 'images');
+        }
+        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
+            await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
         }
         await settings.save();
     } else {
@@ -511,7 +536,8 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
         await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
-        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, defaultSettings.imageBasePath);
+        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appDataDir() + (isMac ? '/' : '\\') + 'images');
+        await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
 
         await settings.save();
     }

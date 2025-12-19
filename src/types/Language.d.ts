@@ -65,8 +65,9 @@ declare interface PageConfig {
         maxHistoryItemsHint: string,
         dataRetentionDays: string,
         dataRetentionDaysHint: string,
+        enableImageSave: string,
+        enableImageSaveHint: string,
         imageStorageLocation: string,
-        imageStorageLocationHint: string,
         // 旧图片地址替换弹窗内容
         replaceImageStorageLocationTitle: string,
         replaceImageStorageLocationConfirm: string,

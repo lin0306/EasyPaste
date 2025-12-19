@@ -58,9 +58,11 @@ pub fn create_main_window(app: AppHandle) {
 #[derive(Deserialize)]
 pub struct Settings {
     #[serde(rename = "autoHideWindow")]
-    auto_hide_window: bool,
+    pub auto_hide_window: bool,
     #[serde(rename = "alwaysOnTop")]
-    always_on_top: bool,
+    pub always_on_top: bool,
     #[serde(rename = "imageBasePath")]
     pub image_base_path: String,
+    #[serde(rename = "enableImageSave")]
+    pub enable_image_save: bool,
 }
