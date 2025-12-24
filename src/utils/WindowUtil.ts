@@ -1,6 +1,7 @@
 import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
 import {WebViewWindowOptions} from "../types/Window";
 import {emit} from "@tauri-apps/api/event";
+import {currentLanguage} from "../services/LanguageService.ts";
 
 // 创建窗口参数配置
 export const windowConfig: WebViewWindowOptions = {
@@ -46,6 +47,7 @@ export async function createWin(options: WebViewWindowOptions) {
         await existWin.setFocus();
         return;
     }
+    console.log(args)
     // 创建窗口对象
     const win = new WebviewWindow(args.label, args)
 
@@ -76,6 +78,7 @@ export async function createWin(options: WebViewWindowOptions) {
 export function openSettingsWindow() {
     return createWin({
         label: 'settings',
+        title: currentLanguage.value.pages.settings.title,
         url: '/settings',
         width: 650,
         height: 500,
@@ -90,6 +93,7 @@ export function openSettingsWindow() {
 export function openTagsWindow() {
     return createWin({
         label: 'tags',
+        title: currentLanguage.value.pages.tags.title,
         url: '/tags',
         width: 650,
         height: 500,
@@ -104,6 +108,7 @@ export function openTagsWindow() {
 export function openAboutWindow() {
     return createWin({
         label: 'about',
+        title: currentLanguage.value.pages.about.title,
         url: '/about',
         width: 350,
         height: 270,
@@ -117,6 +122,7 @@ export function openAboutWindow() {
 export function openUpdaterWindow() {
     return createWin({
         label: 'updater',
+        title: currentLanguage.value.pages.update.title,
         url: '/updater',
         width: 600,
         height: 500,
@@ -130,6 +136,7 @@ export function openUpdaterWindow() {
 export function openIconPreviewWindow() {
     return createWin({
         label: 'icon-preview',
+        title: "图标预览",
         url: '/icon-preview',
         width: 1000,
         height: 700,
@@ -149,6 +156,7 @@ export async function openPreviewWindow(filePath: string, isFolder: boolean) {
     } else {
         await createWin({
             label: 'preview',
+            title: currentLanguage.value.pages.preview.title,
             url: '/preview?filePath=' + encodeURIComponent(filePath) + '&isFolder=' + isFolder,
             width: 600,
             height: 500,
@@ -170,6 +178,7 @@ export async function openItemEditWindow(itemId: number) {
     } else {
         await createWin({
             label: 'item-editor',
+            title: currentLanguage.value.pages.list.editor.title,
             url: '/item-editor?itemId=' + itemId,
             width: 600,
             height: 500,

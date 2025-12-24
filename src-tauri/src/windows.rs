@@ -10,7 +10,7 @@ pub fn create_main_window(app: AppHandle) {
     match file::load_file_content::<Settings>(app.clone(), "settings.json".into()) {
         Ok(data) => {
             let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
-                .title("main")
+                .title("EasyPaste")
                 .inner_size(350.0, 550.0) // 窗口初始大小
                 .min_inner_size(350.0, 550.0) // 窗口最小大小
                 .max_inner_size(800.0, 1000.0) // 窗口最大大小
@@ -32,7 +32,7 @@ pub fn create_main_window(app: AppHandle) {
         }
         Err(_e) => {
             let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
-                .title("main")
+                .title("EasyPaste")
                 .inner_size(350.0, 550.0) // 窗口初始大小
                 .min_inner_size(350.0, 550.0) // 窗口最小大小
                 .max_inner_size(800.0, 1000.0) // 窗口最大大小
