@@ -190,7 +190,32 @@ const dateLocale = computed(() => {
  */
 async function handleKeyDown(event: KeyboardEvent) {
   // 忽略浏览器默认的搜索快捷键
-  if (event.key.toLowerCase() === 'f' && (event.ctrlKey || event.metaKey)) {
+  if (event.key.toLowerCase() === 'f'
+      && (event.ctrlKey || event.metaKey)
+      && !event.altKey
+      && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  // 忽略浏览器f5刷新快捷键
+  if (event.key.toLowerCase() === 'f5'
+      && !event.ctrlKey
+      && !event.metaKey
+      && !event.altKey
+      && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  // 检测 Ctrl + R 或 Cmd + R（macOS）
+  if ((event.ctrlKey && event.key.toLowerCase() === 'r' || event.metaKey && event.key.toLowerCase() === 'r')
+      && !event.altKey
+      && !event.shiftKey) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  // 检测 Ctrl + Shift + R 或 Cmd + Shift + R（macOS）
+  if ((event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'r' || event.metaKey && event.shiftKey && event.key.toLowerCase() === 'r')
+      && !event.altKey) {
     event.preventDefault();
     event.stopPropagation();
   }
