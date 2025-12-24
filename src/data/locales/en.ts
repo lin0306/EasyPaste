@@ -136,6 +136,7 @@ export const english: LanguageConfig = {
             deleteSuccessMsg: 'Delete Success',
             bindSuccessMsg: 'Bind Success',
             unBindSuccessMsg: 'Unbind Success',
+            quickPasteRegisterFailedMsg: ' Failed!',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

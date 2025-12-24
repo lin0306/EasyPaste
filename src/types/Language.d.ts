@@ -142,6 +142,7 @@ declare interface PageConfig {
         deleteSuccessMsg: string;
         bindSuccessMsg: string;
         unBindSuccessMsg: string;
+        quickPasteRegisterFailedMsg: string;
         menu: {
             [x: string]: string;
             program: string;

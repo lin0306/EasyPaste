@@ -137,6 +137,7 @@ export const chinese: LanguageConfig = {
             deleteSuccessMsg: '删除成功',
             bindSuccessMsg: '绑定成功',
             unBindSuccessMsg: '取消绑定成功',
+            quickPasteRegisterFailedMsg: " 无法使用！",
             menu: {
                 program: '程序',
                 settings: '偏好设置',
