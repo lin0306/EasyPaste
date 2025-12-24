@@ -396,7 +396,12 @@ class ClipboardDBService {
      */
     async deleteClipboardItemTag(itemId: number, tagId: number) {
         try {
-            const item = await this.db?.select('SELECT * FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
+            const item = await this.db?.select('SELECT * FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]) as ClipboardItem[];
+            if (item[0].type === 'image') {
+                if (item[0].file_path) {
+                    await deleteFile(item[0].file_path);
+                }
+            }
             if (item) {
                 // 删除数据
                 await this.db?.execute('DELETE FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]);
