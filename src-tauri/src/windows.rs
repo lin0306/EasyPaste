@@ -26,7 +26,6 @@ pub fn create_main_window(app: AppHandle) {
                 .content_protected(false) // 禁止窗口被捕获
                 .resizable(true) // 窗口可自由拖放大小
                 .disable_drag_drop_handler() // 允许拖拽
-                .transparent(false) // 窗口不透明
                 .build();
             app.manage(window);
         }
@@ -48,7 +47,6 @@ pub fn create_main_window(app: AppHandle) {
                 .content_protected(false) // 禁止窗口被捕获
                 .resizable(true) // 窗口可自由拖放大小
                 .disable_drag_drop_handler() // 允许拖拽
-                .transparent(false) // 窗口不透明
                 .build();
             app.manage(window);
         }
