@@ -434,6 +434,7 @@ export async function getEnableImageSave(): Promise<boolean> {
  * 初始化用户配置
  */
 export async function initSettings() {
+    info("初始化用户配置");
     const settingsExist = await exists(SETTINGS_FILE_NAME, {
         baseDir: BaseDirectory.AppData,
     });
