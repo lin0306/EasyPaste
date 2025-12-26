@@ -225,11 +225,6 @@ async function handleKeyDown(event: KeyboardEvent) {
 onMounted(async () => {
   try {
     info("应用启动中...");
-    // 设置图片默认保存位置
-    const imagePath = await getImageBasePath();
-    if (!imagePath || imagePath === '') {
-      await saveImageBasePath(await appDataDir() + (isMac ? '/' : '\\') + 'images');
-    }
     // 初始化主题
     await initializeTheme();
     // 初始化语言
