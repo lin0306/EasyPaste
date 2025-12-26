@@ -5,11 +5,8 @@ import {error, info} from '@tauri-apps/plugin-log';
 import {currentLanguage, initializeLanguage, setupLanguageListener} from './services/LanguageService.ts';
 import {initializeTheme, setupThemeListener, themeColors} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
-import {appDataDir} from "@tauri-apps/api/path";
-import {isMac} from "./data/SystemParams.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
-import {getImageBasePath, saveImageBasePath} from "./store/Settings.ts";
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {

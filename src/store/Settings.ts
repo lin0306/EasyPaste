@@ -4,7 +4,7 @@ import {SETTINGS} from "../constants/UserSettingsConstant.ts";
 import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
 import {SETTINGS_KEYS} from "../constants/KeysConstants.ts";
 import {utf8Decoder} from "../constants/PublicConstants.ts";
-import {appDataDir} from "@tauri-apps/api/path";
+import {appLocalDataDir} from "@tauri-apps/api/path";
 import {isMac} from "../data/SystemParams.ts";
 
 export const SETTINGS_FILE_NAME = "settings.json";
@@ -507,7 +507,7 @@ export async function initSettings() {
             await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
         }
         if (!userSettingsString.includes(SETTINGS_KEYS.IMAGE_BASE_PATH)) {
-            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appDataDir() + (isMac ? '/' : '\\') + 'images');
+            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'images');
         }
         if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
             await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
@@ -537,7 +537,7 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
         await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
-        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appDataDir() + (isMac ? '/' : '\\') + 'images');
+        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'images');
         await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
 
         await settings.save();
