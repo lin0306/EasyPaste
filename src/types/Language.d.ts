@@ -23,6 +23,7 @@ declare interface PageConfig {
         programTitle: string;
         mainWindowTitle: string;
         storageTitle: string;
+        imageStorageTitle: string;
         shortcutTitle: string;
         updaterTitle: string;
         themesTitle: string;
@@ -68,6 +69,10 @@ declare interface PageConfig {
         enableImageSave: string,
         enableImageSaveHint: string,
         imageStorageLocation: string,
+        logStorageUsage: string,
+        logClearBtn: string,
+        logLocationHint: string,
+        logClearSuccessMsg: string,
         // 旧图片地址替换弹窗内容
         replaceImageStorageLocationTitle: string,
         replaceImageStorageLocationConfirm: string,
