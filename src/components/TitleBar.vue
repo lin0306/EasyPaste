@@ -7,7 +7,7 @@
       <span>
       {{ title }}
       </span>
-      <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="checkUpdate"/>
+      <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="openUpdateWindow"/>
     </div>
     <div class="window-controls">
       <div v-if="isDev" class="control-button" @click="onRefresh">
@@ -123,11 +123,11 @@ async function openDevTool() {
 }
 
 /**
- * 检查更新
+ * 打开更新窗口
  */
-async function checkUpdate() {
+async function openUpdateWindow() {
   const update = UpdaterService.getInstance();
-  await update.checkForUpdates(true);
+  update.showUpdateWindow();
 }
 
 /**
