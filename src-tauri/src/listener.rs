@@ -66,6 +66,9 @@ impl ClipboardHandler for Manager {
 
             // 获取图片保存路径
             let mut path = get_image_base_path(self.app.clone());
+            if !path.exists() {
+                create_dir_all(&path).expect("图片文件夹创建失败");
+            }
             // 拼接文件名：EasyPaste_当前时间.jpg
             let image_file_name = format!(
                 "EasyPaste_{}.jpg",
@@ -197,8 +200,5 @@ fn get_image_base_path(app: AppHandle) -> PathBuf {
     path.push(appdata_dir);
     path.push(app.config().identifier.clone());
     path.push("images");
-    if !path.exists() {
-        create_dir_all(&path).expect("图片文件夹创建失败");
-    }
     path
 }
