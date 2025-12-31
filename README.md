@@ -9,8 +9,8 @@
 
   <p>
 
-[![](https://img.shields.io/badge/GitHub%20version-v0.1.8--beta-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
-[![](https://img.shields.io/badge/Gitee%20version-v0.1.8--beta-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/easy-paste/releases/latest)
+[![](https://img.shields.io/badge/GitHub%20version-v0.1.9--beta-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/Gitee%20version-v0.1.9--beta-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/easy-paste/releases/latest)
 [![](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey)
 
@@ -21,7 +21,7 @@
 
 > ⚠️ **项目状态**
 >
-> **当前版本**: v0.1.8-beta (开发测试阶段)
+> **当前版本**: v0.1.9-beta (开发测试阶段)
 >
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
