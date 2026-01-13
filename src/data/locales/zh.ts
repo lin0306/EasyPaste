@@ -146,6 +146,7 @@ export const chinese: LanguageConfig = {
             menu: {
                 program: '程序',
                 settings: '偏好设置',
+                pluginStore: '插件管理',
                 reload: '重新加载',
                 reloadHint: '正在重新加载应用程序...',
                 exit: '退出程序',
@@ -176,7 +177,6 @@ export const chinese: LanguageConfig = {
                 unTop: '取消置顶',
                 filePreview: '文件预览',
                 copyFile: '复制所选文件',
-                ocr: '识别图片内容',
                 edit: '修改内容',
                 delete: '删除',
             },
@@ -263,6 +263,12 @@ export const chinese: LanguageConfig = {
             cannotPreviewPackage: '文件大小超过 1G，暂不支持预览，请点击右上角打开文件所在位置进行浏览',
             cannotPreview7z: '暂不支持预览7z格式的文件，请点击右上角打开文件所在位置进行浏览',
             folder: '文件夹',
-        }
+        },
+        pluginStore: {
+            title: '插件商店',
+        },
+        plugins: {
+
+        },
     },
 }

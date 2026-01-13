@@ -5,6 +5,7 @@ mod file;
 mod listener;
 mod log;
 mod permission;
+mod plugins;
 #[cfg(target_os = "windows")]
 mod regedit;
 mod tray;
@@ -13,6 +14,7 @@ mod windows;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_os::init())
         .setup(|app| {
@@ -63,6 +65,8 @@ pub fn run() {
             file::read_rar_data,
             file::read_tar_data,
             file::read_gzip_data,
+            plugins::get_plugins_dir,
+            windows::invoke_external_plugin,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");

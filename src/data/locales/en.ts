@@ -145,6 +145,7 @@ export const english: LanguageConfig = {
             menu: {
                 program: 'Program',
                 settings: 'Settings',
+                pluginStore: 'Plugins',
                 reload: 'Reload',
                 reloadHint: 'The application is reloading...',
                 exit: 'Close',
@@ -175,7 +176,6 @@ export const english: LanguageConfig = {
                 unTop: 'UnTop',
                 filePreview: 'File Preview',
                 copyFile: 'Copy Selected File',
-                ocr: 'OCR',
                 edit: 'Edit',
                 delete: 'Delete',
             },
@@ -262,6 +262,12 @@ export const english: LanguageConfig = {
             cannotPreviewPackage: 'The file size exceeds 1G and cannot be previewed. Please click the upper right corner to open the file location for browsing.',
             cannotPreview7z: 'The 7z file does not support preview, please click the upper right corner to open the file location for browsing.',
             folder: 'Folder',
-        }
+        },
+        pluginStore: {
+            title: 'Plugin Store',
+        },
+        plugins: {
+
+        },
     },
 }

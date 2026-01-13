@@ -44,6 +44,14 @@ export const blueTheme: ThemeConfig = {
                 textColor: 'rgba(255,255,255,1)',
                 disabledTextColor: 'rgba(255,255,255,0.5)',
                 hoverTextColor: 'rgba(255,255,255,1)',
+            },
+            error: {
+                backgroundColor: 'rgb(255,124,124)',
+                disabledBackgroundColor: 'rgb(255,140,140)',
+                hoverBackgroundColor: 'rgb(255,102,102)',
+                textColor: 'rgba(255,255,255,1)',
+                disabledTextColor: 'rgba(255,255,255,0.5)',
+                hoverTextColor: 'rgba(255,255,255,1)',
             }
         },
         select: {

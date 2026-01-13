@@ -51,6 +51,14 @@ declare interface ThemeConfigColors {
             disabledTextColor: string;          // 主按钮禁用文字色
             hoverTextColor: string;             // 主按钮悬浮文字色
         },
+        error: {                                // 异常按钮颜色
+            backgroundColor: string;            // 异常按钮背景色
+            disabledBackgroundColor: string;    // 异常按钮禁用背景色
+            hoverBackgroundColor: string;       // 异常按钮悬浮背景色
+            textColor: string;                  // 异常按钮文字色
+            disabledTextColor: string;          // 异常按钮禁用文字色
+            hoverTextColor: string;             // 异常按钮悬浮文字色
+        },
     },
     select: {                                   // 下拉选择框颜色
         options: {                              // 选项颜色

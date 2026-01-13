@@ -7,6 +7,7 @@ import {initializeTheme, setupThemeListener, themeColors} from './services/Theme
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
+import {invoke} from "@tauri-apps/api/core";
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
@@ -31,18 +32,27 @@ const theme = computed(() => {
       textColor: themeColors.value.button.normal.textColor,
       textColorHover: themeColors.value.button.normal.hoverTextColor,
       textColorDisabled: themeColors.value.button.normal.disabledTextColor,
-      border: '1px',
-      borderHover: '1px',
-      borderDisabled: '1px',
+      border: `1px solid ${themeColors.value.button.normal.textColor}`,
+      borderHover: `1px solid ${themeColors.value.button.normal.hoverTextColor}`,
+      borderDisabled: `1px solid ${themeColors.value.button.normal.disabledTextColor}`,
       colorPrimary: themeColors.value.button.primary.backgroundColor,
       colorHoverPrimary: themeColors.value.button.primary.hoverBackgroundColor,
       colorDisabledPrimary: themeColors.value.button.primary.disabledBackgroundColor,
       textColorPrimary: themeColors.value.button.primary.textColor,
       textColorHoverPrimary: themeColors.value.button.primary.hoverTextColor,
       textColorDisabledPrimary: themeColors.value.button.primary.disabledTextColor,
-      borderPrimary: '1px',
-      borderHoverPrimary: '1px',
-      borderDisabledPrimary: '1px',
+      borderPrimary: `0px`,
+      borderHoverPrimary: `0px`,
+      borderDisabledPrimary: `0px`,
+      colorError: themeColors.value.button.error.backgroundColor,
+      colorHoverError: themeColors.value.button.error.hoverBackgroundColor,
+      colorDisabledError: themeColors.value.button.error.disabledBackgroundColor,
+      textColorError: themeColors.value.button.error.textColor,
+      textColorHoverError: themeColors.value.button.error.hoverTextColor,
+      textColorDisabledError: themeColors.value.button.error.disabledTextColor,
+      borderError: `0px`,
+      borderHoverError: `0px`,
+      borderDisabledError: `0px`,
     },
     Input: {
       color: themeColors.value.universal.background,
@@ -164,6 +174,11 @@ const theme = computed(() => {
       textColorWarning: themeColors.value.universal.text,
       textColorLoading: themeColors.value.universal.text,
       margin: '40px 0',
+    },
+    Tabs: {
+      tabTextColorLine: themeColors.value.universal.textHover,
+      tabTextColorActiveLine: themeColors.value.universal.text,
+      tabBorderColor: themeColors.value.universal.border
     }
   } as GlobalThemeOverrides;
 });

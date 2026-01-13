@@ -152,6 +152,7 @@ declare interface PageConfig {
             [x: string]: string;
             program: string;
             settings: string;
+            pluginStore: string;
             reload: string;
             reloadHint: string;
             exit: string;
@@ -182,7 +183,6 @@ declare interface PageConfig {
             unTop: string;
             filePreview: string;
             copyFile: string;
-            ocr: string;
             edit: string;
             delete: string;
         },
@@ -269,5 +269,11 @@ declare interface PageConfig {
         cannotPreviewPackage: string;
         cannotPreview7z: string;
         folder: string;
+    },
+    pluginStore: {
+        title: string;
+    },
+    plugins: {
+        [x:string]: string,
     }
 }

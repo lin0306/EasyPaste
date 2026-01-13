@@ -9,6 +9,8 @@ const routes = [
     {path: '/preview', component: () => import('../pages/preview/index.vue')},
     {path: '/icon-preview', component: () => import('../pages/icon/preview.vue')},
     {path: '/item-editor', component: () => import('../pages/list/ItemEditor.vue')},
+    {path: '/plugin-view', component: () => import('../pages/pluginView/index.vue')},
+    {path: '/plugin-store', component: () => import('../pages/pluginStore/index.vue')},
 ]
 
 const router = createRouter({

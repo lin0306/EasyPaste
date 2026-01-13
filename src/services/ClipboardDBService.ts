@@ -70,6 +70,23 @@ class ClipboardDBService {
                     PRIMARY KEY (item_id, tag_id)
                 )
             `);
+
+            // 创建已安装插件表
+            await this.db?.execute(`
+                CREATE TABLE IF NOT EXISTS plugins
+                (
+                    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                    plugin_id       TEXT    NOT NULL UNIQUE,
+                    plugin_name     TEXT    NOT NULL,
+                    version         TEXT    NOT NULL,
+                    use_location    TEXT    NOT NULL,
+                    platform        TEXT    NOT NULL,
+                    url             TEXT    NOT NULL,
+                    enable          BOOLEAN DEFAULT 1,
+                    description     TEXT,
+                    install_time  INTEGER
+                )
+            `);
         } catch (er) {
             error('[数据库进程] 数据库表初始化失败:' + er);
             throw er;
@@ -561,6 +578,96 @@ class ClipboardDBService {
             }
         }
         return 0;
+    }
+
+    /**
+     * 添加插件
+     * @param plugin 插件信息
+     */
+    async addPlugin(plugin: LocalPlugin) {
+        console.log("添加插件", plugin)
+        await this.db?.execute(`
+            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, url, description )
+                VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                plugin.plugin_id,
+                plugin.plugin_name,
+                plugin.version,
+                plugin.use_location,
+                plugin.platform,
+                plugin.url,
+                plugin.description,
+            ]);
+    }
+
+    /**
+     * 添加插件
+     * @param plugin 插件信息
+     */
+    async updatePlugin(plugin: LocalPlugin) {
+        await this.db?.execute(`
+                    UPDATE plugins
+                    SET plugin_name = ?,
+                        version = ?,
+                        use_location = ?,
+                        platform = ?,
+                        url = ?,
+                        description = ?,
+                        install_time = ?
+                    WHERE id = ?`,
+            [
+                plugin.plugin_name,
+                plugin.version,
+                plugin.use_location,
+                plugin.platform,
+                plugin.url,
+                plugin.description,
+                Date.now(),
+                plugin.id,
+            ]);
+    }
+
+    /**
+     * 搜索插件
+     * @param pluginName 插件名称
+     * @param useLocation 使用位置
+     */
+    async searchPlugins(pluginName?: string, useLocation?: string): Promise<LocalPlugin[]>  {
+        let sql = 'SELECT * FROM plugins WHERE 1=1';
+        let params = [];
+        if (pluginName && pluginName.trim() !== '') {
+            sql += ` AND plugin_name LIKE ?`;
+            params.push(`%${pluginName}%`);
+        }
+        if (useLocation && useLocation.trim() !== '') {
+            sql += ` AND use_location LIKE ?`;
+            params.push(`%${useLocation}%`);
+        }
+        console.log(sql, params)
+        return await this.db?.select(sql, params) as LocalPlugin[];
+    }
+
+    async getAllPlugins(): Promise<LocalPlugin[]> {
+        return await this.db?.select(`
+            SELECT * FROM plugins ORDER BY install_time DESC
+        `) as LocalPlugin[];
+    }
+
+    /**
+     * 修改插件的启用状态
+     * @param id 插件ID
+     * @param enable 启用状态
+     */
+    async togglePluginEnable(id: number, enable: number) {
+        await this.db?.execute(`
+            UPDATE plugins SET enable = ? WHERE id = ?
+        `, [enable, id]);
+    }
+
+    async removePlugin(id: number) {
+        await this.db?.execute(`
+            DELETE FROM plugins WHERE id = ?
+        `, [id]);
     }
 }
 

@@ -187,3 +187,18 @@ export async function openItemEditWindow(itemId: number) {
         });
     }
 }
+
+/**
+ * 打开插件商店窗口
+ */
+export function openPluginStoreWindow() {
+    return createWin({
+        label: 'plugin-store',
+        title: currentLanguage.value.pages.settings.title,
+        url: '/plugin-store',
+        width: 650,
+        height: 500,
+        minWidth: 650,
+        minHeight: 500
+    })
+}

@@ -44,6 +44,14 @@ export const lightTheme: ThemeConfig = {
                 textColor: 'rgb(218,218,218)',
                 disabledTextColor: 'rgba(232,232,232,0.77)',
                 hoverTextColor: 'rgba(255,255,255,1)',
+            },
+            error: {
+                backgroundColor: 'rgb(253,132,132)',
+                disabledBackgroundColor: 'rgb(255,140,140)',
+                hoverBackgroundColor: 'rgb(255,102,102)',
+                textColor: 'rgb(230,230,230)',
+                disabledTextColor: 'rgba(232,232,232,0.77)',
+                hoverTextColor: 'rgba(255,255,255,1)',
             }
         },
         select: {

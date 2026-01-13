@@ -30,6 +30,7 @@ import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
 import {currentLanguage} from "../../services/LanguageService.ts";
+import {destroyPlugins, initializePlugins} from "./composables/PluginComposable.ts";
 
 hljs.registerLanguage('html', html)
 
@@ -112,7 +113,7 @@ onMounted(async () => {
       await initUserSettings();
       // 重新配置开机自启
       getPowerOnSelfStart().then(powerOnSelfStart => {
-        if(powerOnSelfStart) {
+        if (powerOnSelfStart) {
           isEnabled().then(enabled => {
             if (powerOnSelfStart !== enabled) {
               if (powerOnSelfStart) {
@@ -148,6 +149,11 @@ onMounted(async () => {
     // 初始化文件数据配置
     await initializeFileData();
 
+    // 加载插件
+    initializePlugins().catch(e => {
+      error('插件加载失败', e);
+    });
+
     // 增加事件监听
     document.addEventListener('keydown', handleKeyDown);
   } catch (err) {
@@ -177,7 +183,9 @@ onUnmounted(async () => {
   destroyUpdater();
 
   // 销毁文件数据配置
-  destroyFileData();
+  await destroyFileData();
+
+  await destroyPlugins();
 
   // 移除事件监听
   document.removeEventListener('keydown', handleKeyDown);

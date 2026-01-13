@@ -45,6 +45,14 @@ export const darkTheme: ThemeConfig = {
                 disabledTextColor: 'rgb(177,177,177)',
                 hoverTextColor: 'rgb(191,191,191)',
             },
+            error: {
+                backgroundColor: 'rgb(131,55,55)',
+                disabledBackgroundColor: 'rgb(66,66,66)',
+                hoverBackgroundColor: 'rgb(131,55,55)',
+                textColor: 'rgb(166,166,166)',
+                disabledTextColor: 'rgb(177,177,177)',
+                hoverTextColor: 'rgb(191,191,191)',
+            }
         },
         select: {
             options: {

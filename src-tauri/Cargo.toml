@@ -47,6 +47,8 @@ unrar = "0.5.8"
 tar = "0.4.44"
 # 压缩文件处理
 flate2 = "1.1.2"
+# tcp/ip请求
+tauri-plugin-http = "2"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"

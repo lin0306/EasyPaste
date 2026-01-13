@@ -44,6 +44,14 @@ export const pinkTheme: ThemeConfig = {
                 textColor: 'rgba(255,255,255,1)',
                 disabledTextColor: 'rgba(255,255,255,0.71)',
                 hoverTextColor: 'rgba(255,255,255,1)',
+            },
+            error: {
+                backgroundColor: 'rgb(255,99,99)',
+                disabledBackgroundColor: 'rgb(209,47,47)',
+                hoverBackgroundColor: 'rgb(255, 68, 68)',
+                textColor: 'rgb(255,255,255)',
+                disabledTextColor: 'rgba(236,236,236,0.71)',
+                hoverTextColor: 'rgb(255,255,255)',
             }
         },
         select: {
