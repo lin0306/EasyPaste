@@ -179,7 +179,10 @@ const theme = computed(() => {
       tabTextColorLine: themeColors.value.universal.textHover,
       tabTextColorActiveLine: themeColors.value.universal.text,
       tabBorderColor: themeColors.value.universal.border
-    }
+    },
+    Progress: {
+      fillColor: themeColors.value.universal.borderHoverColor,
+    },
   } as GlobalThemeOverrides;
 });
 
