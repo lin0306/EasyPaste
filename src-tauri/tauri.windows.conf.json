@@ -1,0 +1,27 @@
+{
+  "identifier": "com.lin.EasyPaste.dev",
+  "bundle": {
+    "windows": {
+      "allowDowngrades": false,
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "signCommand": null,
+      "timestampUrl": null,
+      "tsp": false,
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "embedBootstrapper"
+      },
+      "nsis": {
+        "languages": [
+          "SimpChinese",
+          "English"
+        ],
+        "displayLanguageSelector": true,
+        "installerHooks": "./configs/nsis/hook.nsh",
+        "installerIcon": "./icons/icon.ico",
+        "installMode": "both"
+      }
+    }
+  }
+}

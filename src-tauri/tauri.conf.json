@@ -37,48 +37,7 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ],
-    "windows": {
-      "allowDowngrades": false,
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "signCommand": null,
-      "timestampUrl": null,
-      "tsp": false,
-      "webviewInstallMode": {
-        "silent": true,
-        "type": "embedBootstrapper"
-      },
-      "nsis": {
-        "languages": [
-          "SimpChinese",
-          "English"
-        ],
-        "displayLanguageSelector": true,
-        "installerHooks": "./configs/nsis/hook.nsh",
-        "installerIcon": "./icons/icon.ico",
-        "installMode": "both"
-      }
-    },
-    "macOS": {
-      "dmg": {
-        "appPosition": {
-          "x": 180,
-          "y": 170
-        },
-        "applicationFolderPosition": {
-          "x": 480,
-          "y": 170
-        },
-        "windowSize": {
-          "height": 400,
-          "width": 660
-        }
-      },
-      "files": {},
-      "hardenedRuntime": true,
-      "minimumSystemVersion": "10.13"
-    }
+    ]
   },
   "plugins": {
     "updater": {
