@@ -272,6 +272,31 @@ declare interface PageConfig {
     },
     pluginStore: {
         title: string;
+        storeTabTitle: string;
+        localTabTitle: string;
+        updateBtn: string;
+        disableBtn: string;
+        enableBtn: string;
+        installBtn: string;
+        installedBtn: string;
+        unInstallBtn: string;
+        pluginPlatformGeneral: string;
+        pluginPlatformMac: string;
+        pluginPlatformWindows: string;
+        localNoPluginHint: string;
+        detailNoPluginHint: string;
+        storeNoPluginHint: string;
+        installSuccessHint: string;
+        installNotUrlHint: string;
+        installFailedHint: string;
+        uninstallSuccessHint: string;
+        uninstallFailedHint: string;
+        notInstallHint: string;
+        updateSuccessHint: string;
+        updateUnInstallFailedHint: string;
+        updateFailedHint: string;
+        notPluginHint: string;
+        notSelectPluginHint: string;
     },
     plugins: {
         [x:string]: string,
