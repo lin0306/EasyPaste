@@ -105,6 +105,7 @@ pub fn create_tray(app: AppHandle) {
                         if !visible {
                             println!("显示窗口");
                             win.show().expect("窗口显示失败");
+                            win.unminimize().expect("窗口取消最小化失败");
                             win.set_focus().expect("窗口聚焦失败");
 
                             state_new.win_current_visible = true;
