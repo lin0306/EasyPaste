@@ -5,7 +5,6 @@ mod file;
 mod listener;
 mod log;
 mod permission;
-mod plugins;
 #[cfg(target_os = "windows")]
 mod regedit;
 mod tray;
@@ -65,7 +64,6 @@ pub fn run() {
             file::read_rar_data,
             file::read_tar_data,
             file::read_gzip_data,
-            plugins::get_plugins_dir,
             windows::invoke_external_plugin,
         ])
         .run(tauri::generate_context!())

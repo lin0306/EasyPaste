@@ -31,6 +31,7 @@ const defaultSettings: Settings = {
     displayThumbnailImage: true,
     imageBasePath: '',
     enableImageSave: true,
+    pluginPath: '',
 }
 
 /**
@@ -411,7 +412,6 @@ export async function getImageBasePath(): Promise<string> {
     return await store.get<string>(SETTINGS_KEYS.IMAGE_BASE_PATH) || '';
 }
 
-
 /**
  * 保存是否存储图片
  * @param enableImageSave 图片存储位置
@@ -428,6 +428,24 @@ export async function saveEnableImageSave(enableImageSave: boolean) {
 export async function getEnableImageSave(): Promise<boolean> {
     const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
     return await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE) || defaultSettings.enableImageSave;
+}
+
+/**
+ * 保存插件路径
+ * @param pluginPath 插件路径
+ */
+export async function savePluginPath(pluginPath: string) {
+    info("保存插件路径: " + pluginPath);
+    const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, pluginPath);
+}
+
+/**
+ * 获取插件路径
+ */
+export async function getPluginPath(): Promise<string> {
+    const store = await load(SETTINGS_FILE_NAME, {autoSave: true});
+    return await store.get<string>(SETTINGS_KEYS.PLUGIN_PATH) || defaultSettings.pluginPath;
 }
 
 /**
@@ -512,11 +530,14 @@ export async function initSettings() {
         if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
             await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
         }
+        if (!userSettingsString.includes(SETTINGS_KEYS.PLUGIN_PATH)) {
+            await settings.set(SETTINGS_KEYS.PLUGIN_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'plugins');
+        }
         await settings.save();
     } else {
         // 用户配置文件不存在
         const settings = await load(SETTINGS_FILE_NAME, {autoSave: true});
-
+        const localDataDir = await appLocalDataDir();
         await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
         await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart);
         await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey);
@@ -537,8 +558,9 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
         await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
         await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
-        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'images');
+        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, localDataDir + (isMac ? '/' : '\\') + 'images');
         await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
+        await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir+ (isMac ? '/' : '\\') + 'plugins');
 
         await settings.save();
     }

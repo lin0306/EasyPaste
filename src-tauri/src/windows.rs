@@ -1,4 +1,4 @@
-use crate::{file, plugins};
+use crate::{file};
 use log::info;
 use serde::Deserialize;
 use std::io::Write;
@@ -74,10 +74,10 @@ pub async fn invoke_external_plugin(
         "invoke_external_plugin: {:?}, {:?}, {:?}, {:?}",
         plugin_id, plugin_name, cmd, payload
     );
-    match plugins::get_plugins_dir(app) {
+    match file::load_file_content::<Settings>(app.clone(), "settings.json".into()) {
         Ok(plugins_dir) => {
             let mut path = PathBuf::new();
-            path.push(plugins_dir);
+            path.push(plugins_dir.plugin_path);
             path.push(plugin_id);
             path.push(plugin_name);
             let plugin_path = path.to_string_lossy().to_string();
@@ -138,4 +138,6 @@ pub struct Settings {
     pub image_base_path: String,
     #[serde(rename = "enableImageSave")]
     pub enable_image_save: bool,
+    #[serde(rename = "pluginPath")]
+    pub plugin_path: String,
 }

@@ -53,6 +53,8 @@ const theme = computed(() => {
       borderError: `0px`,
       borderHoverError: `0px`,
       borderDisabledError: `0px`,
+      textColorText: themeColors.value.universal.text,
+      textColorGhost: themeColors.value.universal.text,
     },
     Input: {
       color: themeColors.value.universal.background,

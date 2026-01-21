@@ -27,6 +27,8 @@ declare interface Settings {
     dataRetentionDays: number,          // 数据保留时长
     enableImageSave: boolean,           // 启用图片保存
     imageBasePath: string,              // 图片保存路径
+    // 插件设置
+    pluginPath: string,                 // 插件安装路径
 }
 
 declare interface ShortcutKeys {
