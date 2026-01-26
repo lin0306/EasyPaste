@@ -265,6 +265,7 @@ declare interface PageConfig {
         volume: string;
         fileCount: string;
         cannotPreviewOffice: string;
+        nonsupportPreviewOffice: string;
         fileReadFailed: string;
         packageDecompressionFailed: string;
         cannotPreviewPackage: string;

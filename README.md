@@ -186,8 +186,6 @@ EasyPaste 是一个专注于提升工作效率的跨平台剪贴板管理工具�
 
 | 依赖包                       | 版本       | 用途            |
 |---------------------------|----------|---------------|
-| `@vue-office/docx`        | ^1.6.3   | Word 文档在线预览   |
-| `@vue-office/excel`       | ^1.7.14  | Excel 表格在线预览  |
 | `@zip.js/zip.js`          | ^2.8.2   | ZIP 压缩文件处理    |
 | `plyr`                    | ^3.8.3   | 现代化视频播放器      |
 | `v-viewer`                | ^3.0.22  | 图片查看和缩放组件     |
@@ -649,8 +647,6 @@ A: 目前支持：
 |--------------------------------------------------------------|--------------|----------------|-----------------------|
 | [highlight.js](https://highlightjs.org/)                     | 语法高亮库        | BSD-3-Clause   | 提供了多语言代码语法高亮功能        |
 | [Marked](https://marked.js.org/)                             | Markdown 解析器 | MIT            | 实现了 Markdown 文档的解析和渲染 |
-| [@vue-office/docx](https://github.com/501351981/vue-office)  | Word 文档预览组件  | MIT            | 支持 Word 文档的在线预览       |
-| [@vue-office/excel](https://github.com/501351981/vue-office) | Excel 表格预览组件 | MIT            | 支持 Excel 表格的在线预览      |
 | [Plyr](https://plyr.io/)                                     | 现代化媒体播放器     | MIT            | 提供了优雅的视频播放体验          |
 | [v-viewer](https://github.com/mirari/v-viewer)               | 图片查看组件       | MIT            | 实现了图片的缩放和查看功能         |
 | [WaveSurfer.js](https://wavesurfer-js.org/)                  | 音频波形可视化      | BSD-3-Clause   | 提供了音频文件的波形显示          |

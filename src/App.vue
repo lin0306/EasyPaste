@@ -7,7 +7,6 @@ import {initializeTheme, setupThemeListener, themeColors} from './services/Theme
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
-import {invoke} from "@tauri-apps/api/core";
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {

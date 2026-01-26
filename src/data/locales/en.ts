@@ -258,6 +258,7 @@ export const english: LanguageConfig = {
             volume: 'Volume: ',
             fileCount: ' files',
             cannotPreviewOffice: 'Currently, only files in docx, xlsx and pdf formats are supported for preview. Please click the upper right corner to browse the location where the file is stored.',
+            nonsupportPreviewOffice: 'Please open the Office file with professional software, please click the upper right corner to open the location of the file to browse',
             fileReadFailed: 'File Read Failed',
             packageDecompressionFailed: 'File decompression failed. Error reason: ',
             cannotPreviewPackage: 'The file size exceeds 1G and cannot be previewed. Please click the upper right corner to open the file location for browsing.',

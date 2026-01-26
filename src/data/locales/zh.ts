@@ -259,6 +259,7 @@ export const chinese: LanguageConfig = {
             volume: '音量：',
             fileCount: ' 个文件',
             cannotPreviewOffice: '暂时只支持预览docx、xlsx、pdf格式的文件，请点击右上角打开文件所在位置进行浏览',
+            nonsupportPreviewOffice: 'Office 文件请用专业软件打开，请点击右上角打开文件所在位置进行浏览',
             fileReadFailed: '文件读取失败',
             packageDecompressionFailed: '文件解压缩失败，错误原因：',
             cannotPreviewPackage: '文件大小超过 1G，暂不支持预览，请点击右上角打开文件所在位置进行浏览',

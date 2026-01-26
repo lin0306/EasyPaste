@@ -29,8 +29,6 @@
     "@tauri-apps/plugin-store": "~2",
     "@tauri-apps/plugin-updater": "~2",
     "@tauri-apps/plugin-window-state": "~2",
-    "@vue-office/docx": "^1.6.3",
-    "@vue-office/excel": "^1.7.14",
     "@zip.js/zip.js": "^2.8.2",
     "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
