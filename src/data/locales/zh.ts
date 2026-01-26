@@ -68,6 +68,7 @@ export const chinese: LanguageConfig = {
             enableImageSave: '保存图片',
             enableImageSaveHint: '由于部分图片是通过第三方截图工具生成的，系统只能获取原始图像数据，无法保留来源信息，因此需要将其存储到本地',
             imageStorageLocation: '图片存储位置：',
+            imageStorageLocationHint: '更改默认存储位置，后续卸载时可能不会自动删除文件夹，需要手动删除',
             logStorageUsage: '日志存储占用：',
             logClearBtn: '清理日志',
             logLocationHint: '打开日志文件所在位置',

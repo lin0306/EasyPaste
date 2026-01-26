@@ -68,6 +68,7 @@ export const english: LanguageConfig = {
             enableImageSave: 'Save Image',
             enableImageSaveHint: 'Since some of the images were generated using third-party screenshot tools, the system can only obtain the original image data but cannot retain the source information. Therefore, it is necessary to store them locally.',
             imageStorageLocation: 'Image Storage Location: ',
+            imageStorageLocationHint: 'Change the default storage location, subsequent uninstallation may not automatically delete the folder, please manually delete',
             logStorageUsage: 'Log Storage Usage: ',
             logClearBtn: 'Clear Log',
             logLocationHint: 'Open the log file location',

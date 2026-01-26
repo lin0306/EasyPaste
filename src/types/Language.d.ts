@@ -69,6 +69,7 @@ declare interface PageConfig {
         enableImageSave: string,
         enableImageSaveHint: string,
         imageStorageLocation: string,
+        imageStorageLocationHint: string,
         logStorageUsage: string,
         logClearBtn: string,
         logLocationHint: string,
