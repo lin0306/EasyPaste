@@ -44,7 +44,7 @@ import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 import {invoke} from '@tauri-apps/api/core'
 import {onMounted, ref} from 'vue'
 import {isDev} from "../data/SystemParams.ts"
-import {listFixedStore} from '../store/fixed'
+import {listFixedStore} from '../store/Fixed.ts'
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 import UpdateIcon from "../assets/icons/UpdateIcon.vue";
 import UpdaterService from "../services/UpdaterService.ts";
