@@ -150,11 +150,10 @@ onMounted(() => {
 /* 标题栏样式 */
 #title-bar {
   height: 25px;
-  width: 98%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1%;
   border-radius: 8px 8px 0 0;
   backdrop-filter: blur(10px);
   z-index: 3000;
@@ -175,6 +174,7 @@ onMounted(() => {
   cursor: auto !important;
   display: flex;
   align-items: center;
+  padding: 0 5px;
 }
 
 .logo {
@@ -200,6 +200,7 @@ onMounted(() => {
   gap: 5px;
   -webkit-app-region: no-drag;
   cursor: pointer;
+  padding: 0 5px;
 }
 
 .control-button {
