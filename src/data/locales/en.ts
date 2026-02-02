@@ -187,6 +187,7 @@ export const english: LanguageConfig = {
                 copyFile: 'Copy Selected File',
                 edit: 'Edit',
                 delete: 'Delete',
+                openLink: 'Open Link',
             },
             editor: {
                 title: 'Edit Text Content',

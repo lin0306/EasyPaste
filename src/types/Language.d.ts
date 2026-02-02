@@ -194,6 +194,7 @@ declare interface PageConfig {
             copyFile: string;
             edit: string;
             delete: string;
+            openLink: string;
         },
         editor: {
             title: string;

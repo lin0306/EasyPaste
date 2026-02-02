@@ -188,6 +188,7 @@ export const chinese: LanguageConfig = {
                 copyFile: '复制所选文件',
                 edit: '修改内容',
                 delete: '删除',
+                openLink: '打开链接',
             },
             editor: {
                 title: '编辑文本内容',
