@@ -5,6 +5,7 @@ import ClipboardDBService from './ClipboardDBService';
 import {invoke} from '@tauri-apps/api/core';
 import {ref} from "vue";
 import {isCodeText} from "../utils/CodeUtil.ts";
+import {getPageTitle, isUrl} from "../utils/LinkUtil.ts";
 
 // 剪贴板内容缓存
 export const dataMap = ref<Map<{ type: string; content: string; file_path: string }, number>>(new Map());
@@ -31,22 +32,47 @@ export async function initClipboardListener() {
                 // 处理文本内容
                 const content = payload.content;
                 if (content) {
-                    await db.saveClipboardItem(content, (isCodeText(content) ? 'code' : 'text'));
+                    const id = await db.getContentExist(content);
+                    if (id) {
+                        await db.updateItemTime(id, Date.now());
+                        info("[数据库进程] 有查询到相同文本内容的记录，覆盖复制时间");
+                    } else {
+                        if (isUrl(content)) {
+                            const linkTitle = await getPageTitle(content);
+                            await db.saveClipboardItem(content, 'link', linkTitle);
+                        } else if (isCodeText(content)) {
+                            await db.saveClipboardItem(content, 'code');
+                        } else {
+                            await db.saveClipboardItem(content, 'text');
+                        }
+                    }
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
-                if (fileName) {
-                    // 直接将文件路径保存到数据库
-                    await db.saveClipboardItem(fileName, 'file');
+                const id = await db.getFileExist(fileName, 'file');
+                if (id) {
+                    await db.updateItemTime(id, Date.now());
+                    info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                } else {
+                    if (fileName) {
+                        // 直接将文件路径保存到数据库
+                        await db.saveClipboardItem(fileName, 'file');
+                    }
                 }
-            } else if(payload.type === 'image') {
+            } else if (payload.type === 'image') {
                 const fileName = payload.file_path;
                 if (fileName) {
-                    // 直接将文件路径保存到数据库
-                    await db.saveClipboardItem(fileName, 'image');
+                    const id = await db.getFileExist(fileName, 'image');
+                    if (id) {
+                        await db.updateItemTime(id, Date.now());
+                        info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                    } else {
+                        // 直接将文件路径保存到数据库
+                        await db.saveClipboardItem(fileName, 'image');
+                    }
                 }
             }
-            dataMap.value.delete(data);
+
             info("剪贴板内容保存完成");
             // 延迟10毫秒，让数据先入库完成
             setTimeout(async () => {
@@ -56,6 +82,7 @@ export async function initClipboardListener() {
                 }
                 clipboardListen.success();
                 info("剪贴板内容保存完成，更新复制状态");
+                dataMap.value.delete(data);
             }, 10);
         } catch (er) {
             error('处理剪贴板事件失败:' + er);
@@ -72,13 +99,13 @@ export async function initClipboardListener() {
  * @param item 剪贴板内容对象
  */
 export async function copyToClipboard(item: ClipboardItem) {
-    if (item.type === 'text' || item.type === 'code') {
+    if (item.type === 'text' || item.type === 'code' || item.type === 'link') {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.content, format: 'text'});
-    } else if(item.type === 'image') {
+    } else if (item.type === 'image') {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.file_path, format: 'image'});
-    }else {
+    } else {
         // 调用后端接口
         return await invoke('write_to_clipboard', {content: item.file_path, format: 'files'});
     }

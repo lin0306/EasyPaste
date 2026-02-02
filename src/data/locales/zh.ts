@@ -129,6 +129,7 @@ export const chinese: LanguageConfig = {
             typeCode: '代码',
             typeFile: '文件',
             typeImage: '图片',
+            typeLink: '链接',
             registerOpenWindowShortcutKeysErrorHint: '唤醒程序快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
             registerQuickPasteShortcutKeysErrorHint: '快速粘贴快捷键【{keys}】注册失败，请检查快捷键是否被其他占用，可在【设置-快捷键】页面调整',
             chars: '字符',
@@ -150,6 +151,7 @@ export const chinese: LanguageConfig = {
             minutesAgo: '分钟前',
             hoursAgo: '小时前',
             daysAgo: '天前',
+            linkNotTitle: '无标题',
             menu: {
                 program: '程序',
                 settings: '偏好设置',

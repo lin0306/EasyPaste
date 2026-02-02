@@ -20,6 +20,7 @@ export const clipboardListenStore = defineStore('clipboardListen', () => {
         item.type = data.type;
         item.file_path = data.file_path;
         item.chars = data.chars;
+        item.link_title = data.link_title;
     }
     const getItem = () => {
         return item;

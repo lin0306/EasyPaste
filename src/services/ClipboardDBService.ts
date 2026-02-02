@@ -38,14 +38,15 @@ class ClipboardDBService {
             await this.db?.execute(`
                 CREATE TABLE IF NOT EXISTS clipboard_items
                 (
-                    id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                    content   TEXT,
-                    chars     INTEGER,
-                    copy_time INTEGER NOT NULL,
-                    is_topped BOOLEAN DEFAULT 0,
-                    top_time  INTEGER,
-                    type      TEXT    DEFAULT 'text',
-                    file_path TEXT
+                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    content     TEXT,
+                    link_title  TEXT,
+                    chars       INTEGER,
+                    copy_time   INTEGER NOT NULL,
+                    is_topped   BOOLEAN DEFAULT 0,
+                    top_time    INTEGER,
+                    type        TEXT    DEFAULT 'text',
+                    file_path   TEXT
                 )
             `);
             // 创建标签表
@@ -87,6 +88,20 @@ class ClipboardDBService {
                     install_time  INTEGER
                 )
             `);
+
+            const clipboardItemsInfo = await this.db?.select<[{
+                cid: number,
+                name: string,
+                notnull: boolean
+            }]>(`PRAGMA table_info(clipboard_items)`);
+            const clipboardItemsColumnExists = clipboardItemsInfo?.some((col) => col.name === 'link_title')
+            if (!clipboardItemsColumnExists) {
+                // 增加链接标题字段
+                await this.db?.execute(`
+                    alter table clipboard_items
+                        add link_title TEXT;
+                `);
+            }
         } catch (er) {
             error('[数据库进程] 数据库表初始化失败:' + er);
             throw er;
@@ -96,45 +111,16 @@ class ClipboardDBService {
     /**
      * 保存剪贴板项目到数据库
      * @param content 内容
+     * @param linkTitle 链接标题
      * @param type 类型
      */
-    async saveClipboardItem(content: string, type: string) {
+    async saveClipboardItem(content: string, type: string, linkTitle: string | null = null) {
         try {
             // 覆盖相同内容的旧记录的复制时间
-            if (type === 'text' || type === 'code') {
-                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ? AND type = ?', [content, type]) as [{
-                    id: number
-                }];
-                if (row && row.length > 0) {
-                    await this.updateItemTime(row[0].id, Date.now());
-                    info("[数据库进程] 有查询到相同文本内容的记录，覆盖复制时间");
-                    return;
-                }
-                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path, chars) VALUES (?, ?, ?, ?, ?)', [content, Date.now(), type, null, content.length]);
+            if (type === 'text' || type === 'code' || type === 'link') {
+                await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path, chars, link_title) VALUES (?, ?, ?, ?, ?, ?)', [content, Date.now(), type, null, content.length, linkTitle]);
             }
             if (type === 'file' || type === 'image') {
-                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{
-                    id: number
-                }];
-                if (row && row.length > 0) {
-                    await this.updateItemTime(row[0].id, Date.now());
-                    info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
-                    return;
-                }
-                // 将图片复制到剪贴板了，查看数据库有没有对应的图片记录，有则更新复制时间
-                if (type === 'file') {
-                    const filePaths = JSON.parse(content);
-                    if (filePaths.length === 1) {
-                        const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = \'image\' AND file_path = ?', [filePaths[0]]) as [{
-                            id: number
-                        }];
-                        if (row && row.length > 0) {
-                            await this.updateItemTime(row[0].id, Date.now());
-                            info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
-                            return;
-                        }
-                    }
-                }
                 await this.db?.execute('INSERT INTO clipboard_items (content, copy_time, type, file_path) VALUES (?, ?, ?, ?)', [null, Date.now(), type, content]);
             }
             // 清理历史数据
@@ -145,6 +131,44 @@ class ClipboardDBService {
             error("[数据库进程] 剪贴板内容添加失败" + err);
             throw err;
         }
+    }
+
+    /**
+     * 检查内容是否存在
+     * @param content 内容
+     */
+    async getContentExist(content: string) : Promise<number | undefined> {
+        const row = await this.db?.select('SELECT id FROM clipboard_items WHERE content = ?', [content]) as [{
+            id: number
+        }];
+        return row && row.length > 0 ? row[0].id : undefined;
+    }
+
+    /**
+     * 检查文件是否存在
+     * @param content 文件路径
+     * @param type 类型
+     */
+    async getFileExist(content: string, type: string) : Promise<number | undefined> {
+        const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = ? AND file_path = ?', [type, content]) as [{
+            id: number
+        }];
+        if (row && row.length > 0) {
+            return row[0].id;
+        }
+        // 将图片复制到剪贴板了，查看数据库有没有对应的图片记录，有则更新复制时间
+        if (type === 'file') {
+            const filePaths = JSON.parse(content);
+            if (filePaths.length === 1) {
+                const row = await this.db?.select('SELECT id FROM clipboard_items WHERE type = \'image\' AND file_path = ?', [filePaths[0]]) as [{
+                    id: number
+                }];
+                if (row && row.length > 0) {
+                    row[0].id;
+                }
+            }
+        }
+        return undefined;
     }
 
     /**

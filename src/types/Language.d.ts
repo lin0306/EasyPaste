@@ -134,6 +134,7 @@ declare interface PageConfig {
         typeCode: string;
         typeFile: string;
         typeImage: string;
+        typeLink: string;
         registerOpenWindowShortcutKeysErrorHint: string;
         registerQuickPasteShortcutKeysErrorHint: string;
         chars: string;
@@ -155,6 +156,7 @@ declare interface PageConfig {
         minutesAgo: string;
         hoursAgo: string;
         daysAgo: string;
+        linkNotTitle: string;
         menu: {
             [x: string]: string;
             program: string;

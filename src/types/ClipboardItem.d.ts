@@ -9,6 +9,7 @@ declare interface ClipboardItem {
   tags: TagItem[],
   chars: number;
   tags_json: string;
+  link_title: string;
 }
 
 declare interface TagItem {
