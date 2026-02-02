@@ -4,7 +4,7 @@
        :data-tauri-drag-region="!isFixed"
   >
     <div class="window-title">
-      <img src="../../public/logo.svg" class="logo" />
+      <img src="/logo.svg" class="logo" />
       <span>
       {{ title }}
       </span>
