@@ -196,9 +196,8 @@ class ClipboardDBService {
 
             // 传了id，查的不是第一页
             if (lastItemId) {
-                const items = await this.getItem(lastItemId);
-                if (items && items.length > 0) {
-                    const latestItem = items[0];
+                const latestItem = await this.getItem(lastItemId);
+                if (latestItem) {
                     if (latestItem.top_time) {
                         // 最后一条数据是置顶数据，如果当前数据有置顶时间，则需要过滤出比最后一条数据的置顶时间小的数据，否则按照复制时间排序
                         itemsSql += `
@@ -336,7 +335,7 @@ class ClipboardDBService {
     async deleteClipboardItem(id: number) {
         try {
             const item = await this.getItem(id);
-            if (item && item.length > 0) {
+            if (item) {
                 // 删除数据
                 await this.db?.execute('DELETE FROM clipboard_items WHERE id = ?', [id]);
             }
@@ -418,8 +417,24 @@ class ClipboardDBService {
      * @param id 条目id
      * @returns 条目信息
      */
-    async getItem(id: number): Promise<ClipboardItem[] | undefined> {
-        return this.db?.select('SELECT * FROM clipboard_items WHERE id = ?', [id]);
+    async getItem(id: number): Promise<ClipboardItem | undefined> {
+        const items = await this.db?.select(`select ci.*,
+                                       iif(t.id is null, null,
+                                           json_group_array(
+                                                   json_object('id', t.id, 'name', t.name, 'color', t.color,
+                                                               'created_at', t.created_at)
+                                           )
+                                       ) as tags_json
+                                from clipboard_items ci
+                                         left join item_tags it on ci.id = it.item_id
+                                         left join tags t on it.tag_id = t.id
+                                WHERE ci.id = ?`, [id]) as any[];
+        if (items && items.length > 0) {
+            const item = items[0];
+            item.tags = item.tags_json ? JSON.parse(item.tags_json) : [];
+            return item;
+        }
+        return undefined;
     }
 
     /**
