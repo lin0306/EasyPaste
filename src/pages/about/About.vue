@@ -19,7 +19,7 @@ onMounted(async () => {
             :dev-tool="`about`"/>
 
   <div class="about-container">
-    <img src="/logo.png" class="logo" alt="程序logo">
+    <img src="/logo.svg" class="logo" alt="程序logo">
     <div class="app-name">{{ currentLanguage.pages.about.appName }}</div>
     <div class="version-info">{{ currentLanguage.pages.about.version }}: {{ appVersion }}</div>
     <div class="links-container">
