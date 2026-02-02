@@ -175,7 +175,6 @@ const theme = computed(() => {
       textColorError: themeColors.value.universal.text,
       textColorWarning: themeColors.value.universal.text,
       textColorLoading: themeColors.value.universal.text,
-      margin: '40px 0',
     },
     Tabs: {
       tabTextColorLine: themeColors.value.universal.textHover,
