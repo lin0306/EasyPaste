@@ -32,6 +32,7 @@ const defaultSettings: Settings = {
     imageBasePath: '',
     enableImageSave: true,
     pluginPath: '',
+    displayDetailTime: false,
 }
 
 /**
@@ -449,6 +450,24 @@ export async function getPluginPath(): Promise<string> {
 }
 
 /**
+ * 保存是否显示详细时间
+ * @param displayDetailTime 是否显示详细时间
+ */
+export async function saveDisplayDetailTime(displayDetailTime: boolean) {
+    info("保存是否显示详细时间: " + displayDetailTime);
+    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
+    await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, displayDetailTime);
+}
+
+/**
+ * 获取是否显示详细时间
+ */
+export async function getDisplayDetailTime(): Promise<boolean> {
+    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
+    return await store.get<boolean>(SETTINGS_KEYS.DISPLAY_DETAIL_TIME) || defaultSettings.displayDetailTime;
+}
+
+/**
  * 初始化用户配置
  */
 export async function initSettings() {
@@ -533,6 +552,9 @@ export async function initSettings() {
         if (!userSettingsString.includes(SETTINGS_KEYS.PLUGIN_PATH)) {
             await settings.set(SETTINGS_KEYS.PLUGIN_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'plugins');
         }
+        if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) {
+            await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime);
+        }
         await settings.save();
     } else {
         // 用户配置文件不存在
@@ -561,6 +583,7 @@ export async function initSettings() {
         await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, localDataDir + (isMac ? '/' : '\\') + 'images');
         await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
         await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir+ (isMac ? '/' : '\\') + 'plugins');
+        await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime);
 
         await settings.save();
     }

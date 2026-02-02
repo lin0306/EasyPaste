@@ -42,6 +42,7 @@ export const english: LanguageConfig = {
             autoGoToLatestData: 'Automatically scroll to the latest data',
             autoGoToLatestDataHint: 'After opening, each time you copy a new item, the list will scroll to the latest copied item\'s position, and after closing this function, each time you copy a new item, the list will not automatically scroll.',
             displayThumbnailImage: 'Display Thumbnail Image',
+            displayDetailTime: 'Display Detail Time',
 
             enableTag: 'Enable Tag Function',
             bindTagBtnShowLocation: 'Tag Binding Button Location',
@@ -144,6 +145,10 @@ export const english: LanguageConfig = {
             bindSuccessMsg: 'Bind Success',
             unBindSuccessMsg: 'Unbind Success',
             quickPasteRegisterFailedMsg: ' Failed!',
+            justNow: 'Just Now',
+            minutesAgo: 'minutes ago',
+            hoursAgo: 'hours ago',
+            daysAgo: 'days ago',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

@@ -7,7 +7,8 @@ declare interface Settings {
     autoHideWindow: boolean,            // 自动隐藏窗口
     autoGoToLatestData: boolean,        // 自动跳转到最新数据
     alwaysOnTop: boolean,               // 窗口是否始终置顶
-    displayThumbnailImage: boolean,    // 显示缩略图图片
+    displayThumbnailImage: boolean,     // 显示缩略图图片
+    displayDetailTime: boolean,         // 显示详细时间
     // 标签设置
     enableTag: boolean,                 // 启用标签
     bindTagBtnShowLocation: string,     // 标签绑定按钮位置

@@ -42,6 +42,7 @@ export const chinese: LanguageConfig = {
             autoGoToLatestData: '自动滚动到最新数据',
             autoGoToLatestDataHint: '打开后，每次复制新内容时，列表都会滚动到最新复制的内容所在的位置，关闭此功能后，每次复制新内容时，列表不会自动滚动',
             displayThumbnailImage: '显示缩略图',
+            displayDetailTime: '显示详细时间',
 
             enableTag: '启用标签功能',
             bindTagBtnShowLocation: '标签绑定按钮位置',
@@ -145,6 +146,10 @@ export const chinese: LanguageConfig = {
             bindSuccessMsg: '绑定成功',
             unBindSuccessMsg: '取消绑定成功',
             quickPasteRegisterFailedMsg: " 无法使用！",
+            justNow: '刚刚',
+            minutesAgo: '分钟前',
+            hoursAgo: '小时前',
+            daysAgo: '天前',
             menu: {
                 program: '程序',
                 settings: '偏好设置',

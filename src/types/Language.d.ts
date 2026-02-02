@@ -43,6 +43,7 @@ declare interface PageConfig {
         autoGoToLatestData: string;
         autoGoToLatestDataHint: string;
         displayThumbnailImage: string;
+        displayDetailTime: string;
         // 标签设置页面文字
         enableTag: string;
         bindTagBtnShowLocation: string;
@@ -150,6 +151,10 @@ declare interface PageConfig {
         bindSuccessMsg: string;
         unBindSuccessMsg: string;
         quickPasteRegisterFailedMsg: string;
+        justNow: string;
+        minutesAgo: string;
+        hoursAgo: string;
+        daysAgo: string;
         menu: {
             [x: string]: string;
             program: string;
