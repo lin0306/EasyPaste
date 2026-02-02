@@ -4,6 +4,7 @@
        :data-tauri-drag-region="!isFixed"
   >
     <div class="window-title">
+      <img src="../../public/logo.svg" class="logo" />
       <span>
       {{ title }}
       </span>
@@ -174,6 +175,12 @@ onMounted(() => {
   cursor: auto !important;
   display: flex;
   align-items: center;
+}
+
+.logo {
+  width: 16px;
+  margin-right: 5px;
+  -webkit-user-drag: none;
 }
 
 .update-icon {
