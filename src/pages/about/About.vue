@@ -24,11 +24,11 @@ onMounted(async () => {
     <div class="version-info">{{ currentLanguage.pages.about.version }}: {{ appVersion }}</div>
     <div class="links-container">
       <!-- <a href="#" @click="openLink('https://example.com/service')">服务协议</a> -->
-      <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste/issues')">{{
-          currentLanguage.pages.about.problemFeedback
-        }}</a>
+      <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste/issues')">
+        {{ currentLanguage.pages.about.problemFeedback }}
+      </a>
       <a href="#" @click="openLink('https://github.com/lin0306/EasyPaste')">GitHub</a>
-      <a href="#" @click="openLink('https://gitee.com/lin0306/easy-paste')">Gitee</a>
+      <a href="#" @click="openLink('https://gitee.com/lin0306/EasyPaste')">Gitee</a>
     </div>
   </div>
 </template>
