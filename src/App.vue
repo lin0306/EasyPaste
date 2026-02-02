@@ -74,7 +74,8 @@ const theme = computed(() => {
       colorBordered: themeColors.value.universal.secondary, // 背景色
       textColor: themeColors.value.universal.textHint, // 文字颜色
       border: `1px solid ${themeColors.value.universal.border}`, // 边框
-      fontWeightStrong: 400 // 字体粗细
+      fontWeightStrong: 400, // 字体粗细
+      closeIconColor: themeColors.value.universal.text,
     },
     Select: {
       peers: {
