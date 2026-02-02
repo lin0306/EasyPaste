@@ -26,12 +26,12 @@
               <div v-if="child.type === 'divider'" class="divider"/>
               <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
                 {{ child.label }}
-                <HookIcon v-if="child.isCheck" :color="themeColors.universal.text" class="checked-icon"/>
+                <font-awesome-icon icon="fa-solid fa-check" v-if="child.isCheck" :color="themeColors.universal.text"
+                                   class="checked-icon"/>
                 <div v-else class="unchecked-icon"></div>
               </div>
               <div v-else class="dropdown-link">{{ child.label }}</div>
             </li>
-
           </ul>
         </transition>
       </li>
@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import HookIcon from '../assets/icons/HookIcon.vue';
 import {animationEffect} from "./composables/AnimationComposable.ts";
 import {themeColors} from "../services/ThemeService.ts";
 
@@ -139,7 +138,7 @@ const handleMouseLeave = () => {
 }
 
 .dropdown-link {
-  display: block;
+  display: flex;
   padding: 4px 10px;
   color: var(--theme-universal-text);
   text-decoration: none;

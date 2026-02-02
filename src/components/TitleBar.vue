@@ -12,10 +12,10 @@
     </div>
     <div class="window-controls">
       <div v-if="isDev" class="control-button" @click="onRefresh">
-        <RefreshIcon class="program-btn" id="devtool-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" class="program-btn" id="devtool-button-img" />
       </div>
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
-        <DevToolIcon class="program-btn" id="devtool-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-laptop-code" class="program-btn" id="devtool-button-img" />
       </div>
       <div v-if="showFixedBtn && !isFixed" class="control-button fixation-button" @click="onFixWindow">
         <FixedIcon class="program-btn" id="fixation-button-img"/>
@@ -24,22 +24,19 @@
         <UnFixedIcon class="program-btn" id="unfixation-button-img"/>
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
-        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img"/>
       </div>
       <div v-if="showHideBtn" class="control-button" @click="onHide">
-        <MinimizeIcon class="program-btn" id="minimize-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img"/>
       </div>
       <div v-if="showCloseBtn" class="control-button close-button" @click="onClose">
-        <CloseIcon class="program-btn" id="close-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-xmark" class="program-btn" id="close-button-img"/>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import CloseIcon from '../assets/icons/CloseIcon.vue'
-import DevToolIcon from '../assets/icons/DevToolIcon.vue'
 import FixedIcon from '../assets/icons/FixedIcon.vue'
-import MinimizeIcon from '../assets/icons/MinimizeIcon.vue'
 import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
 import {invoke} from '@tauri-apps/api/core'
@@ -49,7 +46,6 @@ import {listFixedStore} from '../store/Fixed.ts'
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
 import UpdateIcon from "../assets/icons/UpdateIcon.vue";
 import UpdaterService from "../services/UpdaterService.ts";
-import RefreshIcon from "../assets/icons/RefreshIcon.vue";
 
 const props = withDefaults(defineProps<{
   title: string;
