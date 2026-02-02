@@ -14,6 +14,7 @@ declare interface PageConfig {
         title: string;
         // 设置页面左侧菜单文字
         generalMenu: string;
+        mwMenu: string;
         storageMenu: string;
         shortcutMenu: string;
         updaterMenu: string;

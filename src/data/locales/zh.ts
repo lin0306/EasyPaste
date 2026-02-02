@@ -13,6 +13,7 @@ export const chinese: LanguageConfig = {
             initFailedHint: '页面内容加载失败，请重新打开',
             title: '设置',
             generalMenu: '常规设置',
+            mwMenu: '主窗口设置',
             storageMenu: '存储设置',
             shortcutMenu: '快捷键',
             updaterMenu: '更新设置',

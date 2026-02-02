@@ -13,6 +13,7 @@ export const english: LanguageConfig = {
             initFailedHint: 'The page content loading failed. Please reload the page.',
             title: 'Settings',
             generalMenu: 'General Settings',
+            mwMenu: 'Main Window Settings',
             updaterMenu: 'Update Settings',
             storageMenu: 'Storage Settings',
             shortcutMenu: 'Shortcuts',
