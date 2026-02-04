@@ -4,6 +4,7 @@ use serde_json::from_reader;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::PathBuf;
+use std::process::Command;
 use tauri::AppHandle;
 use unrar::Archive;
 
@@ -38,16 +39,50 @@ pub fn load_file_content<T: DeserializeOwned>(
  */
 #[tauri::command]
 pub async fn open_folder(path: String) -> Result<(), String> {
-    #[cfg(target_os = "macos")]
-    let command = "open";
-
     #[cfg(target_os = "windows")]
-    let command = "explorer";
+    {
+        let output = Command::new("explorer")
+            .arg("/select,")
+            .arg(&path)
+            .output()
+            .map_err(|e| e.to_string())?;
 
-    std::process::Command::new(command)
-        .arg(&path)
-        .spawn()
-        .map_err(|e| e.to_string())?;
+        if !output.status.success() {
+            return Err(String::from("Failed to run explorer"));
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let output = Command::new("open")
+            .arg("-R")
+            .arg(&path)
+            .output()
+            .map_err(|e| e.to_string())?;
+
+        if !output.status.success() {
+            return Err(String::from("Failed to run open -R"));
+        }
+    }
+
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    {
+        // Linux: 只能打开目录（无法可靠选中文件）
+        use std::path::Path;
+        let parent = Path::new(&path).parent()
+            .ok_or("Invalid path")?
+            .to_str()
+            .ok_or("Invalid UTF-8 in path")?;
+
+        let output = Command::new(FILE_MANAGER)
+            .arg(parent)
+            .output()
+            .map_err(|e| e.to_string())?;
+
+        if !output.status.success() {
+            return Err(String::from("Failed to open file manager"));
+        }
+    }
 
     Ok(())
 }
