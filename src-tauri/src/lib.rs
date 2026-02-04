@@ -51,6 +51,7 @@ pub fn run() {
             tray::reload_tray_menu,
             tray::hide_win_msg,
             listener::write_to_clipboard,
+            listener::is_listening,
             #[cfg(target_os = "windows")]
             regedit::valid_clipboard_regedit,
             #[cfg(target_os = "windows")]

@@ -151,6 +151,8 @@ export const english: LanguageConfig = {
             hoursAgo: 'hours ago',
             daysAgo: 'days ago',
             linkNotTitle: 'No Title',
+            listening: 'Listening',
+            stopListen: 'Stop Listen',
             menu: {
                 program: 'Program',
                 settings: 'Settings',

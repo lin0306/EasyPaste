@@ -157,6 +157,8 @@ declare interface PageConfig {
         hoursAgo: string;
         daysAgo: string;
         linkNotTitle: string;
+        listening: string;
+        stopListen: string;
         menu: {
             [x: string]: string;
             program: string;

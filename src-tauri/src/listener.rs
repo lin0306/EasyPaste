@@ -114,7 +114,7 @@ pub fn start_listening(app: AppHandle) {
         return;
     }
 
-    let manager = Manager::new(app);
+    let manager = Manager::new(app.clone());
 
     let mut watcher = ClipboardWatcherContext::new().unwrap();
 
@@ -127,10 +127,13 @@ pub fn start_listening(app: AppHandle) {
     state.watcher_shutdown = Some(shutdown);
     state.watcher_thread = Some(handle);
     state.is_listening = true;
+    app.clone().emit("update-listening", true).unwrap();
+
+    info!("已开始监听剪贴板");
 }
 
 // 停止监听函数
-pub fn stop_listening() {
+pub fn stop_listening(app: AppHandle) {
     let mut state = LISTENER_STATE.lock().unwrap();
 
     if !state.is_listening {
@@ -145,10 +148,13 @@ pub fn stop_listening() {
     state.watcher_shutdown.take().unwrap().stop();
     drop(state.watcher_thread.take()); // 等待线程结束
     state.is_listening = false;
+    app.clone().emit("update-listening", false).unwrap();
+
     info!("已停止监听剪贴板");
 }
 
 // 获取监听状态
+#[tauri::command]
 pub fn is_listening() -> bool {
     let state = LISTENER_STATE.lock().unwrap();
     state.is_listening

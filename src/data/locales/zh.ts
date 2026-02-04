@@ -152,6 +152,8 @@ export const chinese: LanguageConfig = {
             hoursAgo: '小时前',
             daysAgo: '天前',
             linkNotTitle: '无标题',
+            listening: '监听中',
+            stopListen: '停止监听',
             menu: {
                 program: '程序',
                 settings: '偏好设置',

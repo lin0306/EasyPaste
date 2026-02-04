@@ -147,7 +147,7 @@ pub fn create_tray(app: AppHandle) {
             }
             "clipboard_monitor" => {
                 if is_listening() {
-                    stop_listening();
+                    stop_listening(app.clone());
                     println!("停止监听剪贴板")
                 } else {
                     start_listening(app.app_handle().clone());
