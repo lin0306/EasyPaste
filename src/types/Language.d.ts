@@ -182,6 +182,7 @@ declare interface PageConfig {
             dark: string;
             blue: string;
             pink: string;
+            custom: string;
             help: string;
             instructions: string;
             updateLog: string;

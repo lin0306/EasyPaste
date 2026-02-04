@@ -7,6 +7,7 @@ import {blueTheme} from '../data/themes/blue.ts';
 import {pinkTheme} from '../data/themes/pink.ts';
 import {getTheme, saveTheme} from "../store/Settings.ts";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
+import {getCustomTheme, initCustomTheme} from "../store/CustomTheme.ts";
 
 // 所有可用主题
 export const themes: ThemeConfig[] = [
@@ -15,7 +16,6 @@ export const themes: ThemeConfig[] = [
     blueTheme,
     pinkTheme,
 ];
-
 
 /**
  * 当前使用的主题id
@@ -30,9 +30,15 @@ export const themeColors = ref<ThemeConfigColors>(lightTheme.colors);
  * 初始化主题
  */
 export async function initializeTheme() {
+    console.info('正在初始化主题配置...')
     try {
+        // 初始化默认主题
+        await initCustomTheme();
+        const customTheme = await getCustomTheme();
+        themes.push(customTheme);
         // 设置当前主题
         currentThemeId.value = await getTheme();
+        info('程序使用的主题:' + currentThemeId.value)
 
         // 查找并应用主题
         const theme = themes.find(item => item.id === currentThemeId.value);
@@ -82,6 +88,7 @@ export function applyThemeToDOM(colors: ThemeConfigColors, suffix: string = '') 
  * @param themeId
  */
 export async function toggleTheme(themeId: string) {
+    console.log('切换主题:', themeId)
     try {
         // 查找主题
         const theme = themes.find(item => item.id === themeId);

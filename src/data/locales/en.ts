@@ -175,6 +175,7 @@ export const english: LanguageConfig = {
                 dark: 'Dark',
                 blue: 'Blue',
                 pink: 'Pink',
+                custom: 'Custom',
                 help: 'Help',
                 instructions: 'Instructions',
                 updateLog: 'Update Log',

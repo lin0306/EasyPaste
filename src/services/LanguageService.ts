@@ -24,6 +24,7 @@ export const currentLanguage = ref<LanguageConfig>(chinese);
  * 初始化语言
  */
 export async function initializeLanguage() {
+    console.log('正在初始化语言配置...')
     try {
         // 设置当前主题
         currentLanguageId.value = await getLanguage();

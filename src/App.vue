@@ -2,8 +2,8 @@
 import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
 import {computed, onMounted, onUnmounted} from 'vue';
 import {error, info} from '@tauri-apps/plugin-log';
-import {currentLanguage, initializeLanguage, setupLanguageListener} from './services/LanguageService.ts';
-import {initializeTheme, setupThemeListener, themeColors} from './services/ThemeService.ts';
+import {currentLanguage, setupLanguageListener} from './services/LanguageService.ts';
+import {setupThemeListener, themeColors} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
@@ -241,10 +241,6 @@ async function handleKeyDown(event: KeyboardEvent) {
 onMounted(async () => {
   try {
     info("应用启动中...");
-    // 初始化主题
-    await initializeTheme();
-    // 初始化语言
-    await initializeLanguage();
     // 初始化动画效果配置
     await initializeAnimationEffect();
     // 设置主题监听器

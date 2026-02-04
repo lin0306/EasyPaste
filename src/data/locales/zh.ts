@@ -176,6 +176,7 @@ export const chinese: LanguageConfig = {
                 dark: '深色',
                 blue: '蓝色',
                 pink: '粉色',
+                custom: '自定义',
                 help: '帮助',
                 instructions: '使用说明',
                 updateLog: '更新日志',
