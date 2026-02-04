@@ -213,7 +213,7 @@ onUnmounted(async () => {
   <ClipboardListContent v-if="!isLoading"/>
 
   <!-- 底部展示 -->
-  <ClipboardFooter/>
+  <ClipboardFooter v-if="!isLoading"/>
 
   <!-- 标签列表 -->
   <TagList v-if="!isLoading"/>
