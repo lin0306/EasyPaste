@@ -1,7 +1,7 @@
 import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
 import {WebViewWindowOptions} from "../types/Window";
 import {emit} from "@tauri-apps/api/event";
-import {currentLanguage} from "../services/LanguageService.ts";
+import {currentLanguage} from "./LanguageService.ts";
 
 // 创建窗口参数配置
 export const windowConfig: WebViewWindowOptions = {

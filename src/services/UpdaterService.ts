@@ -2,7 +2,7 @@ import {info} from '@tauri-apps/plugin-log';
 import {isPermissionGranted, requestPermission, sendNotification} from '@tauri-apps/plugin-notification';
 import {relaunch} from '@tauri-apps/plugin-process';
 import {check, DownloadEvent, DownloadOptions, Update} from '@tauri-apps/plugin-updater';
-import {openUpdaterWindow} from '../utils/WindowUtil.ts';
+import {openUpdaterWindow} from './WindowService.ts';
 import {hasNewVersion} from "../pages/list/composables/UpdaterComposable.ts";
 import {getNewVersionAlertMode} from "../store/Settings.ts";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
