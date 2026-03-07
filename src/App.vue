@@ -360,4 +360,12 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
 }
+/*fix:折叠面板第一条没有垂直居中*/
+.n-collapse .n-collapse-item:first-child {
+   margin-top: 5px;
+}
+
+.n-collapse .n-collapse-item .n-collapse-item__content-wrapper .n-collapse-item__content-inner {
+  padding-top: 0;
+}
 </style>

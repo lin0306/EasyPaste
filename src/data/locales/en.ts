@@ -113,6 +113,14 @@ export const english: LanguageConfig = {
             transitionSpeedNormal: 'Normal',
             transitionSpeedSlow: 'Slow',
             animationHint: 'Page transition animations can enhance visual experience, but may affect fluency on low-performance devices',
+
+            themeEditor: {
+                title: 'Theme Editor',
+                themeEdit: 'Theme Edit',
+                themePreview: 'Theme Preview',
+                themeImport: 'Import the theme file',
+                themeExport: 'Export the theme file',
+            },
         },
         list: {
             title: 'Clipboard List',

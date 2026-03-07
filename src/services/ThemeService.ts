@@ -7,15 +7,16 @@ import {blueTheme} from '../data/themes/blue.ts';
 import {pinkTheme} from '../data/themes/pink.ts';
 import {getTheme, saveTheme} from "../store/Settings.ts";
 import {SETTINGS} from "../constants/UserSettingsConstant.ts";
-import {getCustomTheme, initCustomTheme} from "../store/CustomTheme.ts";
+import {getCustomTheme, initCustomTheme} from "../store/CustomThemeConfig.ts";
+import {setTransparency} from "../utils/ColorUtil.ts";
 
 // 所有可用主题
-export const themes: ThemeConfig[] = [
+export const themes = ref<ThemeConfig[]>([
     lightTheme,
     darkTheme,
     blueTheme,
     pinkTheme,
-];
+]);
 
 /**
  * 当前使用的主题id
@@ -24,7 +25,7 @@ export const currentThemeId = ref<string>(SETTINGS.THEME.DEFAULT_THEME);
 /**
  * 当前使用的主题配置
  */
-export const themeColors = ref<ThemeConfigColors>(lightTheme.colors);
+export const themeColors = ref<ThemeColor>(lightTheme.colors);
 
 /**
  * 初始化主题
@@ -35,13 +36,13 @@ export async function initializeTheme() {
         // 初始化默认主题
         await initCustomTheme();
         const customTheme = await getCustomTheme();
-        themes.push(customTheme);
+        themes.value.push(customTheme);
         // 设置当前主题
         currentThemeId.value = await getTheme();
         info('程序使用的主题:' + currentThemeId.value)
 
         // 查找并应用主题
-        const theme = themes.find(item => item.id === currentThemeId.value);
+        const theme = themes.value.find(item => item.id === currentThemeId.value);
         if (theme) {
             themeColors.value = theme.colors;
             applyThemeToDOM(theme.colors);
@@ -57,6 +58,7 @@ export async function initializeTheme() {
         themeColors.value = lightTheme.colors;
         applyThemeToDOM(lightTheme.colors);
     }
+    info('主题初始化完成')
 }
 
 /**
@@ -64,7 +66,7 @@ export async function initializeTheme() {
  * @param colors 主题颜色
  * @param suffix CSS变量后缀
  */
-export function applyThemeToDOM(colors: ThemeConfigColors, suffix: string = '') {
+export function applyThemeToDOM(colors: ThemeColor, suffix: string = '') {
     const root = document.documentElement;
 
     // 将主题颜色应用到CSS变量
@@ -75,6 +77,12 @@ export function applyThemeToDOM(colors: ThemeConfigColors, suffix: string = '') 
                 root.style.setProperty(`--theme-${suffix}-${key}`, value as string);
             } else {
                 root.style.setProperty(`--theme-${key}`, value as string);
+            }
+            if (key === 'textHint') {
+                root.style.setProperty(`--theme-scrollbar`, setTransparency(value));
+            }
+            if (key === 'text') {
+                root.style.setProperty(`--theme-scrollbar-hover`, setTransparency(value));
             }
         } else {
             // 递归处理嵌套对象
@@ -91,7 +99,7 @@ export async function toggleTheme(themeId: string) {
     console.log('切换主题:', themeId)
     try {
         // 查找主题
-        const theme = themes.find(item => item.id === themeId);
+        const theme = themes.value.find(item => item.id === themeId);
         if (!theme) {
             error('找不到主题:' + themeId);
             return;
@@ -117,18 +125,33 @@ export async function toggleTheme(themeId: string) {
 }
 
 /**
- * 监听主题变更事件
+ * 主题事件监听
  */
 export async function setupThemeListener() {
+    // 监听主题变更事件
     await listen<string>('theme-changed', (event) => {
         // 确保不重复应用相同主题
         if (event.payload !== currentThemeId.value) {
-            const theme = themes.find(item => item.id === event.payload);
+            const theme = themes.value.find(item => item.id === event.payload);
             if (theme) {
                 currentThemeId.value = event.payload;
                 themeColors.value = theme.colors;
                 applyThemeToDOM(theme.colors);
             }
+        }
+    });
+    // 监听自定义主题更新事件
+    await listen('reload-custom-theme', async () => {
+        const customTheme = await getCustomTheme();
+        const index = themes.value.findIndex(item => item.id === customTheme.id);
+        if (index && index > -1) {
+            themes.value[themes.value.findIndex(item => item.id === customTheme.id)] = customTheme;
+        } else {
+            themes.value.push(customTheme);
+        }
+        if (currentThemeId.value === 'custom') {
+            themeColors.value = customTheme.colors;
+            applyThemeToDOM(customTheme.colors);
         }
     });
 }

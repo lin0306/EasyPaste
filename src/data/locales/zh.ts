@@ -75,6 +75,7 @@ export const chinese: LanguageConfig = {
             logClearBtn: '清理日志',
             logLocationHint: '打开日志文件所在位置',
             logClearSuccessMsg: '日志清理成功',
+
             replaceImageStorageLocationTitle: '更新旧图片存储位置',
             replaceImageStorageLocationConfirm: '有查询到 {num} 条图片内容，是否全部移动到新的文件夹位置',
             replaceImageStorageLocationProcessing: '图片移动中...',
@@ -85,10 +86,12 @@ export const chinese: LanguageConfig = {
             wakeUpRoutine: '唤醒程序',
             quickPaste: '快速粘贴',
             emptyShortcutConfig: '暂无快捷键配置',
+
             restartModalTitle: '重启确认',
             restartModalContent: '“替换全局热键”功能需要重启电脑后才能生效，是否现在重启？',
             restartModalCancelBtn: '稍后重启',
             restartModalConfirmBtn: '现在重启',
+
             editHotkeyModalTitle: '编辑快捷键',
             editHotkeyModalHint: '按下快捷键...',
             editHotkeyModalContent: '请按下您想要设置的快捷键组合',
@@ -107,13 +110,20 @@ export const chinese: LanguageConfig = {
             enableReplaceGlobalHotkeyFailedMsg: '打开“替换全局热键”失败，请确认程序是否以管理员身份启动',
             disableReplaceGlobalHotkeyFailedMsg: '关闭“替换全局热键”失败，请确认程序是否以管理员身份启动',
 
-            // 动画相关设置
             enableAnimationEffects: '启用动画效果',
             transitionSpeed: '动画速度',
             transitionSpeedFast: '快速',
             transitionSpeedNormal: '正常',
             transitionSpeedSlow: '慢速',
             animationHint: '页面切换动画可以提升视觉体验，但可能会影响低性能设备的流畅性',
+
+            themeEditor: {
+                title: '主题编辑器',
+                themeEdit:  '主题编辑',
+                themePreview: '主题预览',
+                themeImport: '导入主题文件',
+                themeExport: '导出主题文件',
+            }
         },
         list: {
             title: '剪贴板列表',

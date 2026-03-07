@@ -132,7 +132,7 @@ onMounted(async () => {
       </div>
       <!-- 查看更多按钮 -->
       <div class="view-more-container">
-        <n-button type="primary" quaternary @click="openGitHubReleases">
+        <n-button type="primary" text @click="openGitHubReleases">
           {{ currentLanguage.pages.update.viewMoreBtn }}
           <span class="view-more-icon">→</span>
         </n-button>

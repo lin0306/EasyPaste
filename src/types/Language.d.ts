@@ -8,7 +8,7 @@ declare interface LanguageConfig {
 
 declare interface PageConfig {
     settings: {
-        [x: string]: string;
+        [x: string]: any;
         initFailedHint: string;
         // 设置页面标题
         title: string;
@@ -103,7 +103,6 @@ declare interface PageConfig {
         quickPasteKeyNotAvailableHint: string;
         keyRepeatHint: string;
         shortcutHint: string;
-
         // 提示信息
         saveSuccessMsg: string;
         saveFailedMsg: string;
@@ -111,7 +110,6 @@ declare interface PageConfig {
         resetSuccessMsg: string;
         enableReplaceGlobalHotkeyFailedMsg: string;
         disableReplaceGlobalHotkeyFailedMsg: string;
-
         // 动画相关设置
         enableAnimationEffects: string;
         transitionSpeed: string;
@@ -119,6 +117,14 @@ declare interface PageConfig {
         transitionSpeedNormal: string;
         transitionSpeedSlow: string;
         animationHint: string;
+        // 主题编辑器相关
+        themeEditor: {
+            title: string;
+            themeEdit: string;
+            themePreview: string;
+            themeImport: string;
+            themeExport: string;
+        }
     },
     list: {
         title: string;
@@ -313,6 +319,6 @@ declare interface PageConfig {
         notSelectPluginHint: string;
     },
     plugins: {
-        [x:string]: string,
+        [x:string]: any,
     }
 }

@@ -25,13 +25,12 @@ import {getSearchKey} from "../../store/ShortcutKeys.ts";
 import ClipboardFooter from "./components/ClipboardFooter.vue";
 import {getPowerOnSelfStart} from "../../store/Settings.ts";
 import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
+import {currentLanguage} from "../../services/LanguageService.ts";
+import {destroyPlugins, initializePlugins} from "./composables/PluginComposable.ts";
 
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
 import html from "highlight.js/lib/languages/vbscript-html";
-import {currentLanguage} from "../../services/LanguageService.ts";
-import {destroyPlugins, initializePlugins} from "./composables/PluginComposable.ts";
-
 hljs.registerLanguage('html', html)
 
 // Naive UI 框架的消息组件

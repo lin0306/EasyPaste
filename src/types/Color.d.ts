@@ -1,0 +1,1 @@
+declare interface RGB {    r: number;    g: number;    b: number;}declare interface RGBA extends RGB {    a: number;}declare interface HSL {    h: number;    s: number;    l: number;}

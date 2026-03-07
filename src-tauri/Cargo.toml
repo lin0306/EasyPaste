@@ -1,6 +1,6 @@
 [package]
 name = "EasyPaste"
-version = "0.1.9"
+version = "0.2.0-beta"
 description = "简易的剪贴板管理工具"
 authors = ["lin0306"]
 edition = "2021"
@@ -35,20 +35,21 @@ serde_json = "1"
 # 日志相关配置
 log = "0.4"
 # 日期
-chrono = { version = "0.4.19", features = ["serde"] }
+chrono = { version = "0.4", features = ["serde"] }
 # 文件操作
 dirs = "6.0.0"
 # 剪贴板操作
-clipboard-rs = "0.3.0"
-lazy_static = "1.5.0"
+clipboard-rs = "0.3"
+lazy_static = "1.5"
 # RAR 文件处理
 unrar = "0.5.8"
 # TAR 文件处理
 tar = "0.4.44"
 # 压缩文件处理
-flate2 = "1.1.2"
+flate2 = "1.1"
 # tcp/ip请求
 tauri-plugin-http = "2"
+reqwest = "0.12.28"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"
@@ -56,7 +57,7 @@ winreg = "0.55.0"
 # 数据库支持
 [dependencies.tauri-plugin-sql]
 features = ["sqlite"] # or "postgres", or "mysql"
-version = "2.0.0"
+version = "2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2"

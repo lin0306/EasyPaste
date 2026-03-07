@@ -16,6 +16,6 @@ declare interface TagItem {
   id: number;
   name: string;
   color: string;
-  created_at: Date;
+  created_at: number;
   stats: number;
 }

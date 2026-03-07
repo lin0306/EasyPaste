@@ -43,7 +43,8 @@ export async function initializeLanguage() {
         currentLanguageId.value = SETTINGS.LANGUAGE.DEFAULT_LANGUAGE;
         currentLanguage.value = chinese;
     }
-};
+    info('语言初始化完成')
+}
 
 /**
  * 切换语言
