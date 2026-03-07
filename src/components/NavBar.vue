@@ -146,7 +146,7 @@ const handleMouseLeave = () => {
 }
 
 .dropdown-link:hover {
-  background-color: var(--theme-menu-itemHover);
+  background-color: var(--theme-menuBar-itemHover);
 }
 
 .divider {
