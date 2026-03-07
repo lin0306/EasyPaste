@@ -124,6 +124,98 @@ declare interface PageConfig {
             themePreview: string;
             themeImport: string;
             themeExport: string;
+            selectTheme: string;
+            themeFile: string;
+            importBtn: string;
+            exportBtn: string;
+            resetBtn: string;
+            saveBtn: string;
+            loadingThemeFileMsg: string;
+            loadingThemeFileErrorMsg: string;
+            exportingThemeFileMsg: string;
+            resetFinishMsg: string;
+            themeSaveSuccessMsg: string;
+            exportedThemeFileModeContent: string;
+            openInFolderBtn: string;
+            closeBtn: string;
+            editor: {
+                global: {
+                    title: string;
+                    primaryColor: string;
+                    secondaryColor: string;
+                    backgroundColor: string;
+                    deleteColor: string;
+                    textColor: string;
+                    hintTextColor: string;
+                    borderColor: string;
+                }
+                button: {
+                    title: string;
+                    primary: {
+                        bgColor: string;
+                        hoverBgColor: string;
+                        disableBgColor: string;
+                        textColor: string;
+                        textHoverColor: string;
+                        textDisableColor: string;
+                    },
+                    normal: {
+                        bgColor: string;
+                        hoverBgColor: string;
+                        disableBgColor: string;
+                        textColor: string;
+                        textHoverColor: string;
+                        textDisableColor: string;
+                    },
+                    error: {
+                        bgColor: string;
+                        hoverBgColor: string;
+                        disableBgColor: string;
+                        textColor: string;
+                        textHoverColor: string;
+                        textDisableColor: string;
+                    },
+                }
+                select:{
+                    title: string;
+                    hoverBgColor: string;
+                    activeBgColor: string;
+                    activeHoverBgColor: string;
+                },
+                titleBar: {
+                    title: string;
+                    bgColor: string;
+                    btnHoverBgColor: string;
+                    closeBtnHoverBgColor: string;
+                },
+                menuBar: {
+                    title: string;
+                    bgColor: string;
+                    hoverBgColor: string;
+                    activeBgColor: string;
+                },
+                customCard: {
+                    title: string;
+                    bgColor: string;
+                    hoverBgColor: string;
+                },
+                audio: {
+                    title: string;
+                    waveColor: string;
+                    cursorColor: string;
+                    progressColor: string;
+                },
+                textEditor: {
+                    title: string;
+                    bgColor: string;
+                    lineNumberBgColor: string;
+                    lineNumberActiveBgColor: string;
+                }
+
+            },
+            preview: {
+
+            }
         }
     },
     list: {

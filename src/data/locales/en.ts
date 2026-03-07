@@ -120,6 +120,97 @@ export const english: LanguageConfig = {
                 themePreview: 'Theme Preview',
                 themeImport: 'Import the theme file',
                 themeExport: 'Export the theme file',
+                selectTheme: 'Select theme',
+                themeFile: 'Theme File',
+                importBtn: 'Import',
+                exportBtn: 'Export',
+                resetBtn: 'Reset',
+                saveBtn: 'Save',
+                loadingThemeFileMsg: 'Loading theme file...',
+                loadingThemeFileErrorMsg: 'Failed to load theme file',
+                exportingThemeFileMsg: 'Exporting theme file...',
+                resetFinishMsg: 'Reset finish',
+                themeSaveSuccessMsg: 'Theme save success',
+                exportedThemeFileModeContent: 'Theme file has been saved to:',
+                openInFolderBtn: 'Open in folder',
+                closeBtn: 'Close',
+                editor: {
+                    global: {
+                        title: 'Global color configuration',
+                        primaryColor: 'dominant hue:',
+                        secondaryColor: 'Secondary hue:',
+                        backgroundColor: 'Background color:',
+                        deleteColor: 'Delete color:',
+                        textColor: 'Text Color:',
+                        hintTextColor: 'Hint text color:',
+                        borderColor: 'Border color:',
+                    },
+                    button: {
+                        title: 'Button color configuration',
+                        primary: {
+                            bgColor: 'Primary button background color:',
+                            hoverBgColor: 'Primary button hover background color:',
+                            disableBgColor: 'Primary button disabled background color:',
+                            textColor: 'Primary button text color:',
+                            textHoverColor: 'Primary button text hover color:',
+                            textDisableColor: 'Primary button text disabled color:',
+                        },
+                        normal: {
+                            bgColor: 'Normal button background color:',
+                            hoverBgColor: 'Normal button hover background color:',
+                            disableBgColor: 'Normal button disabled background color:',
+                            textColor: 'Normal button text color:',
+                            textHoverColor: 'Normal button hover text color:',
+                            textDisableColor: 'Normal button disabled text color:'
+                        },
+                        error: {
+                            bgColor: 'Error button background color:',
+                            hoverBgColor: 'Error button hover background color:',
+                            disableBgColor: 'Error button disabled background color:',
+                            textColor: 'Error button text color:',
+                            textHoverColor: 'Error button hover text color:',
+                            textDisableColor: 'Error button disabled text color:'
+                        },
+                    },
+                    select: {
+                        title: 'Selector color configuration',
+                        hoverBgColor: 'Selector hover background color:',
+                        activeBgColor: 'Selector active background color:',
+                        activeHoverBgColor: 'Selector active hover background color:',
+                    },
+                    titleBar: {
+                        title: 'Title bar color configuration',
+                        bgColor: 'Background color:',
+                        btnHoverBgColor: 'Button hover background color:',
+                        closeBtnHoverBgColor: 'Close button hover background color:',
+                    },
+                    menuBar: {
+                        title: 'Menu bar color configuration',
+                        bgColor: 'Background color:',
+                        hoverBgColor: 'Hover background color:',
+                        activeBgColor: 'Active background color:',
+                    },
+                    customCard: {
+                        title: 'List card color configuration',
+                        bgColor: 'Background color:',
+                        hoverBgColor: 'Hover background color:',
+                    },
+                    audio: {
+                        title: 'Audio color configuration',
+                        waveColor: 'Wave color:',
+                        cursorColor: 'Cursor color:',
+                        progressColor: 'Progress color:',
+                    },
+                    textEditor: {
+                        title: 'Text editor color configuration',
+                        bgColor: 'Background color:',
+                        lineNumberBgColor: 'Line number background color:',
+                        lineNumberActiveBgColor: 'Line number active background color:',
+                    }
+                },
+                preview: {
+
+                }
             },
         },
         list: {
