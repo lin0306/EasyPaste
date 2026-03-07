@@ -11,16 +11,16 @@
     </div>
     <div class="window-controls">
       <div v-if="isDev" class="control-button" @click="onRefresh">
-        <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" class="program-btn" id="devtool-button-img" />
+        <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" class="program-btn" id="refresh-button-img" />
       </div>
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
         <font-awesome-icon icon="fa-solid fa-laptop-code" class="program-btn" id="devtool-button-img" />
       </div>
       <div v-if="showFixedBtn && !isFixed" class="control-button fixation-button" @click="onFixWindow">
-        <FixedIcon class="program-btn" id="fixation-button-img"/>
+        <font-awesome-icon :icon="['fas', 'fixed']" class="program-btn" id="fixation-button-img"/>
       </div>
       <div v-if="showFixedBtn && isFixed" class="control-button unfixation-button" @click="onUnfixWindow">
-        <UnFixedIcon class="program-btn" id="unfixation-button-img"/>
+        <font-awesome-icon :icon="['fas', 'unfixed']" class="program-btn-preview" id="unfixation-button-img"/>
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
         <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img"/>
@@ -35,8 +35,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import FixedIcon from '../assets/icons/FixedIcon.vue'
-import UnFixedIcon from '../assets/icons/UnFixedIcon.vue'
 
 import {invoke} from '@tauri-apps/api/core'
 import {onMounted, ref} from 'vue'
@@ -170,12 +168,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: 0 5px;
-}
-
-.logo {
-  width: 16px;
-  margin-right: 5px;
-  -webkit-user-drag: none;
 }
 
 .update-icon {
