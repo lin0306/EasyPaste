@@ -230,7 +230,7 @@ const theme = computed(() => {
       tabBorderColor: themeColors.value.universal.border
     },
     Progress: {
-      fillColor: themeColors.value.universal.border,
+      fillColor: themeColors.value.button.primary.backgroundColor,
     },
     Split: {
       resizableTriggerColor: themeColors.value.universal.border,
