@@ -73,7 +73,7 @@ export const english: LanguageConfig = {
             imageStorageLocationHint: 'Change the default storage location, subsequent uninstallation may not automatically delete the folder, please manually delete',
             logStorageUsage: 'Log Storage Usage: ',
             logClearBtn: 'Clear Log',
-            logLocationHint: 'Open the log file location',
+            logLocationHint: 'Click me to open the location of the log file',
             logClearSuccessMsg: 'Log Clear Success',
             replaceImageStorageLocationTitle: 'Update Image Storage Location',
             replaceImageStorageLocationConfirm: 'There are {num} images in the database, do you want to move them to the new folder?',

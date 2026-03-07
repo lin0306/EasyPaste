@@ -266,6 +266,18 @@ const theme = computed(() => {
       itemMargin: '0px',
       titlePadding: '5px'
     },
+    Dropdown: {
+      color: themeColors.value.universal.secondary,
+      optionColorHover: themeColors.value.button.normal.hoverBackgroundColor,
+      optionColorActive: themeColors.value.button.normal.hoverBackgroundColor,
+      optionTextColor: themeColors.value.universal.text,
+      optionTextColorHover: themeColors.value.button.normal.hoverTextColor,
+      optionTextColorActive: themeColors.value.button.normal.hoverTextColor,
+      optionTextColorChildActive: themeColors.value.button.normal.hoverTextColor,
+      dividerColor: themeColors.value.universal.border,
+      padding: '0',
+
+    },
   } as GlobalThemeOverrides;
 });
 

@@ -179,12 +179,12 @@ export async function openItemEditWindow(itemId: number) {
 export async function openPluginStoreWindow() {
     await createWin({
         label: 'plugin-store',
-        title: currentLanguage.value.pages.settings.title,
+        title: currentLanguage.value.pages.pluginStore.title,
         url: '/plugin-store',
-        width: 650,
-        height: 500,
-        minWidth: 650,
-        minHeight: 500
+        width: 800,
+        height: 600,
+        minWidth: 800,
+        minHeight: 600
     })
 }
 
