@@ -7,26 +7,10 @@ export const pinkTheme: ThemeConfig = {
             primary: 'rgba(219,112,147,1)',
             secondary: 'rgba(255,255,255,1)',
             background: 'rgba(253,245,250,1)',
-            hoverBackgroundColor: 'rgba(248,230,240,1)',
-            disabledBackgroundColor: 'rgba(240,210,225,1)',
+            delete: 'rgb(255, 68, 68)',
             text: 'rgba(153,51,102,1)',
             textHint: 'rgba(153,51,102,0.6)',
-            textDelete: 'rgb(255, 68, 68)',
-            textDisabled: 'rgba(153,51,102,0.6)',
-            textHover: 'rgb(198, 65, 132)',
             border: 'rgba(219, 112, 147, 0.1)',
-            borderHoverColor: 'rgba(240,210,225,1)',
-            borderDisabledColor: 'rgba(240,210,225,1)',
-        },
-        titleBar: {
-            backgroundColor: 'rgb(245,225,235)',
-            btnHoverBackgroundColor: 'rgb(243,205,223)',
-            closeBtnHoverBackgroundColor: 'rgb(255,136,136)',
-        },
-        menu: {
-            background: 'rgba(252,242,248,1)',
-            itemActive: 'rgb(246,191,219)',
-            itemHover: 'rgba(248,230,240,1)',
         },
         button: {
             normal: {
@@ -56,29 +40,29 @@ export const pinkTheme: ThemeConfig = {
         },
         select: {
             options: {
-                hoverBackgroundColor: 'rgb(246,216,230)',
-                selectBackgroundColor: 'rgb(225,193,209)',
+                optionColorPending: 'rgb(246,216,230)',
+                optionColorActive: 'rgb(225,193,209)',
+                optionColorActivePending: 'rgb(225,193,209)',
             }
         },
-        scrollBar: {
-            color: 'rgba(156,126,146,0.3)',
-            colorHover: 'rgba(197,137,170,0.5)',
+        titleBar: {
+            backgroundColor: 'rgb(245,225,235)',
+            btnHoverBackgroundColor: 'rgb(243,205,223)',
+            closeBtnHoverBackgroundColor: 'rgb(255,136,136)',
         },
-        switch: {
-            railColor: 'rgb(249, 219, 234)',
-            railColorActive: 'rgba(211, 122, 200, 0.38)',
-            buttonColor: 'rgba(156, 100, 149, 0.38)',
+        menuBar: {
+            background: 'rgba(252,242,248,1)',
+            itemActive: 'rgb(246,191,219)',
+            itemHover: 'rgba(248,230,240,1)',
         },
-        slider: {
-            railColor: 'rgba(240,210,225,1)',
+        customCard: {
+          background: 'rgb(255,255,255)',
+          backgroundHover: 'rgb(245,225,235)',
         },
         wavesurfer: {
             waveColor: 'rgb(179,30,133)',
             cursorColor: 'rgb(236,129,188)',
             progressColor: 'rgb(197,110,153)',
-        },
-        tooltip: {
-            color: 'rgb(251,229,243)',
         },
         editor: {
             backgroundColor: 'rgb(251,242,242)',

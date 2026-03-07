@@ -7,6 +7,7 @@ import {setupThemeListener, themeColors} from './services/ThemeService.ts';
 import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core';
+import {setTransparency} from "./utils/ColorUtil.ts";
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
@@ -27,33 +28,61 @@ const theme = computed(() => {
     Button: {
       color: themeColors.value.button.normal.backgroundColor,
       colorHover: themeColors.value.button.normal.hoverBackgroundColor,
+      colorFocus: themeColors.value.button.normal.hoverBackgroundColor,
+      colorPressed: themeColors.value.button.normal.hoverBackgroundColor,
       colorDisabled: themeColors.value.button.normal.disabledBackgroundColor,
       textColor: themeColors.value.button.normal.textColor,
       textColorHover: themeColors.value.button.normal.hoverTextColor,
+      textColorFocus: themeColors.value.button.normal.hoverTextColor,
+      textColorPressed: themeColors.value.button.normal.hoverTextColor,
       textColorDisabled: themeColors.value.button.normal.disabledTextColor,
-      border: `1px solid ${themeColors.value.button.normal.textColor}`,
-      borderHover: `1px solid ${themeColors.value.button.normal.hoverTextColor}`,
-      borderDisabled: `1px solid ${themeColors.value.button.normal.disabledTextColor}`,
+      border: `1px solid ${themeColors.value.button.normal.backgroundColor}`,
+      borderHover: `1px solid ${themeColors.value.button.normal.hoverBackgroundColor}`,
+      borderFocus: `1px solid ${themeColors.value.button.normal.hoverBackgroundColor}`,
+      borderPressed: `1px solid ${themeColors.value.button.normal.hoverBackgroundColor}`,
+      borderDisabled: `1px solid ${themeColors.value.button.normal.disabledBackgroundColor}`,
+
       colorPrimary: themeColors.value.button.primary.backgroundColor,
       colorHoverPrimary: themeColors.value.button.primary.hoverBackgroundColor,
+      colorFocusPrimary: themeColors.value.button.primary.hoverBackgroundColor,
+      colorPressedPrimary: themeColors.value.button.primary.hoverBackgroundColor,
       colorDisabledPrimary: themeColors.value.button.primary.disabledBackgroundColor,
       textColorPrimary: themeColors.value.button.primary.textColor,
       textColorHoverPrimary: themeColors.value.button.primary.hoverTextColor,
+      textColorFocusPrimary: themeColors.value.button.primary.hoverTextColor,
+      textColorPressedPrimary: themeColors.value.button.primary.hoverTextColor,
       textColorDisabledPrimary: themeColors.value.button.primary.disabledTextColor,
-      borderPrimary: `0px`,
-      borderHoverPrimary: `0px`,
-      borderDisabledPrimary: `0px`,
+      borderPrimary: `1px solid ${themeColors.value.button.primary.backgroundColor}`,
+      borderHoverPrimary: `1px solid ${themeColors.value.button.primary.hoverBackgroundColor}`,
+      borderFocusPrimary: `1px solid ${themeColors.value.button.primary.hoverBackgroundColor}`,
+      borderPressedPrimary: `1px solid ${themeColors.value.button.primary.hoverBackgroundColor}`,
+      borderDisabledPrimary: `1px solid ${themeColors.value.button.primary.disabledBackgroundColor}`,
+
       colorError: themeColors.value.button.error.backgroundColor,
       colorHoverError: themeColors.value.button.error.hoverBackgroundColor,
+      colorFocusError: themeColors.value.button.error.hoverBackgroundColor,
+      colorPressedError: themeColors.value.button.error.hoverBackgroundColor,
       colorDisabledError: themeColors.value.button.error.disabledBackgroundColor,
       textColorError: themeColors.value.button.error.textColor,
       textColorHoverError: themeColors.value.button.error.hoverTextColor,
+      textColorFocusError: themeColors.value.button.error.hoverTextColor,
+      textColorPressedError: themeColors.value.button.error.hoverTextColor,
       textColorDisabledError: themeColors.value.button.error.disabledTextColor,
-      borderError: `0px`,
-      borderHoverError: `0px`,
-      borderDisabledError: `0px`,
-      textColorText: themeColors.value.universal.text,
+      borderError: `1px solid ${themeColors.value.button.error.backgroundColor}`,
+      borderHoverError: `1px solid ${themeColors.value.button.error.hoverBackgroundColor}`,
+      borderDisabledError: `1px solid ${themeColors.value.button.error.disabledBackgroundColor}`,
+
+      textColorText: themeColors.value.button.normal.textColor,
+      textColorTextHover: themeColors.value.button.normal.hoverTextColor,
+      textColorTextFocus: themeColors.value.button.normal.hoverTextColor,
+      textColorTextPressed: themeColors.value.button.normal.hoverTextColor,
+      textColorTextDisabled: themeColors.value.button.normal.disabledTextColor,
+
       textColorGhost: themeColors.value.universal.text,
+      textColorGhostHover: themeColors.value.button.normal.hoverTextColor,
+      textColorGhostFocus: themeColors.value.button.normal.hoverTextColor,
+      textColorGhostPressed: themeColors.value.button.normal.hoverTextColor,
+      textColorGhostDisabled: themeColors.value.button.normal.disabledTextColor,
     },
     Input: {
       color: themeColors.value.universal.background,
@@ -69,6 +98,7 @@ const theme = computed(() => {
       placeholderColor: themeColors.value.universal.textHint,
       placeholderColorDisabled: themeColors.value.universal.textHint,
       borderRadius: '5px',
+      suffixTextColor: themeColors.value.universal.text,
     },
     Tag: {
       colorBordered: themeColors.value.universal.secondary, // 背景色
@@ -83,40 +113,58 @@ const theme = computed(() => {
           textColor: themeColors.value.universal.text,
           color: themeColors.value.universal.background,
           colorActive: themeColors.value.universal.background,
-          textColorDisabled: themeColors.value.universal.textDisabled,
-          colorDisabled: themeColors.value.universal.disabledBackgroundColor,
+          textColorDisabled: themeColors.value.universal.textHint,
+          colorDisabled: themeColors.value.universal.textHint,
           border: `1px solid ${themeColors.value.universal.border}`,
-          borderHover: themeColors.value.universal.borderHoverColor,
-          borderActive: themeColors.value.universal.borderHoverColor,
-          borderFocus: themeColors.value.universal.borderHoverColor,
-          borderDisabled: themeColors.value.universal.borderDisabledColor,
+          borderHover: themeColors.value.universal.border,
+          borderActive: themeColors.value.universal.border,
+          borderFocus: themeColors.value.universal.border,
+          borderDisabled: themeColors.value.universal.border,
           placeholderColor: themeColors.value.universal.textHint,
           placeholderColorDisabled: themeColors.value.universal.textHint,
+          arrowColor: themeColors.value.universal.text
         },
         InternalSelectMenu: {
           color: themeColors.value.universal.background,
           optionTextColor: themeColors.value.universal.text, // 未选中状态下的文字颜色
           optionTextColorActive: themeColors.value.universal.text, // 选中状态下的文字颜色
           optionOpacityDisabled: '0.6',
-          optionColorPending: themeColors.value.select.options.hoverBackgroundColor, // 悬浮再未选中的选项上的背景色
-          optionColorActive: themeColors.value.select.options.selectBackgroundColor, // 选中的选项背景色
-          optionColorActivePending: themeColors.value.select.options.selectBackgroundColor, // 悬浮在选中的选项上的背景色
+          optionColorPending: themeColors.value.select.options.optionColorPending, // 悬浮再未选中的选项上的背景色
+          optionColorActive: themeColors.value.select.options.optionColorActive, // 选中的选项背景色
+          optionColorActivePending: themeColors.value.select.options.optionColorActivePending, // 悬浮在选中的选项上的背景色
+          optionCheckColor: themeColors.value.universal.text
+        }
+      }
+    },
+    Popselect: {
+      peers: {
+        Popover: {
+          color: themeColors.value.universal.background, // 下拉选项背景色
+        },
+        InternalSelectMenu: {
+          optionTextColor: themeColors.value.universal.text, // 未选中状态下的文字颜色
+          optionTextColorActive: themeColors.value.universal.text, // 选中状态下的文字颜色
+          optionOpacityDisabled: '0.6',
+          optionColorPending: themeColors.value.select.options.optionColorPending, // 悬浮再未选中的选项上的背景色
+          optionColorActive: themeColors.value.select.options.optionColorActive, // 选中的选项背景色
+          optionColorActivePending: themeColors.value.select.options.optionColorActivePending, // 悬浮在选中的选项上的背景色
+          optionCheckColor: themeColors.value.universal.text
         }
       }
     },
     Menu: {
-      color: themeColors.value.menu.background,
-      itemColorHover: themeColors.value.menu.itemHover,
-      itemColorActive: themeColors.value.menu.itemActive,
+      color: themeColors.value.menuBar.background,
+      itemColorHover: themeColors.value.menuBar.itemHover,
+      itemColorActive: themeColors.value.menuBar.itemActive,
       itemTextColor: themeColors.value.universal.text,
       itemTextColorActive: themeColors.value.universal.text,
       itemTextColorHover: themeColors.value.universal.text,
       itemTextColorActiveHover: themeColors.value.universal.text,
     },
     Switch: {
-      railColor: themeColors.value.switch.railColor,
-      railColorActive: themeColors.value.switch.railColorActive,
-      buttonColor: themeColors.value.switch.buttonColor,
+      railColor: themeColors.value.button.normal.backgroundColor,
+      railColorActive: themeColors.value.button.normal.hoverBackgroundColor,
+      buttonColor: themeColors.value.button.primary.backgroundColor,
     },
     Dialog: {
       titleTextColor: themeColors.value.universal.text,             // 标题颜色
@@ -126,27 +174,27 @@ const theme = computed(() => {
       closeColorHover: themeColors.value.universal.secondary,       // 关闭按钮背景色
       closeColorPressed: themeColors.value.universal.secondary,     // 关闭按钮背景色
       closeIconColor: themeColors.value.universal.text,             // 关闭图标颜色
-      closeIconColorHover: themeColors.value.universal.textHover,   // 关闭图标悬浮颜色
-      closeIconColorPressed: themeColors.value.universal.textHover, // 关闭图标悬浮颜色
+      closeIconColorHover: themeColors.value.universal.text,        // 关闭图标悬浮颜色
+      closeIconColorPressed: themeColors.value.universal.text,      // 关闭图标悬浮颜色
     },
     Empty: {
       textColor: themeColors.value.universal.textHint,
       iconColor: themeColors.value.universal.textHint,
     },
     Scrollbar: {
-      color: themeColors.value.scrollBar.color,
-      colorHover: themeColors.value.scrollBar.colorHover,
+      color: setTransparency(themeColors.value.universal.textHint),
+      colorHover: setTransparency(themeColors.value.universal.text),
     },
     Slider: {
-      railColor: themeColors.value.slider.railColor,
-      railColorHover: themeColors.value.slider.railColor,
+      railColor: themeColors.value.universal.secondary,
+      railColorHover: themeColors.value.universal.secondary,
     },
     Divider: {
       color: themeColors.value.universal.border,
       textColor: themeColors.value.universal.text,
     },
     Tooltip: {
-      color: themeColors.value.tooltip.color,
+      color: themeColors.value.universal.background,
       textColor: themeColors.value.universal.text,
       fontSize: '12px',
       padding: '4px 8px',
@@ -155,12 +203,12 @@ const theme = computed(() => {
       nodeTextColor: themeColors.value.universal.text,
       loadingColor: themeColors.value.universal.text,
       arrowColor: themeColors.value.universal.text,
-      nodeTextColorDisabled: themeColors.value.universal.textDisabled,
+      nodeTextColorDisabled: themeColors.value.universal.textHint,
       dropMarkColor: themeColors.value.universal.text,
       lineColor: themeColors.value.universal.text,
-      nodeColorHover: themeColors.value.universal.hoverBackgroundColor,
-      nodeColorPressed: themeColors.value.universal.hoverBackgroundColor,
-      nodeColorActive: themeColors.value.universal.hoverBackgroundColor,
+      nodeColorHover: themeColors.value.button.normal.hoverBackgroundColor,
+      nodeColorPressed: themeColors.value.button.normal.hoverBackgroundColor,
+      nodeColorActive: themeColors.value.button.normal.hoverBackgroundColor,
     },
     Message: {
       color: themeColors.value.universal.background,
@@ -177,12 +225,28 @@ const theme = computed(() => {
       textColorLoading: themeColors.value.universal.text,
     },
     Tabs: {
-      tabTextColorLine: themeColors.value.universal.textHover,
+      tabTextColorLine: themeColors.value.universal.textHint,
       tabTextColorActiveLine: themeColors.value.universal.text,
       tabBorderColor: themeColors.value.universal.border
     },
     Progress: {
-      fillColor: themeColors.value.universal.borderHoverColor,
+      fillColor: themeColors.value.universal.border,
+    },
+    Split: {
+      resizableTriggerColor: themeColors.value.universal.border,
+      resizableTriggerColorHover: themeColors.value.universal.border,
+    },
+    ColorPicker: {
+      color: themeColors.value.universal.secondary,
+      textColor: themeColors.value.universal.text,
+    },
+    Collapse: {
+      dividerColor: themeColors.value.universal.border,
+      titleTextColor: themeColors.value.universal.text,
+      textColor: themeColors.value.universal.text,
+      arrowColor: themeColors.value.universal.text,
+      itemMargin: '0px',
+      titlePadding: '5px'
     },
   } as GlobalThemeOverrides;
 });

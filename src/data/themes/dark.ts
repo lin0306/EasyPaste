@@ -7,43 +7,27 @@ export const darkTheme: ThemeConfig = {
             primary: 'rgba(90,90,90,1)',
             secondary: 'rgba(35,35,35,1)',
             background: 'rgba(20,20,20,1)',
-            hoverBackgroundColor: 'rgba(45,45,45,1)',
-            disabledBackgroundColor: 'rgb(30,30,30)',
+            delete: 'rgb(243, 57, 57)',
             text: 'rgb(188,188,188)',
             textHint: 'rgba(230,230,230,0.6)',
-            textDelete: 'rgb(243, 57, 57)',
-            textHover: 'rgba(144, 147, 153, 0.5)',
-            textDisabled: 'rgba(230,230,230,0.6)',
             border: 'rgba(253, 253, 253, 0.12)',
-            borderHoverColor: 'rgb(35,35,35)',
-            borderDisabledColor: 'rgb(35,35,35)',
-        },
-        titleBar: {
-            backgroundColor: 'rgb(53,53,53)',
-            btnHoverBackgroundColor: 'rgb(106,106,106)',
-            closeBtnHoverBackgroundColor: 'rgb(131,55,55)',
-        },
-        menu: {
-            background: 'rgba(28,28,28,1)',
-            itemActive: 'rgb(64,64,64)',
-            itemHover: 'rgba(45,45,45,1)',
         },
         button: {
             normal: {
-                backgroundColor: 'rgb(35,35,35)',
+                backgroundColor: 'rgb(46,46,46)',
                 disabledBackgroundColor: 'rgb(23,23,23)',
-                hoverBackgroundColor: 'rgb(66,66,66)',
-                textColor: 'rgb(96,96,96)',
+                hoverBackgroundColor: 'rgb(86,86,86)',
+                textColor: 'rgb(142,142,142)',
                 disabledTextColor: 'rgb(154,154,154)',
-                hoverTextColor: 'rgb(151,151,151)',
+                hoverTextColor: 'rgb(174,174,174)',
             },
             primary: {
-                backgroundColor: 'rgb(67,67,67)',
-                disabledBackgroundColor: 'rgba(35,35,35,1)',
-                hoverBackgroundColor: 'rgb(99,99,99)',
-                textColor: 'rgb(166,166,166)',
+                backgroundColor: 'rgb(129,129,129)',
+                disabledBackgroundColor: 'rgb(80,80,80)',
+                hoverBackgroundColor: 'rgb(156,156,156)',
+                textColor: 'rgb(189,189,189)',
                 disabledTextColor: 'rgb(177,177,177)',
-                hoverTextColor: 'rgb(191,191,191)',
+                hoverTextColor: 'rgb(211,211,211)',
             },
             error: {
                 backgroundColor: 'rgb(131,55,55)',
@@ -56,29 +40,29 @@ export const darkTheme: ThemeConfig = {
         },
         select: {
             options: {
-                hoverBackgroundColor: 'rgb(64,64,64)',
-                selectBackgroundColor: 'rgb(126,126,126)',
+                optionColorPending: 'rgb(64,64,64)',
+                optionColorActive: 'rgb(126,126,126)',
+                optionColorActivePending: 'rgb(126,126,126)',
             }
         },
-        scrollBar: {
-            color: 'rgba(255, 255, 255, 0.3)',
-            colorHover: 'rgba(144, 147, 153, 0.5)',
+        titleBar: {
+            backgroundColor: 'rgb(53,53,53)',
+            btnHoverBackgroundColor: 'rgb(106,106,106)',
+            closeBtnHoverBackgroundColor: 'rgb(131,55,55)',
         },
-        switch: {
-            railColor: 'rgba(144, 147, 153, 0.3)',
-            railColorActive: 'rgba(144, 147, 153, 0.5)',
-            buttonColor: 'rgba(255,255,255,1)',
+        menuBar: {
+            background: 'rgba(28,28,28,1)',
+            itemActive: 'rgb(64,64,64)',
+            itemHover: 'rgba(45,45,45,1)',
         },
-        slider: {
-            railColor: 'rgba(144, 147, 153, 0.3)',
+        customCard: {
+            background: 'rgb(53,53,53)',
+            backgroundHover: 'rgb(64,64,64)',
         },
         wavesurfer: {
             waveColor: 'rgb(83,83,83)',
             cursorColor: 'rgb(163,163,163)',
             progressColor: 'rgb(50,50,50)',
-        },
-        tooltip: {
-            color: 'rgb(53,53,53)',
         },
         editor: {
             backgroundColor: 'rgb(35,35,35)',

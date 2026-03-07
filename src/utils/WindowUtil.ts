@@ -71,12 +71,11 @@ export async function createWin(options: WebViewWindowOptions) {
     })
 }
 
-
 /**
  * 打开设置窗口
  */
-export function openSettingsWindow() {
-    return createWin({
+export async function openSettingsWindow() {
+    await createWin({
         label: 'settings',
         title: currentLanguage.value.pages.settings.title,
         url: '/settings',
@@ -90,8 +89,8 @@ export function openSettingsWindow() {
 /**
  * 打开标签窗口
  */
-export function openTagsWindow() {
-    return createWin({
+export async function openTagsWindow() {
+    await createWin({
         label: 'tags',
         title: currentLanguage.value.pages.tags.title,
         url: '/tags',
@@ -105,8 +104,8 @@ export function openTagsWindow() {
 /**
  * 打开关于窗口
  */
-export function openAboutWindow() {
-    return createWin({
+export async function openAboutWindow() {
+    await createWin({
         label: 'about',
         title: currentLanguage.value.pages.about.title,
         url: '/about',
@@ -119,27 +118,13 @@ export function openAboutWindow() {
 /**
  * 打开更新窗口
  */
-export function openUpdaterWindow() {
-    return createWin({
+export async function openUpdaterWindow() {
+    await createWin({
         label: 'updater',
         title: currentLanguage.value.pages.update.title,
         url: '/updater',
         width: 600,
         height: 500,
-        resizable: false
-    })
-}
-
-/**
- * 打开图标预览窗口
- */
-export function openIconPreviewWindow() {
-    return createWin({
-        label: 'icon-preview',
-        title: "图标预览",
-        url: '/icon-preview',
-        width: 1000,
-        height: 700,
         resizable: false
     })
 }
@@ -167,7 +152,7 @@ export async function openPreviewWindow(filePath: string, isFolder: boolean) {
 }
 
 /**
- * 文件预览
+ * 打开文本编辑窗口
  */
 export async function openItemEditWindow(itemId: number) {
     const existWin = await WebviewWindow.getByLabel("item-editor");
@@ -191,8 +176,8 @@ export async function openItemEditWindow(itemId: number) {
 /**
  * 打开插件商店窗口
  */
-export function openPluginStoreWindow() {
-    return createWin({
+export async function openPluginStoreWindow() {
+    await createWin({
         label: 'plugin-store',
         title: currentLanguage.value.pages.settings.title,
         url: '/plugin-store',
@@ -201,4 +186,23 @@ export function openPluginStoreWindow() {
         minWidth: 650,
         minHeight: 500
     })
+}
+
+/**
+ * 打开主题编辑器窗口
+ */
+export async function openThemeEditorWindow() {
+    await createWin({
+        label: 'theme-editor',
+        title: currentLanguage.value.pages.settings.themeEditor.title,
+        url: '/theme-editor',
+        width: 1000,
+        height: 700,
+        minWidth: 1000,
+        minHeight: 700
+    })
+    // setTimeout(async () => {
+    //     await invoke('open_dev_tool', {windowName: 'theme-editor'});
+    // }, 200)
+
 }
