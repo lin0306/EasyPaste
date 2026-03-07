@@ -187,10 +187,10 @@ jobs:
           MACOS_URL=""
           WIN_URL=""
           if [ -n "$MACOS_ARTIFACT" ]; then
-            MACOS_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$MACOS_ARTIFACT")"
+            MACOS_URL="https://gh.llkk.cc/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$MACOS_ARTIFACT")"
           fi
           if [ -n "$WIN_ARTIFACT" ]; then
-            WIN_URL="https://gh-proxy.com/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$WIN_ARTIFACT")"
+            WIN_URL="https://gh.llkk.cc/https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$(basename "$WIN_ARTIFACT")"
           fi
 
           # 获取签名内容
