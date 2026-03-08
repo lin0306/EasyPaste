@@ -1,1 +1,6 @@
-declare interface PackageInfo {    path: string;    dir: boolean;    date: Date;    size: number;}
+declare interface PackageInfo {
+  path: string
+  dir: boolean
+  date: Date
+  size: number
+}

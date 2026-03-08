@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+*.local
+.DS_Store
+src-tauri/target
+src-tauri/**/*.d.ts
+.idea
+.vscode
+.rs
+.toml
+src-tauri/gen/.*
+src-tauri/config/.*
+pnpm-lock.yaml

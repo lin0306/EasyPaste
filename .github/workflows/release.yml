@@ -4,8 +4,8 @@ name: Tauri 2 Release
 on:
   push:
     tags:
-      - 'v*'  # 当推送以v开头的标签时触发
-  workflow_dispatch:  # 允许手动触发
+      - 'v*' # 当推送以v开头的标签时触发
+  workflow_dispatch: # 允许手动触发
     inputs:
       update_notes:
         type: string
@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ macos-latest, windows-latest ]
+        platform: [macos-latest, windows-latest]
         include:
           - platform: macos-latest
             rust-target: aarch64-apple-darwin
@@ -116,7 +116,7 @@ jobs:
 
   # 代码发布
   release:
-    needs: [ setup, build ]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -129,7 +129,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: "App ${{ github.ref_name }}"
+          name: 'App ${{ github.ref_name }}'
           body: ${{ github.event.inputs.update_notes }}
           draft: false # 是否生成release草稿
           prerelease: false # 是否生成预发布包
@@ -228,7 +228,7 @@ jobs:
 
           # 控制台打印json内容
           echo $PLATFORMS_JSON
-          
+
           ESCAPED_PLATFORMS_JSON=$(echo "$PLATFORMS_JSON" | jq -c '.')
 
           echo "PLATFORMS_JSON=$ESCAPED_PLATFORMS_JSON" >> $GITHUB_OUTPUT
@@ -244,7 +244,7 @@ jobs:
             "platforms": ${{ steps.find_assets.outputs.PLATFORMS_JSON }}
           }
           EOF
-          
+
           cat latest.json
 
       - name: Commit and push changes

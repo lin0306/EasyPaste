@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {isMac} from "../../../data/SystemParams.ts";
-import {openLink} from "../../../utils/LinkUtil.ts";
+import { isMac } from '../../../data/SystemParams.ts'
+import { openLink } from '../../../utils/LinkUtil.ts'
 import {
   currentConfig,
   currentShortcutKeys,
@@ -12,62 +12,67 @@ import {
   replaceGlobalHotkeyLoading,
   systemClipboardEnable,
   systemClipboardKeyOccupied,
-  systemClipboardKeysRegistered
-} from "../composables/SettingsDataComposable.ts";
-import {currentLanguage, getTray, languages, toggleLanguage} from "../../../services/LanguageService.ts";
-import {onMounted, ref} from "vue";
+  systemClipboardKeysRegistered,
+} from '../composables/SettingsDataComposable.ts'
+import {
+  currentLanguage,
+  getTray,
+  languages,
+  toggleLanguage,
+} from '../../../services/LanguageService.ts'
+import { onMounted, ref } from 'vue'
 import {
   getLanguage,
   getPowerOnSelfStart,
   getReplaceGlobalHotkey,
   saveLanguage,
   savePowerOnSelfStart,
-  saveReplaceGlobalHotkey
-} from "../../../store/Settings.ts";
-import {disable, enable, isEnabled} from "@tauri-apps/plugin-autostart";
-import {error, info} from "@tauri-apps/plugin-log";
-import {emit} from "@tauri-apps/api/event";
-import {invoke} from "@tauri-apps/api/core";
-import {convertRegisterKeys} from "../../../utils/ShortcutKeysUtil.ts";
-import {isRegistered, register, unregister} from "@tauri-apps/plugin-global-shortcut";
-import {saveLanguageCache} from "../../../services/FileService.ts";
-import {useMessage} from "naive-ui";
-import {getWakeUpRoutine} from "../../../store/ShortcutKeys.ts";
+  saveReplaceGlobalHotkey,
+} from '../../../store/Settings.ts'
+import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart'
+import { error, info } from '@tauri-apps/plugin-log'
+import { emit } from '@tauri-apps/api/event'
+import { invoke } from '@tauri-apps/api/core'
+import { convertRegisterKeys } from '../../../utils/ShortcutKeysUtil.ts'
+import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-shortcut'
+import { saveLanguageCache } from '../../../services/FileService.ts'
+import { useMessage } from 'naive-ui'
+import { getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
 
-const message = useMessage();
+const message = useMessage()
 
 // 语言选项
 const languageOptions = languages.map(lang => ({
   value: lang.id,
-  label: lang.name
-}));
+  label: lang.name,
+}))
 
 // 重启确认弹窗状态
-const restartModalVisible = ref(false);
+const restartModalVisible = ref(false)
 
 /**
  * 更新系统快捷键
  */
 const updateToSystemShortcutKeys = async (): Promise<void> => {
-  const key = ['meta', 'v'];
+  const key = ['meta', 'v']
   // 没有找到注册表配置，直接修改快捷键
-  info("唤醒程序快捷键已修改，重新注册");
+  info('唤醒程序快捷键已修改，重新注册')
 
   // 注销快捷键
   try {
-    const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
-    const registerKey = convertRegisterKeys(keys);
+    const keys: string[] = originalShortcutKeys.wakeUpRoutine.key
+    const registerKey = convertRegisterKeys(keys)
     if (await isRegistered(registerKey)) {
       // 如果已经注册了快捷键，需要先取消注册，再重新注册
-      await unregister(registerKey);
+      await unregister(registerKey)
     }
   } catch (e) {
-    info("快捷键注销失败" + e);
+    info('快捷键注销失败' + e)
   }
 
   // 修改快捷键
-  currentShortcutKeys.wakeUpRoutine.key = key;
-  await emit('update-open-window-key', {keys: currentShortcutKeys});
+  currentShortcutKeys.wakeUpRoutine.key = key
+  await emit('update-open-window-key', { keys: currentShortcutKeys })
 }
 
 /**
@@ -75,27 +80,27 @@ const updateToSystemShortcutKeys = async (): Promise<void> => {
  * @param powerOnSelfStart 是否开机自启
  */
 const onChangePowerOnSelfStart = async (powerOnSelfStart: boolean): Promise<void> => {
-  onLoading.value = true;
+  onLoading.value = true
   try {
-    await savePowerOnSelfStart(powerOnSelfStart);
-    const enabled = await isEnabled();
+    await savePowerOnSelfStart(powerOnSelfStart)
+    const enabled = await isEnabled()
     if (powerOnSelfStart !== enabled) {
       if (powerOnSelfStart) {
         // 启用自启动
-        await enable();
+        await enable()
       } else {
         // 禁用自启动
-        await disable();
+        await disable()
       }
     }
-    originalConfig.powerOnSelfStart = powerOnSelfStart;
-    currentConfig.powerOnSelfStart = powerOnSelfStart;
+    originalConfig.powerOnSelfStart = powerOnSelfStart
+    currentConfig.powerOnSelfStart = powerOnSelfStart
   } catch (e) {
-    error('修改自启动设置出错:' + e);
-    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
-    currentConfig.powerOnSelfStart = originalConfig.powerOnSelfStart;
+    error('修改自启动设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.powerOnSelfStart = originalConfig.powerOnSelfStart
   } finally {
-    onLoading.value = false;
+    onLoading.value = false
   }
 }
 
@@ -104,79 +109,79 @@ const onChangePowerOnSelfStart = async (powerOnSelfStart: boolean): Promise<void
  * @param replaceGlobalHotkey 是否替换全局热键
  */
 const onChangeReplaceGlobalHotkey = async (replaceGlobalHotkey: boolean): Promise<void> => {
-  onLoading.value = true;
+  onLoading.value = true
   try {
     // 打开替换全局热键
     if (currentConfig.replaceGlobalHotkey) {
-      const enable = await invoke<boolean>('valid_clipboard_regedit');
+      const enable = await invoke<boolean>('valid_clipboard_regedit')
       if (!enable) {
-        await updateToSystemShortcutKeys();
+        await updateToSystemShortcutKeys()
       } else {
         // 有找到注册表配置，需要修改注册表，再修改快捷键
-        const backupResult = await invoke<boolean>('backup_clipboard_regedit');
+        const backupResult = await invoke<boolean>('backup_clipboard_regedit')
         if (!backupResult) {
-          console.log("备份注册表失败");
-          message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg);
+          console.log('备份注册表失败')
+          message.error(currentLanguage.value.pages.settings.enableReplaceGlobalHotkeyFailedMsg)
           // 回滚【替换全局热键】设置
-          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
-          return;
+          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey
+          return
         } else {
-          await updateToSystemShortcutKeys();
+          await updateToSystemShortcutKeys()
           // 显示重启确认弹窗
-          restartModalVisible.value = true;
+          restartModalVisible.value = true
         }
       }
     } else {
       // 关闭全局热键，重置快捷键
-      info("唤醒程序快捷键已修改，重新注册");
-      const valid = await invoke<boolean>('valid_clipboard_backup_regedit');
-      let isBackupSuccess = true;
+      info('唤醒程序快捷键已修改，重新注册')
+      const valid = await invoke<boolean>('valid_clipboard_backup_regedit')
+      let isBackupSuccess = true
       if (valid) {
         // 恢复注册表配置
-        const backupResult = await invoke<boolean>('recover_clipboard_regedit');
+        const backupResult = await invoke<boolean>('recover_clipboard_regedit')
         if (!backupResult) {
-          console.log("恢复注册表失败");
-          message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg);
+          console.log('恢复注册表失败')
+          message.error(currentLanguage.value.pages.settings.disableReplaceGlobalHotkeyFailedMsg)
           // 回滚【替换全局热键】设置
-          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey;
-          isBackupSuccess = false;
+          currentConfig.replaceGlobalHotkey = !currentConfig.replaceGlobalHotkey
+          isBackupSuccess = false
         }
       }
 
       if (isBackupSuccess) {
         // 注销快捷键
         try {
-          const keys: string[] = originalShortcutKeys.wakeUpRoutine.key;
-          const registerKey = convertRegisterKeys(keys);
+          const keys: string[] = originalShortcutKeys.wakeUpRoutine.key
+          const registerKey = convertRegisterKeys(keys)
           if (await isRegistered(registerKey)) {
             // 如果已经注册了快捷键，需要先取消注册，再重新注册
-            await unregister(registerKey);
+            await unregister(registerKey)
           }
         } catch (e) {
-          info("快捷键注销失败" + e);
+          info('快捷键注销失败' + e)
         }
 
         // 修改快捷键
-        currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c'];
-        await emit('update-open-window-key', {keys: currentShortcutKeys});
+        currentShortcutKeys.wakeUpRoutine.key = ['alt', 'c']
+        await emit('update-open-window-key', { keys: currentShortcutKeys })
 
         if (valid) {
           // 显示重启确认弹窗
-          restartModalVisible.value = true;
+          restartModalVisible.value = true
         }
       } else {
-        return;
+        return
       }
     }
-    await saveReplaceGlobalHotkey(replaceGlobalHotkey);
-    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey;
-    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+    await saveReplaceGlobalHotkey(replaceGlobalHotkey)
+    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey
+    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey
   } catch (e) {
-    error('修改窗口置顶设置出错:' + e);
-    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
-    currentConfig.replaceGlobalHotkey = originalConfig.replaceGlobalHotkey;
+    error('修改窗口置顶设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.replaceGlobalHotkey = originalConfig.replaceGlobalHotkey
   } finally {
-    onLoading.value = false;
+    onLoading.value = false
   }
 }
 
@@ -187,25 +192,25 @@ const onChangeReplaceGlobalHotkey = async (replaceGlobalHotkey: boolean): Promis
 const onChangeLanguages = async (languages: string): Promise<void> => {
   if (languages === originalConfig.languages) {
     // 忽略点击重复项的情况
-    return;
+    return
   }
-  onLoading.value = true;
+  onLoading.value = true
   try {
-    await saveLanguage(languages);
+    await saveLanguage(languages)
     // 更新语言
-    await toggleLanguage(currentConfig.languages);
+    await toggleLanguage(currentConfig.languages)
     // 保存语言
-    await saveLanguageCache(getTray(currentConfig.languages));
+    await saveLanguageCache(getTray(currentConfig.languages))
     // 重新加载托盘菜单
-    await invoke('reload_tray_menu');
-    originalConfig.languages = languages;
-    currentConfig.languages = languages;
+    await invoke('reload_tray_menu')
+    originalConfig.languages = languages
+    currentConfig.languages = languages
   } catch (e) {
-    error('修改语言设置出错:' + e);
-    message.error(currentLanguage.value.pages.settings.saveFailedMsg);
-    currentConfig.languages = originalConfig.languages;
+    error('修改语言设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.languages = originalConfig.languages
   } finally {
-    onLoading.value = false;
+    onLoading.value = false
   }
 }
 
@@ -213,25 +218,24 @@ const onChangeLanguages = async (languages: string): Promise<void> => {
  * 重启电脑
  */
 const handleRestart = async (): Promise<void> => {
-  restartModalVisible.value = false;
+  restartModalVisible.value = false
 
-  await invoke('restart_computer');
+  await invoke('restart_computer')
 }
 
 /**
  * 点击刷新按钮，重新获取系统剪贴板快捷键占用情况
  */
 const handleClickRefreshReplaceGlobalHotkeyStatus = (): void => {
-  replaceGlobalHotkeyLoading.value = true;
-  replaceGlobalHotkeyLoaded.value = false;
+  replaceGlobalHotkeyLoading.value = true
+  replaceGlobalHotkeyLoaded.value = false
 
   // 执行刷新逻辑
-  checkSystemClipboardKeyOccupied()
-      .catch(e => {
-        console.error('后台加载系统剪贴板状态失败:', e);
-        error("后台加载系统剪贴板状态失败：" + e);
-        message.error(currentLanguage.value.pages.settings.initFailedHint);
-      });
+  checkSystemClipboardKeyOccupied().catch(e => {
+    console.error('后台加载系统剪贴板状态失败:', e)
+    error('后台加载系统剪贴板状态失败：' + e)
+    message.error(currentLanguage.value.pages.settings.initFailedHint)
+  })
 }
 
 /**
@@ -239,34 +243,34 @@ const handleClickRefreshReplaceGlobalHotkeyStatus = (): void => {
  */
 const checkSystemClipboardKeyOccupied = async (): Promise<void> => {
   try {
-    info("加载系统剪贴板快捷键占用情况")
-    const wakeUpRoutineKey = await getWakeUpRoutine();
+    info('加载系统剪贴板快捷键占用情况')
+    const wakeUpRoutineKey = await getWakeUpRoutine()
     // 系统剪贴板快捷键占用检查
-    systemClipboardKeyOccupied.value = JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(['meta', 'v']);
+    systemClipboardKeyOccupied.value =
+      JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(['meta', 'v'])
     if (!systemClipboardKeyOccupied.value) {
       // 检测系统剪贴板快捷键是否可用
-      systemClipboardEnable.value = await invoke('valid_clipboard_regedit');
+      systemClipboardEnable.value = await invoke('valid_clipboard_regedit')
       if (!systemClipboardEnable.value) {
-        const key = ['meta', 'v'];
+        const key = ['meta', 'v']
         try {
-          await register(convertRegisterKeys(key), () => {
-          });
-          systemClipboardKeysRegistered.value = false;
-          await unregister(convertRegisterKeys(key));
+          await register(convertRegisterKeys(key), () => {})
+          systemClipboardKeysRegistered.value = false
+          await unregister(convertRegisterKeys(key))
         } catch (e) {
-          systemClipboardKeysRegistered.value = true;
+          systemClipboardKeysRegistered.value = true
         }
       } else {
-        isAdminStart.value = await invoke('check_admin');
+        isAdminStart.value = await invoke('check_admin')
       }
     }
   } catch (e) {
-    error("加载系统剪贴板快捷键占用情况出错：" + e);
-    console.error('加载系统剪贴板快捷键占用情况出错:', e);
+    error('加载系统剪贴板快捷键占用情况出错：' + e)
+    console.error('加载系统剪贴板快捷键占用情况出错:', e)
   } finally {
-    replaceGlobalHotkeyLoading.value = false;
-    replaceGlobalHotkeyLoaded.value = true;
-    info("系统剪贴板快捷键占用情况加载完毕");
+    replaceGlobalHotkeyLoading.value = false
+    replaceGlobalHotkeyLoaded.value = true
+    info('系统剪贴板快捷键占用情况加载完毕')
   }
 }
 
@@ -274,33 +278,32 @@ const checkSystemClipboardKeyOccupied = async (): Promise<void> => {
 onMounted(async () => {
   try {
     // 初始化用户配置
-    const powerOnSelfStart = await getPowerOnSelfStart();
-    originalConfig.powerOnSelfStart = powerOnSelfStart;
-    currentConfig.powerOnSelfStart = powerOnSelfStart;
+    const powerOnSelfStart = await getPowerOnSelfStart()
+    originalConfig.powerOnSelfStart = powerOnSelfStart
+    currentConfig.powerOnSelfStart = powerOnSelfStart
 
-    const replaceGlobalHotkey = await getReplaceGlobalHotkey();
-    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey;
-    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey;
+    const replaceGlobalHotkey = await getReplaceGlobalHotkey()
+    originalConfig.replaceGlobalHotkey = replaceGlobalHotkey
+    currentConfig.replaceGlobalHotkey = replaceGlobalHotkey
 
-    const languages = await getLanguage();
-    originalConfig.languages = languages;
-    currentConfig.languages = languages;
+    const languages = await getLanguage()
+    originalConfig.languages = languages
+    currentConfig.languages = languages
 
     // 只加载一次
     if (!isMac && !replaceGlobalHotkeyLoaded.value) {
-      checkSystemClipboardKeyOccupied()
-          .catch(e => {
-            console.error('后台加载系统剪贴板状态失败:', e);
-            error("后台加载系统剪贴板状态失败：" + e);
-            message.error(currentLanguage.value.pages.settings.initFailedHint);
-          });
+      checkSystemClipboardKeyOccupied().catch(e => {
+        console.error('后台加载系统剪贴板状态失败:', e)
+        error('后台加载系统剪贴板状态失败：' + e)
+        message.error(currentLanguage.value.pages.settings.initFailedHint)
+      })
     }
   } catch (e) {
-    console.error('页面初始化失败:', e);
-    error("页面初始化失败：" + e);
-    message.error(currentLanguage.value.pages.settings.initFailedHint);
+    console.error('页面初始化失败:', e)
+    error('页面初始化失败：' + e)
+    message.error(currentLanguage.value.pages.settings.initFailedHint)
   }
-});
+})
 </script>
 
 <template>
@@ -308,10 +311,11 @@ onMounted(async () => {
     <n-divider title-placement="left">{{ currentLanguage.pages.settings.programTitle }}</n-divider>
     <div class="form-item">
       <span class="label">{{ currentLanguage.pages.settings.powerOnSelfStart }}</span>
-      <n-switch v-model:value="currentConfig.powerOnSelfStart"
-                :loading="onLoading"
-                :disabled="onLoading"
-                @update:value="onChangePowerOnSelfStart"
+      <n-switch
+        v-model:value="currentConfig.powerOnSelfStart"
+        :loading="onLoading"
+        :disabled="onLoading"
+        @update:value="onChangePowerOnSelfStart"
       />
     </div>
     <div class="line" v-if="!isMac">
@@ -319,41 +323,65 @@ onMounted(async () => {
         <span class="label">
           {{ currentLanguage.pages.settings.replaceGlobalHotkey }}
           <font-awesome-icon
-              icon="fa-solid fa-arrow-rotate-right"
-              v-if="replaceGlobalHotkeyLoaded"
-              class="refresh-icon"
-              @click="handleClickRefreshReplaceGlobalHotkeyStatus"/>
+            icon="fa-solid fa-arrow-rotate-right"
+            v-if="replaceGlobalHotkeyLoaded"
+            class="refresh-icon"
+            @click="handleClickRefreshReplaceGlobalHotkeyStatus"
+          />
         </span>
-        <n-switch v-model:value="currentConfig.replaceGlobalHotkey"
-                  :disabled="(systemClipboardEnable && !isAdminStart) || (!systemClipboardEnable && !systemClipboardKeyOccupied && systemClipboardKeysRegistered) || onLoading"
-                  :loading="onLoading || replaceGlobalHotkeyLoading"
-                  @update:value="onChangeReplaceGlobalHotkey"
+        <n-switch
+          v-model:value="currentConfig.replaceGlobalHotkey"
+          :disabled="
+            (systemClipboardEnable && !isAdminStart) ||
+            (!systemClipboardEnable &&
+              !systemClipboardKeyOccupied &&
+              systemClipboardKeysRegistered) ||
+            onLoading
+          "
+          :loading="onLoading || replaceGlobalHotkeyLoading"
+          @update:value="onChangeReplaceGlobalHotkey"
         />
       </div>
-      <div class="second-item"
-           v-if="!systemClipboardKeyOccupied && !systemClipboardEnable && systemClipboardKeysRegistered && !replaceGlobalHotkeyLoading">
+      <div
+        class="second-item"
+        v-if="
+          !systemClipboardKeyOccupied &&
+          !systemClipboardEnable &&
+          systemClipboardKeysRegistered &&
+          !replaceGlobalHotkeyLoading
+        "
+      >
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon"/>
+          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
           <span class="hint-text">
-                  {{ currentLanguage.pages.settings.shortcutKeyOccupationHint }}
-                </span>
+            {{ currentLanguage.pages.settings.shortcutKeyOccupationHint }}
+          </span>
         </div>
       </div>
-      <div class="second-item" v-else-if="systemClipboardEnable && !isAdminStart  && !replaceGlobalHotkeyLoading">
+      <div
+        class="second-item"
+        v-else-if="systemClipboardEnable && !isAdminStart && !replaceGlobalHotkeyLoading"
+      >
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon"/>
+          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
           <span class="hint-text">
-                  {{ currentLanguage.pages.settings.replaceGlobalHotkeyNoPermissionHint }}
-                  <a href="#"
-                     @click="openLink('https://github.com/lin0306/EasyPaste/blob/master/doc/FAQ/rights_of_administrators/rights_of_administrators.md')">
-                    {{ currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint }}
-                  </a>
-                </span>
+            {{ currentLanguage.pages.settings.replaceGlobalHotkeyNoPermissionHint }}
+            <a
+              href="#"
+              @click="
+                openLink(
+                  'https://github.com/lin0306/EasyPaste/blob/master/doc/FAQ/rights_of_administrators/rights_of_administrators.md'
+                )
+              "
+            >
+              {{ currentLanguage.pages.settings.replaceGlobalHotkeyLinkHint }}
+            </a>
+          </span>
         </div>
       </div>
       <div class="second-item" v-else-if="!replaceGlobalHotkeyLoading">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon"/>
+          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }}
           </span>
@@ -362,18 +390,22 @@ onMounted(async () => {
     </div>
     <div class="form-item">
       <span class="label">{{ currentLanguage.pages.settings.languages }}</span>
-      <n-select class="select"
-                v-model:value="currentConfig.languages"
-                :options="languageOptions"
-                :loading="onLoading"
-                :disabled="onLoading"
-                @update:value="onChangeLanguages"
+      <n-select
+        class="select"
+        v-model:value="currentConfig.languages"
+        :options="languageOptions"
+        :loading="onLoading"
+        :disabled="onLoading"
+        @update:value="onChangeLanguages"
       />
     </div>
 
     <!-- 重启确认弹窗 -->
-    <n-modal v-model:show="restartModalVisible" :title="currentLanguage.pages.settings.restartModalTitle"
-             preset="dialog">
+    <n-modal
+      v-model:show="restartModalVisible"
+      :title="currentLanguage.pages.settings.restartModalTitle"
+      preset="dialog"
+    >
       <p>{{ currentLanguage.pages.settings.restartModalContent }}</p>
       <template #action>
         <n-button @click="restartModalVisible = false">
@@ -387,6 +419,4 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,1 +1,174 @@
-import {loadPluginManifest} from "../../../services/PluginService.ts";import {currentLanguage, languages} from "../../../services/LanguageService.ts";import {WebviewWindow} from "@tauri-apps/api/webviewWindow";import {emit, listen, UnlistenFn} from "@tauri-apps/api/event";import {createWin} from "../../../services/WindowService.ts";import {imageContextMenus} from "./WindowComposable.ts";import {error, info} from "@tauri-apps/plugin-log";import ClipboardDBService from "../../../services/ClipboardDBService.ts";async function initPlugins(): Promise<void> {    const db = await ClipboardDBService.getInstance();    const plugins: LocalPlugin[] = await db.searchPlugins(undefined, "list");    console.log("加载列表页面所有插件", plugins)    if (plugins && plugins.length > 0) {        for (const p of plugins) {            await loadPlugin(p.plugin_id);        }    }}/** * 加载插件 * @param pluginId 插件ID */async function loadPlugin(pluginId: string): Promise<void> {    const manifestJson = await loadPluginManifest(pluginId);    console.log("加载" + pluginId, manifestJson)    const features = manifestJson.features;    if (features) {        for (let feature of features) {            if (feature.page && feature.page === "list") {                if (feature.type && feature.type === "contextMenu") {                    if (feature.location && feature.location === "image") {                        if (feature.menus && feature.menus.length > 0) {                            for (let menu of feature.menus) {                                console.log("加载 " + pluginId + " 右键菜单", menu)                                // 设置语言                                for (let language of languages) {                                    if (language.id === "chinese") {                                        language.pages.plugins[menu.menuId] = menu.label_ZH;                                    }                                    if (language.id === "english") {                                        language.pages.plugins[menu.menuId] = menu.label_EN;                                    }                                    if (currentLanguage.value.id === language.id) {                                        currentLanguage.value.pages.plugins[menu.menuId] = language.pages.plugins[menu.menuId];                                    }                                }                                // 设置点击打开窗口事件                                if (menu.click_fun && menu.click_fun.type === "openWindow") {                                    const clickFun = async (params: Map<string, any>) => {                                        console.log("触发自定义右键菜单点击事件", params)                                        const existWin = await WebviewWindow.getByLabel("plugins");                                        if (existWin) {                                            const obj = Object.fromEntries(params);                                            await emit('reload-' + menu.menuId, obj);                                            await existWin.show();                                            await existWin.setFocus();                                        } else {                                            // 设置传参                                            let str = "";                                            for (let [k, v] of params) {                                                // 使用传入的参数值构建查询字符串                                                str += `${k}=${encodeURIComponent(v)}&`;                                            }                                            await createWin({                                                label: "plugins",                                                title: currentLanguage.value.pages.preview.title,                                                url: "/plugin-view?pluginId=" + pluginId + "&" + str,                                                width: menu.click_fun.width,                                                height: menu.click_fun.height,                                                resizable: true,                                                visible: true,                                            });                                        }                                    };                                    // 设置图片右键菜单项                                    imageContextMenus.value.push({                                        label: menu.menuId,                                        params: menu.click_fun.params,                                        onClick: clickFun                                    });                                }                            }                        }                    }                }            }        }    }}/** * 移除插件 * @param pluginId 插件ID */async function removePlugin(pluginId: string): Promise<void> {    const manifestJson = await loadPluginManifest(pluginId);    console.log("加载" + pluginId, manifestJson)    const features = manifestJson.features;    if (features) {        for (let feature of features) {            if (feature.page && feature.page === "list") {                if (feature.type && feature.type === "contextMenu") {                    if (feature.location && feature.location === "image") {                        if (feature.menus && feature.menus.length > 0) {                            for (let menu of feature.menus) {                                console.log("删除 " + pluginId + " 右键菜单", menu)                                // 设置点击打开窗口事件                                if (menu.click_fun && menu.click_fun.type === "openWindow") {                                    // 删除图片右键菜单项                                    imageContextMenus.value = imageContextMenus.value.filter(item => item.label !== menu.menuId);                                }                            }                        }                    }                }            }        }    }}/** * 初始化插件安装监听器 */let installPluginListener: any = null;function initInstallPluginListener(): Promise<UnlistenFn> {    return listen('install-plugin', async (event: any) => {        console.log("安装插件", event);        const pluginId = event.payload.pluginId;        await loadPlugin(pluginId);    });}/** * 初始化插件卸载监听器 */let uninstallPluginListener: any = null;function initUninstallPluginListener(): Promise<UnlistenFn> {    return listen('uninstall-plugin', async (event: any) => {        console.log("卸载插件", event);        const pluginId = event.payload.pluginId;        await removePlugin(pluginId);    });}export const initializePlugins = async (): Promise<void> => {    try {        await initPlugins();        // 添加插件安装事件监听        installPluginListener = initInstallPluginListener();        // 添加插件卸载事件监听        uninstallPluginListener = initUninstallPluginListener();        info("插件加载完成");    } catch (e) {        error("插件加载失败");    }}export const destroyPlugins = async (): Promise<void> => {    // 移除插件安装事件监听    if (installPluginListener) {        await installPluginListener();    }    // 移除插件卸载事件监听    if (uninstallPluginListener) {        await uninstallPluginListener();    }}
+import { loadPluginManifest } from '../../../services/PluginService.ts'
+import { currentLanguage, languages } from '../../../services/LanguageService.ts'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
+import { createWin } from '../../../services/WindowService.ts'
+import { imageContextMenus } from './WindowComposable.ts'
+import { error, info } from '@tauri-apps/plugin-log'
+import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+
+async function initPlugins(): Promise<void> {
+  const db = await ClipboardDBService.getInstance()
+  const plugins: LocalPlugin[] = await db.searchPlugins(undefined, 'list')
+  console.log('加载列表页面所有插件', plugins)
+  if (plugins && plugins.length > 0) {
+    for (const p of plugins) {
+      await loadPlugin(p.plugin_id)
+    }
+  }
+}
+
+/**
+ * 加载插件
+ * @param pluginId 插件ID
+ */
+async function loadPlugin(pluginId: string): Promise<void> {
+  const manifestJson = await loadPluginManifest(pluginId)
+  console.log('加载' + pluginId, manifestJson)
+  const features = manifestJson.features
+  if (features) {
+    for (let feature of features) {
+      if (feature.page && feature.page === 'list') {
+        if (feature.type && feature.type === 'contextMenu') {
+          if (feature.location && feature.location === 'image') {
+            if (feature.menus && feature.menus.length > 0) {
+              for (let menu of feature.menus) {
+                console.log('加载 ' + pluginId + ' 右键菜单', menu)
+                // 设置语言
+                for (let language of languages) {
+                  if (language.id === 'chinese') {
+                    language.pages.plugins[menu.menuId] = menu.label_ZH
+                  }
+                  if (language.id === 'english') {
+                    language.pages.plugins[menu.menuId] = menu.label_EN
+                  }
+                  if (currentLanguage.value.id === language.id) {
+                    currentLanguage.value.pages.plugins[menu.menuId] =
+                      language.pages.plugins[menu.menuId]
+                  }
+                }
+                // 设置点击打开窗口事件
+                if (menu.click_fun && menu.click_fun.type === 'openWindow') {
+                  const clickFun = async (params: Map<string, any>) => {
+                    console.log('触发自定义右键菜单点击事件', params)
+                    const existWin = await WebviewWindow.getByLabel('plugins')
+                    if (existWin) {
+                      const obj = Object.fromEntries(params)
+                      await emit('reload-' + menu.menuId, obj)
+                      await existWin.show()
+                      await existWin.setFocus()
+                    } else {
+                      // 设置传参
+                      let str = ''
+                      for (let [k, v] of params) {
+                        // 使用传入的参数值构建查询字符串
+                        str += `${k}=${encodeURIComponent(v)}&`
+                      }
+                      await createWin({
+                        label: 'plugins',
+                        title: currentLanguage.value.pages.preview.title,
+                        url: '/plugin-view?pluginId=' + pluginId + '&' + str,
+                        width: menu.click_fun.width,
+                        height: menu.click_fun.height,
+                        resizable: true,
+                        visible: true,
+                      })
+                    }
+                  }
+                  // 设置图片右键菜单项
+                  imageContextMenus.value.push({
+                    label: menu.menuId,
+                    params: menu.click_fun.params,
+                    onClick: clickFun,
+                  })
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 移除插件
+ * @param pluginId 插件ID
+ */
+async function removePlugin(pluginId: string): Promise<void> {
+  const manifestJson = await loadPluginManifest(pluginId)
+  console.log('加载' + pluginId, manifestJson)
+  const features = manifestJson.features
+  if (features) {
+    for (let feature of features) {
+      if (feature.page && feature.page === 'list') {
+        if (feature.type && feature.type === 'contextMenu') {
+          if (feature.location && feature.location === 'image') {
+            if (feature.menus && feature.menus.length > 0) {
+              for (let menu of feature.menus) {
+                console.log('删除 ' + pluginId + ' 右键菜单', menu)
+                // 设置点击打开窗口事件
+                if (menu.click_fun && menu.click_fun.type === 'openWindow') {
+                  // 删除图片右键菜单项
+                  imageContextMenus.value = imageContextMenus.value.filter(
+                    item => item.label !== menu.menuId
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 初始化插件安装监听器
+ */
+let installPluginListener: any = null
+
+function initInstallPluginListener(): Promise<UnlistenFn> {
+  return listen('install-plugin', async (event: any) => {
+    console.log('安装插件', event)
+    const pluginId = event.payload.pluginId
+    await loadPlugin(pluginId)
+  })
+}
+
+/**
+ * 初始化插件卸载监听器
+ */
+let uninstallPluginListener: any = null
+
+function initUninstallPluginListener(): Promise<UnlistenFn> {
+  return listen('uninstall-plugin', async (event: any) => {
+    console.log('卸载插件', event)
+    const pluginId = event.payload.pluginId
+    await removePlugin(pluginId)
+  })
+}
+
+export const initializePlugins = async (): Promise<void> => {
+  try {
+    await initPlugins()
+    // 添加插件安装事件监听
+    installPluginListener = initInstallPluginListener()
+    // 添加插件卸载事件监听
+    uninstallPluginListener = initUninstallPluginListener()
+    info('插件加载完成')
+  } catch (e) {
+    error('插件加载失败')
+  }
+}
+
+export const destroyPlugins = async (): Promise<void> => {
+  // 移除插件安装事件监听
+  if (installPluginListener) {
+    await installPluginListener()
+  }
+  // 移除插件卸载事件监听
+  if (uninstallPluginListener) {
+    await uninstallPluginListener()
+  }
+}

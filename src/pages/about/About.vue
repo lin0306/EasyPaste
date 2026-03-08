@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import TitleBar from '../../components/TitleBar.vue';
+import TitleBar from '../../components/TitleBar.vue'
 
-import {getVersion} from '@tauri-apps/api/app';
-import {onMounted, ref} from 'vue';
-import {openLink} from "../../utils/LinkUtil.ts";
-import {currentLanguage} from "../../services/LanguageService.ts";
+import { getVersion } from '@tauri-apps/api/app'
+import { onMounted, ref } from 'vue'
+import { openLink } from '../../utils/LinkUtil.ts'
+import { currentLanguage } from '../../services/LanguageService.ts'
 
 // @ts-ignore
-const appVersion = ref<string>("");
+const appVersion = ref<string>('')
 
 onMounted(async () => {
-  appVersion.value = await getVersion();
-});
-
+  appVersion.value = await getVersion()
+})
 </script>
 <template>
-  <TitleBar :title="currentLanguage.pages.about.title" :showCloseBtn="true"
-            :dev-tool="`about`"/>
+  <TitleBar :title="currentLanguage.pages.about.title" :showCloseBtn="true" :dev-tool="`about`" />
 
   <div class="about-container">
-    <img src="/logo.svg" class="logo" alt="程序logo">
+    <img src="/logo.svg" class="logo" alt="程序logo" />
     <div class="app-name">{{ currentLanguage.pages.about.appName }}</div>
     <div class="version-info">{{ currentLanguage.pages.about.version }}: {{ appVersion }}</div>
     <div class="links-container">

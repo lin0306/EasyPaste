@@ -1,95 +1,99 @@
 <script setup lang="ts">
-import TitleBar from '../../components/TitleBar.vue';
+import TitleBar from '../../components/TitleBar.vue'
 
-import {check, Update} from '@tauri-apps/plugin-updater';
-import {onMounted, reactive, ref} from 'vue';
-import UpdaterService from '../../services/UpdaterService.ts';
-import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
-import {marked} from "marked";
-import {getRenderer} from "../../utils/MarkdownUtil.ts";
-import {openLink} from "../../utils/LinkUtil.ts";
-import {currentLanguage} from "../../services/LanguageService.ts";
+import { check, Update } from '@tauri-apps/plugin-updater'
+import { onMounted, reactive, ref } from 'vue'
+import UpdaterService from '../../services/UpdaterService.ts'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { marked } from 'marked'
+import { getRenderer } from '../../utils/MarkdownUtil.ts'
+import { openLink } from '../../utils/LinkUtil.ts'
+import { currentLanguage } from '../../services/LanguageService.ts'
 
 marked.setOptions({
   breaks: true,
   gfm: true,
-  renderer: getRenderer()
-});
+  renderer: getRenderer(),
+})
 
-let updater: Update;
+let updater: Update
 const updaterVer: UpdaterInfo = reactive({
   version: '',
   pubDate: '',
-  notes: ''
-});
-const onLoading = ref(true);
+  notes: '',
+})
+const onLoading = ref(true)
 
 // 下载状态
-const isDownloading = ref(false);
-const downloadState = ref<'unstart' | 'downloading' | 'completed' | 'failed'>('failed');
-const showDownloadFailedVisible = ref(false);
+const isDownloading = ref(false)
+const downloadState = ref<'unstart' | 'downloading' | 'completed' | 'failed'>('failed')
+const showDownloadFailedVisible = ref(false)
 
 // 下载信息
-const downloadedSize = ref<any>(0); // 已下载大小 (byte)
-const totalSize = ref<any>(0); // 总大小 (byte)
-let downloadSpeedCalculationInterval: NodeJS.Timeout | null = null;
-const downloadedSizeSnapshot = ref<any>(0); // 已下载大小快照 (byte)
-const downloadProgress = ref(0); // 下载进度（百分比）
-const downloadSpeed = ref<any>(0); // 下载速度 (KB/s)
-const downloadSpeedUnit = ref('KB/s'); // 下载速度单位
+const downloadedSize = ref<any>(0) // 已下载大小 (byte)
+const totalSize = ref<any>(0) // 总大小 (byte)
+let downloadSpeedCalculationInterval: NodeJS.Timeout | null = null
+const downloadedSizeSnapshot = ref<any>(0) // 已下载大小快照 (byte)
+const downloadProgress = ref(0) // 下载进度（百分比）
+const downloadSpeed = ref<any>(0) // 下载速度 (KB/s)
+const downloadSpeedUnit = ref('KB/s') // 下载速度单位
 
 // 打开 GitHub 发布页面
 const openGitHubReleases = (): void => {
-  openLink('https://github.com/lin0306/EasyPaste/releases');
+  openLink('https://github.com/lin0306/EasyPaste/releases')
 }
 
 // 下载更新
 const downloadUpdate = (): void => {
-  showDownloadFailedVisible.value = false;
-  downloadState.value = 'downloading';
-  downloadProgress.value = 0; // 初始化进度值
-  console.log('设置isDownloading为true', isDownloading.value);
+  showDownloadFailedVisible.value = false
+  downloadState.value = 'downloading'
+  downloadProgress.value = 0 // 初始化进度值
+  console.log('设置isDownloading为true', isDownloading.value)
   // 触发下载操作
   try {
-    UpdaterService.download(updater, (event) => {
-      switch (event.event) {
-        case "Started":
-          downloadState.value = 'downloading';
-          totalSize.value = event.data.contentLength
-          console.log('下载开始', event.data.contentLength);
-          startDownloadSpeedCalculationInterval();
-          break;
-        case "Progress":
-          downloadedSize.value = event.data.chunkLength + downloadedSize.value
-          console.log('下载进度', event.data.chunkLength);
-          if (totalSize.value <= 0) {
-            // 防止除以0或处理无效的总大小
-            return;
-          } else {
-            const progress = (downloadedSize.value / totalSize.value) * 100;
-            // 返回介于0到100之间的数值，避免超出范围的情况
-            downloadProgress.value = Math.min(100, Math.max(0, progress));
-          }
-          break;
-        case "Finished":
-          downloadState.value = 'completed';
-          console.log('下载完成');
-          // 窗口最小化了，下载完成后自动取消最小化
-          getCurrentWebviewWindow().unminimize();
-          getCurrentWebviewWindow().setFocus();
-          if (downloadSpeedCalculationInterval) {
-            clearInterval(downloadSpeedCalculationInterval);
-          }
-          break;
-      }
-    }, undefined);
+    UpdaterService.download(
+      updater,
+      event => {
+        switch (event.event) {
+          case 'Started':
+            downloadState.value = 'downloading'
+            totalSize.value = event.data.contentLength
+            console.log('下载开始', event.data.contentLength)
+            startDownloadSpeedCalculationInterval()
+            break
+          case 'Progress':
+            downloadedSize.value = event.data.chunkLength + downloadedSize.value
+            console.log('下载进度', event.data.chunkLength)
+            if (totalSize.value <= 0) {
+              // 防止除以0或处理无效的总大小
+              return
+            } else {
+              const progress = (downloadedSize.value / totalSize.value) * 100
+              // 返回介于0到100之间的数值，避免超出范围的情况
+              downloadProgress.value = Math.min(100, Math.max(0, progress))
+            }
+            break
+          case 'Finished':
+            downloadState.value = 'completed'
+            console.log('下载完成')
+            // 窗口最小化了，下载完成后自动取消最小化
+            getCurrentWebviewWindow().unminimize()
+            getCurrentWebviewWindow().setFocus()
+            if (downloadSpeedCalculationInterval) {
+              clearInterval(downloadSpeedCalculationInterval)
+            }
+            break
+        }
+      },
+      undefined
+    )
   } catch (e) {
-    console.log("下载失败", e)
+    console.log('下载失败', e)
     if (downloadSpeedCalculationInterval) {
-      clearInterval(downloadSpeedCalculationInterval);
+      clearInterval(downloadSpeedCalculationInterval)
     }
-    downloadState.value = 'failed';
-    showDownloadFailedVisible.value = true;
+    downloadState.value = 'failed'
+    showDownloadFailedVisible.value = true
   }
 }
 
@@ -98,61 +102,73 @@ const downloadUpdate = (): void => {
  */
 const startDownloadSpeedCalculationInterval = (): void => {
   downloadSpeedCalculationInterval = setInterval(() => {
-    const number = downloadedSize.value - downloadedSizeSnapshot.value;
+    const number = downloadedSize.value - downloadedSizeSnapshot.value
     if (number < 1024) {
-      downloadSpeed.value = number;
-      downloadSpeedUnit.value = 'B/s';
+      downloadSpeed.value = number
+      downloadSpeedUnit.value = 'B/s'
     } else if (number < 1024 * 1024) {
-      downloadSpeed.value = Number(number / 1024).toFixed(2);
-      downloadSpeedUnit.value = 'KB/s';
+      downloadSpeed.value = Number(number / 1024).toFixed(2)
+      downloadSpeedUnit.value = 'KB/s'
     } else {
-      downloadSpeed.value = Number(number / 1024 / 1024).toFixed(2);
-      downloadSpeedUnit.value = 'MB/s';
+      downloadSpeed.value = Number(number / 1024 / 1024).toFixed(2)
+      downloadSpeedUnit.value = 'MB/s'
     }
-    downloadedSizeSnapshot.value = downloadedSize.value;
-  }, 1000);
+    downloadedSizeSnapshot.value = downloadedSize.value
+  }, 1000)
 }
 
 // 立即安装更新并重启
 const installNow = (): void => {
   // 触发安装操作
-  UpdaterService.install(updater);
+  UpdaterService.install(updater)
 }
 
 onMounted(async () => {
-  const updateInfo = await check();
+  const updateInfo = await check()
   if (!updateInfo) {
-    return;
+    return
   }
-  updater = updateInfo;
-  console.log(updater);
-  updaterVer.version = updateInfo.version;
-  updaterVer.pubDate = updateInfo.date || '';
-  updaterVer.notes = await marked(updateInfo.body || '');
-  onLoading.value = false;
+  updater = updateInfo
+  console.log(updater)
+  updaterVer.version = updateInfo.version
+  updaterVer.pubDate = updateInfo.date || ''
+  updaterVer.notes = await marked(updateInfo.body || '')
+  onLoading.value = false
 })
-
 </script>
 <template>
   <div class="update-container">
-    <TitleBar :title="currentLanguage.pages.update.title" :showMinimizeBtn="true" :showCloseBtn="true"
-              :dev-tool="`updater`"/>
+    <TitleBar
+      :title="currentLanguage.pages.update.title"
+      :showMinimizeBtn="true"
+      :showCloseBtn="true"
+      :dev-tool="`updater`"
+    />
     <!-- 加载展示 -->
     <div v-if="onLoading" class="loading-container">
-      <n-spin/>
+      <n-spin />
     </div>
     <!-- 更新内容展示区域 -->
-    <div v-else class="update-content"
-         :style="{height: downloadState === 'downloading' ? `calc(100% - 160px)`: 'calc(100% - 120px)'}">
+    <div
+      v-else
+      class="update-content"
+      :style="{
+        height: downloadState === 'downloading' ? `calc(100% - 160px)` : 'calc(100% - 120px)',
+      }"
+    >
       <div class="release-header">
-        <h2 class="release-version">{{ updaterVer.version || currentLanguage.pages.update.versionName }}</h2>
-        <span class="release-tag" v-if="updaterVer.version && updaterVer.version.includes('beta')">Pre-release</span>
+        <h2 class="release-version">
+          {{ updaterVer.version || currentLanguage.pages.update.versionName }}
+        </h2>
+        <span class="release-tag" v-if="updaterVer.version && updaterVer.version.includes('beta')"
+          >Pre-release</span
+        >
       </div>
       <div class="release-date" v-if="updaterVer.pubDate">
         {{ new Date(updaterVer.pubDate).toLocaleDateString() }}
       </div>
       <div class="divider"></div>
-      <div v-if="updaterVer.notes" class="release-notes" v-html="updaterVer.notes"/>
+      <div v-if="updaterVer.notes" class="release-notes" v-html="updaterVer.notes" />
       <div class="release-notes" v-else>
         {{ currentLanguage.pages.update.updateNotes }}
       </div>
@@ -168,12 +184,15 @@ onMounted(async () => {
     </div>
 
     <!-- 下载失败，重新下载弹窗 -->
-    <n-modal v-model:show="showDownloadFailedVisible" title="下载失败" preset="dialog" :closable="false">
+    <n-modal
+      v-model:show="showDownloadFailedVisible"
+      title="下载失败"
+      preset="dialog"
+      :closable="false"
+    >
       <span>安装包下载失败，请检查网络连接并重新下载。</span>
       <template #action>
-        <n-button type="primary" @click="downloadUpdate">
-          重新下载
-        </n-button>
+        <n-button type="primary" @click="downloadUpdate"> 重新下载 </n-button>
       </template>
     </n-modal>
 
@@ -186,10 +205,10 @@ onMounted(async () => {
       <div class="progress-info">
         <div class="progress-text">{{ downloadProgress.toFixed(1) }}%</div>
         <div class="download-details">
-          <span>{{ Number(Number(downloadedSize) / 1024 / 1024).toFixed(2) }}MB / {{
-              Number(Number(totalSize) / 1024 /
-                  1024).toFixed(2)
-            }}MB</span>
+          <span
+            >{{ Number(Number(downloadedSize) / 1024 / 1024).toFixed(2) }}MB /
+            {{ Number(Number(totalSize) / 1024 / 1024).toFixed(2) }}MB</span
+          >
           <span class="download-speed">{{ downloadSpeed }} {{ downloadSpeedUnit }}</span>
         </div>
       </div>
@@ -199,9 +218,7 @@ onMounted(async () => {
     <div class="update-footer" v-show="!onLoading && downloadState !== 'downloading'">
       <!-- 初始状态：显示暂不更新和立即下载按钮 -->
       <div class="update-actions">
-        <div class="left-action">
-
-        </div>
+        <div class="left-action"></div>
         <div class="right-action">
           <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'unstart'">
             {{ currentLanguage.pages.update.downloadNowBtn }}

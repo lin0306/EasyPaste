@@ -3,14 +3,10 @@
     <n-button @click="handleMainAction" round>
       {{ props.data.filter(item => item.show)[0].label }}
     </n-button>
-    <n-dropdown
-        :options="options"
-        trigger="click"
-        :render-option="renderOption"
-    >
-      <n-button style="padding: 0 8px;" round>
+    <n-dropdown :options="options" trigger="click" :render-option="renderOption">
+      <n-button style="padding: 0 8px" round>
         <n-icon>
-          <font-awesome-icon icon="fa-solid fa-chevron-down"/>
+          <font-awesome-icon icon="fa-solid fa-chevron-down" />
         </n-icon>
       </n-button>
     </n-dropdown>
@@ -18,43 +14,48 @@
 </template>
 
 <script setup lang="ts">
-import {computed, h, VNode} from 'vue'
-import {themeColors} from "../services/ThemeService.ts";
-import {NButton, NButtonGroup, NDropdown, NIcon} from 'naive-ui'
-import {DropdownGroupOption, DropdownOption} from "naive-ui/es/dropdown/src/interface";
+import { computed, h, VNode } from 'vue'
+import { themeColors } from '../services/ThemeService.ts'
+import { NButton, NButtonGroup, NDropdown, NIcon } from 'naive-ui'
+import { DropdownGroupOption, DropdownOption } from 'naive-ui/es/dropdown/src/interface'
 
 // 菜单项
 const options = computed(() => {
   return props.data
-      .filter(item => item.show)
-      .slice(1)
-      .map(item => {
-        return {
-          label: item.label,
-          key: item.key,
-          danger: item.danger,
-          onClick: item.onClick,
-        }
-      })
+    .filter(item => item.show)
+    .slice(1)
+    .map(item => {
+      return {
+        label: item.label,
+        key: item.key,
+        danger: item.danger,
+        onClick: item.onClick,
+      }
+    })
 })
 
 // 下拉选项
 const props = defineProps<{
-  data: ButtonGroup[],
-}>();
-
+  data: ButtonGroup[]
+}>()
 
 // 主按钮点击
 const handleMainAction = (): void => {
   console.log('主按钮点击')
   const option = props.data.filter(item => item.show)[0]
   if (option) {
-    option.onClick();
+    option.onClick()
   }
 }
 
 // 使用 render-option 完全控制选项渲染
-const renderOption = ({node, option}: { node: VNode, option: DropdownOption & DropdownGroupOption }): VNode => {
+const renderOption = ({
+  node,
+  option,
+}: {
+  node: VNode
+  option: DropdownOption & DropdownGroupOption
+}): VNode => {
   // 分割线保持原样
   // @ts-ignore
   if (option.type === 'divider') {
@@ -64,52 +65,9 @@ const renderOption = ({node, option}: { node: VNode, option: DropdownOption & Dr
   // 危险选项：自定义整个节点
   if (option.danger) {
     return h(
-        'div',
-        {
-          class: 'danger-option-wrapper',
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '6px 12px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            color: themeColors.value.button.error.backgroundColor,  // 红色文字
-            fontWeight: '500',
-            transition: 'all 0.2s',
-            minWidth: '65px',
-          },
-          // 模拟 hover 效果（因为 render-option 会包裹在 n-dropdown-option 中）
-          onMouseenter: (e) => {
-            // @ts-ignore
-            e.currentTarget.style.backgroundColor = themeColors.value.button.error.backgroundColor
-            // @ts-ignore
-            e.currentTarget.style.color = themeColors.value.button.error.textColor
-          },
-          onMouseleave: (e) => {
-            // @ts-ignore
-            e.currentTarget.style.backgroundColor = 'transparent'
-            // @ts-ignore
-            e.currentTarget.style.color = themeColors.value.button.error.backgroundColor
-          },
-          onClick: () => {
-            console.log(option)
-            // @ts-ignore
-            option.onClick();
-          },
-        },
-        [
-          // @ts-ignore
-          h('span', null, option.label)
-        ]
-    )
-  }
-
-  // 普通选项：可以自定义，也可以返回默认 node
-  return h(
       'div',
       {
-        class: 'option-wrapper',
+        class: 'danger-option-wrapper',
         style: {
           display: 'flex',
           alignItems: 'center',
@@ -117,31 +75,74 @@ const renderOption = ({node, option}: { node: VNode, option: DropdownOption & Dr
           padding: '6px 12px',
           borderRadius: '4px',
           cursor: 'pointer',
+          color: themeColors.value.button.error.backgroundColor, // 红色文字
+          fontWeight: '500',
           transition: 'all 0.2s',
           minWidth: '65px',
         },
         // 模拟 hover 效果（因为 render-option 会包裹在 n-dropdown-option 中）
-        onMouseenter: (e) => {
+        onMouseenter: e => {
           // @ts-ignore
-          e.currentTarget.style.backgroundColor = themeColors.value.button.normal.backgroundColor
+          e.currentTarget.style.backgroundColor = themeColors.value.button.error.backgroundColor
           // @ts-ignore
-          e.currentTarget.style.color = themeColors.value.button.normal.textColor
+          e.currentTarget.style.color = themeColors.value.button.error.textColor
         },
-        onMouseleave: (e) => {
+        onMouseleave: e => {
           // @ts-ignore
           e.currentTarget.style.backgroundColor = 'transparent'
           // @ts-ignore
-          e.currentTarget.style.color = themeColors.value.universal.text
+          e.currentTarget.style.color = themeColors.value.button.error.backgroundColor
         },
         onClick: () => {
+          console.log(option)
           // @ts-ignore
-          option.onClick();
+          option.onClick()
         },
       },
       [
         // @ts-ignore
-        h('span', null, option.label)
+        h('span', null, option.label),
       ]
+    )
+  }
+
+  // 普通选项：可以自定义，也可以返回默认 node
+  return h(
+    'div',
+    {
+      class: 'option-wrapper',
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '6px 12px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        minWidth: '65px',
+      },
+      // 模拟 hover 效果（因为 render-option 会包裹在 n-dropdown-option 中）
+      onMouseenter: e => {
+        // @ts-ignore
+        e.currentTarget.style.backgroundColor = themeColors.value.button.normal.backgroundColor
+        // @ts-ignore
+        e.currentTarget.style.color = themeColors.value.button.normal.textColor
+      },
+      onMouseleave: e => {
+        // @ts-ignore
+        e.currentTarget.style.backgroundColor = 'transparent'
+        // @ts-ignore
+        e.currentTarget.style.color = themeColors.value.universal.text
+      },
+      onClick: () => {
+        // @ts-ignore
+        option.onClick()
+      },
+    },
+    [
+      // @ts-ignore
+      h('span', null, option.label),
+    ]
   )
 }
 </script>

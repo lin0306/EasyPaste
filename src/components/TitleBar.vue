@@ -1,72 +1,91 @@
 <template>
-  <div id="title-bar"
-       :class="{ 'fixed': isFixed }"
-       :data-tauri-drag-region="!isFixed"
-  >
+  <div id="title-bar" :class="{ fixed: isFixed }" :data-tauri-drag-region="!isFixed">
     <div class="window-title">
       <span>
-      {{ title }}
+        {{ title }}
       </span>
-      <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="openUpdateWindow"/>
+      <UpdateIcon v-if="showUpdateIcon" class="update-icon" @click="openUpdateWindow" />
     </div>
     <div class="window-controls">
       <div v-if="isDev" class="control-button" @click="onRefresh">
-        <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" class="program-btn" id="refresh-button-img" />
+        <font-awesome-icon
+          icon="fa-solid fa-arrow-rotate-right"
+          class="program-btn"
+          id="refresh-button-img"
+        />
       </div>
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
-        <font-awesome-icon icon="fa-solid fa-laptop-code" class="program-btn" id="devtool-button-img" />
+        <font-awesome-icon
+          icon="fa-solid fa-laptop-code"
+          class="program-btn"
+          id="devtool-button-img"
+        />
       </div>
-      <div v-if="showFixedBtn && !isFixed" class="control-button fixation-button" @click="onFixWindow">
-        <font-awesome-icon :icon="['fas', 'fixed']" class="program-btn" id="fixation-button-img"/>
+      <div
+        v-if="showFixedBtn && !isFixed"
+        class="control-button fixation-button"
+        @click="onFixWindow"
+      >
+        <font-awesome-icon :icon="['fas', 'fixed']" class="program-btn" id="fixation-button-img" />
       </div>
-      <div v-if="showFixedBtn && isFixed" class="control-button unfixation-button" @click="onUnfixWindow">
-        <font-awesome-icon :icon="['fas', 'unfixed']" class="program-btn-preview" id="unfixation-button-img"/>
+      <div
+        v-if="showFixedBtn && isFixed"
+        class="control-button unfixation-button"
+        @click="onUnfixWindow"
+      >
+        <font-awesome-icon
+          :icon="['fas', 'unfixed']"
+          class="program-btn-preview"
+          id="unfixation-button-img"
+        />
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
-        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img" />
       </div>
       <div v-if="showHideBtn" class="control-button" @click="onHide">
-        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img" />
       </div>
       <div v-if="showCloseBtn" class="control-button close-button" @click="onClose">
-        <font-awesome-icon icon="fa-solid fa-xmark" class="program-btn" id="close-button-img"/>
+        <font-awesome-icon icon="fa-solid fa-xmark" class="program-btn" id="close-button-img" />
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { invoke } from '@tauri-apps/api/core'
+import { onMounted, ref } from 'vue'
+import { isDev } from '../data/SystemParams.ts'
+import { listFixedStore } from '../store/Fixed.ts'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import UpdateIcon from '../assets/icons/UpdateIcon.vue'
+import UpdaterService from '../services/UpdaterService.ts'
 
-import {invoke} from '@tauri-apps/api/core'
-import {onMounted, ref} from 'vue'
-import {isDev} from "../data/SystemParams.ts"
-import {listFixedStore} from '../store/Fixed.ts'
-import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
-import UpdateIcon from "../assets/icons/UpdateIcon.vue";
-import UpdaterService from "../services/UpdaterService.ts";
+const props = withDefaults(
+  defineProps<{
+    title: string
+    showCloseBtn?: boolean
+    showHideBtn?: boolean // 是否显示窗口隐藏按钮
+    showFixedBtn?: boolean
+    devTool?: string
+    showMinimizeBtn?: boolean // 是否显示窗口最小化按钮，当窗口属性skipTaskbar设置为true时，此设置不生效
+    showUpdateIcon?: boolean
+  }>(),
+  {
+    showFixedBtn: false,
+  }
+)
 
-const props = withDefaults(defineProps<{
-  title: string;
-  showCloseBtn?: boolean;
-  showHideBtn?: boolean; // 是否显示窗口隐藏按钮
-  showFixedBtn?: boolean;
-  devTool?: string;
-  showMinimizeBtn?: boolean; // 是否显示窗口最小化按钮，当窗口属性skipTaskbar设置为true时，此设置不生效
-  showUpdateIcon?: boolean;
-}>(), {
-  showFixedBtn: false
-});
+const isFixed = ref(false)
 
-const isFixed = ref(false);
-
-let listFixedListen = listFixedStore();
+let listFixedListen = listFixedStore()
 
 /**
  * 固定窗口
  */
 const onFixWindow = (): void => {
   if (props.showFixedBtn) {
-    isFixed.value = true;
-    listFixedListen.fixed();
+    isFixed.value = true
+    listFixedListen.fixed()
   }
 }
 
@@ -75,8 +94,8 @@ const onFixWindow = (): void => {
  */
 const onUnfixWindow = (): void => {
   if (props.showFixedBtn) {
-    isFixed.value = false;
-    listFixedListen.unfixed();
+    isFixed.value = false
+    listFixedListen.unfixed()
   }
 }
 
@@ -85,7 +104,7 @@ const onUnfixWindow = (): void => {
  */
 const onMinimizeWindow = (): void => {
   if (props.showMinimizeBtn) {
-    getCurrentWebviewWindow().minimize();
+    getCurrentWebviewWindow().minimize()
   }
 }
 
@@ -94,7 +113,7 @@ const onMinimizeWindow = (): void => {
  */
 const onClose = (): void => {
   if (props.showCloseBtn) {
-    getCurrentWebviewWindow().close();
+    getCurrentWebviewWindow().close()
   }
 }
 
@@ -103,7 +122,7 @@ const onClose = (): void => {
  */
 const onHide = (): void => {
   if (props.showHideBtn) {
-    getCurrentWebviewWindow().hide();
+    getCurrentWebviewWindow().hide()
   }
 }
 
@@ -112,7 +131,7 @@ const onHide = (): void => {
  */
 const openDevTool = async (): Promise<void> => {
   if (props.devTool) {
-    await invoke('open_dev_tool', {windowName: props.devTool});
+    await invoke('open_dev_tool', { windowName: props.devTool })
   }
 }
 
@@ -120,8 +139,8 @@ const openDevTool = async (): Promise<void> => {
  * 打开更新窗口
  */
 const openUpdateWindow = async (): Promise<void> => {
-  const update = UpdaterService.getInstance();
-  update.showUpdateWindow();
+  const update = UpdaterService.getInstance()
+  update.showUpdateWindow()
 }
 
 /**
@@ -129,15 +148,15 @@ const openUpdateWindow = async (): Promise<void> => {
  */
 const onRefresh = (): void => {
   // 刷新当前页面
-  window.location.reload();
+  window.location.reload()
 }
 
 onMounted(() => {
   if (props.showFixedBtn) {
-    listFixedListen = listFixedStore();
-    isFixed.value = listFixedListen.stateData();
+    listFixedListen = listFixedStore()
+    isFixed.value = listFixedListen.stateData()
   }
-});
+})
 </script>
 <style scoped>
 /* 标题栏样式 */

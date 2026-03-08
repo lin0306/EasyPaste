@@ -1,38 +1,38 @@
-import {load} from "@tauri-apps/plugin-store";
-import {info} from "@tauri-apps/plugin-log";
-import {SETTINGS} from "../constants/UserSettingsConstant.ts";
-import {BaseDirectory, exists, readFile} from "@tauri-apps/plugin-fs";
-import {SETTINGS_KEYS} from "../constants/KeysConstants.ts";
-import {utf8Decoder} from "../constants/PublicConstants.ts";
-import {appLocalDataDir} from "@tauri-apps/api/path";
-import {isMac} from "../data/SystemParams.ts";
+import { load } from '@tauri-apps/plugin-store'
+import { info } from '@tauri-apps/plugin-log'
+import { SETTINGS } from '../constants/UserSettingsConstant.ts'
+import { BaseDirectory, exists, readFile } from '@tauri-apps/plugin-fs'
+import { SETTINGS_KEYS } from '../constants/KeysConstants.ts'
+import { utf8Decoder } from '../constants/PublicConstants.ts'
+import { appLocalDataDir } from '@tauri-apps/api/path'
+import { isMac } from '../data/SystemParams.ts'
 
-export const SETTINGS_FILE_NAME = "settings.json";
+export const SETTINGS_FILE_NAME = 'settings.json'
 const defaultSettings: Settings = {
-    theme: SETTINGS.THEME.DEFAULT_THEME,
-    powerOnSelfStart: false,
-    replaceGlobalHotkey: false,
-    languages: SETTINGS.LANGUAGE.DEFAULT_LANGUAGE,
-    maxHistoryItems: 2000,
-    dataRetentionDays: 30,
-    autoCheckUpdate: true,
-    updateMode: SETTINGS.UPDATER.CHECK_MODE.TIMING,
-    autoCheckUpdateInterval: 1,
-    enableTag: true,
-    bindTagBtnShowLocation: SETTINGS.TAG.BIND_TAG_LOCATION.TOP_RIGHT,
-    autoHideWindow: false,
-    alwaysOnTop: true,
-    newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
-    enableAnimationEffects: true,
-    animationDuration: 350,
-    animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL.key,
-    autoGoToLatestData: true,
-    tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
-    displayThumbnailImage: true,
-    imageBasePath: '',
-    enableImageSave: true,
-    pluginPath: '',
-    displayDetailTime: false,
+  theme: SETTINGS.THEME.DEFAULT_THEME,
+  powerOnSelfStart: false,
+  replaceGlobalHotkey: false,
+  languages: SETTINGS.LANGUAGE.DEFAULT_LANGUAGE,
+  maxHistoryItems: 2000,
+  dataRetentionDays: 30,
+  autoCheckUpdate: true,
+  updateMode: SETTINGS.UPDATER.CHECK_MODE.TIMING,
+  autoCheckUpdateInterval: 1,
+  enableTag: true,
+  bindTagBtnShowLocation: SETTINGS.TAG.BIND_TAG_LOCATION.TOP_RIGHT,
+  autoHideWindow: false,
+  alwaysOnTop: true,
+  newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
+  enableAnimationEffects: true,
+  animationDuration: 350,
+  animationSpeedLevel: SETTINGS.THEME.ANIMATION.SPEED.NORMAL.key,
+  autoGoToLatestData: true,
+  tagListLocation: SETTINGS.TAG.TAG_LIST_LOCATION.TOP_LEFT,
+  displayThumbnailImage: true,
+  imageBasePath: '',
+  enableImageSave: true,
+  pluginPath: '',
+  displayDetailTime: false,
 }
 
 /**
@@ -40,17 +40,17 @@ const defaultSettings: Settings = {
  * @param theme 主题
  */
 export async function saveTheme(theme: String): Promise<void> {
-    info("保存主题: " + theme);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.THEME, theme);
+  info('保存主题: ' + theme)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.THEME, theme)
 }
 
 /**
  * 获取主题
  */
 export async function getTheme(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.THEME) || defaultSettings.theme;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<string>(SETTINGS_KEYS.THEME)) || defaultSettings.theme
 }
 
 /**
@@ -58,17 +58,17 @@ export async function getTheme(): Promise<string> {
  * @param language 语言
  */
 export async function saveLanguage(language: String): Promise<void> {
-    info("保存语言: " + language);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.LANGUAGES, language);
+  info('保存语言: ' + language)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.LANGUAGES, language)
 }
 
 /**
  * 获取语言
  */
 export async function getLanguage(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.LANGUAGES) || defaultSettings.languages;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<string>(SETTINGS_KEYS.LANGUAGES)) || defaultSettings.languages
 }
 
 /**
@@ -76,17 +76,20 @@ export async function getLanguage(): Promise<string> {
  * @param powerOnSelfStart 是否开机自启
  */
 export async function savePowerOnSelfStart(powerOnSelfStart: boolean): Promise<void> {
-    info("保存开机自启: " + powerOnSelfStart);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, powerOnSelfStart);
+  info('保存开机自启: ' + powerOnSelfStart)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, powerOnSelfStart)
 }
 
 /**
  * 获取开机自启参数
  */
 export async function getPowerOnSelfStart(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.POWER_ON_SELF_START) || defaultSettings.powerOnSelfStart;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.POWER_ON_SELF_START)) ||
+    defaultSettings.powerOnSelfStart
+  )
 }
 
 /**
@@ -94,17 +97,20 @@ export async function getPowerOnSelfStart(): Promise<boolean> {
  * @param replaceGlobalHotkey 是否替换全局热键
  */
 export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean): Promise<void> {
-    info("保存是否替换全局热键: " + replaceGlobalHotkey);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, replaceGlobalHotkey);
+  info('保存是否替换全局热键: ' + replaceGlobalHotkey)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, replaceGlobalHotkey)
 }
 
 /**
  * 获取是否替换全局热键
  */
 export async function getReplaceGlobalHotkey(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY) || defaultSettings.replaceGlobalHotkey;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)) ||
+    defaultSettings.replaceGlobalHotkey
+  )
 }
 
 /**
@@ -112,17 +118,19 @@ export async function getReplaceGlobalHotkey(): Promise<boolean> {
  * @param maxHistoryItems 最大历史记录项
  */
 export async function saveMaxHistoryItems(maxHistoryItems: number): Promise<void> {
-    info("保存最大历史记录项: " + maxHistoryItems);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, maxHistoryItems);
+  info('保存最大历史记录项: ' + maxHistoryItems)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, maxHistoryItems)
 }
 
 /**
  * 获取最大历史记录项
  */
 export async function getMaxHistoryItems(): Promise<number> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<number>(SETTINGS_KEYS.MAX_HISTORY_ITEMS) || defaultSettings.maxHistoryItems;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<number>(SETTINGS_KEYS.MAX_HISTORY_ITEMS)) || defaultSettings.maxHistoryItems
+  )
 }
 
 /**
@@ -130,17 +138,20 @@ export async function getMaxHistoryItems(): Promise<number> {
  * @param dataRetentionDays 数据保留天数
  */
 export async function saveDataRetentionDays(dataRetentionDays: number): Promise<void> {
-    info("保存数据保留天数: " + dataRetentionDays);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, dataRetentionDays);
+  info('保存数据保留天数: ' + dataRetentionDays)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, dataRetentionDays)
 }
 
 /**
  * 获取数据保留天数
  */
 export async function getDataRetentionDays(): Promise<number> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<number>(SETTINGS_KEYS.DATA_RETENTION_DAYS) || defaultSettings.dataRetentionDays;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<number>(SETTINGS_KEYS.DATA_RETENTION_DAYS)) ||
+    defaultSettings.dataRetentionDays
+  )
 }
 
 /**
@@ -148,17 +159,19 @@ export async function getDataRetentionDays(): Promise<number> {
  * @param autoCheckUpdate 是否自动检查更新
  */
 export async function saveAutoCheckUpdate(autoCheckUpdate: boolean): Promise<void> {
-    info("保存自动检查更新: " + autoCheckUpdate);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, autoCheckUpdate);
+  info('保存自动检查更新: ' + autoCheckUpdate)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, autoCheckUpdate)
 }
 
 /**
  * 获取自动检查更新
  */
 export async function getAutoCheckUpdate(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.AUTO_CHECK_UPDATE) || defaultSettings.autoCheckUpdate;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.AUTO_CHECK_UPDATE)) || defaultSettings.autoCheckUpdate
+  )
 }
 
 /**
@@ -166,17 +179,17 @@ export async function getAutoCheckUpdate(): Promise<boolean> {
  * @param updateMode 更新模式
  */
 export async function saveUpdateMode(updateMode: string): Promise<void> {
-    info("保存更新模式: " + updateMode);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.UPDATE_MODE, updateMode);
+  info('保存更新模式: ' + updateMode)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.UPDATE_MODE, updateMode)
 }
 
 /**
  * 获取更新模式
  */
 export async function getUpdateMode(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.UPDATE_MODE) || defaultSettings.updateMode;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<string>(SETTINGS_KEYS.UPDATE_MODE)) || defaultSettings.updateMode
 }
 
 /**
@@ -184,17 +197,20 @@ export async function getUpdateMode(): Promise<string> {
  * @param autoCheckUpdateInterval 自动检查更新间隔
  */
 export async function saveAutoCheckUpdateInterval(autoCheckUpdateInterval: number): Promise<void> {
-    info("保存自动检查更新间隔: " + autoCheckUpdateInterval);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, autoCheckUpdateInterval);
+  info('保存自动检查更新间隔: ' + autoCheckUpdateInterval)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, autoCheckUpdateInterval)
 }
 
 /**
  * 获取自动检查更新间隔
  */
 export async function getAutoCheckUpdateInterval(): Promise<number> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<number>(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL) || defaultSettings.autoCheckUpdateInterval;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<number>(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL)) ||
+    defaultSettings.autoCheckUpdateInterval
+  )
 }
 
 /**
@@ -202,17 +218,17 @@ export async function getAutoCheckUpdateInterval(): Promise<number> {
  * @param enableTag 是否启用标签
  */
 export async function saveEnableTag(enableTag: boolean): Promise<void> {
-    info("保存是否启用标签: " + enableTag);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ENABLE_TAG, enableTag);
+  info('保存是否启用标签: ' + enableTag)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ENABLE_TAG, enableTag)
 }
 
 /**
  * 获取是否启用标签
  */
 export async function getEnableTag(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_TAG) || defaultSettings.enableTag;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<boolean>(SETTINGS_KEYS.ENABLE_TAG)) || defaultSettings.enableTag
 }
 
 /**
@@ -220,17 +236,20 @@ export async function getEnableTag(): Promise<boolean> {
  * @param bindTagBtnShowLocation 标签按钮显示位置
  */
 export async function saveBindTagBtnShowLocation(bindTagBtnShowLocation: string): Promise<void> {
-    info("保存标签按钮显示位置: " + bindTagBtnShowLocation);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, bindTagBtnShowLocation);
+  info('保存标签按钮显示位置: ' + bindTagBtnShowLocation)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, bindTagBtnShowLocation)
 }
 
 /**
  * 获取标签按钮显示位置
  */
 export async function getBindTagBtnShowLocation(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION) || defaultSettings.bindTagBtnShowLocation;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<string>(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION)) ||
+    defaultSettings.bindTagBtnShowLocation
+  )
 }
 
 /**
@@ -238,17 +257,19 @@ export async function getBindTagBtnShowLocation(): Promise<string> {
  * @param autoHideWindow 自动隐藏窗口
  */
 export async function saveAutoHideWindow(autoHideWindow: boolean): Promise<void> {
-    info("保存自动隐藏窗口: " + autoHideWindow);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, autoHideWindow);
+  info('保存自动隐藏窗口: ' + autoHideWindow)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, autoHideWindow)
 }
 
 /**
  * 获取自动隐藏窗口
  */
 export async function getAutoHideWindow(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.AUTO_HIDE_WINDOW) || defaultSettings.autoHideWindow;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) || defaultSettings.autoHideWindow
+  )
 }
 
 /**
@@ -256,17 +277,17 @@ export async function getAutoHideWindow(): Promise<boolean> {
  * @param alwaysOnTop 窗口是否始终置顶
  */
 export async function saveAlwaysOnTop(alwaysOnTop: boolean): Promise<void> {
-    info("保存窗口是否始终置顶: " + alwaysOnTop);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, alwaysOnTop);
+  info('保存窗口是否始终置顶: ' + alwaysOnTop)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, alwaysOnTop)
 }
 
 /**
  * 获取窗口是否始终置顶参数
  */
 export async function getAlwaysOnTop(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.ALWAYS_ON_TOP) || defaultSettings.alwaysOnTop;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<boolean>(SETTINGS_KEYS.ALWAYS_ON_TOP)) || defaultSettings.alwaysOnTop
 }
 
 /**
@@ -274,17 +295,20 @@ export async function getAlwaysOnTop(): Promise<boolean> {
  * @param newVersionAlertMode 有新版本提示方式
  */
 export async function saveNewVersionAlertMode(newVersionAlertMode: string): Promise<void> {
-    info("保存有新版本提示方式: " + newVersionAlertMode);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, newVersionAlertMode);
+  info('保存有新版本提示方式: ' + newVersionAlertMode)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, newVersionAlertMode)
 }
 
 /**
  * 获取有新版本提示方式
  */
 export async function getNewVersionAlertMode(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE) || defaultSettings.newVersionAlertMode;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<string>(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE)) ||
+    defaultSettings.newVersionAlertMode
+  )
 }
 
 /**
@@ -292,17 +316,20 @@ export async function getNewVersionAlertMode(): Promise<string> {
  * @param enableAnimationEffects 是否启用页面切换动画
  */
 export async function saveEnableAnimationEffects(enableAnimationEffects: boolean): Promise<void> {
-    info("保存启用动画效果: " + enableAnimationEffects);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, enableAnimationEffects);
+  info('保存启用动画效果: ' + enableAnimationEffects)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, enableAnimationEffects)
 }
 
 /**
  * 获取启用页面切换动画
  */
 export async function getEnableAnimationEffects(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS) || defaultSettings.enableAnimationEffects;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)) ||
+    defaultSettings.enableAnimationEffects
+  )
 }
 
 /**
@@ -310,17 +337,19 @@ export async function getEnableAnimationEffects(): Promise<boolean> {
  * @param animationDuration 动画持续时间（毫秒）
  */
 export async function saveAnimationDuration(animationDuration: number): Promise<void> {
-    info("保存动画持续时间: " + animationDuration);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, animationDuration);
+  info('保存动画持续时间: ' + animationDuration)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, animationDuration)
 }
 
 /**
  * 获取页面切换动画持续时间
  */
 export async function getAnimationDuration(): Promise<number> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<number>(SETTINGS_KEYS.ANIMATION_DURATION) || defaultSettings.animationDuration;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<number>(SETTINGS_KEYS.ANIMATION_DURATION)) || defaultSettings.animationDuration
+  )
 }
 
 /**
@@ -328,17 +357,20 @@ export async function getAnimationDuration(): Promise<number> {
  * @param animationSpeedLevel 页面动画速度级别
  */
 export async function saveAnimationSpeedLevel(animationSpeedLevel: string): Promise<void> {
-    info("保存页面动画速度级别: " + animationSpeedLevel);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, animationSpeedLevel);
+  info('保存页面动画速度级别: ' + animationSpeedLevel)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, animationSpeedLevel)
 }
 
 /**
  * 获取页面切换动画缓动函数
  */
 export async function getAnimationSpeedLevel(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL) || defaultSettings.animationSpeedLevel;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<string>(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) ||
+    defaultSettings.animationSpeedLevel
+  )
 }
 
 /**
@@ -346,17 +378,20 @@ export async function getAnimationSpeedLevel(): Promise<string> {
  * @param autoGoToLatestData 是否自动跳转到最新数据
  */
 export async function saveAutoGoToLatestData(autoGoToLatestData: boolean): Promise<void> {
-    info("保存是否自动跳转到最新数据: " + autoGoToLatestData);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, autoGoToLatestData);
+  info('保存是否自动跳转到最新数据: ' + autoGoToLatestData)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, autoGoToLatestData)
 }
 
 /**
  * 获取是否自动跳转到最新数据
  */
 export async function getAutoGoToLatestData(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA) || defaultSettings.autoGoToLatestData;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) ||
+    defaultSettings.autoGoToLatestData
+  )
 }
 
 /**
@@ -364,17 +399,19 @@ export async function getAutoGoToLatestData(): Promise<boolean> {
  * @param tagListLocation 是否自动跳转到最新数据
  */
 export async function saveTagListLocation(tagListLocation: string): Promise<void> {
-    info("保存标签列表位置: " + tagListLocation);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, tagListLocation);
+  info('保存标签列表位置: ' + tagListLocation)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, tagListLocation)
 }
 
 /**
  * 获取标签列表位置
  */
 export async function getTagListLocation(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.TAG_LIST_LOCATION) || defaultSettings.tagListLocation;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<string>(SETTINGS_KEYS.TAG_LIST_LOCATION)) || defaultSettings.tagListLocation
+  )
 }
 
 /**
@@ -382,17 +419,20 @@ export async function getTagListLocation(): Promise<string> {
  * @param displayThumbnailImage 是否显示图片缩略图
  */
 export async function saveDisplayThumbnailImage(displayThumbnailImage: boolean): Promise<void> {
-    info("保存标签列表位置: " + displayThumbnailImage);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, displayThumbnailImage);
+  info('保存标签列表位置: ' + displayThumbnailImage)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, displayThumbnailImage)
 }
 
 /**
  * 获取是否显示图片缩略图
  */
 export async function getDisplayThumbnailImage(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE) || defaultSettings.displayThumbnailImage;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) ||
+    defaultSettings.displayThumbnailImage
+  )
 }
 
 /**
@@ -400,17 +440,17 @@ export async function getDisplayThumbnailImage(): Promise<boolean> {
  * @param imageBasePath 图片存储位置
  */
 export async function saveImageBasePath(imageBasePath: string): Promise<void> {
-    info("保存图片存储位置: " + imageBasePath);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, imageBasePath);
+  info('保存图片存储位置: ' + imageBasePath)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, imageBasePath)
 }
 
 /**
  * 获取图片存储位置
  */
 export async function getImageBasePath(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.IMAGE_BASE_PATH) || '';
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<string>(SETTINGS_KEYS.IMAGE_BASE_PATH)) || ''
 }
 
 /**
@@ -418,17 +458,19 @@ export async function getImageBasePath(): Promise<string> {
  * @param enableImageSave 图片存储位置
  */
 export async function saveEnableImageSave(enableImageSave: boolean): Promise<void> {
-    info("保存是否存储图片: " + enableImageSave);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, enableImageSave);
+  info('保存是否存储图片: ' + enableImageSave)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, enableImageSave)
 }
 
 /**
  * 获取是否存储图片
  */
 export async function getEnableImageSave(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE) || defaultSettings.enableImageSave;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) || defaultSettings.enableImageSave
+  )
 }
 
 /**
@@ -436,17 +478,17 @@ export async function getEnableImageSave(): Promise<boolean> {
  * @param pluginPath 插件路径
  */
 export async function savePluginPath(pluginPath: string): Promise<void> {
-    info("保存插件路径: " + pluginPath);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, pluginPath);
+  info('保存插件路径: ' + pluginPath)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, pluginPath)
 }
 
 /**
  * 获取插件路径
  */
 export async function getPluginPath(): Promise<string> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<string>(SETTINGS_KEYS.PLUGIN_PATH) || defaultSettings.pluginPath;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (await store.get<string>(SETTINGS_KEYS.PLUGIN_PATH)) || defaultSettings.pluginPath
 }
 
 /**
@@ -454,137 +496,170 @@ export async function getPluginPath(): Promise<string> {
  * @param displayDetailTime 是否显示详细时间
  */
 export async function saveDisplayDetailTime(displayDetailTime: boolean): Promise<void> {
-    info("保存是否显示详细时间: " + displayDetailTime);
-    const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, displayDetailTime);
+  info('保存是否显示详细时间: ' + displayDetailTime)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, displayDetailTime)
 }
 
 /**
  * 获取是否显示详细时间
  */
 export async function getDisplayDetailTime(): Promise<boolean> {
-    const store = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-    return await store.get<boolean>(SETTINGS_KEYS.DISPLAY_DETAIL_TIME) || defaultSettings.displayDetailTime;
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<boolean>(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) ||
+    defaultSettings.displayDetailTime
+  )
 }
 
 /**
  * 初始化用户配置
  */
 export async function initSettings(): Promise<void> {
-    info("初始化用户配置");
-    const settingsExist = await exists(SETTINGS_FILE_NAME, {
-        baseDir: BaseDirectory.AppData,
-    });
-    if (settingsExist) {
-        const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-        // 用户配置文件存在
-        const userSettings = await readFile(SETTINGS_FILE_NAME, {
-            baseDir: BaseDirectory.AppData,
-        })
-        // 转成字符串
-        const userSettingsString = utf8Decoder.decode(userSettings);
-        if (!userSettingsString.includes(SETTINGS_KEYS.THEME)) {
-            await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.POWER_ON_SELF_START)) {
-            await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)) {
-            await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.LANGUAGES)) {
-            await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.MAX_HISTORY_ITEMS)) {
-            await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.DATA_RETENTION_DAYS)) {
-            await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE)) {
-            await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.UPDATE_MODE)) {
-            await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL)) {
-            await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, defaultSettings.autoCheckUpdateInterval);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_TAG)) {
-            await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION)) {
-            await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, defaultSettings.bindTagBtnShowLocation);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) {
-            await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ALWAYS_ON_TOP)) {
-            await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE)) {
-            await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)) {
-            await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, defaultSettings.enableAnimationEffects);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_DURATION)) {
-            await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) {
-            await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) {
-            await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, defaultSettings.autoGoToLatestData);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.TAG_LIST_LOCATION)) {
-            await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) {
-            await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.IMAGE_BASE_PATH)) {
-            await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'images');
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
-            await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.PLUGIN_PATH)) {
-            await settings.set(SETTINGS_KEYS.PLUGIN_PATH, await appLocalDataDir() + (isMac ? '/' : '\\') + 'plugins');
-        }
-        if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) {
-            await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime);
-        }
-        await settings.save();
-    } else {
-        // 用户配置文件不存在
-        const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
-        const localDataDir = await appLocalDataDir();
-        await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme);
-        await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart);
-        await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey);
-        await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages);
-        await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems);
-        await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays);
-        await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate);
-        await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode);
-        await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, defaultSettings.autoCheckUpdateInterval);
-        await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag);
-        await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, defaultSettings.bindTagBtnShowLocation);
-        await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow);
-        await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop);
-        await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode);
-        await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, defaultSettings.enableAnimationEffects);
-        await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration);
-        await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel);
-        await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData);
-        await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation);
-        await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage);
-        await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, localDataDir + (isMac ? '/' : '\\') + 'images');
-        await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave);
-        await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir+ (isMac ? '/' : '\\') + 'plugins');
-        await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime);
-
-        await settings.save();
+  info('初始化用户配置')
+  const settingsExist = await exists(SETTINGS_FILE_NAME, {
+    baseDir: BaseDirectory.AppData,
+  })
+  if (settingsExist) {
+    const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+    // 用户配置文件存在
+    const userSettings = await readFile(SETTINGS_FILE_NAME, {
+      baseDir: BaseDirectory.AppData,
+    })
+    // 转成字符串
+    const userSettingsString = utf8Decoder.decode(userSettings)
+    if (!userSettingsString.includes(SETTINGS_KEYS.THEME)) {
+      await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme)
     }
+    if (!userSettingsString.includes(SETTINGS_KEYS.POWER_ON_SELF_START)) {
+      await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)) {
+      await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.LANGUAGES)) {
+      await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.MAX_HISTORY_ITEMS)) {
+      await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.DATA_RETENTION_DAYS)) {
+      await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE)) {
+      await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.UPDATE_MODE)) {
+      await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL)) {
+      await settings.set(
+        SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL,
+        defaultSettings.autoCheckUpdateInterval
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_TAG)) {
+      await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION)) {
+      await settings.set(
+        SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION,
+        defaultSettings.bindTagBtnShowLocation
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) {
+      await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ALWAYS_ON_TOP)) {
+      await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE)) {
+      await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)) {
+      await settings.set(
+        SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS,
+        defaultSettings.enableAnimationEffects
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_DURATION)) {
+      await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL)) {
+      await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) {
+      await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, defaultSettings.autoGoToLatestData)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.TAG_LIST_LOCATION)) {
+      await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) {
+      await settings.set(
+        SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE,
+        defaultSettings.displayThumbnailImage
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.IMAGE_BASE_PATH)) {
+      await settings.set(
+        SETTINGS_KEYS.IMAGE_BASE_PATH,
+        (await appLocalDataDir()) + (isMac ? '/' : '\\') + 'images'
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
+      await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.PLUGIN_PATH)) {
+      await settings.set(
+        SETTINGS_KEYS.PLUGIN_PATH,
+        (await appLocalDataDir()) + (isMac ? '/' : '\\') + 'plugins'
+      )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) {
+      await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime)
+    }
+    await settings.save()
+  } else {
+    // 用户配置文件不存在
+    const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+    const localDataDir = await appLocalDataDir()
+    await settings.set(SETTINGS_KEYS.THEME, defaultSettings.theme)
+    await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, defaultSettings.powerOnSelfStart)
+    await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, defaultSettings.replaceGlobalHotkey)
+    await settings.set(SETTINGS_KEYS.LANGUAGES, defaultSettings.languages)
+    await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, defaultSettings.maxHistoryItems)
+    await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, defaultSettings.dataRetentionDays)
+    await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, defaultSettings.autoCheckUpdate)
+    await settings.set(SETTINGS_KEYS.UPDATE_MODE, defaultSettings.updateMode)
+    await settings.set(
+      SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL,
+      defaultSettings.autoCheckUpdateInterval
+    )
+    await settings.set(SETTINGS_KEYS.ENABLE_TAG, defaultSettings.enableTag)
+    await settings.set(
+      SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION,
+      defaultSettings.bindTagBtnShowLocation
+    )
+    await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow)
+    await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop)
+    await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode)
+    await settings.set(
+      SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS,
+      defaultSettings.enableAnimationEffects
+    )
+    await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration)
+    await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel)
+    await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData)
+    await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation)
+    await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage)
+    await settings.set(
+      SETTINGS_KEYS.IMAGE_BASE_PATH,
+      localDataDir + (isMac ? '/' : '\\') + 'images'
+    )
+    await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave)
+    await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir + (isMac ? '/' : '\\') + 'plugins')
+    await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime)
+
+    await settings.save()
+  }
 }

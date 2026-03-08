@@ -2,32 +2,36 @@
   <nav class="navbar">
     <ul class="nav-menu">
       <li
-          v-for="item in menus"
-          :key="item.key"
-          class="nav-item"
-          @mouseenter="handleMouseEnter(item, $event)"
-          @mouseleave="handleMouseLeave"
+        v-for="item in menus"
+        :key="item.key"
+        class="nav-item"
+        @mouseenter="handleMouseEnter(item, $event)"
+        @mouseleave="handleMouseLeave"
       >
         {{ item.label }}
 
         <!-- 二级菜单 -->
         <transition name="slide-fade" :css="animationEffect.enabled">
           <ul
-              v-if="item.children && activeMenu === item.key"
-              class="dropdown-menu"
-              :style="dropdownStyle"
+            v-if="item.children && activeMenu === item.key"
+            class="dropdown-menu"
+            :style="dropdownStyle"
           >
             <li
-                v-for="child in item.children"
-                :key="child.key"
-                class="dropdown-item"
-                @click="child.onClick"
+              v-for="child in item.children"
+              :key="child.key"
+              class="dropdown-item"
+              @click="child.onClick"
             >
-              <div v-if="child.type === 'divider'" class="divider"/>
+              <div v-if="child.type === 'divider'" class="divider" />
               <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
                 {{ child.label }}
-                <font-awesome-icon icon="fa-solid fa-check" v-if="child.isCheck" :color="themeColors.universal.text"
-                                   class="checked-icon"/>
+                <font-awesome-icon
+                  icon="fa-solid fa-check"
+                  v-if="child.isCheck"
+                  :color="themeColors.universal.text"
+                  class="checked-icon"
+                />
                 <div v-else class="unchecked-icon"></div>
               </div>
               <div v-else class="dropdown-link">{{ child.label }}</div>
@@ -40,31 +44,32 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
-import {animationEffect} from "./composables/AnimationComposable.ts";
-import {themeColors} from "../services/ThemeService.ts";
+import { computed, ref } from 'vue'
+import { animationEffect } from './composables/AnimationComposable.ts'
+import { themeColors } from '../services/ThemeService.ts'
 
 const props = defineProps<{
-  menuItems: NavBarItem[];
-}>();
-
+  menuItems: NavBarItem[]
+}>()
 
 /**
  * 菜单项
  */
 const menus = computed(() => {
   // 过滤掉isHide为true的菜单项
-  return props.menuItems.filter(item => !item.isHide).map(item => {
-    // 如果有子菜单，也需要过滤子菜单中isHide为true的项
-    if (item.children && item.children.length > 0) {
-      return {
-        ...item,
-        children: item.children.filter(child => !child.isHide)
-      };
-    }
-    return item;
-  });
-});
+  return props.menuItems
+    .filter(item => !item.isHide)
+    .map(item => {
+      // 如果有子菜单，也需要过滤子菜单中isHide为true的项
+      if (item.children && item.children.length > 0) {
+        return {
+          ...item,
+          children: item.children.filter(child => !child.isHide),
+        }
+      }
+      return item
+    })
+})
 
 // 状态管理
 const activeMenu = ref<string>('')
@@ -72,9 +77,9 @@ const dropdownStyle = ref({})
 
 // 处理鼠标进入事件
 const handleMouseEnter = (menuItem: NavBarItem, event: any): void => {
-  const hasChildren = menuItem.children;
+  const hasChildren = menuItem.children
   if (hasChildren) {
-    activeMenu.value = menuItem.key;
+    activeMenu.value = menuItem.key
 
     // 计算下拉菜单位置
     const navItem = event.target.closest('.nav-item')
@@ -82,7 +87,7 @@ const handleMouseEnter = (menuItem: NavBarItem, event: any): void => {
       const rect = navItem.getBoundingClientRect()
       dropdownStyle.value = {
         left: `${rect.left}px`,
-        top: `${rect.bottom}px`
+        top: `${rect.bottom}px`,
       }
     }
   }
@@ -97,7 +102,7 @@ const handleMouseLeave = (): void => {
 <style scoped>
 .navbar {
   background-color: var(--theme-menu-background);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -127,7 +132,7 @@ const handleMouseLeave = (): void => {
 .dropdown-menu {
   position: fixed;
   background-color: var(--theme-universal-secondary);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, .1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   list-style: none;
   padding: 5px 0;
   border-radius: 4px;

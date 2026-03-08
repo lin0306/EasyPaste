@@ -1,105 +1,116 @@
 <script setup lang="ts">
-import TitleBar from "../../components/TitleBar.vue";
-import {onMounted, onUnmounted, reactive, watch} from "vue";
-import {isImage} from "../../utils/ImageUtil.ts";
-import {filePathConvertFileName, isText} from "../../utils/TextUtil.ts";
-import VideoPreview from "./components/VideoPreview.vue";
-import ImagePreview from "./components/ImagePreview.vue";
-import {isVideo} from "../../utils/VideoUtil.ts";
-import {invoke} from "@tauri-apps/api/core";
-import CodePreview from "./components/CodePreview.vue";
-import {isCode} from "../../utils/CodeUtil.ts";
-import {isAudio} from "../../utils/AudioUtil.ts";
-import AudioPreview from "./components/AudioPreview.vue";
-import FolderPreview from "./components/FolderPreview.vue";
-import OfficePreview from "./components/OfficePreview.vue";
-import {isOffice} from "../../utils/OfficeUtil.ts";
-import TextPreview from "./components/text/TextPreview.vue";
-import PackagePreview from "./components/PackagePreview.vue";
-import {isPackage} from "../../utils/PackageUtil.ts";
-import {listen, UnlistenFn} from "@tauri-apps/api/event";
-import {convertFileSize, getFileSize} from "../../utils/FileUtil.ts";
-import {getType} from "../../constants/FileTypeConstatnts.ts";
-import {currentLanguage} from "../../services/LanguageService.ts";
+import TitleBar from '../../components/TitleBar.vue'
+import { onMounted, onUnmounted, reactive, watch } from 'vue'
+import { isImage } from '../../utils/ImageUtil.ts'
+import { filePathConvertFileName, isText } from '../../utils/TextUtil.ts'
+import VideoPreview from './components/VideoPreview.vue'
+import ImagePreview from './components/ImagePreview.vue'
+import { isVideo } from '../../utils/VideoUtil.ts'
+import { invoke } from '@tauri-apps/api/core'
+import CodePreview from './components/CodePreview.vue'
+import { isCode } from '../../utils/CodeUtil.ts'
+import { isAudio } from '../../utils/AudioUtil.ts'
+import AudioPreview from './components/AudioPreview.vue'
+import FolderPreview from './components/FolderPreview.vue'
+import OfficePreview from './components/OfficePreview.vue'
+import { isOffice } from '../../utils/OfficeUtil.ts'
+import TextPreview from './components/text/TextPreview.vue'
+import PackagePreview from './components/PackagePreview.vue'
+import { isPackage } from '../../utils/PackageUtil.ts'
+import { listen, UnlistenFn } from '@tauri-apps/api/event'
+import { convertFileSize, getFileSize } from '../../utils/FileUtil.ts'
+import { getType } from '../../constants/FileTypeConstatnts.ts'
+import { currentLanguage } from '../../services/LanguageService.ts'
 
 const fileInfo = reactive({
   filePath: '',
   isFolder: false,
   size: '0B',
   type: 'application/octet-stream',
-});
+})
 
 /**
  * 初始化文件更新监听器
  */
-let reloadFilePathListener: any = null;
+let reloadFilePathListener: any = null
 
 /**
  * 打开文件所在目录
  */
 const openInFolder = async (): Promise<void> => {
-  await invoke('open_folder', {path: fileInfo.filePath})
+  await invoke('open_folder', { path: fileInfo.filePath })
 }
 
 const initReloadFilePathListener = async (): Promise<UnlistenFn> => {
   return await listen('reload-preview', async (event: any) => {
-    fileInfo.filePath = event.payload.filePath;
-    fileInfo.isFolder = event.payload.isFolder;
+    fileInfo.filePath = event.payload.filePath
+    fileInfo.isFolder = event.payload.isFolder
     // 更新窗口 url
-    window.history.replaceState(null, '', `${window.location.origin}${window.location.pathname}?filePath=${encodeURIComponent(fileInfo.filePath)}&isFolder=${fileInfo.isFolder}`);
-  });
+    window.history.replaceState(
+      null,
+      '',
+      `${window.location.origin}${window.location.pathname}?filePath=${encodeURIComponent(fileInfo.filePath)}&isFolder=${fileInfo.isFolder}`
+    )
+  })
 }
 
 const loadFileInfo = async (): Promise<void> => {
   if (!fileInfo.isFolder) {
-    const size = await getFileSize(fileInfo.filePath);
-    fileInfo.size = convertFileSize(size);
-    fileInfo.type = getType(fileInfo.filePath);
+    const size = await getFileSize(fileInfo.filePath)
+    fileInfo.size = convertFileSize(size)
+    fileInfo.type = getType(fileInfo.filePath)
   }
 }
 
 watch(() => fileInfo.filePath, loadFileInfo)
 
 onMounted(async () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  fileInfo.filePath = <string>searchParams.get('filePath');
-  fileInfo.isFolder = <string>searchParams.get('isFolder') === "true";
-  await loadFileInfo();
+  const searchParams = new URLSearchParams(window.location.search)
+  fileInfo.filePath = <string>searchParams.get('filePath')
+  fileInfo.isFolder = <string>searchParams.get('isFolder') === 'true'
+  await loadFileInfo()
   // 初始化文件更新监听器
-  reloadFilePathListener = await initReloadFilePathListener();
+  reloadFilePathListener = await initReloadFilePathListener()
 })
 
 onUnmounted(() => {
   // 销毁文件更新监听器
   if (reloadFilePathListener) {
-    reloadFilePathListener();
+    reloadFilePathListener()
   }
 })
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.preview.title"
-            :showCloseBtn="true"
-            :dev-tool="`preview`"/>
+  <TitleBar
+    :title="currentLanguage.pages.preview.title"
+    :showCloseBtn="true"
+    :dev-tool="`preview`"
+  />
   <div class="viewer-container">
     <div class="viewer-header">
-      <div class="viewer-file-path">{{ currentLanguage.pages.preview.filePathLabel }}
+      <div class="viewer-file-path">
+        {{ currentLanguage.pages.preview.filePathLabel }}
         {{ filePathConvertFileName(fileInfo.filePath) }}
       </div>
-      <font-awesome-icon icon="fa-regular fa-folder-open" @click="openInFolder" class="folder-icon"/>
+      <font-awesome-icon
+        icon="fa-regular fa-folder-open"
+        @click="openInFolder"
+        class="folder-icon"
+      />
     </div>
-    <n-divider/>
+    <n-divider />
     <div class="viewer-content">
-      <folder-preview v-if="fileInfo.isFolder" :file-path="fileInfo.filePath"/>
-      <image-preview v-else-if="isImage(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <video-preview v-else-if="isVideo(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <audio-preview v-else-if="isAudio(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <code-preview v-else-if="isCode(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <office-preview v-else-if="isOffice(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <text-preview v-else-if="isText(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
-      <package-preview v-else-if="isPackage(fileInfo.filePath)" :file-path="fileInfo.filePath"/>
+      <folder-preview v-if="fileInfo.isFolder" :file-path="fileInfo.filePath" />
+      <image-preview v-else-if="isImage(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <video-preview v-else-if="isVideo(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <audio-preview v-else-if="isAudio(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <code-preview v-else-if="isCode(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <office-preview v-else-if="isOffice(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <text-preview v-else-if="isText(fileInfo.filePath)" :file-path="fileInfo.filePath" />
+      <package-preview v-else-if="isPackage(fileInfo.filePath)" :file-path="fileInfo.filePath" />
       <div v-else class="unknown-file-container">
-        <font-awesome-icon :icon="['fas', 'preview-unknown-file']" class="unknown-file-icon"/>
+        <font-awesome-icon :icon="['fas', 'preview-unknown-file']" class="unknown-file-icon" />
         <span class="unknown-file-text">
           {{ currentLanguage.pages.preview.cannotPreview }}
         </span>
@@ -107,9 +118,13 @@ onUnmounted(() => {
     </div>
   </div>
   <div class="file-info">
-    <n-ellipsis style="max-width: 70%">{{ currentLanguage.pages.preview.fileType
-      }}{{ fileInfo.isFolder ? currentLanguage.pages.preview.folder : fileInfo.type }}</n-ellipsis>
-    <div v-if="!fileInfo.isFolder">{{ currentLanguage.pages.preview.fileSize }}{{ fileInfo.isFolder ? '' : fileInfo.size }}</div>
+    <n-ellipsis style="max-width: 70%"
+      >{{ currentLanguage.pages.preview.fileType
+      }}{{ fileInfo.isFolder ? currentLanguage.pages.preview.folder : fileInfo.type }}</n-ellipsis
+    >
+    <div v-if="!fileInfo.isFolder">
+      {{ currentLanguage.pages.preview.fileSize }}{{ fileInfo.isFolder ? '' : fileInfo.size }}
+    </div>
   </div>
 </template>
 

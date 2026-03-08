@@ -31,7 +31,6 @@
   background-color: var(--theme-scrollbar-hover);
   border-width: 0;
   cursor: pointer;
-
 }
 
 ::-webkit-scrollbar-corner {

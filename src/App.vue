@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import {GlobalThemeOverrides, NConfigProvider, NMessageProvider} from 'naive-ui';
-import {computed, onMounted, onUnmounted} from 'vue';
-import {error, info} from '@tauri-apps/plugin-log';
-import {currentLanguage, setupLanguageListener} from './services/LanguageService.ts';
-import {setupThemeListener, themeColors} from './services/ThemeService.ts';
-import {destroyAnimationEffect, initializeAnimationEffect} from "./components/composables/AnimationComposable.ts";
+import { GlobalThemeOverrides, NConfigProvider, NMessageProvider } from 'naive-ui'
+import { computed, onMounted, onUnmounted } from 'vue'
+import { error, info } from '@tauri-apps/plugin-log'
+import { currentLanguage, setupLanguageListener } from './services/LanguageService.ts'
+import { setupThemeListener, themeColors } from './services/ThemeService.ts'
+import {
+  destroyAnimationEffect,
+  initializeAnimationEffect,
+} from './components/composables/AnimationComposable.ts'
 // 代码高亮引入
-import hljs from 'highlight.js/lib/core';
-import {setTransparency} from "./utils/ColorUtil.ts";
+import hljs from 'highlight.js/lib/core'
+import { setTransparency } from './utils/ColorUtil.ts'
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
-  return false;
-};
+  return false
+}
 
 /**
  * 定义全局组件主题色
@@ -140,7 +143,7 @@ const theme = computed(() => {
           borderDisabled: themeColors.value.universal.border,
           placeholderColor: themeColors.value.universal.textHint,
           placeholderColorDisabled: themeColors.value.universal.textHint,
-          arrowColor: themeColors.value.universal.text
+          arrowColor: themeColors.value.universal.text,
         },
         InternalSelectMenu: {
           color: themeColors.value.universal.background,
@@ -150,9 +153,9 @@ const theme = computed(() => {
           optionColorPending: themeColors.value.select.options.optionColorPending, // 悬浮再未选中的选项上的背景色
           optionColorActive: themeColors.value.select.options.optionColorActive, // 选中的选项背景色
           optionColorActivePending: themeColors.value.select.options.optionColorActivePending, // 悬浮在选中的选项上的背景色
-          optionCheckColor: themeColors.value.universal.text
-        }
-      }
+          optionCheckColor: themeColors.value.universal.text,
+        },
+      },
     },
     Popselect: {
       peers: {
@@ -166,9 +169,9 @@ const theme = computed(() => {
           optionColorPending: themeColors.value.select.options.optionColorPending, // 悬浮再未选中的选项上的背景色
           optionColorActive: themeColors.value.select.options.optionColorActive, // 选中的选项背景色
           optionColorActivePending: themeColors.value.select.options.optionColorActivePending, // 悬浮在选中的选项上的背景色
-          optionCheckColor: themeColors.value.universal.text
-        }
-      }
+          optionCheckColor: themeColors.value.universal.text,
+        },
+      },
     },
     Menu: {
       color: themeColors.value.menuBar.background,
@@ -185,15 +188,15 @@ const theme = computed(() => {
       buttonColor: themeColors.value.button.primary.backgroundColor,
     },
     Dialog: {
-      titleTextColor: themeColors.value.universal.text,             // 标题颜色
-      textColor: themeColors.value.universal.text,                  // 文本颜色
-      color: themeColors.value.universal.secondary,                 // 背景色
-      iconColor: themeColors.value.universal.text,                  // 图标颜色
-      closeColorHover: themeColors.value.universal.secondary,       // 关闭按钮背景色
-      closeColorPressed: themeColors.value.universal.secondary,     // 关闭按钮背景色
-      closeIconColor: themeColors.value.universal.text,             // 关闭图标颜色
-      closeIconColorHover: themeColors.value.universal.text,        // 关闭图标悬浮颜色
-      closeIconColorPressed: themeColors.value.universal.text,      // 关闭图标悬浮颜色
+      titleTextColor: themeColors.value.universal.text, // 标题颜色
+      textColor: themeColors.value.universal.text, // 文本颜色
+      color: themeColors.value.universal.secondary, // 背景色
+      iconColor: themeColors.value.universal.text, // 图标颜色
+      closeColorHover: themeColors.value.universal.secondary, // 关闭按钮背景色
+      closeColorPressed: themeColors.value.universal.secondary, // 关闭按钮背景色
+      closeIconColor: themeColors.value.universal.text, // 关闭图标颜色
+      closeIconColorHover: themeColors.value.universal.text, // 关闭图标悬浮颜色
+      closeIconColorPressed: themeColors.value.universal.text, // 关闭图标悬浮颜色
     },
     Empty: {
       textColor: themeColors.value.universal.textHint,
@@ -245,7 +248,7 @@ const theme = computed(() => {
     Tabs: {
       tabTextColorLine: themeColors.value.universal.textHint,
       tabTextColorActiveLine: themeColors.value.universal.text,
-      tabBorderColor: themeColors.value.universal.border
+      tabBorderColor: themeColors.value.universal.border,
     },
     Progress: {
       fillColor: themeColors.value.button.primary.backgroundColor,
@@ -264,7 +267,7 @@ const theme = computed(() => {
       textColor: themeColors.value.universal.text,
       arrowColor: themeColors.value.universal.text,
       itemMargin: '0px',
-      titlePadding: '5px'
+      titlePadding: '5px',
     },
     Dropdown: {
       color: themeColors.value.universal.secondary,
@@ -276,98 +279,111 @@ const theme = computed(() => {
       optionTextColorChildActive: themeColors.value.button.normal.hoverTextColor,
       dividerColor: themeColors.value.universal.border,
       padding: '0',
-
     },
-  } as GlobalThemeOverrides;
-});
+  } as GlobalThemeOverrides
+})
 
 /**
  * 计算 Naive UI 的语言配置
  */
 const locale = computed(() => {
-  return currentLanguage.value.locale;
-});
+  return currentLanguage.value.locale
+})
 
 /**
  * 计算 Naive UI 的语言配置
  */
 const dateLocale = computed(() => {
-  return currentLanguage.value.dateLocale;
-});
+  return currentLanguage.value.dateLocale
+})
 
 /**
  * 忽略浏览器默认的搜索快捷键
  */
 async function handleKeyDown(event: KeyboardEvent): Promise<void> {
   // 忽略浏览器默认的搜索快捷键
-  if (event.key.toLowerCase() === 'f'
-      && (event.ctrlKey || event.metaKey)
-      && !event.altKey
-      && !event.shiftKey) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (
+    event.key.toLowerCase() === 'f' &&
+    (event.ctrlKey || event.metaKey) &&
+    !event.altKey &&
+    !event.shiftKey
+  ) {
+    event.preventDefault()
+    event.stopPropagation()
   }
   // 忽略浏览器f5刷新快捷键
-  if (event.key.toLowerCase() === 'f5'
-      && !event.ctrlKey
-      && !event.metaKey
-      && !event.altKey
-      && !event.shiftKey) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (
+    event.key.toLowerCase() === 'f5' &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.altKey &&
+    !event.shiftKey
+  ) {
+    event.preventDefault()
+    event.stopPropagation()
   }
   // 检测 Ctrl + R 或 Cmd + R（macOS）
-  if ((event.ctrlKey && event.key.toLowerCase() === 'r' || event.metaKey && event.key.toLowerCase() === 'r')
-      && !event.altKey
-      && !event.shiftKey) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (
+    ((event.ctrlKey && event.key.toLowerCase() === 'r') ||
+      (event.metaKey && event.key.toLowerCase() === 'r')) &&
+    !event.altKey &&
+    !event.shiftKey
+  ) {
+    event.preventDefault()
+    event.stopPropagation()
   }
   // 检测 Ctrl + Shift + R 或 Cmd + Shift + R（macOS）
-  if ((event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'r' || event.metaKey && event.shiftKey && event.key.toLowerCase() === 'r')
-      && !event.altKey) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (
+    ((event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'r') ||
+      (event.metaKey && event.shiftKey && event.key.toLowerCase() === 'r')) &&
+    !event.altKey
+  ) {
+    event.preventDefault()
+    event.stopPropagation()
   }
 }
 
 // 应用启动时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
-    info("应用启动中...");
+    info('应用启动中...')
     // 初始化动画效果配置
-    await initializeAnimationEffect();
+    await initializeAnimationEffect()
     // 设置主题监听器
     setupThemeListener().catch(e => {
-      error('主题监听器初始化失败:' + e);
-    });
+      error('主题监听器初始化失败:' + e)
+    })
     // 设置语言监听器
     setupLanguageListener().catch(e => {
-      error('语言监听器初始化失败:' + e);
-    });
-    info('应用初始化完成');
+      error('语言监听器初始化失败:' + e)
+    })
+    info('应用初始化完成')
   } catch (er) {
-    error('应用初始化失败:' + er);
+    error('应用初始化失败:' + er)
   }
   // 增加键盘点击事件监听
-  document.addEventListener('keydown', handleKeyDown);
-});
+  document.addEventListener('keydown', handleKeyDown)
+})
 
 onUnmounted(() => {
   // 销毁动画效果配置
-  destroyAnimationEffect();
+  destroyAnimationEffect()
   // 移除键盘点击时间监听
-  document.removeEventListener('keydown', handleKeyDown);
+  document.removeEventListener('keydown', handleKeyDown)
 })
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="theme" :locale="locale" :date-locale="dateLocale" :hljs="hljs">
+  <n-config-provider
+    :theme-overrides="theme"
+    :locale="locale"
+    :date-locale="dateLocale"
+    :hljs="hljs"
+  >
     <n-message-provider>
-      <router-view/>
+      <router-view />
     </n-message-provider>
   </n-config-provider>
-
 </template>
 
 <style>
@@ -375,10 +391,13 @@ onUnmounted(() => {
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--theme-universal-background);
   color: var(--theme-universal-text);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   overflow-y: hidden;
   -moz-user-select: none; /* Firefox私有属性 */
   -webkit-user-select: none; /* WebKit内核私有属性 */

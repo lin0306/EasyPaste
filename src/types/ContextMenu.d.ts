@@ -1,1 +1,5 @@
-declare interface ContextMenu {    label: string;    params?: string[];    onClick: (...any) => any;}
+declare interface ContextMenu {
+  label: string
+  params?: string[]
+  onClick: (...any) => any
+}
