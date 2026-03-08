@@ -6,6 +6,8 @@ import {invoke} from '@tauri-apps/api/core';
 import {ref} from "vue";
 import {isCodeText} from "../utils/CodeUtil.ts";
 import {getPageTitle, isUrl} from "../utils/LinkUtil.ts";
+import {isImage} from "../utils/ImageUtil.ts";
+import {removeEscape} from "../utils/FileUtil.ts";
 
 // 剪贴板内容缓存
 export const dataMap = ref<Map<{ type: string; content: string; file_path: string }, number>>(new Map());
@@ -49,14 +51,35 @@ export async function initClipboardListener() {
                 }
             } else if (payload.type === 'file') {
                 const fileName = payload.file_path;
-                const id = await db.getFileExist(fileName, 'file');
-                if (id) {
-                    await db.updateItemTime(id, Date.now());
-                    info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                const files: string[] = JSON.parse(fileName);
+                if (files && files.length === 1 && isImage(files[0])) {
+                    // 文件用的是双斜杠，图片用的单斜杠，这里需要转义处理
+                    const id = await db.getFileExist(removeEscape(files[0]), 'image');
+                    if (id) {
+                        await db.updateItemTime(id, Date.now());
+                        info("[数据库进程] 有查询到相同图片内容的记录，覆盖复制时间");
+                    } else {
+                        const id = await db.getFileExist(fileName, 'file');
+                        if (id) {
+                            await db.updateItemTime(id, Date.now());
+                            info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                        } else {
+                            if (fileName) {
+                                // 直接将文件路径保存到数据库
+                                await db.saveClipboardItem(fileName, 'file');
+                            }
+                        }
+                    }
                 } else {
-                    if (fileName) {
-                        // 直接将文件路径保存到数据库
-                        await db.saveClipboardItem(fileName, 'file');
+                    const id = await db.getFileExist(fileName, 'file');
+                    if (id) {
+                        await db.updateItemTime(id, Date.now());
+                        info("[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间");
+                    } else {
+                        if (fileName) {
+                            // 直接将文件路径保存到数据库
+                            await db.saveClipboardItem(fileName, 'file');
+                        }
                     }
                 }
             } else if (payload.type === 'image') {
