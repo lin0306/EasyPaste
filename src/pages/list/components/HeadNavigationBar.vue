@@ -38,7 +38,7 @@ const MenuItems = computed((): NavBarItem[] => [
         key: '插件管理',
         label: currentLanguage.value.pages.list.menu.pluginStore,
         type: 'item',
-        isHide: false,
+        isHide: true,
         onClick: () => {
           // 打开设置窗口
           openPluginStoreWindow()
