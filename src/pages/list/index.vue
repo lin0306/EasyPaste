@@ -49,7 +49,7 @@ let lastKeyDownTime = 0;
 /**
  * 监听键盘点击事件
  */
-async function handleKeyDown(event: KeyboardEvent) {
+const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
   // 忽略重复的按键事件
   if (event.timeStamp - lastKeyDownTime < 100) {
     return;

@@ -63,7 +63,7 @@ let listFixedListen = listFixedStore();
 /**
  * 固定窗口
  */
-function onFixWindow(): void {
+const onFixWindow = (): void => {
   if (props.showFixedBtn) {
     isFixed.value = true;
     listFixedListen.fixed();
@@ -73,7 +73,7 @@ function onFixWindow(): void {
 /**
  * 取消固定窗口
  */
-function onUnfixWindow(): void {
+const onUnfixWindow = (): void => {
   if (props.showFixedBtn) {
     isFixed.value = false;
     listFixedListen.unfixed();
@@ -83,7 +83,7 @@ function onUnfixWindow(): void {
 /**
  * 最小化窗口
  */
-function onMinimizeWindow(): void {
+const onMinimizeWindow = (): void => {
   if (props.showMinimizeBtn) {
     getCurrentWebviewWindow().minimize();
   }
@@ -92,7 +92,7 @@ function onMinimizeWindow(): void {
 /**
  * 关闭窗口
  */
-function onClose(): void {
+const onClose = (): void => {
   if (props.showCloseBtn) {
     getCurrentWebviewWindow().close();
   }
@@ -101,7 +101,7 @@ function onClose(): void {
 /**
  * 隐藏窗口
  */
-function onHide(): void {
+const onHide = (): void => {
   if (props.showHideBtn) {
     getCurrentWebviewWindow().hide();
   }
@@ -110,7 +110,7 @@ function onHide(): void {
 /**
  * 打开开发者工具
  */
-async function openDevTool(): Promise<void> {
+const openDevTool = async (): Promise<void> => {
   if (props.devTool) {
     await invoke('open_dev_tool', {windowName: props.devTool});
   }
@@ -119,7 +119,7 @@ async function openDevTool(): Promise<void> {
 /**
  * 打开更新窗口
  */
-async function openUpdateWindow(): Promise<void> {
+const openUpdateWindow = async (): Promise<void> => {
   const update = UpdaterService.getInstance();
   update.showUpdateWindow();
 }
@@ -127,7 +127,7 @@ async function openUpdateWindow(): Promise<void> {
 /**
  * 刷新页面
  */
-function onRefresh(): void {
+const onRefresh = (): void => {
   // 刷新当前页面
   window.location.reload();
 }

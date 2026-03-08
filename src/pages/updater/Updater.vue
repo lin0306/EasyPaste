@@ -38,13 +38,13 @@ const downloadProgress = ref(0); // 下载进度（百分比）
 const downloadSpeed = ref<any>(0); // 下载速度 (KB/s)
 const downloadSpeedUnit = ref('KB/s'); // 下载速度单位
 
-// 打开GitHub发布页面
-function openGitHubReleases(): void {
+// 打开 GitHub 发布页面
+const openGitHubReleases = (): void => {
   openLink('https://github.com/lin0306/EasyPaste/releases');
 }
 
 // 下载更新
-function downloadUpdate(): void {
+const downloadUpdate = (): void => {
   showDownloadFailedVisible.value = false;
   downloadState.value = 'downloading';
   downloadProgress.value = 0; // 初始化进度值
@@ -96,7 +96,7 @@ function downloadUpdate(): void {
 /**
  * 执行下载速度计算定时任务
  */
-function startDownloadSpeedCalculationInterval(): void {
+const startDownloadSpeedCalculationInterval = (): void => {
   downloadSpeedCalculationInterval = setInterval(() => {
     const number = downloadedSize.value - downloadedSizeSnapshot.value;
     if (number < 1024) {
@@ -114,7 +114,7 @@ function startDownloadSpeedCalculationInterval(): void {
 }
 
 // 立即安装更新并重启
-function installNow(): void {
+const installNow = (): void => {
   // 触发安装操作
   UpdaterService.install(updater);
 }
