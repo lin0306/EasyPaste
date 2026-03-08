@@ -7,6 +7,7 @@ declare interface LanguageConfig {
 }
 
 declare interface PageConfig {
+    [x: string]: any,
     settings: {
         [x: string]: any;
         initFailedHint: string;

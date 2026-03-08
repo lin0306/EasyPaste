@@ -30,7 +30,7 @@ export const themeColors = ref<ThemeColor>(lightTheme.colors);
 /**
  * 初始化主题
  */
-export async function initializeTheme() {
+export async function initializeTheme(): Promise<void> {
     console.info('正在初始化主题配置...')
     try {
         // 初始化默认主题
@@ -66,7 +66,7 @@ export async function initializeTheme() {
  * @param colors 主题颜色
  * @param suffix CSS变量后缀
  */
-export function applyThemeToDOM(colors: ThemeColor, suffix: string = '') {
+export function applyThemeToDOM(colors: ThemeColor, suffix: string = ''): void {
     const root = document.documentElement;
 
     // 将主题颜色应用到CSS变量
@@ -95,7 +95,7 @@ export function applyThemeToDOM(colors: ThemeColor, suffix: string = '') {
  * 切换主题
  * @param themeId
  */
-export async function toggleTheme(themeId: string) {
+export async function toggleTheme(themeId: string): Promise<void> {
     console.log('切换主题:', themeId)
     try {
         // 查找主题
@@ -127,7 +127,7 @@ export async function toggleTheme(themeId: string) {
 /**
  * 主题事件监听
  */
-export async function setupThemeListener() {
+export async function setupThemeListener(): Promise<void> {
     // 监听主题变更事件
     await listen<string>('theme-changed', (event) => {
         // 确保不重复应用相同主题

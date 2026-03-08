@@ -63,7 +63,7 @@ let listFixedListen = listFixedStore();
 /**
  * 固定窗口
  */
-function onFixWindow() {
+function onFixWindow(): void {
   if (props.showFixedBtn) {
     isFixed.value = true;
     listFixedListen.fixed();
@@ -73,7 +73,7 @@ function onFixWindow() {
 /**
  * 取消固定窗口
  */
-function onUnfixWindow() {
+function onUnfixWindow(): void {
   if (props.showFixedBtn) {
     isFixed.value = false;
     listFixedListen.unfixed();
@@ -83,7 +83,7 @@ function onUnfixWindow() {
 /**
  * 最小化窗口
  */
-function onMinimizeWindow() {
+function onMinimizeWindow(): void {
   if (props.showMinimizeBtn) {
     getCurrentWebviewWindow().minimize();
   }
@@ -92,7 +92,7 @@ function onMinimizeWindow() {
 /**
  * 关闭窗口
  */
-function onClose() {
+function onClose(): void {
   if (props.showCloseBtn) {
     getCurrentWebviewWindow().close();
   }
@@ -101,7 +101,7 @@ function onClose() {
 /**
  * 隐藏窗口
  */
-function onHide() {
+function onHide(): void {
   if (props.showHideBtn) {
     getCurrentWebviewWindow().hide();
   }
@@ -110,7 +110,7 @@ function onHide() {
 /**
  * 打开开发者工具
  */
-async function openDevTool() {
+async function openDevTool(): Promise<void> {
   if (props.devTool) {
     await invoke('open_dev_tool', {windowName: props.devTool});
   }
@@ -119,7 +119,7 @@ async function openDevTool() {
 /**
  * 打开更新窗口
  */
-async function openUpdateWindow() {
+async function openUpdateWindow(): Promise<void> {
   const update = UpdaterService.getInstance();
   update.showUpdateWindow();
 }
@@ -127,7 +127,7 @@ async function openUpdateWindow() {
 /**
  * 刷新页面
  */
-function onRefresh() {
+function onRefresh(): void {
   // 刷新当前页面
   window.location.reload();
 }

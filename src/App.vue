@@ -46,7 +46,7 @@ const theme = computed(() => {
       textColorTextFocus: themeColors.value.button.normal.hoverTextColor,
       textColorTextPressed: themeColors.value.button.normal.hoverTextColor,
       textColorTextDisabled: themeColors.value.button.normal.disabledTextColor,
-      textColorGhost:  themeColors.value.button.normal.textColor,
+      textColorGhost: themeColors.value.button.normal.textColor,
       textColorGhostHover: themeColors.value.button.normal.hoverTextColor,
       textColorGhostFocus: themeColors.value.button.normal.hoverTextColor,
       textColorGhostPressed: themeColors.value.button.normal.hoverTextColor,
@@ -298,7 +298,7 @@ const dateLocale = computed(() => {
 /**
  * 忽略浏览器默认的搜索快捷键
  */
-async function handleKeyDown(event: KeyboardEvent) {
+async function handleKeyDown(event: KeyboardEvent): Promise<void> {
   // 忽略浏览器默认的搜索快捷键
   if (event.key.toLowerCase() === 'f'
       && (event.ctrlKey || event.metaKey)
@@ -390,9 +390,10 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
 }
+
 /*fix:折叠面板第一条没有垂直居中*/
 .n-collapse .n-collapse-item:first-child {
-   margin-top: 5px;
+  margin-top: 5px;
 }
 
 .n-collapse .n-collapse-item .n-collapse-item__content-wrapper .n-collapse-item__content-inner {

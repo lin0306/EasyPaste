@@ -79,7 +79,7 @@ const customThemeConfig: ThemeConfig = {
 /**
  * 保存用户自定义主题配置
  */
-export async function saveCustomTheme(themeColors: ThemeColor) {
+export async function saveCustomTheme(themeColors: ThemeColor): Promise<void> {
     customThemeConfig.colors = themeColors;
     await writeTextFile(THEME_FILE_NAME, JSON.stringify(customThemeConfig), {
         baseDir: BaseDirectory.AppData,
@@ -99,7 +99,7 @@ export async function getCustomTheme(): Promise<ThemeConfig> {
 /**
  * 初始化自定义主题配置
  */
-export async function initCustomTheme() {
+export async function initCustomTheme(): Promise<void> {
     console.log("初始化用户自定义主题配置");
     if (window.location.pathname !== '/list') {
         console.log("不是主页面，直接从文件中获取自定义主题配置")

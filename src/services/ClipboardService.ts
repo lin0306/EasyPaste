@@ -1,4 +1,4 @@
-import {listen} from '@tauri-apps/api/event';
+import {listen, UnlistenFn} from '@tauri-apps/api/event';
 import {error, info} from '@tauri-apps/plugin-log';
 import {clipboardListenStore} from '../store/CopyStatus';
 import ClipboardDBService from './ClipboardDBService';
@@ -15,7 +15,7 @@ export const dataMap = ref<Map<{ type: string; content: string; file_path: strin
 /**
  * 初始化剪贴板监听服务
  */
-export async function initClipboardListener() {
+export async function initClipboardListener(): Promise<UnlistenFn> {
     // 监听剪贴板内容变化事件
     const unListen = await listen('clipboard-change', async (event) => {
         const payload: any = event.payload;
@@ -121,16 +121,16 @@ export async function initClipboardListener() {
  * 将内容写入剪贴板
  * @param item 剪贴板内容对象
  */
-export async function copyToClipboard(item: ClipboardItem) {
+export async function copyToClipboard(item: ClipboardItem): Promise<boolean> {
     if (item.type === 'text' || item.type === 'code' || item.type === 'link') {
         // 调用后端接口
-        return await invoke('write_to_clipboard', {content: item.content, format: 'text'});
+        return await invoke<boolean>('write_to_clipboard', {content: item.content, format: 'text'});
     } else if (item.type === 'image') {
         // 调用后端接口
-        return await invoke('write_to_clipboard', {content: item.file_path, format: 'image'});
+        return await invoke<boolean>('write_to_clipboard', {content: item.file_path, format: 'image'});
     } else {
         // 调用后端接口
-        return await invoke('write_to_clipboard', {content: item.file_path, format: 'files'});
+        return await invoke<boolean>('write_to_clipboard', {content: item.file_path, format: 'files'});
     }
 }
 
@@ -138,7 +138,7 @@ export async function copyToClipboard(item: ClipboardItem) {
  * 文件写入剪贴板
  * @param filePaths 文件路径列表
  */
-export async function copyFileToClipboard(filePaths: Array<string>) {
+export async function copyFileToClipboard(filePaths: Array<string>): Promise<boolean> {
     // 调用后端接口
-    return await invoke('write_to_clipboard', {content: JSON.stringify(filePaths), format: 'files'});
+    return await invoke<boolean>('write_to_clipboard', {content: JSON.stringify(filePaths), format: 'files'});
 }

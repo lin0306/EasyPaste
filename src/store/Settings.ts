@@ -39,7 +39,7 @@ const defaultSettings: Settings = {
  * 保存主题
  * @param theme 主题
  */
-export async function saveTheme(theme: String) {
+export async function saveTheme(theme: String): Promise<void> {
     info("保存主题: " + theme);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.THEME, theme);
@@ -57,7 +57,7 @@ export async function getTheme(): Promise<string> {
  * 保存语言
  * @param language 语言
  */
-export async function saveLanguage(language: String) {
+export async function saveLanguage(language: String): Promise<void> {
     info("保存语言: " + language);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.LANGUAGES, language);
@@ -75,7 +75,7 @@ export async function getLanguage(): Promise<string> {
  * 保存开机自启参数
  * @param powerOnSelfStart 是否开机自启
  */
-export async function savePowerOnSelfStart(powerOnSelfStart: boolean) {
+export async function savePowerOnSelfStart(powerOnSelfStart: boolean): Promise<void> {
     info("保存开机自启: " + powerOnSelfStart);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.POWER_ON_SELF_START, powerOnSelfStart);
@@ -93,7 +93,7 @@ export async function getPowerOnSelfStart(): Promise<boolean> {
  * 获取是否替换全局热键
  * @param replaceGlobalHotkey 是否替换全局热键
  */
-export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean) {
+export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean): Promise<void> {
     info("保存是否替换全局热键: " + replaceGlobalHotkey);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY, replaceGlobalHotkey);
@@ -111,7 +111,7 @@ export async function getReplaceGlobalHotkey(): Promise<boolean> {
  * 保存最大历史记录项
  * @param maxHistoryItems 最大历史记录项
  */
-export async function saveMaxHistoryItems(maxHistoryItems: number) {
+export async function saveMaxHistoryItems(maxHistoryItems: number): Promise<void> {
     info("保存最大历史记录项: " + maxHistoryItems);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.MAX_HISTORY_ITEMS, maxHistoryItems);
@@ -129,7 +129,7 @@ export async function getMaxHistoryItems(): Promise<number> {
  * 保存数据保留天数
  * @param dataRetentionDays 数据保留天数
  */
-export async function saveDataRetentionDays(dataRetentionDays: number) {
+export async function saveDataRetentionDays(dataRetentionDays: number): Promise<void> {
     info("保存数据保留天数: " + dataRetentionDays);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.DATA_RETENTION_DAYS, dataRetentionDays);
@@ -147,7 +147,7 @@ export async function getDataRetentionDays(): Promise<number> {
  * 保存自动检查更新
  * @param autoCheckUpdate 是否自动检查更新
  */
-export async function saveAutoCheckUpdate(autoCheckUpdate: boolean) {
+export async function saveAutoCheckUpdate(autoCheckUpdate: boolean): Promise<void> {
     info("保存自动检查更新: " + autoCheckUpdate);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE, autoCheckUpdate);
@@ -165,7 +165,7 @@ export async function getAutoCheckUpdate(): Promise<boolean> {
  * 保存更新模式
  * @param updateMode 更新模式
  */
-export async function saveUpdateMode(updateMode: string) {
+export async function saveUpdateMode(updateMode: string): Promise<void> {
     info("保存更新模式: " + updateMode);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.UPDATE_MODE, updateMode);
@@ -183,7 +183,7 @@ export async function getUpdateMode(): Promise<string> {
  * 保存自动检查更新间隔
  * @param autoCheckUpdateInterval 自动检查更新间隔
  */
-export async function saveAutoCheckUpdateInterval(autoCheckUpdateInterval: number) {
+export async function saveAutoCheckUpdateInterval(autoCheckUpdateInterval: number): Promise<void> {
     info("保存自动检查更新间隔: " + autoCheckUpdateInterval);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.AUTO_CHECK_UPDATE_INTERVAL, autoCheckUpdateInterval);
@@ -201,7 +201,7 @@ export async function getAutoCheckUpdateInterval(): Promise<number> {
  * 保存是否启用标签
  * @param enableTag 是否启用标签
  */
-export async function saveEnableTag(enableTag: boolean) {
+export async function saveEnableTag(enableTag: boolean): Promise<void> {
     info("保存是否启用标签: " + enableTag);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ENABLE_TAG, enableTag);
@@ -219,7 +219,7 @@ export async function getEnableTag(): Promise<boolean> {
  * 保存标签按钮显示位置
  * @param bindTagBtnShowLocation 标签按钮显示位置
  */
-export async function saveBindTagBtnShowLocation(bindTagBtnShowLocation: string) {
+export async function saveBindTagBtnShowLocation(bindTagBtnShowLocation: string): Promise<void> {
     info("保存标签按钮显示位置: " + bindTagBtnShowLocation);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION, bindTagBtnShowLocation);
@@ -237,7 +237,7 @@ export async function getBindTagBtnShowLocation(): Promise<string> {
  * 保存自动隐藏窗口
  * @param autoHideWindow 自动隐藏窗口
  */
-export async function saveAutoHideWindow(autoHideWindow: boolean) {
+export async function saveAutoHideWindow(autoHideWindow: boolean): Promise<void> {
     info("保存自动隐藏窗口: " + autoHideWindow);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, autoHideWindow);
@@ -255,7 +255,7 @@ export async function getAutoHideWindow(): Promise<boolean> {
  * 保存窗口是否始终置顶参数
  * @param alwaysOnTop 窗口是否始终置顶
  */
-export async function saveAlwaysOnTop(alwaysOnTop: boolean) {
+export async function saveAlwaysOnTop(alwaysOnTop: boolean): Promise<void> {
     info("保存窗口是否始终置顶: " + alwaysOnTop);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, alwaysOnTop);
@@ -273,7 +273,7 @@ export async function getAlwaysOnTop(): Promise<boolean> {
  * 保存有新版本提示方式
  * @param newVersionAlertMode 有新版本提示方式
  */
-export async function saveNewVersionAlertMode(newVersionAlertMode: string) {
+export async function saveNewVersionAlertMode(newVersionAlertMode: string): Promise<void> {
     info("保存有新版本提示方式: " + newVersionAlertMode);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, newVersionAlertMode);
@@ -291,7 +291,7 @@ export async function getNewVersionAlertMode(): Promise<string> {
  * 保存是否启用动画效果
  * @param enableAnimationEffects 是否启用页面切换动画
  */
-export async function saveEnableAnimationEffects(enableAnimationEffects: boolean) {
+export async function saveEnableAnimationEffects(enableAnimationEffects: boolean): Promise<void> {
     info("保存启用动画效果: " + enableAnimationEffects);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS, enableAnimationEffects);
@@ -309,7 +309,7 @@ export async function getEnableAnimationEffects(): Promise<boolean> {
  * 保存动画持续时间
  * @param animationDuration 动画持续时间（毫秒）
  */
-export async function saveAnimationDuration(animationDuration: number) {
+export async function saveAnimationDuration(animationDuration: number): Promise<void> {
     info("保存动画持续时间: " + animationDuration);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, animationDuration);
@@ -327,7 +327,7 @@ export async function getAnimationDuration(): Promise<number> {
  * 保存页面动画速度级别
  * @param animationSpeedLevel 页面动画速度级别
  */
-export async function saveAnimationSpeedLevel(animationSpeedLevel: string) {
+export async function saveAnimationSpeedLevel(animationSpeedLevel: string): Promise<void> {
     info("保存页面动画速度级别: " + animationSpeedLevel);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, animationSpeedLevel);
@@ -345,7 +345,7 @@ export async function getAnimationSpeedLevel(): Promise<string> {
  * 保存是否自动跳转到最新数据
  * @param autoGoToLatestData 是否自动跳转到最新数据
  */
-export async function saveAutoGoToLatestData(autoGoToLatestData: boolean) {
+export async function saveAutoGoToLatestData(autoGoToLatestData: boolean): Promise<void> {
     info("保存是否自动跳转到最新数据: " + autoGoToLatestData);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, autoGoToLatestData);
@@ -363,7 +363,7 @@ export async function getAutoGoToLatestData(): Promise<boolean> {
  * 保存标签列表位置
  * @param tagListLocation 是否自动跳转到最新数据
  */
-export async function saveTagListLocation(tagListLocation: string) {
+export async function saveTagListLocation(tagListLocation: string): Promise<void> {
     info("保存标签列表位置: " + tagListLocation);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, tagListLocation);
@@ -381,7 +381,7 @@ export async function getTagListLocation(): Promise<string> {
  * 保存是否显示图片缩略图
  * @param displayThumbnailImage 是否显示图片缩略图
  */
-export async function saveDisplayThumbnailImage(displayThumbnailImage: boolean) {
+export async function saveDisplayThumbnailImage(displayThumbnailImage: boolean): Promise<void> {
     info("保存标签列表位置: " + displayThumbnailImage);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, displayThumbnailImage);
@@ -399,7 +399,7 @@ export async function getDisplayThumbnailImage(): Promise<boolean> {
  * 保存图片存储位置
  * @param imageBasePath 图片存储位置
  */
-export async function saveImageBasePath(imageBasePath: string) {
+export async function saveImageBasePath(imageBasePath: string): Promise<void> {
     info("保存图片存储位置: " + imageBasePath);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.IMAGE_BASE_PATH, imageBasePath);
@@ -417,7 +417,7 @@ export async function getImageBasePath(): Promise<string> {
  * 保存是否存储图片
  * @param enableImageSave 图片存储位置
  */
-export async function saveEnableImageSave(enableImageSave: boolean) {
+export async function saveEnableImageSave(enableImageSave: boolean): Promise<void> {
     info("保存是否存储图片: " + enableImageSave);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, enableImageSave);
@@ -435,7 +435,7 @@ export async function getEnableImageSave(): Promise<boolean> {
  * 保存插件路径
  * @param pluginPath 插件路径
  */
-export async function savePluginPath(pluginPath: string) {
+export async function savePluginPath(pluginPath: string): Promise<void> {
     info("保存插件路径: " + pluginPath);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, pluginPath);
@@ -453,7 +453,7 @@ export async function getPluginPath(): Promise<string> {
  * 保存是否显示详细时间
  * @param displayDetailTime 是否显示详细时间
  */
-export async function saveDisplayDetailTime(displayDetailTime: boolean) {
+export async function saveDisplayDetailTime(displayDetailTime: boolean): Promise<void> {
     info("保存是否显示详细时间: " + displayDetailTime);
     const settings = await load(SETTINGS_FILE_NAME, {defaults: {}, autoSave: true});
     await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, displayDetailTime);
@@ -470,7 +470,7 @@ export async function getDisplayDetailTime(): Promise<boolean> {
 /**
  * 初始化用户配置
  */
-export async function initSettings() {
+export async function initSettings(): Promise<void> {
     info("初始化用户配置");
     const settingsExist = await exists(SETTINGS_FILE_NAME, {
         baseDir: BaseDirectory.AppData,

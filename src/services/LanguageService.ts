@@ -23,7 +23,7 @@ export const currentLanguage = ref<LanguageConfig>(chinese);
 /**
  * 初始化语言
  */
-export async function initializeLanguage() {
+export async function initializeLanguage(): Promise<void> {
     console.log('正在初始化语言配置...')
     try {
         // 设置当前主题
@@ -50,7 +50,7 @@ export async function initializeLanguage() {
  * 切换语言
  * @param languageId 语言ID
  */
-export async function toggleLanguage(languageId: string) {
+export async function toggleLanguage(languageId: string): Promise<void> {
     try {
         // 查找主题
         const language = languages.find(item => item.id === languageId);
@@ -78,7 +78,7 @@ export async function toggleLanguage(languageId: string) {
 /**
  * 监听语言变更事件
  */
-export const setupLanguageListener = async () => {
+export const setupLanguageListener = async (): Promise<void> => {
     await listen<string>('language-changed', (event) => {
         // 确保不重复应用相同主题
         if (event.payload !== currentLanguageId.value) {
@@ -92,7 +92,7 @@ export const setupLanguageListener = async () => {
 };
 
 // 获取托盘的语言
-export function getTray(languageId: string) {
+export function getTray(languageId: string): LanguageConfig["pages"]["tray"] {
     const language = languages.find(item => item.id === languageId);
     if (!language) {
         return chinese.pages.tray;

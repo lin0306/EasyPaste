@@ -22,7 +22,7 @@ export default class UpdaterService {
     /**
      * 获取更新服务实例
      */
-    static getInstance() {
+    static getInstance(): UpdaterService {
         if (!this.instance) {
             this.instance = new UpdaterService();
         }
@@ -33,7 +33,7 @@ export default class UpdaterService {
      * 设置检查更新的时间间隔
      * @param minutes 分钟
      */
-    setIntervalTime(minutes: number) {
+    setIntervalTime(minutes: number): void {
         this.intervalTime = minutes * 60000;
         if (this.updateInterval !== null) {
             clearInterval(this.updateInterval);
@@ -44,7 +44,7 @@ export default class UpdaterService {
     /**
      * 开始自动检查更新
      */
-    startAutoCheck() {
+    startAutoCheck(): void {
         if (this.updateInterval === null) {
             this.updateInterval = setInterval(() => this.checkForUpdates(false), this.intervalTime);
             info('初始化自动检查更新任务')
@@ -54,7 +54,7 @@ export default class UpdaterService {
     /**
      * 停止自动检查更新
      */
-    stopAutoCheck() {
+    stopAutoCheck(): void {
         if (this.updateInterval !== null) {
             clearInterval(this.updateInterval);
             this.updateInterval = null;
@@ -65,7 +65,7 @@ export default class UpdaterService {
     /**
      * 检查更新
      */
-    async checkForUpdates(isManual: boolean) {
+    async checkForUpdates(isManual: boolean): Promise<void> {
         info('触发检查更新操作')
         try {
             const update = await check();
@@ -111,7 +111,7 @@ export default class UpdaterService {
     /**
      * 显示更新窗口
      */
-    showUpdateWindow() {
+    showUpdateWindow(): void {
         // 打开更新窗口
         openUpdaterWindow();
     }
@@ -120,7 +120,7 @@ export default class UpdaterService {
      * 下载并安装更新
      * @param options 下载选项
      */
-    static async downloadAndInstall(options?: DownloadOptions) {
+    static async downloadAndInstall(options?: DownloadOptions): Promise<void> {
         return check().then(async (update) => {
             if (update) {
                 await update.downloadAndInstall(() => {
@@ -130,13 +130,13 @@ export default class UpdaterService {
         });
     }
 
-    static async download(update?: Update, onEvent?: (progress: DownloadEvent) => void, options?: DownloadOptions) {
+    static async download(update?: Update, onEvent?: (progress: DownloadEvent) => void, options?: DownloadOptions): Promise<void> {
         if (update) {
             await update.download(onEvent, options);
         }
     }
 
-    static async install(update?: Update) {
+    static async install(update?: Update): Promise<void> {
         if (update) {
             await update.install();
             await relaunch();

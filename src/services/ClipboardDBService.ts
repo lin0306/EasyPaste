@@ -32,7 +32,7 @@ class ClipboardDBService {
         return ClipboardDBService.instance;
     }
 
-    async initDatabase() {
+    async initDatabase(): Promise<void> {
         try {
             // 创建剪贴板项目表
             await this.db?.execute(`
@@ -114,7 +114,7 @@ class ClipboardDBService {
      * @param linkTitle 链接标题
      * @param type 类型
      */
-    async saveClipboardItem(content: string, type: string, linkTitle: string | null = null) {
+    async saveClipboardItem(content: string, type: string, linkTitle: string | null = null): Promise<void> {
         try {
             // 覆盖相同内容的旧记录的复制时间
             if (type === 'text' || type === 'code' || type === 'link') {
@@ -176,7 +176,7 @@ class ClipboardDBService {
      * @param {number} id 条目ID
      * @param {number} newTime 新的复制时间
      */
-    async updateItemTime(id: number, newTime: number) {
+    async updateItemTime(id: number, newTime: number): Promise<void> {
         await this.db?.execute('UPDATE clipboard_items SET copy_time = ? WHERE id = ?', [newTime, id]);
     }
 
@@ -305,7 +305,7 @@ class ClipboardDBService {
     /**
      * 置顶或取消置顶剪贴板项目
      */
-    async toggleTopClipboardItem(id: number, isTopped: boolean) {
+    async toggleTopClipboardItem(id: number, isTopped: boolean): Promise<boolean> {
         const now = Date.now();
 
         try {
@@ -328,7 +328,7 @@ class ClipboardDBService {
      * @param id 项目id
      * @param content 项目内容
      */
-    async updateItemContent(id: number, content: string) {
+    async updateItemContent(id: number, content: string): Promise<boolean> {
         try {
             await this.db?.execute('UPDATE clipboard_items SET content = ? WHERE id = ?', [content, id]);
             return true;
@@ -343,7 +343,7 @@ class ClipboardDBService {
      * @param id 项目id
      * @param filePath 文件地址
      */
-    async updateItemFilePath(id: number, filePath: string) {
+    async updateItemFilePath(id: number, filePath: string): Promise<boolean> {
         try {
             await this.db?.execute('UPDATE clipboard_items SET file_path = ? WHERE id = ?', [filePath, id]);
             return true;
@@ -356,7 +356,7 @@ class ClipboardDBService {
     /**
      * 删除剪贴板项目
      */
-    async deleteClipboardItem(id: number) {
+    async deleteClipboardItem(id: number): Promise<boolean> {
         try {
             const item = await this.getItem(id);
             if (item) {
@@ -376,7 +376,7 @@ class ClipboardDBService {
      * @param tagId 标签id
      * @returns
      */
-    async deleteClipboardItemTag(itemId: number, tagId: number) {
+    async deleteClipboardItemTag(itemId: number, tagId: number): Promise<boolean> {
         try {
             const item = await this.db?.select('SELECT * FROM item_tags WHERE item_id = ? AND tag_id = ?', [itemId, tagId]) as ClipboardItem[];
             if (item[0].type === 'image') {
@@ -491,7 +491,7 @@ class ClipboardDBService {
      * @param {string} name 标签名称
      * @param {string} color 标签颜色
      */
-    async addTag(name: string, color: string) {
+    async addTag(name: string, color: string): Promise<void> {
         await this.db?.execute('INSERT INTO tags (name, color, created_at) VALUES (?, ?, ?)', [name, color, Date.now()]);
     }
 
@@ -499,7 +499,7 @@ class ClipboardDBService {
      * 删除标签
      * @param {number} tagId 标签ID
      */
-    async deleteTag(tagId: number) {
+    async deleteTag(tagId: number): Promise<void> {
         await this.db?.execute('DELETE FROM tags WHERE id = ?', [tagId]);
     }
 
@@ -509,7 +509,7 @@ class ClipboardDBService {
      * @param {string} name 标签名称
      * @param {string} color 标签颜色
      */
-    async updateTag(id: number, name: string, color: string) {
+    async updateTag(id: number, name: string, color: string): Promise<void> {
         await this.db?.execute('UPDATE tags SET name = ?, color = ? WHERE id = ?', [name, color, id]);
     }
 
@@ -535,7 +535,7 @@ class ClipboardDBService {
      * @param {number|string} tagId 标签ID
      * @throws {Error} 当标签不存在时抛出错误
      */
-    async bindItemToTag(itemId: number, tagId: any) {
+    async bindItemToTag(itemId: number, tagId: any): Promise<void> {
         // 验证标签是否存在
         const tag = await this.db?.select('SELECT id FROM tags WHERE id = ?', [tagId]) as [{ id: number }];
         if (!tag || tag.length <= 0) {
@@ -623,7 +623,7 @@ class ClipboardDBService {
      * 添加插件
      * @param plugin 插件信息
      */
-    async addPlugin(plugin: LocalPlugin) {
+    async addPlugin(plugin: LocalPlugin): Promise<void> {
         console.log("添加插件", plugin)
         await this.db?.execute(`
             INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, url, description )
@@ -643,7 +643,7 @@ class ClipboardDBService {
      * 添加插件
      * @param plugin 插件信息
      */
-    async updatePlugin(plugin: LocalPlugin) {
+    async updatePlugin(plugin: LocalPlugin): Promise<void> {
         await this.db?.execute(`
                     UPDATE plugins
                     SET plugin_name = ?,
@@ -697,13 +697,13 @@ class ClipboardDBService {
      * @param id 插件ID
      * @param enable 启用状态
      */
-    async togglePluginEnable(id: number, enable: number) {
+    async togglePluginEnable(id: number, enable: number): Promise<void> {
         await this.db?.execute(`
             UPDATE plugins SET enable = ? WHERE id = ?
         `, [enable, id]);
     }
 
-    async removePlugin(id: number) {
+    async removePlugin(id: number): Promise<void> {
         await this.db?.execute(`
             DELETE FROM plugins WHERE id = ?
         `, [id]);

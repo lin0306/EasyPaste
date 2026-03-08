@@ -35,7 +35,7 @@ export const windowConfig: WebViewWindowOptions = {
  * 创建新窗口
  * @param options 窗口参数
  */
-export async function createWin(options: WebViewWindowOptions) {
+export async function createWin(options: WebViewWindowOptions): Promise<void> {
     console.log('-=-=-=-=-=开始创建窗口')
 
     const args: WebViewWindowOptions = Object.assign({}, windowConfig, options)
@@ -74,7 +74,7 @@ export async function createWin(options: WebViewWindowOptions) {
 /**
  * 打开设置窗口
  */
-export async function openSettingsWindow() {
+export async function openSettingsWindow(): Promise<void> {
     await createWin({
         label: 'settings',
         title: currentLanguage.value.pages.settings.title,
@@ -89,7 +89,7 @@ export async function openSettingsWindow() {
 /**
  * 打开标签窗口
  */
-export async function openTagsWindow() {
+export async function openTagsWindow(): Promise<void> {
     await createWin({
         label: 'tags',
         title: currentLanguage.value.pages.tags.title,
@@ -104,7 +104,7 @@ export async function openTagsWindow() {
 /**
  * 打开关于窗口
  */
-export async function openAboutWindow() {
+export async function openAboutWindow(): Promise<void> {
     await createWin({
         label: 'about',
         title: currentLanguage.value.pages.about.title,
@@ -118,7 +118,7 @@ export async function openAboutWindow() {
 /**
  * 打开更新窗口
  */
-export async function openUpdaterWindow() {
+export async function openUpdaterWindow(): Promise<void> {
     await createWin({
         label: 'updater',
         title: currentLanguage.value.pages.update.title,
@@ -132,7 +132,7 @@ export async function openUpdaterWindow() {
 /**
  * 文件预览
  */
-export async function openPreviewWindow(filePath: string, isFolder: boolean) {
+export async function openPreviewWindow(filePath: string, isFolder: boolean): Promise<void> {
     const existWin = await WebviewWindow.getByLabel("preview");
     if (existWin) {
         await emit('reload-preview', {filePath: filePath, isFolder: isFolder});
@@ -154,7 +154,7 @@ export async function openPreviewWindow(filePath: string, isFolder: boolean) {
 /**
  * 打开文本编辑窗口
  */
-export async function openItemEditWindow(itemId: number) {
+export async function openItemEditWindow(itemId: number): Promise<void> {
     const existWin = await WebviewWindow.getByLabel("item-editor");
     if (existWin) {
         await emit('reload-editor', {itemId: itemId});
@@ -176,7 +176,7 @@ export async function openItemEditWindow(itemId: number) {
 /**
  * 打开插件商店窗口
  */
-export async function openPluginStoreWindow() {
+export async function openPluginStoreWindow(): Promise<void> {
     await createWin({
         label: 'plugin-store',
         title: currentLanguage.value.pages.pluginStore.title,
@@ -191,7 +191,7 @@ export async function openPluginStoreWindow() {
 /**
  * 打开主题编辑器窗口
  */
-export async function openThemeEditorWindow() {
+export async function openThemeEditorWindow(): Promise<void> {
     await createWin({
         label: 'theme-editor',
         title: currentLanguage.value.pages.settings.themeEditor.title,

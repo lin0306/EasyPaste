@@ -44,7 +44,7 @@ export default class DataClearService {
      * 设置数据清理的时间间隔
      * @param minutes 分钟
      */
-    setIntervalTime(minutes: number) {
+    setIntervalTime(minutes: number): void {
         this.intervalTime = minutes * 60000;
         if (this.dataClearInterval !== null) {
             clearInterval(this.dataClearInterval);
@@ -56,7 +56,7 @@ export default class DataClearService {
      * 设置数据保留时长
      * @param days 天数
      */
-    setDataRetentionDays(days: number) {
+    setDataRetentionDays(days: number): void {
         this.dataRetentionDays = days;
     }
 
@@ -64,7 +64,7 @@ export default class DataClearService {
      * 设置数据保留条数
      * @param count 保留条数
      */
-    setMaxHistoryItems(count: number) {
+    setMaxHistoryItems(count: number): void {
         this.maxHistoryItems = count;
     }
 
@@ -72,7 +72,7 @@ export default class DataClearService {
     /**
      * 开始自动清理数据
      */
-    startDataClear() {
+    startDataClear(): void {
         if (this.dataClearInterval === null && this.dataRetentionDays > 0) {
             this.dataClearInterval = setInterval(() => this.dataClear(), this.intervalTime);
             info('初始化自动清理数据任务')
@@ -82,7 +82,7 @@ export default class DataClearService {
     /**
      * 停止自动清理数据
      */
-    stopDataClear() {
+    stopDataClear(): void {
         if (this.dataClearInterval !== null) {
             clearInterval(this.dataClearInterval);
             this.dataClearInterval = null;
@@ -94,7 +94,7 @@ export default class DataClearService {
     /**
      * 数据清理
      */
-    async dataClear() {
+    async dataClear(): Promise<void> {
         try {
             const db = await ClipboardDBService.getInstance();
             const c1 = await db.clearClipboardItems(this.dataRetentionDays);

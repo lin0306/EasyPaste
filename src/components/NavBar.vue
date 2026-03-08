@@ -71,7 +71,7 @@ const activeMenu = ref<string>('')
 const dropdownStyle = ref({})
 
 // 处理鼠标进入事件
-const handleMouseEnter = (menuItem: NavBarItem, event: any) => {
+const handleMouseEnter = (menuItem: NavBarItem, event: any): void => {
   const hasChildren = menuItem.children;
   if (hasChildren) {
     activeMenu.value = menuItem.key;
@@ -89,7 +89,7 @@ const handleMouseEnter = (menuItem: NavBarItem, event: any) => {
 }
 
 // 处理鼠标离开事件
-const handleMouseLeave = () => {
+const handleMouseLeave = (): void => {
   activeMenu.value = ''
 }
 </script>

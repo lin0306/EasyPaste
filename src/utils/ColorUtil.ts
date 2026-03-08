@@ -2,7 +2,7 @@
  * 计算按钮颜色
  * @param backgroundColor 按钮背景色
  */
-export function calculateButtonColors(backgroundColor: string) {
+export function calculateButtonColors(bgColor: string): ButtonColor {
     // 解析 RGBA 颜色值
     const parseRgba = (color: string): RGBA => {
         // 如果没有颜色值，则返回默认黑色
@@ -43,7 +43,7 @@ export function calculateButtonColors(backgroundColor: string) {
     };
 
     // 主逻辑
-    const bg = parseRgba(backgroundColor);
+    const bg = parseRgba(bgColor);
     const brightness = getBrightness(bg);
 
     // 正常状态文字颜色
@@ -62,6 +62,7 @@ export function calculateButtonColors(backgroundColor: string) {
     const disabledTextColor = toGrayscale(bg);
 
     return {
+        bgColor,
         hoverBgColor,
         disabledBgColor,
         textColor,
@@ -75,7 +76,7 @@ export function calculateButtonColors(backgroundColor: string) {
  * @param color 颜色
  * @param transparency 透明度
  */
-export function setTransparency(color: string, transparency?: number) {
+export function setTransparency(color: string, transparency?: number): string {
     if (!color) {
         return color;
     }
