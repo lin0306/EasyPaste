@@ -8,6 +8,17 @@ import { filePathConvertFileName } from '../../../utils/TextUtil.ts'
 import { NCode, NImage, NTag } from 'naive-ui'
 import UpdateIcon from '../../../assets/icons/UpdateIcon.vue'
 import { ref } from 'vue'
+import {
+  faAlignLeft,
+  faArrowRotateRight,
+  faCheck,
+  faCode,
+  faLaptopCode,
+  faLink,
+  faMinus,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
+import { faFile, faImage, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
 // 菜单栏相关
 const activeMenu = ref<string>('')
@@ -185,14 +196,14 @@ const handleMouseLeave = (): void => {
       <div class="window-controls-preview">
         <div v-if="isDev" class="control-button-preview">
           <font-awesome-icon
-            icon="fa-solid fa-arrow-rotate-right"
+            :icon="faArrowRotateRight"
             class="program-btn-preview"
             id="refresh-button-img"
           />
         </div>
         <div v-if="isDev" class="control-button-preview">
           <font-awesome-icon
-            icon="fa-solid fa-laptop-code"
+            :icon="faLaptopCode"
             class="program-btn-preview"
             id="devtool-button-img"
           />
@@ -212,18 +223,10 @@ const handleMouseLeave = (): void => {
           />
         </div>
         <div class="control-button-preview">
-          <font-awesome-icon
-            icon="fa-solid fa-minus"
-            class="program-btn-preview"
-            id="minimize-button-img"
-          />
+          <font-awesome-icon :icon="faMinus" class="program-btn-preview" id="minimize-button-img" />
         </div>
         <div class="control-button-preview close-button-preview">
-          <font-awesome-icon
-            icon="fa-solid fa-xmark"
-            class="program-btn-preview"
-            id="close-button-img"
-          />
+          <font-awesome-icon :icon="faXmark" class="program-btn-preview" id="close-button-img" />
         </div>
       </div>
     </div>
@@ -251,7 +254,7 @@ const handleMouseLeave = (): void => {
                 <div v-else-if="child.type === 'radio'" class="dropdown-link">
                   {{ child.label }}
                   <font-awesome-icon
-                    icon="fa-solid fa-check"
+                    :icon="faCheck"
                     v-if="child.isCheck"
                     :color="themeColors.universal.text"
                     class="checked-icon"
@@ -273,27 +276,27 @@ const handleMouseLeave = (): void => {
           <div class="card-header-left">
             <div class="item-type-icons">
               <font-awesome-icon
-                icon="fa-align-left"
+                :icon="faAlignLeft"
                 v-if="item.type === 'text'"
                 class="item-type-icon"
               />
               <font-awesome-icon
-                icon="fa-code"
+                :icon="faCode"
                 v-if="item.type === 'code'"
                 class="item-type-icon"
               />
               <font-awesome-icon
-                icon="fa-regular fa-image"
+                :icon="faImage"
                 v-if="item.type === 'image'"
                 class="item-type-icon"
               />
               <font-awesome-icon
-                icon="fa-link"
+                :icon="faLink"
                 v-if="item.type === 'link'"
                 class="item-type-icon"
               />
               <font-awesome-icon
-                icon="fa-regular fa-file"
+                :icon="faFile"
                 v-if="item.type === 'file'"
                 class="item-type-icon"
               />
@@ -310,7 +313,7 @@ const handleMouseLeave = (): void => {
               </div>
               <!-- 删除按钮 -->
               <div class="card-header-right-button">
-                <font-awesome-icon icon="fa-regular fa-trash-can" />
+                <font-awesome-icon :icon="faTrashCan" />
               </div>
               <!-- 设置标签按钮 -->
               <div class="card-header-right-button drag-icon">
@@ -339,7 +342,7 @@ const handleMouseLeave = (): void => {
               <!-- 图标区域 -->
               <div class="link-icon-container">
                 <div class="link-icon-block">
-                  <font-awesome-icon icon="fa-link" />
+                  <font-awesome-icon :icon="faLink" />
                 </div>
               </div>
               <!-- 文字内容 -->

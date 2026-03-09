@@ -16,6 +16,7 @@ import { getSpeedDuration, SETTINGS } from '../../../constants/UserSettingsConst
 import { currentThemeId, themes, toggleTheme } from '../../../services/ThemeService.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { openThemeEditorWindow } from '../../../services/WindowService.ts'
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
 
 const message = useMessage()
 
@@ -193,7 +194,7 @@ onMounted(async () => {
             @click.stop="onEditTheme"
             :color="theme.colors.button.primary.backgroundColor"
           >
-            <font-awesome-icon icon="fa-regular fa-pen-to-square" />
+            <font-awesome-icon :icon="faPenToSquare" />
           </n-button>
           <div
             class="theme-content-line"

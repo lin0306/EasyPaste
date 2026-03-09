@@ -38,6 +38,7 @@ import dos from 'highlight.js/lib/languages/dos'
 import nsis from 'highlight.js/lib/languages/nsis'
 import vbscript from 'highlight.js/lib/languages/vbscript'
 import { readTextFile } from '@tauri-apps/plugin-fs'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 hljs.registerLanguage('c', c)
 hljs.registerLanguage('cpp', cpp)
@@ -309,7 +310,7 @@ onMounted(() => {
       >
         <template #prefix>
           <n-icon size="16">
-            <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            <font-awesome-icon :icon="faMagnifyingGlass" />
           </n-icon>
         </template>
         <template #suffix v-if="searchText.length > 0">

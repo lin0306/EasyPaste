@@ -6,7 +6,7 @@
     <n-dropdown :options="options" trigger="click" :render-option="renderOption">
       <n-button style="padding: 0 8px" round>
         <n-icon>
-          <font-awesome-icon icon="fa-solid fa-chevron-down" />
+          <font-awesome-icon :icon="faChevronDown" />
         </n-icon>
       </n-button>
     </n-dropdown>
@@ -18,6 +18,7 @@ import { computed, h, VNode } from 'vue'
 import { themeColors } from '../services/ThemeService.ts'
 import { NButton, NButtonGroup, NDropdown, NIcon } from 'naive-ui'
 import { DropdownGroupOption, DropdownOption } from 'naive-ui/es/dropdown/src/interface'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 // 菜单项
 const options = computed(() => {

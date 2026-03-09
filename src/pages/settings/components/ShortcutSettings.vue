@@ -29,6 +29,8 @@ import { isMac } from '../../../data/SystemParams.ts'
 import { onMounted, ref } from 'vue'
 import { debounce } from 'lodash-es'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
+import { faCircleCheck, faCircleExclamation, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -343,7 +345,7 @@ onMounted(async () => {
           <span v-if="shortcut.name === '快速粘贴'" class="key-badge">1-9</span>
         </div>
         <span class="edit-icon" @click="startEditShortcut(key)">
-          <font-awesome-icon icon="fa-regular fa-pen-to-square" />
+          <font-awesome-icon :icon="faPenToSquare" />
         </span>
       </div>
     </div>
@@ -357,7 +359,7 @@ onMounted(async () => {
       <div class="shortcut-modal-content">
         <p>{{ currentLanguage.pages.settings.editHotkeyModalContent }}</p>
         <div class="shortcut-hint" v-if="!isMac">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="shortcut-hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="shortcut-hint-icon" />
           {{ currentLanguage.pages.settings.shortcutHint }}
         </div>
         <div class="shortcut-keys-select">
@@ -369,12 +371,12 @@ onMounted(async () => {
             :class="currentKeyAvailableKey ? 'key-available' : 'key-not-available'"
           >
             <font-awesome-icon
-              icon="fa-solid fa-circle-check"
+              :icon="faCircleCheck"
               v-if="currentKeyAvailableKey"
               class="shortcut-verification-icon"
             />
             <font-awesome-icon
-              icon="fa-solid fa-circle-exclamation"
+              :icon="faCircleExclamation"
               v-else
               class="shortcut-verification-icon"
             />

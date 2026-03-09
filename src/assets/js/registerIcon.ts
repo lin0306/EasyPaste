@@ -322,4 +322,4 @@ library.add(largeFile)
 library.add(nonsupportPreviewFile)
 // @ts-ignore
 library.add(unknownFilePreview)
-info('自定义图标哦注册完成')
+info('自定义图标注册完成')

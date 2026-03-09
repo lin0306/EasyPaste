@@ -11,6 +11,8 @@ import {
 } from '../composables/TagDataComposable.ts'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { faSquarePlus } from '@fortawesome/free-regular-svg-icons'
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -94,7 +96,7 @@ const addTag = async (): Promise<void> => {
       <div>
         <font-awesome-icon
           class="add-btn"
-          icon="fa-regular fa-square-plus"
+          :icon="faSquarePlus"
           v-if="editState.isEdit"
           @click="openAddForm"
         />
@@ -111,7 +113,7 @@ const addTag = async (): Promise<void> => {
             clearable
           />
           <div class="hint">
-            <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+            <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
             <span class="hint-text">
               {{ currentLanguage.pages.tags.tagNameHint }}
             </span>

@@ -14,6 +14,8 @@ import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { faChevronLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -154,7 +156,7 @@ onUnmounted(() => {
         <template #prefix>
           <!-- 搜索 -->
           <n-icon size="16">
-            <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            <font-awesome-icon :icon="faMagnifyingGlass" />
           </n-icon>
         </template>
       </n-input>
@@ -182,7 +184,7 @@ onUnmounted(() => {
             </div>
             <div class="tag-item-actions" @click.stop>
               <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
-                <font-awesome-icon icon="fa-regular fa-trash-can" />
+                <font-awesome-icon :icon="faTrashCan" />
               </div>
             </div>
           </div>
@@ -193,7 +195,7 @@ onUnmounted(() => {
     <!-- 切换按钮 -->
     <div class="toggle-panel-button" @click="showAddPanel">
       <div class="toggle-icon-container" :class="{ unfold: isPanelVisible }">
-        <font-awesome-icon icon="fa-solid fa-chevron-left" />
+        <font-awesome-icon :icon="faChevronLeft" />
       </div>
     </div>
 

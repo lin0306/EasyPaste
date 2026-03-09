@@ -8,18 +8,10 @@
     </div>
     <div class="window-controls">
       <div v-if="isDev" class="control-button" @click="onRefresh">
-        <font-awesome-icon
-          icon="fa-solid fa-arrow-rotate-right"
-          class="program-btn"
-          id="refresh-button-img"
-        />
+        <font-awesome-icon :icon="faArrowRotateRight" class="program-btn" id="refresh-button-img" />
       </div>
       <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
-        <font-awesome-icon
-          icon="fa-solid fa-laptop-code"
-          class="program-btn"
-          id="devtool-button-img"
-        />
+        <font-awesome-icon :icon="faLaptopCode" class="program-btn" id="devtool-button-img" />
       </div>
       <div
         v-if="showFixedBtn && !isFixed"
@@ -40,13 +32,13 @@
         />
       </div>
       <div v-if="showMinimizeBtn" class="control-button" @click="onMinimizeWindow">
-        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img" />
+        <font-awesome-icon :icon="faMinus" class="program-btn" id="minimize-button-img" />
       </div>
       <div v-if="showHideBtn" class="control-button" @click="onHide">
-        <font-awesome-icon icon="fa-solid fa-minus" class="program-btn" id="minimize-button-img" />
+        <font-awesome-icon :icon="faMinus" class="program-btn" id="minimize-button-img" />
       </div>
       <div v-if="showCloseBtn" class="control-button close-button" @click="onClose">
-        <font-awesome-icon icon="fa-solid fa-xmark" class="program-btn" id="close-button-img" />
+        <font-awesome-icon :icon="faXmark" class="program-btn" id="close-button-img" />
       </div>
     </div>
   </div>
@@ -59,6 +51,12 @@ import { listFixedStore } from '../store/Fixed.ts'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import UpdateIcon from '../assets/icons/UpdateIcon.vue'
 import UpdaterService from '../services/UpdaterService.ts'
+import {
+  faArrowRotateRight,
+  faLaptopCode,
+  faMinus,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
 
 const props = withDefaults(
   defineProps<{

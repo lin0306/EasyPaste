@@ -27,6 +27,8 @@ import { convertFileSize, deleteFile, deleteFolder, moveFile } from '../../../ut
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { readDir, stat } from '@tauri-apps/plugin-fs'
 import { invoke } from '@tauri-apps/api/core'
+import { faArrowRotateRight, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { faFolderOpen } from '@fortawesome/free-regular-svg-icons'
 
 const message = useMessage()
 
@@ -275,7 +277,7 @@ onMounted(async () => {
       </div>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.maxHistoryItemsHint }}
           </span>
@@ -297,7 +299,7 @@ onMounted(async () => {
       </div>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.dataRetentionDaysHint }}
           </span>
@@ -312,7 +314,7 @@ onMounted(async () => {
             (isLoadingLogFile ? '...' : convertFileSize(logFileInfo.size))
           }}
           <font-awesome-icon
-            icon="fa-solid fa-arrow-rotate-right"
+            :icon="faArrowRotateRight"
             v-if="replaceGlobalHotkeyLoaded"
             class="refresh-icon"
             @click="loadLogFileInfo"
@@ -324,7 +326,7 @@ onMounted(async () => {
       </div>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span @click="openLogFolder" class="hint-text hint-text-btn">
             {{ currentLanguage.pages.settings.logLocationHint }}
           </span>
@@ -346,7 +348,7 @@ onMounted(async () => {
       </div>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.enableImageSaveHint }}
           </span>
@@ -357,16 +359,12 @@ onMounted(async () => {
       <span class="label">{{ currentLanguage.pages.settings.imageStorageLocation }}</span>
       <n-input v-model:value="currentConfig.imageBasePath" readonly>
         <template #suffix>
-          <font-awesome-icon
-            icon="fa-regular fa-folder-open"
-            class="select-file-icon"
-            @click="onSelectFile"
-          />
+          <font-awesome-icon :icon="faFolderOpen" class="select-file-icon" @click="onSelectFile" />
         </template>
       </n-input>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.imageStorageLocationHint }}
           </span>

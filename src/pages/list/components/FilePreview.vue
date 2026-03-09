@@ -10,6 +10,18 @@ import { isAudio } from '../../../utils/AudioUtil.ts'
 import { isExcel, isPDF, isPPT, isWord } from '../../../utils/OfficeUtil.ts'
 import { isPackage } from '../../../utils/PackageUtil.ts'
 import { displayThumbnailImage } from '../composables/FileDataComposable.ts'
+import {
+  faFileAudio,
+  faFileCode,
+  faFileLines,
+  faFilePdf,
+  faFileVideo,
+  faFileWord,
+  faFileZipper,
+  faFolderClosed,
+  faImage,
+} from '@fortawesome/free-regular-svg-icons'
+import { faTable } from '@fortawesome/free-solid-svg-icons'
 
 const props = defineProps<{
   filePath: string
@@ -21,7 +33,7 @@ const props = defineProps<{
 <template>
   <div class="file-item">
     <font-awesome-icon v-if="!isExist" :icon="['fas', 'no-file']" class="file-not-exist-icon" />
-    <font-awesome-icon v-else-if="isFolder" class="file-icon" icon="fa-regular fa-folder-closed" />
+    <font-awesome-icon v-else-if="isFolder" class="file-icon" :icon="faFolderClosed" />
     <n-image
       v-else-if="isImage(props.filePath) && displayThumbnailImage"
       :lazy="true"
@@ -34,39 +46,15 @@ const props = defineProps<{
     <font-awesome-icon
       v-else-if="isImage(props.filePath) && !displayThumbnailImage"
       class="file-icon"
-      icon="fa-regular fa-image"
+      :icon="faImage"
     />
-    <font-awesome-icon
-      v-else-if="isVideo(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-video"
-    />
-    <font-awesome-icon
-      v-else-if="isAudio(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-audio"
-    />
-    <font-awesome-icon
-      v-else-if="isWord(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-word"
-    />
-    <font-awesome-icon
-      v-else-if="isExcel(props.filePath)"
-      class="file-icon"
-      icon="fa-solid fa-table"
-    />
+    <font-awesome-icon v-else-if="isVideo(props.filePath)" class="file-icon" :icon="faFileVideo" />
+    <font-awesome-icon v-else-if="isAudio(props.filePath)" class="file-icon" :icon="faFileAudio" />
+    <font-awesome-icon v-else-if="isWord(props.filePath)" class="file-icon" :icon="faFileWord" />
+    <font-awesome-icon v-else-if="isExcel(props.filePath)" class="file-icon" :icon="faTable" />
     <font-awesome-icon v-else-if="isPPT(props.filePath)" :icon="['fas', 'ppt']" class="file-icon" />
-    <font-awesome-icon
-      v-else-if="isPDF(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-pdf"
-    />
-    <font-awesome-icon
-      v-else-if="isText(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-lines"
-    />
+    <font-awesome-icon v-else-if="isPDF(props.filePath)" class="file-icon" :icon="faFilePdf" />
+    <font-awesome-icon v-else-if="isText(props.filePath)" class="file-icon" :icon="faFileLines" />
     <font-awesome-icon
       v-else-if="isProgram(props.filePath)"
       :icon="['fas', 'exe']"
@@ -75,13 +63,9 @@ const props = defineProps<{
     <font-awesome-icon
       v-else-if="isPackage(props.filePath)"
       class="file-icon"
-      icon="fa-regular fa-file-zipper"
+      :icon="faFileZipper"
     />
-    <font-awesome-icon
-      v-else-if="isCode(props.filePath)"
-      class="file-icon"
-      icon="fa-regular fa-file-code"
-    />
+    <font-awesome-icon v-else-if="isCode(props.filePath)" class="file-icon" :icon="faFileCode" />
     <font-awesome-icon v-else :icon="['fas', 'unknown-file']" class="file-icon" />
     <span :class="{ 'file-not-exist-text': !props.isExist }">
       {{ filePathConvertFileName(filePath) }}

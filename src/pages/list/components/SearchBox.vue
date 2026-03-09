@@ -13,7 +13,7 @@
       >
         <template #prefix>
           <n-icon size="16">
-            <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            <font-awesome-icon :icon="faMagnifyingGlass" />
           </n-icon>
         </template>
       </n-input>
@@ -105,6 +105,7 @@ import { loadClipboardItems, searchBoxState } from '../composables/ClipboardData
 import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { themeColors } from '../../../services/ThemeService.ts'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 /**
  * 根据数据类型类型筛选数据

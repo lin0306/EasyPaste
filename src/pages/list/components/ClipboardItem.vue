@@ -13,27 +13,27 @@
             <font-awesome-icon
               v-if="props.item.type === 'text'"
               class="item-type-icon"
-              icon="fa-align-left"
+              :icon="faAlignLeft"
             />
             <font-awesome-icon
               v-if="props.item.type === 'code'"
               class="item-type-icon"
-              icon="fa-code"
+              :icon="faCode"
             />
             <font-awesome-icon
               v-if="props.item.type === 'image'"
               class="item-type-icon"
-              icon="fa-regular fa-image"
+              :icon="faImage"
             />
             <font-awesome-icon
               v-if="props.item.type === 'link'"
               class="item-type-icon"
-              icon="fa-link"
+              :icon="faLink"
             />
             <font-awesome-icon
               v-if="props.item.type === 'file'"
               class="item-type-icon"
-              icon="fa-regular fa-file"
+              :icon="faFile"
             />
           </div>
           <div v-if="displayDetailTime" class="card-title">
@@ -57,7 +57,7 @@
               class="card-header-right-button"
               @click="removeItem(item, index, currentLanguage, message)"
             >
-              <font-awesome-icon icon="fa-regular fa-trash-can" />
+              <font-awesome-icon :icon="faTrashCan" />
             </div>
             <!-- 设置标签按钮 -->
             <div
@@ -95,7 +95,7 @@
             <!-- 图标区域 -->
             <div class="link-icon-container">
               <div class="link-icon-block">
-                <font-awesome-icon icon="fa-link" />
+                <font-awesome-icon :icon="faLink" />
               </div>
             </div>
             <!-- 文字内容 -->
@@ -126,7 +126,7 @@
               alt="图片预览失败"
               class="image-preview"
             />
-            <font-awesome-icon v-else class="file-icon" icon="fa-regular fa-image" />
+            <font-awesome-icon v-else class="file-icon" :icon="faImage" />
           </div>
           <!-- 空 -->
           <div v-else class="item-line"></div>
@@ -208,6 +208,8 @@ import { animationEffect } from '../../../components/composables/AnimationCompos
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { getTimeAgo } from '../../../utils/DateUtil.ts'
+import { faAlignLeft, faCode, faLink } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faImage, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
 // Naive UI 框架的消息组件
 const message = useMessage()

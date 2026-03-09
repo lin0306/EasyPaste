@@ -14,6 +14,8 @@ import {
 } from '../composables/PluginComponsables.ts'
 import { useMessage } from 'naive-ui'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { faCubes } from '@fortawesome/free-solid-svg-icons'
+import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
 
 const message = useMessage()
 
@@ -40,7 +42,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
       @click="onSelectStore(plugin)"
     >
       <div class="plugin-item-icon">
-        <font-awesome-icon icon="fa-solid fa-cubes" class="plugin-icon" />
+        <font-awesome-icon :icon="faCubes" class="plugin-icon" />
       </div>
       <div class="plugin-item-content">
         <div class="plugin-title">
@@ -56,12 +58,12 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
             <span v-if="plugin.platform === 'Mac'">Mac</span>
             <template #avatar>
               <font-awesome-icon
-                icon="fa-brands fa-windows"
+                :icon="faWindows"
                 v-if="plugin.platform === 'Windows'"
                 class="platform-icon"
               />
               <font-awesome-icon
-                icon="fa-brands fa-apple"
+                :icon="faApple"
                 v-if="plugin.platform === 'Mac'"
                 class="platform-icon"
               />

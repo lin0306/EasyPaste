@@ -38,6 +38,7 @@ import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-sh
 import { saveLanguageCache } from '../../../services/FileService.ts'
 import { useMessage } from 'naive-ui'
 import { getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
+import { faArrowRotateRight, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -323,7 +324,7 @@ onMounted(async () => {
         <span class="label">
           {{ currentLanguage.pages.settings.replaceGlobalHotkey }}
           <font-awesome-icon
-            icon="fa-solid fa-arrow-rotate-right"
+            :icon="faArrowRotateRight"
             v-if="replaceGlobalHotkeyLoaded"
             class="refresh-icon"
             @click="handleClickRefreshReplaceGlobalHotkeyStatus"
@@ -352,7 +353,7 @@ onMounted(async () => {
         "
       >
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.shortcutKeyOccupationHint }}
           </span>
@@ -363,7 +364,7 @@ onMounted(async () => {
         v-else-if="systemClipboardEnable && !isAdminStart && !replaceGlobalHotkeyLoading"
       >
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.replaceGlobalHotkeyNoPermissionHint }}
             <a
@@ -381,7 +382,7 @@ onMounted(async () => {
       </div>
       <div class="second-item" v-else-if="!replaceGlobalHotkeyLoading">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.replaceGlobalHotkeyHint }}
           </span>

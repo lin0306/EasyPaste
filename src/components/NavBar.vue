@@ -27,7 +27,7 @@
               <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
                 {{ child.label }}
                 <font-awesome-icon
-                  icon="fa-solid fa-check"
+                  :icon="faCheck"
                   v-if="child.isCheck"
                   :color="themeColors.universal.text"
                   class="checked-icon"
@@ -47,6 +47,7 @@
 import { computed, ref } from 'vue'
 import { animationEffect } from './composables/AnimationComposable.ts'
 import { themeColors } from '../services/ThemeService.ts'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 const props = defineProps<{
   menuItems: NavBarItem[]

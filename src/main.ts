@@ -18,13 +18,8 @@ import * as naive from 'naive-ui'
 // 导入 Vue 以暴露为全局变量
 import * as Vue from 'vue'
 // 导入 Font Awesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './assets/js/registerIcon.ts'
-library.add(fas, far, fab)
 
 // 暴露 Vue 和 naive-ui 为全局变量
 // @ts-ignore
