@@ -1,6 +1,15 @@
 {
   "version": "0.2.0.1",
-  "notes": "",
+  "notes": "# v0.2.0.1 (2026-03-09)\n\n## 更新内容\n\n### ✅ 修复Bug\n- 修复版本安装后，之前的数据全部消失，配置全部重置问题",
   "pub_date": "2026-03-09T07:33:03.358Z",
-  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmo2bTYyRlk1NEhwNFNNa3k3ZUpwNVJ3YmRVWGI1NHRiU0tqQ2d6TVFZWWlZV2NtMnRKVUxwRUdqazdZSTNvVldKNk9GdVJlTHQrVHN2U2x0dmJjOGc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxMzUyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKb2p5MFk1WFJqUFRWWjlYaWJaL0lMRG8yMG5uQkk3bkN4V0o5cWxzL2hSQnNyd2t5RGp6akt2RkRpTFpsb1lmRzVCSDNoeGt3ZWxZV0VJbFdFNml2Qnc9PQo=","url":"https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmpmWWZkY3N1TUtjak1IYm5QcW1tZ0JUTldhdlYvMFN2MVV1QTN3azBldWhPaTBxU2p2dnJmZGIyZmVWQW1QN1N1WEZnR2xmZXp5V24xZ1ZoZkJmV0FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxNTI5CWZpbGU6RWFzeVBhc3RlXzAuMi4wX3g2NC1zZXR1cC5leGUKSGkvWjR6VkZhb2V3UDBML0ZicDFaenk4OXRiRmJVSmpKd0lETDdPV0FxcXFmYmxra2tuOHJMb0hidEFUd1N4NWd3alRGTmFQUzRRN3YrNWc5YmNXQWc9PQo=","url":"https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste_0.2.0_x64-setup.exe"}}
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmo2bTYyRlk1NEhwNFNNa3k3ZUpwNVJ3YmRVWGI1NHRiU0tqQ2d6TVFZWWlZV2NtMnRKVUxwRUdqazdZSTNvVldKNk9GdVJlTHQrVHN2U2x0dmJjOGc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxMzUyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKb2p5MFk1WFJqUFRWWjlYaWJaL0lMRG8yMG5uQkk3bkN4V0o5cWxzL2hSQnNyd2t5RGp6akt2RkRpTFpsb1lmRzVCSDNoeGt3ZWxZV0VJbFdFNml2Qnc9PQo=",
+      "url": "https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmpmWWZkY3N1TUtjak1IYm5QcW1tZ0JUTldhdlYvMFN2MVV1QTN3azBldWhPaTBxU2p2dnJmZGIyZmVWQW1QN1N1WEZnR2xmZXp5V24xZ1ZoZkJmV0FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxNTI5CWZpbGU6RWFzeVBhc3RlXzAuMi4wX3g2NC1zZXR1cC5leGUKSGkvWjR6VkZhb2V3UDBML0ZicDFaenk4OXRiRmJVSmpKd0lETDdPV0FxcXFmYmxra2tuOHJMb0hidEFUd1N4NWd3alRGTmFQUzRRN3YrNWc5YmNXQWc9PQo=",
+      "url": "https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste_0.2.0_x64-setup.exe"
+    }
+  }
 }
