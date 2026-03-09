@@ -1,15 +1,6 @@
 {
-  "version": "0.2.0",
-  "notes": "# v0.2.0 (2026-03-08)\n\n## 更新内容\n\n### \uD83C\uDF89 新功能\n- 增加可清除日志数据功能\n- 采用全新logo，提高整体美观性\n- 增加卡片时间显示可显示相对时间\n- 增加显示链接类型\n- 增加可自定义主题功能\n\n### \uD83D\uDE80 优化\n- 优化页面布局与颜色\n- 优化轻提示设置更新窗口打开速度\n- 调整全局图标，使其风格更加统一\n- 文件预览打开文件时，直接选中文件\n- 优化拖拽绑定标签时的鼠标展示效果\n- 文本、代码增加可选中部分文本进行复制\n- 优化更新窗口的展示逻辑\n\n### ✅ 修复Bug\n- 修复图片无法保存问题\n- 修复第一次启动程序时，通过快捷键打开窗口，窗口会自动隐藏问题\n- 修复部分组件的颜色在切换时没有变化\n- 修复标签展示问题\n- 修复部分情况下，取消置顶数据丢失问题\n- 修复部分功能无动画效果问题\n- 修复代码文件预览时，不显示行号问题\n- 修复列表窗口加载时，底部状态栏显示问题\n- 修复文本编辑器高亮行和光标所在行不一致问题\n- 修复双击图片进行复制时，新加了一条文件数据，而不是展示的原图片数据\n\n### \uD83D\uDDD1\uFE0F 移除功能\n- 移除Office相关的预览功能，降低包体积\n- 移除列表卡片展示的快速粘贴提示\n- 移除音频预览中的图片，降低包体积\n- 移除文件点击预览功能，改成使用右键进行预览\n- 移除文本拖拽功能\n\n### \uD83D\uDCC5 下一步计划\n- 增加插件功能（开发完成，未开放）\n- 增加翻译插件\n- 增加图片OCR插件",
-  "pub_date": "2026-03-08T13:26:07.568Z",
-  "platforms": {
-    "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnVKY1Z6Mnh0Uk52b1o2RzcvYVkyaTdpRG00K3pEZGF4VUdpK0IyQ2p5aHk3RUhWaDREUElGb1JhcDdScUx1WmxMVy9zNHNWbXhjTHd0VzM5amlMRXdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzcyOTc2Mjc4CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKQUM3SDkvUDV1RHRSY1kwanIzNHVMQVRvcTQ0UngyMEZoTHRvSUk0KzhhVFptU0o2akNMcmtiV0JJL1FKeTNTRXRDOTZLTFBjMXZlT3E5dTl2UHNHQ2c9PQo=",
-      "url": "https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0/EasyPaste.app.tar.gz"
-    },
-    "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSm9vaXJaLytaQWQ1cENGemhSOXlWSkp5U05BdzhPbWxTNnFpZDhySnVVam9wU3QyR1R3ZXlZNE15Tkw3NU9YM0tFRjdQQVFDMTBuRVdHeWQ1Tjg5UVFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzcyOTc2MzE5CWZpbGU6RWFzeVBhc3RlXzAuMi4wX3g2NC1zZXR1cC5leGUKa2FGY0NuSkZRZEVENzA4ZTBteWVFUVI1NFM2QVVlS1Z1YWZQL0liQ0JYbTNRZk9sQ0ROOFcyRnNIQ2VFSnNySVcvTC94eGVaVGQ2TlhBZDQxRGlpRFE9PQo=",
-      "url": "https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0/EasyPaste_0.2.0_x64-setup.exe"
-    }
-  }
+  "version": "0.2.0.1",
+  "notes": "",
+  "pub_date": "2026-03-09T07:33:03.358Z",
+  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmo2bTYyRlk1NEhwNFNNa3k3ZUpwNVJ3YmRVWGI1NHRiU0tqQ2d6TVFZWWlZV2NtMnRKVUxwRUdqazdZSTNvVldKNk9GdVJlTHQrVHN2U2x0dmJjOGc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxMzUyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKb2p5MFk1WFJqUFRWWjlYaWJaL0lMRG8yMG5uQkk3bkN4V0o5cWxzL2hSQnNyd2t5RGp6akt2RkRpTFpsb1lmRzVCSDNoeGt3ZWxZV0VJbFdFNml2Qnc9PQo=","url":"https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSmpmWWZkY3N1TUtjak1IYm5QcW1tZ0JUTldhdlYvMFN2MVV1QTN3azBldWhPaTBxU2p2dnJmZGIyZmVWQW1QN1N1WEZnR2xmZXp5V24xZ1ZoZkJmV0FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQxNTI5CWZpbGU6RWFzeVBhc3RlXzAuMi4wX3g2NC1zZXR1cC5leGUKSGkvWjR6VkZhb2V3UDBML0ZicDFaenk4OXRiRmJVSmpKd0lETDdPV0FxcXFmYmxra2tuOHJMb0hidEFUd1N4NWd3alRGTmFQUzRRN3YrNWc5YmNXQWc9PQo=","url":"https://gh.llkk.cc/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0.1/EasyPaste_0.2.0_x64-setup.exe"}}
 }
