@@ -8,4 +8,5 @@ declare interface PackageTreeOption {
   fileCount?: number
   prefix?: () => VNodeChild
   suffix?: () => VNodeChild
+  [key: string]: any
 }

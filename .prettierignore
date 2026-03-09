@@ -9,6 +9,14 @@ src-tauri/**/*.d.ts
 .vscode
 .rs
 .toml
-src-tauri/gen/.*
 src-tauri/config/.*
 pnpm-lock.yaml
+/build.bat
+/stats.html
+/README.md
+/pnpm-workspace.yaml
+/LICENSE
+/package.json
+/.gitignore
+/src-tauri/Cargo.lock
+/src-tauri/gen/

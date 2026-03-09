@@ -4,6 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
+import path from 'path'
 
 const host = process.env.TAURI_DEV_HOST
 
@@ -40,9 +41,18 @@ export default defineConfig(async () => ({
           ],
         },
       ],
+      dts: 'src/types/auto-imports.d.ts',
+      eslintrc: {
+        enabled: true,
+      },
+      // 排除未使用的模块
+      exclude: ['birpc', 'hookable', 'perfect-debounce'],
     }),
     Components({
+      dts: 'src/types/components.d.ts',
       resolvers: [NaiveUiResolver()],
+      // 排除未使用的组件
+      exclude: ['birpc', 'hookable', 'perfect-debounce'],
     }),
   ],
 
@@ -89,11 +99,38 @@ export default defineConfig(async () => ({
         entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
         assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
 
-        manualChunks(id: any): string {
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[2].split('/')[0].toString()
-          }
+        manualChunks: {
+          // Vue 生态
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+          // UI 库
+          'vendor-naive': ['naive-ui'],
+          // 图标
+          'vendor-fontawesome': [
+            '@fortawesome/fontawesome-svg-core',
+            '@fortawesome/free-solid-svg-icons',
+            '@fortawesome/free-regular-svg-icons',
+            '@fortawesome/free-brands-svg-icons',
+            '@fortawesome/vue-fontawesome',
+          ],
+          // Markdown 和处理
+          'vendor-markdown': ['marked', 'highlight.js'],
+          // 媒体播放
+          'vendor-media': ['plyr', 'wavesurfer.js', 'v-viewer'],
+          // 压缩
+          'vendor-zip': ['@zip.js/zip.js'],
+          // Tauri
+          'vendor-tauri': ['@tauri-apps/api'],
         },
+      },
+    },
+    optimizeDeps: {
+      include: ['vue', 'vue-router', 'pinia', 'naive-ui'],
+      // 明确排除这些空模块
+      exclude: ['birpc', 'hookable', 'perfect-debounce'],
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
       },
     },
   },

@@ -27,6 +27,4 @@ dist-ssr
 .vercel
 build.bat
 stats.html
-/auto-imports.d.ts
-/components.d.ts
 .kiro
