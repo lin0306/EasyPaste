@@ -83,7 +83,8 @@ export default defineConfig(async () => ({
   envPrefix: ['VITE_', 'TAURI_ENV_*'],
   build: {
     // Tauri 在 Windows 上使用 Chromium，在 macOS 和 Linux 上使用 WebKit
-    target: process.env.TAURI_ENV_PLATFORM == 'windows' ? 'chrome105' : 'safari15',
+    // target: process.env.TAURI_ENV_PLATFORM == 'windows' ? 'chrome114' : 'safari16',
+    target: 'esnext',
     // 在 debug 构建中生成 sourcemap
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
     terserOptions: {

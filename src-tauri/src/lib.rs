@@ -66,6 +66,7 @@ pub fn run() {
             file::read_tar_data,
             file::read_gzip_data,
             windows::invoke_external_plugin,
+            windows::init_main_window,
             fetch_page_title,
         ])
         .run(tauri::generate_context!())

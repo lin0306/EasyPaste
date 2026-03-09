@@ -17,15 +17,18 @@ import {
 } from '../../../store/ShortcutKeyAvailableStatus.ts'
 import { error, info } from '@tauri-apps/plugin-log'
 import { sendNotification } from '@tauri-apps/plugin-notification'
-import { currentMonitor, cursorPosition, PhysicalPosition } from '@tauri-apps/api/window'
+import {
+  currentMonitor,
+  cursorPosition,
+  getCurrentWindow,
+  PhysicalPosition,
+} from '@tauri-apps/api/window'
 import { ref } from 'vue'
 import { getAutoHideWindow } from '../../../store/Settings.ts'
 import { getQuickPaste, getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
 import { invoke } from '@tauri-apps/api/core'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { currentLanguage } from '../../../services/LanguageService.ts'
-
-const latestShowWindowTime = ref(0)
 
 // 监听当前窗口是否固定
 const listFixedListen = listFixedStore()
@@ -38,9 +41,6 @@ export const imageContextMenus = ref<ContextMenu[]>([])
 
 // 是否在监听剪贴板数据
 export const isListening = ref(true)
-
-// 是否是第一次启动
-const isFirstOpen = ref(true)
 
 /**
  * 隐藏当前窗口
@@ -55,7 +55,6 @@ export async function hideWindow(): Promise<void> {
     await getCurrentWebviewWindow().hide()
     // 发送窗口已经隐藏消息给后端
     await invoke('hide_win_msg')
-    console.log('已隐藏窗口，' + latestShowWindowTime.value + '，' + Date.now())
   }
 }
 
@@ -70,14 +69,13 @@ async function registerOpenWindowKey(shortcutKeys: string): Promise<void> {
     if (event.state === 'Released') {
       return
     }
-    const win = getCurrentWebviewWindow()
-    const visible = await win.isVisible()
+    const webWin = getCurrentWebviewWindow()
+    const visible = await webWin.isVisible()
     if (!visible) {
-      latestShowWindowTime.value = Date.now()
       const { x, y } = await cursorPosition()
 
       // 获取窗口大小
-      const size = await win.outerSize()
+      const size = await webWin.outerSize()
       const monitor = await currentMonitor()
 
       // 计算窗口位置，确保不会超出屏幕边界
@@ -99,19 +97,12 @@ async function registerOpenWindowKey(shortcutKeys: string): Promise<void> {
       }
 
       // 设置窗口位置并显示
-      await win.setPosition(new PhysicalPosition(posX, posY))
-      await win.show()
-      if (isFirstOpen.value) {
-        await win.hide()
-        await win.show()
-        isFirstOpen.value = false
-      }
-      await win.unminimize()
-      await win.setFocus()
+      await webWin.setPosition(new PhysicalPosition(posX, posY))
+      await webWin.show()
+      await webWin.setFocus()
       window.focus()
       document.body.focus()
       document.body.click()
-      latestShowWindowTime.value = Date.now()
     } else {
       await hideWindow()
     }
@@ -214,7 +205,7 @@ async function registerShortcutKeysQuickPaste(message: MessageApiInjection): Pro
  */
 let focusState = false // 窗口聚焦状态
 let webFocusStatus = false // web网页聚焦状态
-let blurTimer: any = null
+let blurTimer: NodeJS.Timeout | null = null
 
 function initBlurTimer(): NodeJS.Timeout {
   info('初始化窗口失焦定时任务')
@@ -226,17 +217,15 @@ function initBlurTimer(): NodeJS.Timeout {
       webFocusStatus = false
     }
 
-    const win = getCurrentWebviewWindow()
-    const focused = await win.isFocused()
-    // info("webFocusStatus:" + webFocusStatus + "，focusState:" + focusState + "，focused:" + focused)
+    const win = getCurrentWindow()
+    let focused = await win.isFocused()
+
+    // const webWin = getCurrentWindow()
+    // let webFocused = await webWin.isFocused()
+    // info('webFocusStatus:' + webFocusStatus + '，focusState:' + focusState + '，webFocused:' + webFocused + '，focused:' + focused)
     if (!webFocusStatus && ((focusState && !focused) || (!focusState && !focused))) {
       const visible = await win.isVisible()
       if (visible) {
-        // console.log("触发窗口失焦，" + latestShowWindowTime.value + "，" + Date.now() + "，" + (latestShowWindowTime.value > Date.now() - 300));
-        // 如果上一次打开窗口的时间距离当前时间小于500毫秒，则忽略
-        if (latestShowWindowTime.value > Date.now() - 500) {
-          return
-        }
         await hideWindow()
       }
     }
@@ -275,10 +264,7 @@ let trayOpenWindowListener: any = null
 
 function initTrayOpenWindowListener(): Promise<UnlistenFn> {
   return listen('tray-open-window', async (_event: any) => {
-    latestShowWindowTime.value = Date.now()
     await getCurrentWebviewWindow().setFocus()
-    info('已触发托盘图标打开窗口' + latestShowWindowTime.value)
-    isFirstOpen.value = false
   })
 }
 
@@ -402,7 +388,6 @@ export async function initializeWindow(message: MessageApiInjection): Promise<vo
     // 添加监听窗口失焦自动隐藏定时任务
     isAutoHideWindow.value = await getAutoHideWindow()
     if (isAutoHideWindow.value) {
-      latestShowWindowTime.value = Date.now()
       blurTimer = initBlurTimer()
     }
 

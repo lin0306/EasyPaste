@@ -43,6 +43,7 @@ import { destroyPlugins, initializePlugins } from './composables/PluginComposabl
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core'
 import html from 'highlight.js/lib/languages/vbscript-html'
+import { invoke } from '@tauri-apps/api/core'
 
 hljs.registerLanguage('html', html)
 
@@ -122,6 +123,8 @@ watch(
 onMounted(async () => {
   try {
     info('列表页面初始化...')
+    // 初始化主窗口
+    invoke('init_main_window')
     const isFirstRun = await firstRun()
     if (isFirstRun) {
       // 初始化数据

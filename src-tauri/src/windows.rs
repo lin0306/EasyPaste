@@ -3,7 +3,7 @@ use log::info;
 use serde::Deserialize;
 use std::io::Write;
 use std::path::PathBuf;
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindow};
+use tauri::{AppHandle, Manager, PhysicalPosition, WebviewUrl, WebviewWindow};
 
 pub fn create_main_window(app: AppHandle) {
     let mut path = PathBuf::new();
@@ -24,6 +24,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(data.auto_hide_window) // 任务栏不显示
                     .focused(true) // 窗口聚焦
+                    .focusable( true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -32,6 +33,7 @@ pub fn create_main_window(app: AppHandle) {
                     .disable_drag_drop_handler() // 允许拖拽
                     .transparent(true) // 窗口透明
                     .visible_on_all_workspaces(true) // 窗口在所有工作区都显示
+                    .center()
                     .build();
                 app.manage(window);
             }
@@ -48,6 +50,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(data.auto_hide_window) // 任务栏不显示
                     .focused(true) // 窗口聚焦
+                    .focusable( true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -55,6 +58,7 @@ pub fn create_main_window(app: AppHandle) {
                     .resizable(true) // 窗口可自由拖放大小
                     .disable_drag_drop_handler() // 允许拖拽
                     .visible_on_all_workspaces(true) // 窗口在所有工作区都显示
+                    .center()
                     .build();
                 app.manage(window);
             }
@@ -73,6 +77,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(true) // 任务栏不显示
                     .focused(true) // 窗口聚焦
+                    .focusable( true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -81,6 +86,7 @@ pub fn create_main_window(app: AppHandle) {
                     .disable_drag_drop_handler() // 允许拖拽
                     .transparent(true) // 窗口透明
                     .visible_on_all_workspaces(true) // 窗口在所有工作区都显示
+                    .center()
                     .build();
                 app.manage(window);
             }
@@ -97,6 +103,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(true) // 任务栏不显示
                     .focused(true) // 窗口聚焦
+                    .focusable( true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -104,11 +111,23 @@ pub fn create_main_window(app: AppHandle) {
                     .resizable(true) // 窗口可自由拖放大小
                     .disable_drag_drop_handler() // 允许拖拽
                     .visible_on_all_workspaces(true) // 窗口在所有工作区都显示
+                    .center()
                     .build();
                 app.manage(window);
             }
         }
     }
+}
+
+#[tauri::command]
+pub fn init_main_window(app: AppHandle) {
+    let win = app
+        .app_handle()
+        .get_webview_window("main")
+        .expect("主窗口不存在");
+    win.set_position(PhysicalPosition::new(-1000.0, -1000.0)).expect("设置窗口坐标失败");
+    win.show().expect("显示窗口失败");
+    win.hide().expect("隐藏窗口失败");
 }
 
 /**
