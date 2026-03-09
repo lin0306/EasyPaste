@@ -7,6 +7,10 @@ import {
 import { watch } from 'vue'
 import { calculateButtonColors } from '../../../utils/ColorUtil.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { ColorPickerMode } from 'naive-ui/es/color-picker/src/utils'
+
+// 颜色模式
+const colorModes = ['rgb'] as ColorPickerMode[]
 
 watch(
   () => themeConfig.universal.primary,
@@ -93,7 +97,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.primary"
                 @click="forbidCalculate = false"
                 placement="left-end"
@@ -106,7 +110,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.secondary"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -119,7 +123,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.background"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -132,7 +136,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.delete"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -145,7 +149,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.text"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -158,7 +162,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.textHint"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -171,7 +175,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.universal.border"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -192,7 +196,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.backgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -205,7 +209,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.hoverBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -218,7 +222,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.disabledBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -231,7 +235,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.textColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -244,7 +248,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.hoverTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -259,7 +263,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.primary.disabledTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -273,7 +277,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.backgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -286,7 +290,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.hoverBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -299,7 +303,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.disabledBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -312,7 +316,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.textColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -325,7 +329,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.hoverTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -338,7 +342,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.normal.disabledTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -352,7 +356,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.backgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -365,7 +369,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.hoverBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -378,7 +382,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.disabledBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -391,7 +395,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.textColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -404,7 +408,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.hoverTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -417,7 +421,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.button.error.disabledTextColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -437,7 +441,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.select.options.optionColorPending"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -450,7 +454,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.select.options.optionColorActive"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -463,7 +467,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.select.options.optionColorActivePending"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -483,7 +487,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.titleBar.backgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -496,7 +500,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.titleBar.btnHoverBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -509,7 +513,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.titleBar.closeBtnHoverBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -529,7 +533,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.menuBar.background"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -542,7 +546,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.menuBar.itemHover"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -555,7 +559,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.menuBar.itemActive"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -575,7 +579,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.customCard.background"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -588,7 +592,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.customCard.backgroundHover"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -608,7 +612,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.wavesurfer.waveColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -621,7 +625,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.wavesurfer.cursorColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -634,7 +638,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.wavesurfer.progressColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -654,7 +658,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.editor.backgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -667,7 +671,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.editor.lineNumberBackgroundColor"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
@@ -682,7 +686,7 @@ watch(themeConfig, newVal => {
             </div>
             <div class="color-select">
               <n-color-picker
-                modes="['rgba']"
+                :modes="colorModes"
                 v-model:value="themeConfig.editor.lineNumberBackgroundColorActive"
                 @click="forbidCalculate = false"
                 :placement="'left-end'"
