@@ -26,7 +26,7 @@ const onLoading = ref(true)
 
 // 下载状态
 const isDownloading = ref(false)
-const downloadState = ref<'unstart' | 'downloading' | 'completed' | 'failed'>('failed')
+const downloadState = ref<'unstart' | 'downloading' | 'completed' | 'failed'>('unstart')
 const showDownloadFailedVisible = ref(false)
 
 // 下载信息
