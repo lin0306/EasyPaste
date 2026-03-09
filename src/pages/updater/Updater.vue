@@ -174,7 +174,7 @@ onMounted(async () => {
       </div>
       <!-- 查看更多按钮 -->
       <div class="view-more-container">
-        <n-button type="primary" text @click="openGitHubReleases">
+        <n-button text @click="openGitHubReleases">
           <div class="view-more-btn">
             <span>{{ currentLanguage.pages.update.viewMoreBtn }}</span>
             <span class="view-more-icon">→</span>
@@ -241,8 +241,6 @@ onMounted(async () => {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--theme-universal-background);
-  color: var(--theme-universal-text);
 }
 
 .loading-container {
@@ -254,11 +252,10 @@ onMounted(async () => {
 }
 
 .update-content {
-  position: absolute;
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  margin-top: 20px;
+  box-sizing: border-box;
 }
 
 .release-header {
@@ -302,10 +299,10 @@ onMounted(async () => {
 }
 
 .update-footer {
+  flex-shrink: 0;
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
   background-color: var(--theme-universal-background);
-  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -327,10 +324,10 @@ onMounted(async () => {
 }
 
 .download-progress {
+  flex-shrink: 0;
   padding: 15px 20px;
   border-top: 1px solid var(--theme-universal-border);
   background-color: var(--theme-universal-background);
-  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
