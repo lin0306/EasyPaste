@@ -318,7 +318,7 @@ onMounted(async () => {
             @click="loadLogFileInfo"
           />
         </span>
-        <n-button type="primary" dashed @click="clearLogFiles">
+        <n-button dashed @click="clearLogFiles">
           {{ currentLanguage.pages.settings.logClearBtn }}
         </n-button>
       </div>
