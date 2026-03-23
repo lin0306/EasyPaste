@@ -18,7 +18,7 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .setup(|app| {
             // 自启动配置
-            let _ = app.handle().plugin(tauri_plugin_autostart::init(
+            let _ = app.handle().clone().plugin(tauri_plugin_autostart::init(
                 tauri_plugin_autostart::MacosLauncher::LaunchAgent,
                 Some(vec!["--flag1", "--flag2"]), /* arbitrary number of args to pass to your app */
             ));

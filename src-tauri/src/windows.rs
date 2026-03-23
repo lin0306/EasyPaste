@@ -1,4 +1,4 @@
-use crate::{file};
+use crate::file;
 use log::info;
 use serde::Deserialize;
 use std::io::Write;
@@ -24,7 +24,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(data.auto_hide_window) // 任务栏不显示
                     .focused(true) // 窗口聚焦
-                    .focusable( true) // 窗口可聚焦
+                    .focusable(true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -50,7 +50,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(data.auto_hide_window) // 任务栏不显示
                     .focused(true) // 窗口聚焦
-                    .focusable( true) // 窗口可聚焦
+                    .focusable(true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -77,7 +77,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(true) // 任务栏不显示
                     .focused(true) // 窗口聚焦
-                    .focusable( true) // 窗口可聚焦
+                    .focusable(true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -103,7 +103,7 @@ pub fn create_main_window(app: AppHandle) {
                     .visible(false) // 窗口默认不显示
                     .skip_taskbar(true) // 任务栏不显示
                     .focused(true) // 窗口聚焦
-                    .focusable( true) // 窗口可聚焦
+                    .focusable(true) // 窗口可聚焦
                     .fullscreen(false) // 禁止全屏
                     .incognito(true) // 隐私模式
                     .shadow(true) // 窗口阴影
@@ -125,7 +125,8 @@ pub fn init_main_window(app: AppHandle) {
         .app_handle()
         .get_webview_window("main")
         .expect("主窗口不存在");
-    win.set_position(PhysicalPosition::new(-1000.0, -1000.0)).expect("设置窗口坐标失败");
+    win.set_position(PhysicalPosition::new(-1000.0, -1000.0))
+        .expect("设置窗口坐标失败");
     win.show().expect("显示窗口失败");
     win.hide().expect("隐藏窗口失败");
 }
