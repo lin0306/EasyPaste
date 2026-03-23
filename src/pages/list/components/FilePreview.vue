@@ -90,7 +90,7 @@ const props = defineProps<{
 .file-not-exist-icon {
   width: 60px;
   height: 60px;
-  fill: var(--theme-universal-delete);
+  color: var(--theme-universal-delete);
 }
 
 .file-icon {
