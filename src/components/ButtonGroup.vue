@@ -3,8 +3,13 @@
     <n-button @click="handleMainAction" round>
       {{ props.data.filter(item => item.show)[0].label }}
     </n-button>
-    <n-dropdown :options="options" trigger="click" :render-option="renderOption">
-      <n-button style="padding: 0 8px" round>
+    <n-dropdown
+      :show="showDropdown"
+      :options="options"
+      trigger="click"
+      :render-option="renderOption"
+    >
+      <n-button style="padding: 0 8px" round @click="showDropdown = true">
         <n-icon>
           <font-awesome-icon :icon="faChevronDown" />
         </n-icon>
@@ -19,6 +24,11 @@ import { themeColors } from '../services/ThemeService.ts'
 import { NButton, NButtonGroup, NDropdown, NIcon } from 'naive-ui'
 import { DropdownGroupOption, DropdownOption } from 'naive-ui/es/dropdown/src/interface'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+
+// 下拉选项
+const props = defineProps<{
+  data: ButtonGroup[]
+}>()
 
 // 菜单项
 const options = computed(() => {
@@ -35,10 +45,8 @@ const options = computed(() => {
     })
 })
 
-// 下拉选项
-const props = defineProps<{
-  data: ButtonGroup[]
-}>()
+// 下拉菜单显隐
+const showDropdown = ref(false)
 
 // 主按钮点击
 const handleMainAction = (): void => {
@@ -98,6 +106,7 @@ const renderOption = ({
           console.log(option)
           // @ts-ignore
           option.onClick()
+          showDropdown.value = false
         },
       },
       [
@@ -138,6 +147,7 @@ const renderOption = ({
       onClick: () => {
         // @ts-ignore
         option.onClick()
+        showDropdown.value = false
       },
     },
     [
