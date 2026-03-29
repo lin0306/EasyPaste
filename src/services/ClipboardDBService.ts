@@ -806,3 +806,25 @@ class ClipboardDBService {
 }
 
 export default ClipboardDBService
+
+/**
+ * 获取条目内容
+ * @param itemId 条目ID
+ */
+export async function getItemContent(itemId: number) {
+  console.log('getItemContent', itemId);
+  const db = await ClipboardDBService.getInstance()
+  const item = await db.getItem(itemId)
+  return item?.content
+}
+
+/**
+ * 获取条目文件路径
+ * @param itemId 条目ID
+ */
+export async function getItemFilePath(itemId: number) {
+  console.log('getItemFilePath', itemId);
+  const db = await ClipboardDBService.getInstance()
+  const item = await db.getItem(itemId)
+  return item?.file_path
+}

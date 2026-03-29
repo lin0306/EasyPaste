@@ -16,9 +16,51 @@ import {
 import { useMessage } from 'naive-ui'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import ButtonGroup from '../../../components/ButtonGroup.vue'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { loadPluginManifest } from '../../../services/PluginService.ts'
+import PluginSettings from './PluginSettings.vue'
 
 const message = useMessage()
+
+// 判断是否支持设置功能
+const hasSettings = ref(false)
+
+// 检查插件是否支持设置
+async function checkSettingsSupport(pluginId: string | undefined) {
+  if (!pluginId) {
+    hasSettings.value = false
+    return
+  }
+  try {
+    const manifest = await loadPluginManifest(pluginId)
+    const hasSettingsFeature = manifest.features?.some((f: any) => f.type === 'settings') || false
+    hasSettings.value = hasSettingsFeature
+    console.log(`插件 ${pluginId} 支持设置:`, hasSettingsFeature)
+  } catch (e) {
+    console.error(`检查插件 ${pluginId} 设置支持失败:`, e)
+    hasSettings.value = false
+  }
+}
+
+// 监听选中插件变化，检查是否支持设置
+watch(
+  () => selectedPlugin?.plugin_id,
+  (pluginId) => {
+    checkSettingsSupport(pluginId)
+  },
+  { immediate: true, flush: 'post' }
+)
+
+// 设置弹窗状态
+const settingsVisible = ref(false)
+const settingsTitle = ref('')
+
+// 打开设置
+function openSettings() {
+  settingsTitle.value = selectedPlugin.plugin_name + ' ' + currentLanguage.value.pages.pluginStore.settingsBtn
+  settingsVisible.value = true
+}
+
 /**
  * 加载按钮组内容
  */
@@ -40,6 +82,12 @@ const btnOptions = computed(() => [
     label: currentLanguage.value.pages.pluginStore.enableBtn,
     onClick: () => togglePluginEnable(selectedPlugin.plugin_id, true),
     show: selectedPlugin.enable === 0,
+  },
+  {
+    key: 'settings',
+    label: currentLanguage.value.pages.pluginStore.settingsBtn,
+    onClick: () => openSettings(),
+    show: selectedPlugin.enable === 1 && hasSettings.value,
   },
   {
     key: 'uninstall',
@@ -119,6 +167,12 @@ async function onUninstall(): Promise<void> {
       </div>
     </div>
     <div class="plugin-detail-description">{{ selectedPlugin.description }}</div>
+    <!-- 设置弹窗 -->
+    <plugin-settings
+      v-model:visible="settingsVisible"
+      :plugin-id="selectedPlugin.plugin_id"
+      :title="settingsTitle"
+    />
   </div>
   <div class="plugin-detail not-select-plugin" v-else>
     {{ currentLanguage.pages.pluginStore.detailNoPluginHint }}

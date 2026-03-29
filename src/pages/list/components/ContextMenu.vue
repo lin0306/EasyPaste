@@ -11,7 +11,7 @@ import { isFolderCache } from '../composables/FileDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { currentLanguage } from '../../../services/LanguageService.ts'
-import { imageContextMenus } from '../composables/WindowComposable.ts'
+import { imageContextMenus, textContextMenus } from '../composables/WindowComposable.ts'
 import { openLink } from '../../../utils/LinkUtil.ts'
 
 // Naive UI 框架的消息组件
@@ -61,6 +61,12 @@ const calculateMenuPosition = (event: any): void => {
       menuHeight = 140
       if (imageContextMenus.value && imageContextMenus.value.length > 0) {
         menuHeight += imageContextMenus.value.length * 30
+      }
+    }
+    if (props.menuType === 'text') {
+      menuHeight = 140
+      if (textContextMenus.value && textContextMenus.value.length > 0) {
+        menuHeight += textContextMenus.value.length * 30
       }
     }
     if (props.menuType === 'file') {
@@ -136,9 +142,27 @@ const handleImageContextMenuClick = (item: ContextMenu): void => {
   const paramMap = new Map<string, any>()
 
   // 设置参数
-  // todo：暂时只设置filePath
   if (item.params && item.params.indexOf('filePath') > -1) {
-    paramMap.set('filePath', props.filePath)
+    paramMap.set('itemId', props.item.id)
+  }
+
+  // 调用点击事件处理函数
+  if (item.onClick) {
+    item.onClick(paramMap)
+  }
+}
+
+/**
+ * 处理文本右键菜单点击事件，传递 Map 参数
+ * @param item 菜单项
+ */
+const handleTextContextMenuClick = (item: ContextMenu): void => {
+  // 创建参数 Map
+  const paramMap = new Map<string, any>()
+
+  // 设置参数
+  if (item.params && item.params.indexOf('text') > -1) {
+    paramMap.set('itemId', props.item.id)
   }
 
   // 调用点击事件处理函数
@@ -231,6 +255,13 @@ onUnmounted(() => {
       <div class="context-menu-divider"></div>
       <div class="context-menu-item" @click="onOpenTextEditorWindow(props.item.id)">
         <span>{{ currentLanguage.pages.list.contextMenu.edit }}</span>
+      </div>
+      <div
+        v-for="item in textContextMenus"
+        class="context-menu-item"
+        @click="handleTextContextMenuClick(item)"
+      >
+        <span>{{ currentLanguage.pages.plugins[item.label] }}</span>
       </div>
     </template>
 

@@ -3,9 +3,11 @@ import { currentLanguage, languages } from '../../../services/LanguageService.ts
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
 import { createWin } from '../../../services/WindowService.ts'
-import { imageContextMenus } from './WindowComposable.ts'
+import { imageContextMenus, textContextMenus } from './WindowComposable.ts'
 import { error, info } from '@tauri-apps/plugin-log'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+import { invoke } from '@tauri-apps/api/core'
+import { copyToClipboard } from '../../../services/ClipboardService.ts'
 
 async function initPlugins(): Promise<void> {
   const db = await ClipboardDBService.getInstance()
@@ -16,6 +18,118 @@ async function initPlugins(): Promise<void> {
       await loadPlugin(p.plugin_id)
     }
   }
+}
+
+/**
+ * 注册右键菜单
+ * @param pluginId 插件ID
+ * @param menu 菜单配置
+ * @param menuArray 菜单数组引用
+ */
+function registerContextMenu(
+  pluginId: string,
+  menu: any,
+  menuArray: typeof imageContextMenus
+): void {
+  // 设置语言
+  for (let language of languages) {
+    if (language.id === 'chinese') {
+      language.pages.plugins[menu.menuId] = menu.label_ZH
+    }
+    if (language.id === 'english') {
+      language.pages.plugins[menu.menuId] = menu.label_EN
+    }
+    if (currentLanguage.value.id === language.id) {
+      currentLanguage.value.pages.plugins[menu.menuId] = language.pages.plugins[menu.menuId]
+    }
+  }
+
+  // 设置点击事件处理
+  const clickFun = async (params: Map<string, any>) => {
+    console.log('触发自定义右键菜单点击事件', params)
+
+    // 设置传参
+    let str = ''
+    for (let [k, v] of params) {
+      str += `${k}=${v}&`
+    }
+
+    // 根据 click_fun 类型处理
+    if (menu.click_fun && menu.click_fun.type === 'openWindow') {
+      // 打开窗口模式
+      const existWin = await WebviewWindow.getByLabel('plugins')
+      if (existWin) {
+        const obj = Object.fromEntries(params)
+        await emit('reload-' + menu.menuId, obj)
+        await existWin.show()
+        await existWin.setFocus()
+      } else {
+        await createWin({
+          label: 'plugins',
+          title: currentLanguage.value.pages.preview.title,
+          url: '/plugin-view?pluginId=' + pluginId + '&' + str,
+          width: menu.click_fun.width,
+          height: menu.click_fun.height,
+          resizable: true,
+          visible: true,
+        })
+      }
+    } else if (menu.click_fun && menu.click_fun.type === 'invoke') {
+      // 调用插件命令模式 - 插件自行处理逻辑
+      try {
+        const result = (await invoke('invoke_external_plugin', {
+          pluginId: pluginId,
+          pluginName: pluginId + '_plugin.exe',
+          cmd: menu.click_fun.cmd,
+          payload: JSON.stringify(Object.fromEntries(params)),
+        })) as string
+
+        console.log('插件调用结果:', result)
+        const response = JSON.parse(result)
+        // 插件返回的是嵌套结构: { result: '{"action": "...", ...}' }
+        const actionResult = response.result ? JSON.parse(response.result) : {}
+
+        console.log('插件 action 结果:', actionResult)
+
+        // 如果插件返回 action = 'openWindow'，则打开窗口
+        if (actionResult.action === 'openWindow') {
+          const existWin = await WebviewWindow.getByLabel('plugins')
+          if (existWin) {
+            const obj = Object.fromEntries(params)
+            await emit('reload-' + menu.menuId, obj)
+            await existWin.show()
+            await existWin.setFocus()
+          } else {
+            await createWin({
+              label: 'plugins',
+              title: actionResult.title || currentLanguage.value.pages.preview.title,
+              url: '/plugin-view?pluginId=' + pluginId + '&' + str,
+              width: actionResult.width || 800,
+              height: actionResult.height || 600,
+              resizable: true,
+              visible: true,
+            })
+          }
+        } else if (actionResult.action === 'copyToClipboard') {
+          // 插件要求复制到剪贴板
+          await copyToClipboard({ content: actionResult.text, type: 'text' } as ClipboardItem)
+          // 可以在这里添加提示
+          console.log('已复制到剪贴板:', actionResult.text)
+        }
+        // 其他情况插件自行处理，不打开窗口
+      } catch (e) {
+        console.error('插件调用失败:', e)
+        error('插件调用失败: ' + e)
+      }
+    }
+  }
+
+  // 添加到对应菜单数组
+  menuArray.value.push({
+    label: menu.menuId,
+    params: menu.click_fun?.params || [],
+    onClick: clickFun,
+  })
 }
 
 /**
@@ -30,58 +144,21 @@ async function loadPlugin(pluginId: string): Promise<void> {
     for (let feature of features) {
       if (feature.page && feature.page === 'list') {
         if (feature.type && feature.type === 'contextMenu') {
-          if (feature.location && feature.location === 'image') {
+          // 图片右键菜单
+          if (feature.location === 'image') {
             if (feature.menus && feature.menus.length > 0) {
               for (let menu of feature.menus) {
-                console.log('加载 ' + pluginId + ' 右键菜单', menu)
-                // 设置语言
-                for (let language of languages) {
-                  if (language.id === 'chinese') {
-                    language.pages.plugins[menu.menuId] = menu.label_ZH
-                  }
-                  if (language.id === 'english') {
-                    language.pages.plugins[menu.menuId] = menu.label_EN
-                  }
-                  if (currentLanguage.value.id === language.id) {
-                    currentLanguage.value.pages.plugins[menu.menuId] =
-                      language.pages.plugins[menu.menuId]
-                  }
-                }
-                // 设置点击打开窗口事件
-                if (menu.click_fun && menu.click_fun.type === 'openWindow') {
-                  const clickFun = async (params: Map<string, any>) => {
-                    console.log('触发自定义右键菜单点击事件', params)
-                    const existWin = await WebviewWindow.getByLabel('plugins')
-                    if (existWin) {
-                      const obj = Object.fromEntries(params)
-                      await emit('reload-' + menu.menuId, obj)
-                      await existWin.show()
-                      await existWin.setFocus()
-                    } else {
-                      // 设置传参
-                      let str = ''
-                      for (let [k, v] of params) {
-                        // 使用传入的参数值构建查询字符串
-                        str += `${k}=${encodeURIComponent(v)}&`
-                      }
-                      await createWin({
-                        label: 'plugins',
-                        title: currentLanguage.value.pages.preview.title,
-                        url: '/plugin-view?pluginId=' + pluginId + '&' + str,
-                        width: menu.click_fun.width,
-                        height: menu.click_fun.height,
-                        resizable: true,
-                        visible: true,
-                      })
-                    }
-                  }
-                  // 设置图片右键菜单项
-                  imageContextMenus.value.push({
-                    label: menu.menuId,
-                    params: menu.click_fun.params,
-                    onClick: clickFun,
-                  })
-                }
+                console.log('加载 ' + pluginId + ' 图片右键菜单', menu)
+                registerContextMenu(pluginId, menu, imageContextMenus)
+              }
+            }
+          }
+          // 文本右键菜单
+          if (feature.location === 'text') {
+            if (feature.menus && feature.menus.length > 0) {
+              for (let menu of feature.menus) {
+                console.log('加载 ' + pluginId + ' 文本右键菜单', menu)
+                registerContextMenu(pluginId, menu, textContextMenus)
               }
             }
           }
@@ -103,14 +180,26 @@ async function removePlugin(pluginId: string): Promise<void> {
     for (let feature of features) {
       if (feature.page && feature.page === 'list') {
         if (feature.type && feature.type === 'contextMenu') {
-          if (feature.location && feature.location === 'image') {
+          // 移除图片右键菜单
+          if (feature.location === 'image') {
             if (feature.menus && feature.menus.length > 0) {
               for (let menu of feature.menus) {
-                console.log('删除 ' + pluginId + ' 右键菜单', menu)
-                // 设置点击打开窗口事件
-                if (menu.click_fun && menu.click_fun.type === 'openWindow') {
-                  // 删除图片右键菜单项
+                console.log('删除 ' + pluginId + ' 图片右键菜单', menu)
+                if (menu.click_fun) {
                   imageContextMenus.value = imageContextMenus.value.filter(
+                    item => item.label !== menu.menuId
+                  )
+                }
+              }
+            }
+          }
+          // 移除文本右键菜单
+          if (feature.location === 'text') {
+            if (feature.menus && feature.menus.length > 0) {
+              for (let menu of feature.menus) {
+                console.log('删除 ' + pluginId + ' 文本右键菜单', menu)
+                if (menu.click_fun) {
+                  textContextMenus.value = textContextMenus.value.filter(
                     item => item.label !== menu.menuId
                   )
                 }

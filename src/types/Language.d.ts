@@ -390,6 +390,7 @@ declare interface PageConfig {
     installBtn: string
     installedBtn: string
     unInstallBtn: string
+    settingsBtn: string
     pluginPlatformGeneral: string
     pluginPlatformMac: string
     pluginPlatformWindows: string

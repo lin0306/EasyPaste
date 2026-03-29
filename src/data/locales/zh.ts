@@ -395,6 +395,7 @@ export const chinese: LanguageConfig = {
       installBtn: '安装',
       installedBtn: '已安装',
       unInstallBtn: '卸载',
+      settingsBtn: '设置',
       pluginPlatformGeneral: '全平台通用',
       pluginPlatformWindows: '仅适用于Windows系统',
       pluginPlatformMac: '仅适用于Mac系统',

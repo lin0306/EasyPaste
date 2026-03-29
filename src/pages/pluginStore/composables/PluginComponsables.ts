@@ -93,6 +93,13 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
         await savePluginInfo(plugin)
         // 重新加载插件
         await loadLocalPlugins()
+        // 如果当前选中的插件是刚安装的，更新选中状态以触发设置按钮检查
+        if (selectedPlugin.plugin_id === pluginId) {
+          const newlyInstalled = localPlugins.value.find(l => l.plugin_id === pluginId)
+          if (newlyInstalled) {
+            onSelectLocal(newlyInstalled)
+          }
+        }
         // 保存插件配置
         message.success(
           currentLanguage.value.pages.pluginStore.installSuccessHint.replace(

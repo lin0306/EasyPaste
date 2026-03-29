@@ -39,6 +39,9 @@ export const isAutoHideWindow = ref(false)
 // 图片右键菜单
 export const imageContextMenus = ref<ContextMenu[]>([])
 
+// 文本右键菜单
+export const textContextMenus = ref<ContextMenu[]>([])
+
 // 是否在监听剪贴板数据
 export const isListening = ref(true)
 

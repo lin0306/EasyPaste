@@ -62,6 +62,8 @@ pub fn create_main_window(app: AppHandle) {
                     .build();
                 app.manage(window);
             }
+            // 打开开发者工具
+            // open_dev_tool(app.app_handle().clone(), "main");
         }
         Err(_e) => {
             #[cfg(target_os = "windows")]
@@ -151,6 +153,7 @@ pub async fn invoke_external_plugin(
             let mut path = PathBuf::new();
             path.push(plugins_dir.plugin_path);
             path.push(plugin_id);
+            path.push("rust");
             path.push(plugin_name);
             let plugin_path = path.to_string_lossy().to_string();
             let input = serde_json::json!({
@@ -159,11 +162,19 @@ pub async fn invoke_external_plugin(
             })
             .to_string();
 
-            // 启动子进程
+            info!("plugin_path: {:?}", plugin_path);
+
+            // 获取应用数据目录
+            let app_data_dir = dirs::data_dir()
+                .map(|d| d.join(app.config().identifier.clone()))
+                .unwrap_or_else(|| PathBuf::from("."));
+
+            // 启动子进程，传递数据目录环境变量
             let mut child = std::process::Command::new(plugin_path)
                 .stdin(std::process::Stdio::piped())
                 .stdout(std::process::Stdio::piped())
                 .stderr(std::process::Stdio::piped()) // 可选：捕获错误日志
+                .env("EASYPASTE_DATA_DIR", app_data_dir.to_string_lossy().to_string())
                 .spawn()
                 .map_err(|e| format!("Failed to spawn plugin: {}", e))?;
 

@@ -413,6 +413,7 @@ export const english: LanguageConfig = {
       installBtn: 'Install',
       installedBtn: 'Installed',
       unInstallBtn: 'Uninstall',
+      settingsBtn: 'Settings',
       pluginPlatformGeneral: 'Universal across all platforms',
       pluginPlatformWindows: 'Applicable only to Windows systems',
       pluginPlatformMac: 'Applicable only to Mac systems',
