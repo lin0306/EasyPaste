@@ -134,36 +134,16 @@ const onOpenTextEditorWindow = (itemId: number): void => {
 }
 
 /**
- * 处理图片右键菜单点击事件，传递 Map 参数
- * @param item 菜单项
- */
-const handleImageContextMenuClick = (item: ContextMenu): void => {
-  // 创建参数 Map
-  const paramMap = new Map<string, any>()
-
-  // 设置参数
-  if (item.params && item.params.indexOf('filePath') > -1) {
-    paramMap.set('itemId', props.item.id)
-  }
-
-  // 调用点击事件处理函数
-  if (item.onClick) {
-    item.onClick(paramMap)
-  }
-}
-
-/**
  * 处理文本右键菜单点击事件，传递 Map 参数
  * @param item 菜单项
  */
-const handleTextContextMenuClick = (item: ContextMenu): void => {
+const handleContextMenuClick = (item: ContextMenu): void => {
+  console.log(item.params)
   // 创建参数 Map
   const paramMap = new Map<string, any>()
 
   // 设置参数
-  if (item.params && item.params.indexOf('text') > -1) {
-    paramMap.set('itemId', props.item.id)
-  }
+  paramMap.set('itemId', props.item.id)
 
   // 调用点击事件处理函数
   if (item.onClick) {
@@ -238,7 +218,7 @@ onUnmounted(() => {
       <div
         v-for="item in imageContextMenus"
         class="context-menu-item"
-        @click="handleImageContextMenuClick(item)"
+        @click="handleContextMenuClick(item)"
       >
         <span>{{ currentLanguage.pages.plugins[item.label] }}</span>
       </div>
@@ -259,7 +239,7 @@ onUnmounted(() => {
       <div
         v-for="item in textContextMenus"
         class="context-menu-item"
-        @click="handleTextContextMenuClick(item)"
+        @click="handleContextMenuClick(item)"
       >
         <span>{{ currentLanguage.pages.plugins[item.label] }}</span>
       </div>

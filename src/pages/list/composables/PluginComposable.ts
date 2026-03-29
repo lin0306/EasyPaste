@@ -53,6 +53,7 @@ function registerContextMenu(
     for (let [k, v] of params) {
       str += `${k}=${v}&`
     }
+    console.log('插件参数', str)
 
     // 根据 click_fun 类型处理
     if (menu.click_fun && menu.click_fun.type === 'openWindow') {
