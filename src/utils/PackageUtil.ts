@@ -135,7 +135,7 @@ function addPathToTree(tree: PackageTreeOption[], path: string): void {
         key: path,
         label: part,
         children: [],
-        prefix: () => h(NImage, { src: '/closedFolder.svg' }),
+        prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
       }
       currentNode.push(existingNode)
     }
@@ -170,7 +170,7 @@ function addToDirectory(
         key: key,
         label: part,
         children: [],
-        prefix: () => h(NImage, { src: '/closedFolder.svg' }),
+        prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
       }
       currentNode.push(existingNode)
     }
