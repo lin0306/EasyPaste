@@ -68,6 +68,12 @@ async function handleKeyDown(event: KeyboardEvent): Promise<void> {
   }
 }
 
+onBeforeMount(() => {
+  initializeLanguages().catch(e => {
+    error('语言初始化失败:' + e)
+  })
+})
+
 // 应用启动时初始化数据库和剪贴板监听
 onMounted(async () => {
   try {
@@ -77,9 +83,6 @@ onMounted(async () => {
     // 设置主题监听器
     setupThemeListener().catch(e => {
       error('主题监听器初始化失败:' + e)
-    })
-    initializeLanguages().catch(e => {
-      error('语言初始化失败:' + e)
     })
     info('应用初始化完成')
   } catch (er) {

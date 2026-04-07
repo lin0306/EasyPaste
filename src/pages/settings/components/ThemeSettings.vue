@@ -17,6 +17,7 @@ import { currentThemeId, themes, toggleTheme } from '../../../services/ThemeServ
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { openThemeEditorWindow } from '../../../services/WindowService.ts'
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -178,7 +179,7 @@ onMounted(async () => {
             :style="{ backgroundColor: theme.colors.universal.secondary }"
           >
             <div :style="{ color: theme.colors.universal.text }" class="theme-name">
-              {{ currentLanguage.pages.list.menu[theme.id] }}
+              {{ currentLanguage.pages.settings.colors[theme.id] }}
             </div>
           </div>
           <div
@@ -236,7 +237,7 @@ onMounted(async () => {
     <div class="line" v-if="currentConfig.enableAnimationEffects">
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.animationHint }}
           </span>

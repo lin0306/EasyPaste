@@ -20,8 +20,8 @@ export const currentLanguage = ref<LanguageConfig>({
     tray: {},
     preview: {},
     pluginStore: {},
-    plugins: {}
-  }
+    plugins: {},
+  },
 } as LanguageConfig)
 
 let updateAutoGoToLatestDataListener: any = null

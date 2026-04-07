@@ -216,6 +216,14 @@ declare interface PageConfig {
       }
       preview: {}
     }
+    // 主题颜色
+    colors: {
+      [x: string]: string
+      light: string
+      dark: string
+      blue: string
+      pink: string
+    }
   }
   list: {
     title: string

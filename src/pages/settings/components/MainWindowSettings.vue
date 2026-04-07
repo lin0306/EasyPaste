@@ -17,6 +17,7 @@ import {
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
 
@@ -195,7 +196,7 @@ onMounted(async () => {
       </div>
       <div class="second-item">
         <div class="hint">
-          <font-awesome-icon icon="fa-solid fa-circle-info" class="hint-icon" />
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.autoGoToLatestDataHint }}
           </span>

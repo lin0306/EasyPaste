@@ -194,6 +194,12 @@
           }
         },
         "preview": {}
+      },
+      "colors": {
+        "light": "浅色",
+        "dark": "深色",
+        "blue": "蓝色",
+        "pink": "粉色"
       }
     },
     "list": {
