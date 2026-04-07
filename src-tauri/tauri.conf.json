@@ -32,12 +32,8 @@
     "licenseFile": "../LICENSE",
     "publisher": "lin0306",
     "shortDescription": "一个简易且高效的剪贴板管理工具",
-    "icon": [
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
+    "icon": ["icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "resources": ["resources/**/*"]
   },
   "plugins": {
     "updater": {

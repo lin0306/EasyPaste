@@ -6,6 +6,7 @@ import { SETTINGS_KEYS } from '../constants/KeysConstants.ts'
 import { utf8Decoder } from '../constants/PublicConstants.ts'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { isMac } from '../data/SystemParams.ts'
+import { invoke } from '@tauri-apps/api/core'
 
 export const SETTINGS_FILE_NAME = 'settings.json'
 const defaultSettings: Settings = {
@@ -61,6 +62,7 @@ export async function saveLanguage(language: String): Promise<void> {
   info('保存语言: ' + language)
   const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
   await settings.set(SETTINGS_KEYS.LANGUAGES, language)
+  await invoke('update_current_locale', { locale: language })
 }
 
 /**

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { currentLanguage } from '../../../services/LanguageService.ts'
 import { GlobalThemeOverrides, NConfigProvider } from 'naive-ui'
 import { computed, onMounted } from 'vue'
 import { applyPreviewThemeToDOM, themeConfig } from '../composables/ThemeEditorDataComposable.ts'
@@ -12,6 +11,7 @@ import TextEditorPreview from './TextEditorPreview.vue'
 import hljs from 'highlight.js/lib/core'
 import html from 'highlight.js/lib/languages/vbscript-html'
 import { setTransparency } from '../../../utils/ColorUtil.ts'
+import { dateLocale, locale } from '../../../utils/LanguageUtil.ts'
 
 hljs.registerLanguage('html', html)
 
@@ -227,18 +227,6 @@ const theme = computed(() => {
       titlePadding: '5px',
     },
   } as GlobalThemeOverrides
-})
-/**
- * 计算 Naive UI 的语言配置
- */
-const locale = computed(() => {
-  return currentLanguage.value.locale
-})
-/**
- * 计算 Naive UI 的语言配置
- */
-const dateLocale = computed(() => {
-  return currentLanguage.value.dateLocale
 })
 
 onMounted(() => {

@@ -55,7 +55,7 @@ export async function createWin(options: WebViewWindowOptions): Promise<void> {
   await win.once('tauri://created', async () => {
     console.log('执行窗口创建')
     // 是否主窗口
-    if (args.label.indexOf('main') > -1) {
+    if (args.label.indexOf('list') > -1) {
       // ...
     }
 
@@ -178,7 +178,7 @@ export async function openItemEditWindow(itemId: number): Promise<void> {
  */
 export async function openPluginStoreWindow(): Promise<void> {
   await createWin({
-    label: 'plugin-store',
+    label: 'pluginStore',
     title: currentLanguage.value.pages.pluginStore.title,
     url: '/plugin-store',
     width: 800,

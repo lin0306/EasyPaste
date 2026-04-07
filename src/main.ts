@@ -7,8 +7,6 @@ import 'vfonts/FiraCode.css'
 import router from './routers'
 // 全局滚动条样式设置
 import './assets/css/scrollbarGlobal.css'
-// 语言
-import { initializeLanguage } from './services/LanguageService.ts'
 // 主题
 import { initializeTheme } from './services/ThemeService.ts'
 // 图片预览
@@ -18,20 +16,20 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './assets/js/registerIcon.ts'
 import './assets/js/globalWindowConfig.ts'
 
-const app = createApp(App)
-const pinia = createPinia()
+import { error } from '@tauri-apps/plugin-log'
 
-app.use(pinia)
-app.use(router)
-app.use(VueViewer)
+async function bootstrap() {
+  await initializeTheme()
 
-app.component('font-awesome-icon', FontAwesomeIcon)
+  const app = createApp(App)
+  const pinia = createPinia()
 
-// 在挂载前初始化主题和语言
-initializeTheme().then(() => {
-  initializeLanguage().then(() => {
-    app.mount('#app')
-  })
-})
+  app.use(pinia)
+  app.use(router)
+  app.use(VueViewer)
 
-// app.mount('#app')
+  app.component('font-awesome-icon', FontAwesomeIcon)
+  app.mount('#app')
+}
+
+bootstrap().catch(err => error('程序初始化失败' + err))

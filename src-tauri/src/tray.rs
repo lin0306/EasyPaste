@@ -1,8 +1,5 @@
-use crate::file;
+use crate::i18n::{I18nState, Tray};
 use crate::listener::{is_listening, start_listening, stop_listening};
-use log::info;
-use serde::Deserialize;
-use serde_json::from_slice;
 use std::sync::{Arc, Mutex};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
@@ -98,7 +95,7 @@ pub fn create_tray(app: AppHandle) {
                 // 打开主窗口
                 let win = tray
                     .app_handle()
-                    .get_webview_window("main")
+                    .get_webview_window("list")
                     .expect("主窗口不存在");
                 match win.is_visible() {
                     Ok(visible) => {
@@ -112,7 +109,9 @@ pub fn create_tray(app: AppHandle) {
                             state_new.win_current_visible = true;
                             state_new.win_enter_visible = true;
                             state_new.is_first_hide = false;
-                            tray.app_handle().emit("tray-open-window", "".to_string()).unwrap();
+                            tray.app_handle()
+                                .emit("tray-open-window", "".to_string())
+                                .unwrap();
                         } else {
                             println!("隐藏窗口");
                             win.hide().expect("窗口隐藏失败");
@@ -131,7 +130,7 @@ pub fn create_tray(app: AppHandle) {
                 rect: _,
             } => {
                 let mut state_new = LOAD_STATE.lock().unwrap();
-                match tray.app_handle().get_webview_window("main") {
+                match tray.app_handle().get_webview_window("list") {
                     Some(win) => {
                         // 鼠标移到托盘图标上时，设置移入时窗口是否可见
                         state_new.win_enter_visible = win.is_visible().unwrap();
@@ -178,8 +177,7 @@ pub fn create_tray(app: AppHandle) {
     state.is_first_hide = false;
 }
 
-// 重新加载托盘菜单的命令
-#[tauri::command]
+// 重新加载托盘菜单
 pub fn reload_tray_menu(app: AppHandle) -> tauri::Result<()> {
     println!("重新加载托盘菜单");
     create_tray(app);
@@ -200,38 +198,8 @@ pub fn hide_win_msg() {
  * 加载语言配置
  */
 fn load_language(app: &AppHandle) -> Tray {
-    match file::load_file_content::<LanguageConfig>(app.clone(), "language.json".into()) {
-        Ok(data) => data.tray,
-        Err(_e) => {
-            info!("使用默认托盘语言配置");
-            let default_json = r#"{
-                "settings": "设置",
-                "clipboardMonitor": "剪贴板监听",
-                "checkUpdate": "检查更新",
-                "about": "关于",
-                "restart": "重启",
-                "exit": "退出"
-            }"#;
-            from_slice(default_json.as_bytes()).unwrap()
-        }
-    }
-}
-
-#[derive(Deserialize)]
-struct LanguageConfig {
-    tray: Tray,
-}
-
-#[derive(Deserialize)]
-pub struct Tray {
-    settings: String,
-    #[serde(rename = "checkUpdate")]
-    check_update: String,
-    about: String,
-    restart: String,
-    exit: String,
-    #[serde(rename = "clipboardMonitor")]
-    clipboard_monitor: String,
+    let state = app.state::<I18nState>();
+    state.get_tray()
 }
 
 // 全局状态管理结构体

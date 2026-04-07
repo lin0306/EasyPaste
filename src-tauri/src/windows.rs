@@ -13,7 +13,7 @@ pub fn create_main_window(app: AppHandle) {
         Ok(data) => {
             #[cfg(target_os = "windows")]
             {
-                let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
+                let window = WebviewWindow::builder(&app, "list", WebviewUrl::App(path))
                     .title("EasyPaste")
                     .inner_size(350.0, 550.0) // 窗口初始大小
                     .min_inner_size(350.0, 550.0) // 窗口最小大小
@@ -39,7 +39,7 @@ pub fn create_main_window(app: AppHandle) {
             }
             #[cfg(target_os = "macos")]
             {
-                let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
+                let window = WebviewWindow::builder(&app, "list", WebviewUrl::App(path))
                     .title("EasyPaste")
                     .inner_size(350.0, 550.0) // 窗口初始大小
                     .min_inner_size(350.0, 550.0) // 窗口最小大小
@@ -63,12 +63,12 @@ pub fn create_main_window(app: AppHandle) {
                 app.manage(window);
             }
             // 打开开发者工具
-            // open_dev_tool(app.app_handle().clone(), "main");
+            crate::open_dev_tool(app.app_handle().clone(), "list");
         }
         Err(_e) => {
             #[cfg(target_os = "windows")]
             {
-                let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
+                let window = WebviewWindow::builder(&app, "list", WebviewUrl::App(path))
                     .title("EasyPaste")
                     .inner_size(350.0, 550.0) // 窗口初始大小
                     .min_inner_size(350.0, 550.0) // 窗口最小大小
@@ -94,7 +94,7 @@ pub fn create_main_window(app: AppHandle) {
             }
             #[cfg(target_os = "macos")]
             {
-                let window = WebviewWindow::builder(&app, "main", WebviewUrl::App(path))
+                let window = WebviewWindow::builder(&app, "list", WebviewUrl::App(path))
                     .title("EasyPaste")
                     .inner_size(350.0, 550.0) // 窗口初始大小
                     .min_inner_size(350.0, 550.0) // 窗口最小大小
@@ -125,7 +125,7 @@ pub fn create_main_window(app: AppHandle) {
 pub fn init_main_window(app: AppHandle) {
     let win = app
         .app_handle()
-        .get_webview_window("main")
+        .get_webview_window("list")
         .expect("主窗口不存在");
     win.set_position(PhysicalPosition::new(-1000.0, -1000.0))
         .expect("设置窗口坐标失败");
@@ -206,7 +206,7 @@ pub async fn invoke_external_plugin(
             }
         }
         _ => {
-            return Err("插件文件夹获取失败".into());
+            Err("插件文件夹获取失败".into())
         }
     }
 }

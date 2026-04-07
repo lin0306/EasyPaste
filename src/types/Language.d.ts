@@ -2,6 +2,7 @@ declare interface LanguageConfig {
   id: string
   name: string
   locale: any
+  uiLocale: string
   dateLocale: any
   pages: PageConfig
 }

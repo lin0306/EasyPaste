@@ -50,6 +50,7 @@ flate2 = "1.1"
 # tcp/ip请求
 tauri-plugin-http = "2"
 reqwest = "0.12.28"
+anyhow = "1.0.100"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55.0"

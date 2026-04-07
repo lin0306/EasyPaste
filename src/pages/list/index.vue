@@ -215,7 +215,7 @@ onUnmounted(async () => {
   </div>
   <TitleBar
     v-if="!isLoading"
-    :dev-tool="`main`"
+    :dev-tool="`list`"
     :show-hide-btn="!isAutoHideWindow"
     :show-update-icon="hasNewVersion"
     :showFixedBtn="true"

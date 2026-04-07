@@ -14,12 +14,7 @@ import {
   systemClipboardKeyOccupied,
   systemClipboardKeysRegistered,
 } from '../composables/SettingsDataComposable.ts'
-import {
-  currentLanguage,
-  getTray,
-  languages,
-  toggleLanguage,
-} from '../../../services/LanguageService.ts'
+import { currentLanguage } from '../../../services/LanguageService.ts'
 import { onMounted, ref } from 'vue'
 import {
   getLanguage,
@@ -35,7 +30,6 @@ import { emit } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/core'
 import { convertRegisterKeys } from '../../../utils/ShortcutKeysUtil.ts'
 import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-shortcut'
-import { saveLanguageCache } from '../../../services/FileService.ts'
 import { useMessage } from 'naive-ui'
 import { getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
 import { faArrowRotateRight, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
@@ -43,13 +37,24 @@ import { faArrowRotateRight, faCircleInfo } from '@fortawesome/free-solid-svg-ic
 const message = useMessage()
 
 // 语言选项
-const languageOptions = languages.map(lang => ({
-  value: lang.id,
-  label: lang.name,
-}))
+// @ts-ignore
+const languageOptions = ref<[{ value: string; label: string }]>([])
 
 // 重启确认弹窗状态
 const restartModalVisible = ref(false)
+
+/**
+ * 加载所有语言
+ */
+async function loadAllLanguages() {
+  const localesStr = await invoke<string>('get_locales')
+  console.log('所有语言:', localesStr)
+  const locales: [{ id: string; name: string }] = JSON.parse(localesStr)
+  for (const locale of locales) {
+    languageOptions.value.push({ value: locale.id, label: locale.name })
+  }
+  console.log('语言选项:', languageOptions)
+}
 
 /**
  * 更新系统快捷键
@@ -197,13 +202,11 @@ const onChangeLanguages = async (languages: string): Promise<void> => {
   }
   onLoading.value = true
   try {
-    await saveLanguage(languages)
-    // 更新语言
-    await toggleLanguage(currentConfig.languages)
     // 保存语言
-    await saveLanguageCache(getTray(currentConfig.languages))
-    // 重新加载托盘菜单
-    await invoke('reload_tray_menu')
+    await saveLanguage(languages)
+
+    // 发送语言变更事件，通知所有窗口
+    await emit('language-changed', languages)
     originalConfig.languages = languages
     currentConfig.languages = languages
   } catch (e) {
@@ -278,6 +281,7 @@ const checkSystemClipboardKeyOccupied = async (): Promise<void> => {
 // 加载配置
 onMounted(async () => {
   try {
+    await loadAllLanguages()
     // 初始化用户配置
     const powerOnSelfStart = await getPowerOnSelfStart()
     originalConfig.powerOnSelfStart = powerOnSelfStart

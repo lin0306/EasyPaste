@@ -15,7 +15,6 @@
       "nsis": {
         "languages": ["SimpChinese", "English"],
         "displayLanguageSelector": true,
-        "installerHooks": "./configs/nsis/hook.nsh",
         "installerIcon": "./icons/icon.ico",
         "installMode": "both"
       }

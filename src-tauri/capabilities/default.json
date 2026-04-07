@@ -32,6 +32,8 @@
     "fs:allow-appdata-write",
     "fs:allow-applocaldata-read",
     "fs:allow-applocaldata-write",
+    "fs:allow-read-text-file",
+    "fs:allow-resource-read-recursive",
     {
       "identifier": "fs:scope",
       "allow": [

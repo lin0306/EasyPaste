@@ -1,6 +1,5 @@
 // 用户设置相关常量
 import { lightTheme } from '../data/themes/light.ts'
-import { chinese } from '../data/locales/zh.ts'
 
 export const SETTINGS = {
   // 菜单常量
@@ -46,7 +45,7 @@ export const SETTINGS = {
   // 语言设置常量
   LANGUAGE: {
     // 默认语言
-    DEFAULT_LANGUAGE: chinese.id,
+    DEFAULT_LANGUAGE: 'zhCN',
   },
   // 更新设置页面常量
   UPDATER: {

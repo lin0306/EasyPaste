@@ -2,7 +2,7 @@
 import { NConfigProvider, NMessageProvider } from 'naive-ui'
 import { computed, onMounted, onUnmounted } from 'vue'
 import { error, info } from '@tauri-apps/plugin-log'
-import { currentLanguage, setupLanguageListener } from './services/LanguageService.ts'
+import { destroyLanguages, initializeLanguages } from './services/LanguageService.ts'
 import { getPluginThemeOverrides, setupThemeListener } from './services/ThemeService.ts'
 import {
   destroyAnimationEffect,
@@ -10,6 +10,7 @@ import {
 } from './components/composables/AnimationComposable.ts'
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core'
+import { dateLocale, locale } from './utils/LanguageUtil.ts'
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
@@ -20,20 +21,6 @@ document.oncontextmenu = function () {
  * 定义全局组件主题色
  */
 const theme = computed(() => getPluginThemeOverrides())
-
-/**
- * 计算 Naive UI 的语言配置
- */
-const locale = computed(() => {
-  return currentLanguage.value.locale
-})
-
-/**
- * 计算 Naive UI 的语言配置
- */
-const dateLocale = computed(() => {
-  return currentLanguage.value.dateLocale
-})
 
 /**
  * 忽略浏览器默认的搜索快捷键
@@ -91,9 +78,8 @@ onMounted(async () => {
     setupThemeListener().catch(e => {
       error('主题监听器初始化失败:' + e)
     })
-    // 设置语言监听器
-    setupLanguageListener().catch(e => {
-      error('语言监听器初始化失败:' + e)
+    initializeLanguages().catch(e => {
+      error('语言初始化失败:' + e)
     })
     info('应用初始化完成')
   } catch (er) {
@@ -106,6 +92,8 @@ onMounted(async () => {
 onUnmounted(() => {
   // 销毁动画效果配置
   destroyAnimationEffect()
+  // 销毁语言配置
+  destroyLanguages()
   // 移除键盘点击时间监听
   document.removeEventListener('keydown', handleKeyDown)
 })

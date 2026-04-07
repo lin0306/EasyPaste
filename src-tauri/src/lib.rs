@@ -9,10 +9,12 @@ mod permission;
 mod regedit;
 mod tray;
 mod windows;
+mod i18n;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(i18n::I18nState::new())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_os::init())
@@ -24,13 +26,15 @@ pub fn run() {
             ));
             // 开始监听
             listener::start_listening(app.handle().clone());
+            // 初始化系统语言
+            i18n::init_locale(app.handle().clone());
             // 创建系统托盘
             tray::create_tray(app.handle().clone());
             windows::create_main_window(app.handle().clone());
             Ok(())
         })
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            let win = app.get_webview_window("main").expect("主窗口不存在");
+            let win = app.get_webview_window("list").expect("主窗口不存在");
             win.show().expect("窗口显示失败");
             win.set_focus().expect("窗口聚焦失败");
         }))
@@ -48,7 +52,6 @@ pub fn run() {
             #[cfg(debug_assertions)]
             open_dev_tool,
             restart_computer,
-            tray::reload_tray_menu,
             tray::hide_win_msg,
             listener::write_to_clipboard,
             listener::is_listening,
@@ -68,6 +71,11 @@ pub fn run() {
             windows::invoke_external_plugin,
             windows::init_main_window,
             fetch_page_title,
+            i18n::get_current_locale,
+            i18n::get_locales,
+            i18n::update_current_locale,
+            i18n::get_page_locale,
+            i18n::get_ui_locale,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
