@@ -129,7 +129,7 @@ onMounted(async () => {
     return
   }
   updater = updateInfo
-  console.log(updater)
+  console.log("更新信息",updater)
   updaterVer.version = updateInfo.version
   updaterVer.pubDate = updateInfo.date || ''
   updaterVer.notes = await marked(updateInfo.body || '')

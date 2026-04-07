@@ -66,7 +66,7 @@ export async function hideWindow(): Promise<void> {
  * @param shortcutKeys 快捷键
  */
 async function registerOpenWindowKey(shortcutKeys: string): Promise<void> {
-  console.log('注册打开当前窗口快捷键: ' + shortcutKeys)
+  console.debug('注册打开当前窗口快捷键: ' + shortcutKeys)
   await register(shortcutKeys, async event => {
     // 只监听按键按下，松开忽略
     if (event.state === 'Released') {
@@ -123,7 +123,7 @@ async function registerShortcutKeysOpenWindow(): Promise<void> {
       const shortcutKeys = convertRegisterKeys(wakeUpRoutine.key)
       const registered = await isRegistered(shortcutKeys)
       if (registered) {
-        console.log('快捷键已经注册，注销后重新注注册', shortcutKeys)
+        console.debug('快捷键已经注册，注销后重新注注册', shortcutKeys)
         await unregister(shortcutKeys)
       }
       await registerOpenWindowKey(shortcutKeys)
@@ -151,7 +151,7 @@ async function registerQuickPasteKey(
   number: number,
   message: MessageApiInjection
 ): Promise<void> {
-  // console.log("注册快捷键快速粘贴数据: " + shortcutKeys)
+  console.debug("注册快捷键快速粘贴数据: " + shortcutKeys)
   await register(shortcutKeys, async event => {
     // 只监听按键按下，松开忽略
     if (event.state === 'Released') {
@@ -178,7 +178,7 @@ async function registerShortcutKeysQuickPaste(message: MessageApiInjection): Pro
         const shortcutKeys = convertRegisterKeys(keys)
         const registered = await isRegistered(shortcutKeys)
         if (registered) {
-          console.log('快捷键已经注册，注销后重新注注册', shortcutKeys)
+          console.debug('快捷键已经注册，注销后重新注注册', shortcutKeys)
           await unregister(shortcutKeys)
         }
         await registerQuickPasteKey(shortcutKeys, i, message)
@@ -315,7 +315,7 @@ async function initUpdateRegisterShortcutKeysQuickPasteListener(
           const shortcutKeys = convertRegisterKeys(keysArr)
           const registered = await isRegistered(shortcutKeys)
           if (registered) {
-            console.log('快捷键已经注册，注销后重新注注册', shortcutKeys)
+            console.debug('快捷键已经注册，注销后重新注注册', shortcutKeys)
             await unregister(shortcutKeys)
           }
           await registerQuickPasteKey(shortcutKeys, i, message)

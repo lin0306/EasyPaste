@@ -117,7 +117,6 @@ const onSelectFile = async (): Promise<void> => {
     defaultPath: currentConfig.imageBasePath,
     canCreateDirectories: true,
   })
-  console.log('选择文件夹', file)
   if (file) {
     currentConfig.imageBasePath = file
     if (currentConfig.imageBasePath !== originalConfig.imageBasePath) {

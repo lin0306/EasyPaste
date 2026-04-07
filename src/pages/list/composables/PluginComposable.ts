@@ -115,7 +115,7 @@ function registerContextMenu(
           // 插件要求复制到剪贴板
           await copyToClipboard({ content: actionResult.text, type: 'text' } as ClipboardItem)
           // 可以在这里添加提示
-          console.log('已复制到剪贴板:', actionResult.text)
+          console.debug('已复制到剪贴板:', actionResult.text)
         }
         // 其他情况插件自行处理，不打开窗口
       } catch (e) {

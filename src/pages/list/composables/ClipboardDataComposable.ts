@@ -438,7 +438,6 @@ export const onCopyFile = async (
 export const toggleSearchBox = (): void => {
   console.log('切换搜索框显示状态')
   searchBoxState.visible = !searchBoxState.visible
-  console.log(searchBoxState)
   if (searchBoxState.visible) {
     const input = document.querySelector('.n-input__input-el') as HTMLInputElement
     if (input) {
@@ -452,7 +451,6 @@ export const toggleSearchBox = (): void => {
     ) {
       searchBoxState.text = ''
       searchBoxState.selectTypes = []
-      console.log(searchBoxState)
       loadClipboardItems(true)
     }
   }

@@ -25,7 +25,7 @@ export const displayThumbnailImage = ref(true)
  * @param filePaths 文件路径列表
  */
 export const checkFilesExist = (filePaths: string): void => {
-  console.log('检查多个文件是否存在:', filePaths)
+  console.debug('检查多个文件是否存在:', filePaths)
   if (!filePaths) {
     return
   }
@@ -47,7 +47,7 @@ export const checkFilesExist = (filePaths: string): void => {
  * @param filePath 文件路径
  */
 export const checkFileExist = (filePath: string): void => {
-  console.log('检查单个文件是否存在:', filePath)
+  console.debug('检查单个文件是否存在:', filePath)
   if (!filePath) {
     return
   }

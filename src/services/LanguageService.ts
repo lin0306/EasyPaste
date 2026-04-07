@@ -35,10 +35,8 @@ async function loadLanguage() {
   // 获取页面语言
   const window = getCurrentWindow()
   const label = window.label
-  console.log('当前页面:', label)
   const pageLocaleStr = await invoke<string>('get_page_locale', { page: label })
   currentLanguage.value.pages[label] = JSON.parse(pageLocaleStr)
-  console.log('当前页面语言:', currentLanguage.value)
 }
 
 /**
@@ -51,7 +49,6 @@ export async function initializeLanguages() {
 
   // 添加语言变更事件监听
   updateAutoGoToLatestDataListener = await listen<string>('language-changed', async event => {
-    console.log('语言变更:', event)
     // 确保不重复应用相同语言
     if (event.payload !== currentLanguage.value.id) {
       await loadLanguage()

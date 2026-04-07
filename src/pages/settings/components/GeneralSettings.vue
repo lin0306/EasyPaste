@@ -48,12 +48,10 @@ const restartModalVisible = ref(false)
  */
 async function loadAllLanguages() {
   const localesStr = await invoke<string>('get_locales')
-  console.log('所有语言:', localesStr)
   const locales: [{ id: string; name: string }] = JSON.parse(localesStr)
   for (const locale of locales) {
     languageOptions.value.push({ value: locale.id, label: locale.name })
   }
-  console.log('语言选项:', languageOptions)
 }
 
 /**

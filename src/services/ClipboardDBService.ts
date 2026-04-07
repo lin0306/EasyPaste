@@ -771,7 +771,7 @@ class ClipboardDBService {
       sql += ` AND use_location LIKE ?`
       params.push(`%${useLocation}%`)
     }
-    console.log(sql, params)
+    console.debug(sql, params)
     return (await this.db?.select(sql, params)) as LocalPlugin[]
   }
 

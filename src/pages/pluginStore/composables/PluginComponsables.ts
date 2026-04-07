@@ -191,7 +191,7 @@ async function savePluginInfo(value: StorePlugin): Promise<void> {
       }
     }
   }
-  console.log(useLocationSet, JSON.stringify([...useLocationSet]))
+  console.log("插件可加载页面", useLocationSet, JSON.stringify([...useLocationSet]))
   // 保存插件信息
   const db = await ClipboardDBService.getInstance()
   await db.addPlugin({

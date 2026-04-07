@@ -138,7 +138,7 @@ const onOpenTextEditorWindow = (itemId: number): void => {
  * @param item 菜单项
  */
 const handleContextMenuClick = (item: ContextMenu): void => {
-  console.log(item.params)
+  console.log("处理右键菜单点击",item.params)
   // 创建参数 Map
   const paramMap = new Map<string, any>()
 
