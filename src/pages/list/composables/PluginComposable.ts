@@ -243,9 +243,9 @@ export const initializePlugins = async (): Promise<void> => {
   try {
     await initPlugins()
     // 添加插件安装事件监听
-    installPluginListener = initInstallPluginListener()
+    installPluginListener = await initInstallPluginListener()
     // 添加插件卸载事件监听
-    uninstallPluginListener = initUninstallPluginListener()
+    uninstallPluginListener = await initUninstallPluginListener()
     info('插件加载完成')
   } catch (e) {
     error('插件加载失败')
