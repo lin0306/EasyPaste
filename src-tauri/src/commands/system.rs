@@ -26,3 +26,29 @@ pub fn check_admin() -> tauri::Result<bool> {
         Err(_) => Ok(false),
     }
 }
+
+/**
+ * 重启电脑
+ */
+#[tauri::command]
+pub async fn restart_computer() -> Result<(), String> {
+    #[cfg(target_os = "windows")]
+    {
+        std::process::Command::new("shutdown")
+            .args(["/r", "/t", "0"])
+            .status()
+            .map_err(|e| e.to_string())
+            .expect("重启失败");
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        std::process::Command::new("sudo")
+            .args(["shutdown", "-r", "now"])
+            .status()
+            .map_err(|e| e.to_string())
+            .expect("重启失败");
+    }
+
+    Ok(())
+}

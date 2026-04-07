@@ -1,12 +1,12 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use tauri::Manager;
 
-mod file;
+mod commands;
+mod models;
+mod utils;
+
 mod listener;
 mod log;
-mod permission;
-#[cfg(target_os = "windows")]
-mod regedit;
 mod tray;
 mod windows;
 mod i18n;
@@ -30,6 +30,7 @@ pub fn run() {
             i18n::init_locale(app.handle().clone());
             // 创建系统托盘
             tray::create_tray(app.handle().clone());
+            // 创建主窗口
             windows::create_main_window(app.handle().clone());
             Ok(())
         })
@@ -50,27 +51,27 @@ pub fn run() {
         .plugin(tauri_plugin_sql::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             #[cfg(debug_assertions)]
-            open_dev_tool,
-            restart_computer,
+            commands::dev::open_dev_tool,
+            commands::system::restart_computer,
             tray::hide_win_msg,
             listener::write_to_clipboard,
             listener::is_listening,
             #[cfg(target_os = "windows")]
-            regedit::valid_clipboard_regedit,
+            commands::regedit::valid_clipboard_regedit,
             #[cfg(target_os = "windows")]
-            regedit::valid_clipboard_backup_regedit,
+            commands::regedit::valid_clipboard_backup_regedit,
             #[cfg(target_os = "windows")]
-            regedit::backup_clipboard_regedit,
+            commands::regedit::backup_clipboard_regedit,
             #[cfg(target_os = "windows")]
-            regedit::recover_clipboard_regedit,
-            permission::check_admin,
-            file::open_folder,
-            file::read_rar_data,
-            file::read_tar_data,
-            file::read_gzip_data,
+            commands::regedit::recover_clipboard_regedit,
+            commands::system::check_admin,
+            commands::file::open_folder,
+            commands::file::read_rar_data,
+            commands::file::read_tar_data,
+            commands::file::read_gzip_data,
             windows::invoke_external_plugin,
             windows::init_main_window,
-            fetch_page_title,
+            commands::web::fetch_page_title,
             i18n::get_current_locale,
             i18n::get_locales,
             i18n::update_current_locale,
@@ -79,72 +80,4 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");
-}
-
-#[cfg(debug_assertions)]
-#[tauri::command]
-fn open_dev_tool(app_handle: tauri::AppHandle, window_name: &str) {
-    if let Some(window) = app_handle.get_webview_window(&window_name) {
-        println!("正在打开 {} 页面的开发者工具", window_name);
-        window.open_devtools();
-    } else {
-        eprintln!("找不到名称为 {} 的窗口", window_name);
-    }
-}
-
-/**
- * 重启电脑
- */
-#[tauri::command]
-async fn restart_computer() -> Result<(), String> {
-    #[cfg(target_os = "windows")]
-    {
-        std::process::Command::new("shutdown")
-            .args(["/r", "/t", "0"]) // 立即重启
-            .status()
-            .map_err(|e| e.to_string())
-            .expect("重启失败");
-    }
-
-    #[cfg(target_os = "macos")]
-    {
-        std::process::Command::new("sudo")
-            .args(["shutdown", "-r", "now"])
-            .status()
-            .map_err(|e| e.to_string())
-            .expect("重启失败");
-    }
-
-    Ok(())
-}
-
-/**
- * 获取页面标题
- */
-#[tauri::command]
-async fn fetch_page_title(url: String) -> Result<String, String> {
-    let client = reqwest::Client::new();
-    let res = client
-        .get(&url)
-        .header("User-Agent", "Tauri App")
-        .timeout(std::time::Duration::from_secs(10))
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
-    if !res.status().is_success() {
-        return Ok("NotFound".into());
-    }
-
-    let html = res.text().await.map_err(|e| e.to_string())?;
-
-    // 简单提取 <title>（可用 scraper 库更健壮）
-    if let Some(start) = html.find("<title>") {
-        let start = start + 7;
-        if let Some(end) = html[start..].find("</title>") {
-            let title = html[start..start + end].trim().to_string();
-            return Ok(title);
-        }
-    }
-
-    Ok("NotFound".into())
 }
