@@ -69,7 +69,7 @@ export function convertChildren(packageInfos: PackageInfo[]): PackageTreeOption[
           label: name.split('/').pop() || '',
           children: [],
           date: info.date,
-          prefix: () => h(NImage, { src: '/closedFolder.svg' }),
+          prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
         })
       }
       fileCount++

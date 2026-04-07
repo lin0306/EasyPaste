@@ -15,10 +15,10 @@ export function updatePrefixWithExpanded(
   if (!meta.node) return
   switch (meta.action) {
     case 'expand':
-      meta.node.prefix = () => h(NImage, { src: '/openedFolder.svg' })
+      meta.node.prefix = () => h(NImage, { src: '/openedFolder.svg', previewDisabled: true })
       break
     case 'collapse':
-      meta.node.prefix = () => h(NImage, { src: '/closedFolder.svg' })
+      meta.node.prefix = () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true })
       break
   }
 }
