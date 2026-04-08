@@ -1,6 +1,5 @@
 use tauri::Manager;
 
-#[cfg(debug_assertions)]
 #[tauri::command]
 pub fn open_dev_tool(app_handle: tauri::AppHandle, window_name: &str) {
     if let Some(window) = app_handle.get_webview_window(&window_name) {
