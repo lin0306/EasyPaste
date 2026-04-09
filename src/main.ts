@@ -1,3 +1,4 @@
+import { error } from '@tauri-apps/plugin-log'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -13,10 +14,10 @@ import { initializeTheme } from './services/ThemeService.ts'
 import VueViewer from 'v-viewer'
 // 导入 Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// 注册自定义图标
 import './assets/js/registerIcon.ts'
+// window全局配置
 import './assets/js/globalWindowConfig.ts'
-
-import { error } from '@tauri-apps/plugin-log'
 
 async function bootstrap() {
   await initializeTheme()

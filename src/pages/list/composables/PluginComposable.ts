@@ -1,5 +1,5 @@
 import { loadPluginManifest } from '../../../services/PluginService.ts'
-import { currentLanguage, languages } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '../../../services/LanguageService.ts'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
 import { createWin } from '../../../services/WindowService.ts'
@@ -31,19 +31,7 @@ function registerContextMenu(
   menu: any,
   menuArray: typeof imageContextMenus
 ): void {
-  // 设置语言
-  for (let language of languages) {
-    if (language.id === 'chinese') {
-      language.pages.plugins[menu.menuId] = menu.label_ZH
-    }
-    if (language.id === 'english') {
-      language.pages.plugins[menu.menuId] = menu.label_EN
-    }
-    if (currentLanguage.value.id === language.id) {
-      currentLanguage.value.pages.plugins[menu.menuId] = language.pages.plugins[menu.menuId]
-    }
-  }
-
+  console.log(currentLanguage.value.pages.plugins[pluginId])
   // 设置点击事件处理
   const clickFun = async (params: Map<string, any>) => {
     console.log('触发自定义右键菜单点击事件', params)
@@ -127,6 +115,8 @@ function registerContextMenu(
 
   // 添加到对应菜单数组
   menuArray.value.push({
+    pluginId: pluginId,
+    labelCode: menu.labelCode,
     label: menu.menuId,
     params: menu.click_fun?.params || [],
     onClick: clickFun,

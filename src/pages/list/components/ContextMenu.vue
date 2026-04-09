@@ -138,7 +138,7 @@ const onOpenTextEditorWindow = (itemId: number): void => {
  * @param item 菜单项
  */
 const handleContextMenuClick = (item: ContextMenu): void => {
-  console.log("处理右键菜单点击",item.params)
+  console.log('处理右键菜单点击', item.params)
   // 创建参数 Map
   const paramMap = new Map<string, any>()
 
@@ -220,7 +220,7 @@ onUnmounted(() => {
         class="context-menu-item"
         @click="handleContextMenuClick(item)"
       >
-        <span>{{ currentLanguage.pages.plugins[item.label] }}</span>
+        <span>{{ currentLanguage.pages.plugins?.[item.pluginId]?.[item.labelCode] }}</span>
       </div>
     </template>
 
@@ -241,7 +241,7 @@ onUnmounted(() => {
         class="context-menu-item"
         @click="handleContextMenuClick(item)"
       >
-        <span>{{ currentLanguage.pages.plugins[item.label] }}</span>
+        <span>{{ currentLanguage.pages.plugins?.[item.pluginId]?.[item.labelCode] }}</span>
       </div>
     </template>
 

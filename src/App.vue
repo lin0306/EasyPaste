@@ -2,7 +2,7 @@
 import { NConfigProvider, NMessageProvider } from 'naive-ui'
 import { computed, onMounted, onUnmounted } from 'vue'
 import { error, info } from '@tauri-apps/plugin-log'
-import { destroyLanguages, initializeLanguages } from './services/LanguageService.ts'
+import { destroyLanguage, initializeLanguage } from './services/LanguageService.ts'
 import { getPluginThemeOverrides, setupThemeListener } from './services/ThemeService.ts'
 import {
   destroyAnimationEffect,
@@ -69,7 +69,7 @@ async function handleKeyDown(event: KeyboardEvent): Promise<void> {
 }
 
 onBeforeMount(() => {
-  initializeLanguages().catch(e => {
+  initializeLanguage().catch(e => {
     error('语言初始化失败:' + e)
   })
 })
@@ -96,7 +96,7 @@ onUnmounted(() => {
   // 销毁动画效果配置
   destroyAnimationEffect()
   // 销毁语言配置
-  destroyLanguages()
+  destroyLanguage()
   // 移除键盘点击时间监听
   document.removeEventListener('keydown', handleKeyDown)
 })

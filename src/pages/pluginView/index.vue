@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { currentLanguage, languages } from '../../services/LanguageService.ts'
+import {
+  currentLanguage,
+  initializePluginLanguage,
+  languages,
+} from '../../services/LanguageService.ts'
 import TitleBar from '../../components/TitleBar.vue'
 import { onMounted, ref } from 'vue'
 import {
@@ -118,6 +122,9 @@ const loadManifest = async (): Promise<void> => {
 onMounted(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   pluginId.value = <string>searchParams.get('pluginId')
+
+  await initializePluginLanguage()
+
   await loadManifest()
 
   // 加载插件页面
@@ -127,7 +134,7 @@ onMounted(async () => {
 
 <template>
   <TitleBar
-    :title="currentLanguage.pages.plugins[pluginId] || `插件页面`"
+    :title="currentLanguage.pages.plugins?.[pluginId]?.[`previewWindowTitle`] || `插件页面`"
     :show-close-btn="true"
     :dev-tool="`plugins`"
   />

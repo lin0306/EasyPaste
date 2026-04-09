@@ -4,6 +4,7 @@ import { getPluginThemeOverrides, themeColors } from '../../services/ThemeServic
 import { createPluginVueApp } from '../../services/PluginService.ts'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { getItemContent, getItemFilePath } from '../../services/ClipboardDBService.ts'
+import { currentLanguage } from '../../services/LanguageService.ts'
 
 // 暴露 Vue 和 naive-ui 为全局变量
 // @ts-ignore
@@ -23,3 +24,5 @@ window.createPluginVueApp = createPluginVueApp
 window.getItemContent = getItemContent
 // @ts-ignore
 window.getItemFilePath = getItemFilePath
+// @ts-ignore
+window.currentLanguage = currentLanguage

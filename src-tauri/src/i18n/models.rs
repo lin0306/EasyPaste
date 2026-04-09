@@ -57,3 +57,11 @@ pub struct Tray {
     #[serde(rename = "clipboardMonitor")]
     pub clipboard_monitor: String,
 }
+
+#[derive(Deserialize, Serialize, Clone)]
+pub struct PluginLanguage {
+    pub id: String,
+    #[serde(rename = "pluginId")]
+    pub plugin_id: String,
+    pub locale: Value,
+}

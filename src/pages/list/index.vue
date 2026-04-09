@@ -37,7 +37,7 @@ import { getSearchKey } from '../../store/ShortcutKeys.ts'
 import ClipboardFooter from './components/ClipboardFooter.vue'
 import { getPowerOnSelfStart } from '../../store/Settings.ts'
 import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart'
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
 import { destroyPlugins, initializePlugins } from './composables/PluginComposable.ts'
 
 // 代码高亮引入
@@ -165,6 +165,8 @@ onMounted(async () => {
 
     // 初始化文件数据配置
     await initializeFileData()
+
+    await initializePluginLanguage();
 
     // 加载插件
     initializePlugins().catch(e => {

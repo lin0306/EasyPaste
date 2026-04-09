@@ -24,7 +24,7 @@ export const currentLanguage = ref<LanguageConfig>({
   },
 } as LanguageConfig)
 
-let updateAutoGoToLatestDataListener: any = null
+let languageChangedListener: any = null
 
 /**
  * 加载语言
@@ -40,15 +40,43 @@ async function loadLanguage() {
 }
 
 /**
+ * 加载插件语言
+ */
+async function loadPluginLanguage() {
+  const pageLocaleStr = await invoke<string>('get_page_locale', { page: 'plugins' })
+  currentLanguage.value.pages.plugins = JSON.parse(pageLocaleStr)
+}
+
+/**
+ * 初始化插件语言
+ */
+export async function initializePluginLanguage() {
+  console.log('初始化语言配置...')
+  await loadPluginLanguage();
+  // 注销旧的语言变更事件监听
+  destroyLanguage();
+  // 添加语言变更事件监听
+  languageChangedListener = await listen<string>('language-changed', async event => {
+    // 确保不重复应用相同语言
+    if (event.payload !== currentLanguage.value.id) {
+      // 加载语言包
+      await loadLanguage()
+      // 加载插件语言包
+      await loadPluginLanguage()
+    }
+  })
+}
+
+/**
  * 初始化语言
  */
-export async function initializeLanguages() {
+export async function initializeLanguage() {
   console.log('初始化语言配置...')
   // 加载语言包
   await loadLanguage()
 
   // 添加语言变更事件监听
-  updateAutoGoToLatestDataListener = await listen<string>('language-changed', async event => {
+  languageChangedListener = await listen<string>('language-changed', async event => {
     // 确保不重复应用相同语言
     if (event.payload !== currentLanguage.value.id) {
       await loadLanguage()
@@ -59,6 +87,6 @@ export async function initializeLanguages() {
 /**
  * 销毁语言
  */
-export function destroyLanguages() {
-  updateAutoGoToLatestDataListener?.()
+export function destroyLanguage() {
+  languageChangedListener?.()
 }

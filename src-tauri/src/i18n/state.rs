@@ -1,4 +1,4 @@
-use crate::i18n::models::{LanguageConfig, Tray};
+use crate::i18n::models::{LanguageConfig, PluginLanguage, Tray};
 use log::info;
 use serde_json::from_slice;
 use std::collections::HashMap;
@@ -39,6 +39,20 @@ impl I18nState {
 
     pub fn insert_locale(&self, id: String, config: LanguageConfig) {
         self.locales.lock().unwrap().insert(id, config);
+    }
+
+    pub fn insert_plugin_locale(&self, plugin_locale: PluginLanguage) {
+        let mut locales = self.locales.lock().unwrap();
+        for (_, config) in locales.iter_mut() {
+            if config.id.eq(&plugin_locale.id) {
+                if let Some(plugins_value) = config.pages.plugins.as_object_mut() {
+                    plugins_value.insert(
+                        plugin_locale.plugin_id.clone(),
+                        plugin_locale.locale.clone(),
+                    );
+                }
+            }
+        }
     }
 
     pub fn get_tray(&self) -> Tray {
