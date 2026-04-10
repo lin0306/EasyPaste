@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
 import TitleBar from '../../components/TitleBar.vue'
 import { onMounted, watch } from 'vue'
 import {
@@ -34,6 +34,8 @@ watch(
 )
 
 onMounted(async () => {
+  // 加载插件的语言
+  await initializePluginLanguage()
   await initializePlugins()
 })
 </script>

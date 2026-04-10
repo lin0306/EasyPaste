@@ -1,1 +1,13 @@
-mod builder;mod plugin_runner;mod commands;use tauri::{AppHandle, Manager};use crate::windows::builder::build_main_window;pub use commands::*;pub fn create_main_window(app: AppHandle) {    let window =  build_main_window(app.clone());    app.manage(window);}
+mod builder;
+mod plugin_runner;
+mod commands;
+
+use tauri::{AppHandle, Manager};
+use crate::windows::builder::build_main_window;
+
+pub use commands::*;
+
+pub fn create_main_window(app: AppHandle) {
+    let window =  build_main_window(app.clone());
+    app.manage(window);
+}

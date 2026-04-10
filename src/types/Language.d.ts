@@ -417,6 +417,10 @@ declare interface PageConfig {
     updateFailedHint: string
     notPluginHint: string
     notSelectPluginHint: string
+    settings: {
+      loadError: string
+      loadFailed: string
+    }
   }
   plugins: {
     [x: string]: any

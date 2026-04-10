@@ -42,9 +42,11 @@ async function loadLanguage() {
 /**
  * 加载插件语言
  */
-async function loadPluginLanguage() {
+export async function loadPluginLanguage() {
+  console.log('加载所有插件的语言配置...')
   const pageLocaleStr = await invoke<string>('get_page_locale', { page: 'plugins' })
   currentLanguage.value.pages.plugins = JSON.parse(pageLocaleStr)
+  console.log('插件语言配置:', currentLanguage.value.pages.plugins)
 }
 
 /**

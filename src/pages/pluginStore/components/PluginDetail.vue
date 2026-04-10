@@ -45,7 +45,7 @@ async function checkSettingsSupport(pluginId: string | undefined) {
 // 监听选中插件变化，检查是否支持设置
 watch(
   () => selectedPlugin?.plugin_id,
-  (pluginId) => {
+  pluginId => {
     checkSettingsSupport(pluginId)
   },
   { immediate: true, flush: 'post' }

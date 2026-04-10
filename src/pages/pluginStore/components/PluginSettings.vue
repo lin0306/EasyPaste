@@ -1,9 +1,9 @@
 <template>
   <n-modal
     :show="visible"
-    :title="title"
+    :title="currentLanguage.pages.plugins[selectedPlugin.plugin_id]?.['settingsTitle'] || title"
     preset="card"
-    style="width: 600px; max-width: 90vh;"
+    style="width: 600px; max-width: 90vh"
     :mask-closable="false"
     :to="'body'"
     @update:show="v => $emit('update:visible', v)"
@@ -16,7 +16,7 @@
         <n-spin size="large" />
       </div>
       <div v-else-if="error" class="error-container">
-        <n-alert type="error" :title="$t('loadError')">
+        <n-alert type="error" :title="currentLanguage.pages.pluginStore.settings.loadError">
           {{ error }}
         </n-alert>
       </div>
@@ -31,6 +31,8 @@ import { nextTick, onUnmounted, ref, watch } from 'vue'
 import { NAlert, NModal, NSpin, useMessage } from 'naive-ui'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { getPluginCSSPath, getPluginJSPath } from '../../../services/PluginService.ts'
+import { currentLanguage } from '../../../services/LanguageService.ts'
+import { selectedPlugin } from '../composables/PluginComponsables.ts'
 
 const props = defineProps<{
   visible: boolean
@@ -46,22 +48,6 @@ const message = useMessage()
 const loading = ref(false)
 const error = ref('')
 const containerId = ref(`plugin-settings-container-${Date.now()}`)
-
-// 多语言支持
-const $t = (key: string): string => {
-  const messages: Record<string, Record<string, string>> = {
-    zh: {
-      loadError: '加载失败',
-      loadFailed: '加载插件设置失败',
-    },
-    en: {
-      loadError: 'Load Error',
-      loadFailed: 'Failed to load plugin settings',
-    },
-  }
-  const lang = navigator.language.startsWith('zh') ? 'zh' : 'en'
-  return messages[lang][key] || key
-}
 
 // 清理函数：销毁 Vue 实例并移除资源
 function cleanupPlugin(pluginId: string) {
@@ -141,8 +127,8 @@ async function loadPluginSettings(pluginId: string) {
     await nextTick()
   } catch (e) {
     console.error('加载插件设置失败:', e)
-    error.value = $t('loadFailed')
-    message.error($t('loadFailed'))
+    error.value = currentLanguage.value.pages.pluginStore.settings.loadFailed
+    message.error(currentLanguage.value.pages.pluginStore.settings.loadFailed)
   } finally {
     loading.value = false
   }

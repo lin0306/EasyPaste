@@ -392,7 +392,11 @@
       "updateUnInstallFailedHint": "插件卸载失败",
       "updateFailedHint": "插件安装失败，请重新安装",
       "notPluginHint": "未找到插件信息",
-      "notSelectPluginHint": "请选择需要更新的插件"
+      "notSelectPluginHint": "请选择需要更新的插件",
+      "settings": {
+        "loadError": "加载失败",
+        "loadFailed": "加载插件设置失败"
+      }
     },
     "plugins": {}
   }

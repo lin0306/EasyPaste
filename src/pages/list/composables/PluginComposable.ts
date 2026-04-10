@@ -1,5 +1,5 @@
 import { loadPluginManifest } from '../../../services/PluginService.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageService.ts'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
 import { createWin } from '../../../services/WindowService.ts'
@@ -17,6 +17,7 @@ async function initPlugins(): Promise<void> {
     for (const p of plugins) {
       await loadPlugin(p.plugin_id)
     }
+    await loadPluginLanguage()
   }
 }
 
@@ -46,7 +47,7 @@ function registerContextMenu(
     // 根据 click_fun 类型处理
     if (menu.click_fun && menu.click_fun.type === 'openWindow') {
       // 打开窗口模式
-      const existWin = await WebviewWindow.getByLabel('plugins')
+      const existWin = await WebviewWindow.getByLabel('pluginView')
       if (existWin) {
         const obj = Object.fromEntries(params)
         await emit('reload-' + menu.menuId, obj)
@@ -54,7 +55,7 @@ function registerContextMenu(
         await existWin.setFocus()
       } else {
         await createWin({
-          label: 'plugins',
+          label: 'pluginView',
           title: currentLanguage.value.pages.preview.title,
           url: '/plugin-view?pluginId=' + pluginId + '&' + str,
           width: menu.click_fun.width,
@@ -82,7 +83,7 @@ function registerContextMenu(
 
         // 如果插件返回 action = 'openWindow'，则打开窗口
         if (actionResult.action === 'openWindow') {
-          const existWin = await WebviewWindow.getByLabel('plugins')
+          const existWin = await WebviewWindow.getByLabel('pluginView')
           if (existWin) {
             const obj = Object.fromEntries(params)
             await emit('reload-' + menu.menuId, obj)
@@ -90,9 +91,9 @@ function registerContextMenu(
             await existWin.setFocus()
           } else {
             await createWin({
-              label: 'plugins',
+              label: 'pluginView',
               title: actionResult.title || currentLanguage.value.pages.preview.title,
-              url: '/plugin-view?pluginId=' + pluginId + '&' + str,
+              url: '/plugin-view?pluginId=' + pluginId + '&' + str + '&' + actionResult.url,
               width: actionResult.width || 800,
               height: actionResult.height || 600,
               resizable: true,
@@ -128,6 +129,8 @@ function registerContextMenu(
  * @param pluginId 插件ID
  */
 async function loadPlugin(pluginId: string): Promise<void> {
+  console.log('加载插件', pluginId)
+
   const manifestJson = await loadPluginManifest(pluginId)
   console.log('加载' + pluginId, manifestJson)
   const features = manifestJson.features
@@ -213,6 +216,10 @@ function initInstallPluginListener(): Promise<UnlistenFn> {
     console.log('安装插件', event)
     const pluginId = event.payload.pluginId
     await loadPlugin(pluginId)
+    // 后端载入插件的语言
+    await invoke('load_plugin_locales', { plugin_id: pluginId })
+    // 前端获取插件的语言
+    await loadPluginLanguage()
   })
 }
 

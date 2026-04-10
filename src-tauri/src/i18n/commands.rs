@@ -1,6 +1,7 @@
 use crate::i18n::models::Language;
 use crate::tray::reload_tray_menu;
 use tauri::{AppHandle, Manager};
+use crate::i18n::{loader_plugins, I18nState};
 
 /**
  * 获取当前语言
@@ -73,4 +74,14 @@ pub fn get_ui_locale(app: AppHandle) -> tauri::Result<String> {
         Some(locale) => Ok(locale.ui_locale),
         None => Ok("zhCN".to_string()),
     }
+}
+
+/**
+ * 加载指定插件的语言
+ */
+#[tauri::command]
+pub fn load_plugin_locales(app: AppHandle, plugin_id: &str) {
+    println!("加载插件语言: {}", plugin_id);
+    let state = app.state::<I18nState>();
+    loader_plugins::load_plugin_locales_by_plugin_id(app.clone(), &state, plugin_id);
 }

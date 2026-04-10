@@ -10,8 +10,9 @@ import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageService.ts'
 import { getPluginPath } from '../../../store/Settings.ts'
+import { invoke } from '@tauri-apps/api/core'
 
 export const tabValue = ref<string>('local')
 export const pluginStore = ref<StorePlugin[]>([])
@@ -93,6 +94,11 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
         await savePluginInfo(plugin)
         // 重新加载插件
         await loadLocalPlugins()
+        // 后端载入插件的语言
+        await invoke('load_plugin_locales', { plugin_id: pluginId })
+        // 前端获取插件的语言
+        await loadPluginLanguage()
+
         // 如果当前选中的插件是刚安装的，更新选中状态以触发设置按钮检查
         if (selectedPlugin.plugin_id === pluginId) {
           const newlyInstalled = localPlugins.value.find(l => l.plugin_id === pluginId)

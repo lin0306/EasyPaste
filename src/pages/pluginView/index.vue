@@ -15,6 +15,8 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import { exists } from '@tauri-apps/plugin-fs'
 
 const pluginId = ref('')
+const pageId = ref('')
+const viewPageTitleCode = ref('')
 
 /**
  * 加载插件样式
@@ -99,20 +101,8 @@ const loadManifest = async (): Promise<void> => {
     for (let feature of features) {
       if (feature.page && feature.page === 'plugins') {
         console.log('加载插件页面配置', feature)
-        if (feature.type === 'page') {
-          // 设置语言
-          for (let language of languages) {
-            if (language.id === 'chinese') {
-              language.pages.plugins[pluginId.value] = feature.title_ZH
-            }
-            if (language.id === 'english') {
-              language.pages.plugins[pluginId.value] = feature.title_EN
-            }
-            if (currentLanguage.value.id === language.id) {
-              currentLanguage.value.pages.plugins[pluginId.value] =
-                language.pages.plugins[pluginId.value]
-            }
-          }
+        if (feature.type === 'view-page') {
+          viewPageTitleCode.value = feature.labelCode
         }
       }
     }
@@ -122,6 +112,7 @@ const loadManifest = async (): Promise<void> => {
 onMounted(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   pluginId.value = <string>searchParams.get('pluginId')
+  pageId.value = <string>searchParams.get('pageId')
 
   await initializePluginLanguage()
 
@@ -134,7 +125,7 @@ onMounted(async () => {
 
 <template>
   <TitleBar
-    :title="currentLanguage.pages.plugins?.[pluginId]?.[`previewWindowTitle`] || `插件页面`"
+    :title="currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] || `插件页面`"
     :show-close-btn="true"
     :dev-tool="`plugins`"
   />

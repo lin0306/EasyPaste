@@ -77,6 +77,7 @@ pub fn run() {
             i18n::update_current_locale,
             i18n::get_page_locale,
             i18n::get_ui_locale,
+            i18n::load_plugin_locales,
         ])
         .run(tauri::generate_context!())
         .expect("应用程序运行异常");

@@ -49,6 +49,9 @@ pub fn build_tray_menu(app: &AppHandle) -> Menu<Wry> {
     .unwrap()
 }
 
+/**
+ * 加载托盘语言
+ */
 fn load_language(app: &AppHandle) -> crate::i18n::models::Tray {
     let state = app.state::<I18nState>();
     state.get_tray()
