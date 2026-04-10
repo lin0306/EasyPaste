@@ -29,6 +29,7 @@ export const windowConfig: WebViewWindowOptions = {
   contentProtected: false,
   preventOverflow: true,
   incognito: true,
+  parent: 'list', // 确保窗口始终置于列表窗口之上
 }
 
 /**
