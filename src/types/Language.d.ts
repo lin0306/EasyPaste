@@ -422,6 +422,9 @@ declare interface PageConfig {
       loadFailed: string
     }
   }
+  pluginView: {
+    title: string
+  }
   plugins: {
     [x: string]: any
   }

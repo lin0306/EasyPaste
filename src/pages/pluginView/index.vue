@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  currentLanguage,
-  initializePluginLanguage,
-  languages,
-} from '../../services/LanguageService.ts'
+import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
 import TitleBar from '../../components/TitleBar.vue'
 import { onMounted, ref } from 'vue'
 import {
@@ -99,11 +95,9 @@ const loadManifest = async (): Promise<void> => {
   const features = manifestJson.features
   if (features) {
     for (let feature of features) {
-      if (feature.page && feature.page === 'plugins') {
-        console.log('加载插件页面配置', feature)
-        if (feature.type === 'view-page') {
-          viewPageTitleCode.value = feature.labelCode
-        }
+      if (feature.page && feature.page === 'view-page') {
+        viewPageTitleCode.value = feature.labelCode
+        console.log('viewPageTitleCode:', viewPageTitleCode.value)
       }
     }
   }
@@ -125,9 +119,9 @@ onMounted(async () => {
 
 <template>
   <TitleBar
-    :title="currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] || `插件页面`"
+    :title="currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] || currentLanguage.pages.pluginView.title"
     :show-close-btn="true"
-    :dev-tool="`plugins`"
+    :dev-tool="`pluginView`"
   />
   <div id="plugin-container"></div>
 </template>

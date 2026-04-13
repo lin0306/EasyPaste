@@ -71,31 +71,58 @@ export const getLocalPlugin = (id: string): LocalPlugin | null => {
 }
 
 /**
+ * 安装插件文件
+ * @param plugin 插件信息
+ * @param pluginFolderPath 插件安装目录
+ * @param message 消息框架
+ */
+async function installPlugin(
+  plugin: StorePlugin,
+  pluginFolderPath: string,
+  message: MessageApiInjection
+) {
+  try {
+    // 下载并解压文件
+    await installPluginFile(plugin.downloadUrl, pluginFolderPath)
+    // 保存插件信息
+    await savePluginInfo(plugin)
+    // 重新加载插件
+    await loadLocalPlugins()
+    return true
+  } catch (error) {
+    console.error('下载失败:', error)
+    message.error(currentLanguage.value.pages.pluginStore.installFailedHint)
+    deleteFolder(pluginFolderPath)
+    loadingSet.value.delete(plugin.id)
+    return false
+  }
+}
+
+/**
  * 安装插件
  */
 export const install = async (pluginId: string, message: MessageApiInjection): Promise<void> => {
   const plugin = pluginStore.value.find(p => p.id === pluginId)
   if (plugin) {
-    console.log('开始安装插件', plugin)
-    loadingSet.value.add(plugin.id)
-    const configDir = await getPluginPath()
-    const pluginFolderPath = await join(configDir, plugin.id)
-    // 删除已安装的插件
-    if (await exists(pluginFolderPath)) {
-      await deleteFolder(pluginFolderPath)
-    }
-    console.log('插件安装目录', pluginFolderPath)
     try {
+      console.log('开始安装插件', plugin)
+      loadingSet.value.add(plugin.id)
+      const configDir = await getPluginPath()
+      const pluginFolderPath = await join(configDir, plugin.id)
+      // 删除已安装的插件
+      if (await exists(pluginFolderPath)) {
+        await deleteFolder(pluginFolderPath)
+      }
+      console.log('插件安装目录', pluginFolderPath)
       console.log('开始下载文件', plugin, plugin.downloadUrl)
       if (plugin && plugin.downloadUrl) {
-        // 下载并解压文件
-        await installPluginFile(plugin.downloadUrl, pluginFolderPath)
-        // 保存插件信息
-        await savePluginInfo(plugin)
-        // 重新加载插件
-        await loadLocalPlugins()
+        if (!(await installPlugin(plugin, pluginFolderPath, message))) {
+          console.log('安装失败', pluginId)
+          return
+        }
+        console.log('安装成功', pluginId)
         // 后端载入插件的语言
-        await invoke('load_plugin_locales', { plugin_id: pluginId })
+        await invoke('load_plugin_locales', { pluginId: pluginId })
         // 前端获取插件的语言
         await loadPluginLanguage()
 
@@ -117,10 +144,8 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
       } else {
         message.error(currentLanguage.value.pages.pluginStore.installNotUrlHint)
       }
-    } catch (error) {
-      console.error('下载失败:', error)
-      message.error(currentLanguage.value.pages.pluginStore.installFailedHint)
-      deleteFolder(pluginFolderPath)
+    }catch (e) {
+      console.log('安装插件失败', e)
     } finally {
       loadingSet.value.delete(plugin.id)
     }
@@ -137,27 +162,25 @@ async function installPluginFile(url: string, pluginFolderPath: string): Promise
   const response = await fetch(url, { method: 'GET' })
   console.log('文件下载完成，开始解压文件', response)
   await mkdir(pluginFolderPath, { recursive: true })
+  console.log('文件保存目录', pluginFolderPath)
   // 文件解压
   const blob = await response.blob()
   const reader = new ZipReader(new BlobReader(blob))
   const entries = await reader.getEntries()
   let processedFiles = 0
 
-  // 获取根目录名
-  const rootDirName = entries[0].filename.split('/')[0]
-  const rootDirPrefix = rootDirName + '/'
-
   for (const entry of entries) {
     // 移除根目录前缀
     let relativePath = entry.filename
-    if (relativePath.startsWith(rootDirPrefix)) {
-      relativePath = relativePath.substring(rootDirPrefix.length)
-    }
+    console.log('原始文件名', entry.filename)
+    console.log('解压文件', entry.filename, '保存路径', relativePath)
     if (!relativePath || relativePath === '/' || relativePath === '\\') {
+      console.log('是根目录，跳过', entry.filename)
       continue
     }
 
     if (!entry.directory) {
+      console.log('是文件，生成文件')
       const data = await entry.getData(new BlobWriter())
       const targetPath = await join(pluginFolderPath, relativePath)
       console.log('保存文件', targetPath)
@@ -166,16 +189,20 @@ async function installPluginFile(url: string, pluginFolderPath: string): Promise
       await mkdir(parentDir, { recursive: true })
 
       await writeFile(targetPath, new Uint8Array(await data.arrayBuffer()))
+      console.log('文件保存完成', targetPath)
     } else if (relativePath !== '') {
+      console.log('是目录，生成目录')
       // 处理子目录
       const targetPath = await join(pluginFolderPath, relativePath)
       await mkdir(targetPath, { recursive: true })
+      console.log('目录保存完成', targetPath)
     }
 
     processedFiles++
   }
 
   await reader.close()
+  console.log('文件解压完成，已处理文件数', processedFiles)
 }
 
 /**
@@ -183,21 +210,7 @@ async function installPluginFile(url: string, pluginFolderPath: string): Promise
  * @param value 插件信息
  */
 async function savePluginInfo(value: StorePlugin): Promise<void> {
-  const manifest = await loadPluginManifest(value.id)
-  if (!manifest) {
-    throw new Error('未找到插件配置文件')
-  }
-  console.log('加载' + value.id, manifest)
-  const useLocationSet = new Set()
-  const features = manifest.features
-  if (features) {
-    for (let feature of features) {
-      if (feature.page && feature.page !== 'plugins') {
-        useLocationSet.add(feature.page)
-      }
-    }
-  }
-  console.log("插件可加载页面", useLocationSet, JSON.stringify([...useLocationSet]))
+  const useLocationSet = await getUseLocations(value.id)
   // 保存插件信息
   const db = await ClipboardDBService.getInstance()
   await db.addPlugin({
@@ -318,26 +331,37 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
 }
 
 /**
+ * 获取插件可加载页面
+ * @param pluginId 插件id
+ */
+async function getUseLocations(pluginId: string) {
+  const manifest = await loadPluginManifest(pluginId)
+  if (!manifest) {
+    throw new Error('未找到插件配置文件')
+  }
+  console.log('加载' + pluginId, manifest)
+  const useLocationSet = new Set<string>()
+  const features = manifest.features
+  if (features) {
+    for (let feature of features) {
+      if (feature.page && feature.page !== 'plugins') {
+        useLocationSet.add(feature.page)
+      }
+    }
+  }
+  console.log('插件可加载页面', useLocationSet, JSON.stringify([...useLocationSet]))
+
+  return useLocationSet
+}
+
+/**
  * 保存插件信息
  * @param id 插件id
  * @param value 插件信息
  */
 async function updatePluginInfo(id: number, value: StorePlugin): Promise<void> {
   if (id) {
-    const manifest = await loadPluginManifest(value.id)
-    if (!manifest) {
-      throw new Error('未找到插件配置文件')
-    }
-    console.log('加载' + value.id, manifest)
-    const useLocationSet = new Set()
-    const features = manifest.features
-    if (features) {
-      for (let feature of features) {
-        if (feature.page && feature.page !== 'plugins') {
-          useLocationSet.add(feature.page)
-        }
-      }
-    }
+    const useLocationSet = await getUseLocations(value.id)
     // 保存插件信息
     const db = await ClipboardDBService.getInstance()
     await db.updatePlugin({

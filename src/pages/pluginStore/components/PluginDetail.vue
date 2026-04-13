@@ -31,6 +31,10 @@ async function checkSettingsSupport(pluginId: string | undefined) {
     hasSettings.value = false
     return
   }
+  if (!isInstall(pluginId)) {
+    hasSettings.value = false
+    return
+  }
   try {
     const manifest = await loadPluginManifest(pluginId)
     const hasSettingsFeature = manifest.features?.some((f: any) => f.type === 'settings') || false
@@ -57,7 +61,8 @@ const settingsTitle = ref('')
 
 // 打开设置
 function openSettings() {
-  settingsTitle.value = selectedPlugin.plugin_name + ' ' + currentLanguage.value.pages.pluginStore.settingsBtn
+  settingsTitle.value =
+    selectedPlugin.plugin_name + ' ' + currentLanguage.value.pages.pluginStore.settingsBtn
   settingsVisible.value = true
 }
 

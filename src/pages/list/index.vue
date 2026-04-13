@@ -166,7 +166,7 @@ onMounted(async () => {
     // 初始化文件数据配置
     await initializeFileData()
 
-    await initializePluginLanguage();
+    await initializePluginLanguage()
 
     // 加载插件
     initializePlugins().catch(e => {
@@ -176,7 +176,7 @@ onMounted(async () => {
     // 增加事件监听
     document.addEventListener('keydown', handleKeyDown)
   } catch (err) {
-    console.error(err)
+    console.error('列表页面初始化失败', err)
     error('列表页面初始化失败:' + err)
     message.error(currentLanguage.value.pages.list.initFailedHint)
   } finally {

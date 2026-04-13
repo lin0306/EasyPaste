@@ -398,6 +398,9 @@
         "loadFailed": "加载插件设置失败"
       }
     },
+    "pluginView": {
+      "title": "插件预览"
+    },
     "plugins": {}
   }
 }

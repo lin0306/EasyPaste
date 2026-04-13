@@ -1,16 +1,20 @@
+use crate::i18n::models::LanguageConfig;
+use crate::i18n::I18nState;
+use log::{error, info, warn};
+use serde_json::from_reader;
 use std::fs;
 use std::fs::File;
-use log::{error, warn};
-use serde_json::from_reader;
-use tauri::{AppHandle, Manager};
 use tauri::path::BaseDirectory;
+use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
-use crate::i18n::I18nState;
-use crate::i18n::models::LanguageConfig;
 
 pub fn load_default(app: &AppHandle, state: &I18nState) {
     load_user_language(&app, &state);
     load_default_locales(&app, &state);
+    // println!(
+    //     "加载系统默认语言：{:?}",
+    //     serde_json::to_string(&state.get_locales())
+    // )
 }
 
 /**
@@ -69,10 +73,20 @@ fn load_default_locales(app: &AppHandle, state: &I18nState) {
                 let path = entry.path();
                 if path.is_file() {
                     println!("加载语言文件: {:?}", path);
-                    if let Ok(file) = File::open(path.clone()) {
-                        if let Ok(data) = from_reader::<File, LanguageConfig>(file) {
-                            let id = data.id.clone();
-                            state.insert_locale(id, data);
+                    match File::open(path.clone()) {
+                        Ok(file) => match from_reader::<File, LanguageConfig>(file) {
+                            Ok(data) => {
+                                let id = data.id.clone();
+                                // println!("语言ID: {}", id);
+                                // println!("语言数据: {:?}", serde_json::to_string(&data.clone()));
+                                state.insert_locale(id, data);
+                            }
+                            Err(e) => {
+                                error!("读取语言文件失败: {}", e)
+                            }
+                        },
+                        Err(e) => {
+                            error!("打开语言文件失败: {}", e)
                         }
                     }
                 }

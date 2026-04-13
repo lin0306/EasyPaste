@@ -34,7 +34,6 @@ export async function loadPluginManifest(pluginId: string): Promise<any> {
   return JSON.parse(manifest)
 }
 
-
 /**
  * 创建插件应用（用于插件入口文件）
  * 自动处理主题切换，插件无需手动监听

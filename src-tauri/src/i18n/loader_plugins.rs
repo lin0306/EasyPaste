@@ -49,6 +49,7 @@ fn load_plugin_locales(state: &I18nState, plugin_path: PathBuf) {
     if plugin_path.is_dir() {
         let locales_path = plugin_path.join("locales");
         if locales_path.exists() {
+            println!("插件语言文件位置: {:?}", locales_path);
             for locale_entry in fs::read_dir(locales_path).expect("无法读取插件语言目录")
             {
                 let locale_entry = locale_entry.expect("无效的插件语言目录");

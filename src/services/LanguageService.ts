@@ -35,6 +35,7 @@ async function loadLanguage() {
   // 获取页面语言
   const window = getCurrentWindow()
   const label = window.label
+  console.log("页面label", label)
   const pageLocaleStr = await invoke<string>('get_page_locale', { page: label })
   currentLanguage.value.pages[label] = JSON.parse(pageLocaleStr)
 }

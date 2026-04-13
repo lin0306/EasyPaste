@@ -217,7 +217,7 @@ function initInstallPluginListener(): Promise<UnlistenFn> {
     const pluginId = event.payload.pluginId
     await loadPlugin(pluginId)
     // 后端载入插件的语言
-    await invoke('load_plugin_locales', { plugin_id: pluginId })
+    await invoke('load_plugin_locales', { pluginId: pluginId })
     // 前端获取插件的语言
     await loadPluginLanguage()
   })

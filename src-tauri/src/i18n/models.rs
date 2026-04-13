@@ -26,6 +26,8 @@ pub struct Pages {
     pub preview: Value,
     #[serde(rename = "pluginStore")]
     pub plugin_store: Value,
+    #[serde(rename = "pluginView")]
+    pub plugin_view: Value,
     pub plugins: Value,
     pub tray: Tray,
 }
@@ -40,6 +42,7 @@ impl Pages {
             "update" => Some(&self.update),
             "preview" => Some(&self.preview),
             "pluginStore" => Some(&self.plugin_store),
+            "pluginView" => Some(&self.plugin_view),
             "plugins" => Some(&self.plugins),
             _ => None,
         }
