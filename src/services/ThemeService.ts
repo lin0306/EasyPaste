@@ -9,7 +9,7 @@ import { pinkTheme } from '../data/themes/pink.ts'
 import { getTheme, saveTheme } from '../store/Settings.ts'
 import { SETTINGS } from '../constants/UserSettingsConstant.ts'
 import { getCustomTheme, initCustomTheme } from '../store/CustomThemeConfig.ts'
-import { setTransparency } from '../utils/ColorUtil.ts'
+import { getContrastColor, setTransparency } from '../utils/ColorUtil.ts'
 
 // 所有可用主题
 export const themes = ref<ThemeConfig[]>([lightTheme, darkTheme, blueTheme, pinkTheme])
@@ -404,6 +404,9 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
     },
     Progress: {
       fillColor: colors.button.primary.backgroundColor,
+      textColorCircle: colors.universal.text,
+      textColorLineInner: getContrastColor(colors.button.primary.backgroundColor),
+      textColorLineOuter: colors.universal.textHint,
     },
     Split: {
       resizableTriggerColor: colors.universal.border,
