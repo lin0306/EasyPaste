@@ -9,9 +9,11 @@ import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { invoke } from '@tauri-apps/api/core'
 import { copyToClipboard } from '../../../services/ClipboardService.ts'
 
+const loadedPluginSet: Set<string> = new Set<string>()
+
 async function initPlugins(): Promise<void> {
   const db = await ClipboardDBService.getInstance()
-  const plugins: LocalPlugin[] = await db.searchPlugins(undefined, 'list')
+  const plugins: LocalPlugin[] = await db.searchPlugins(undefined, 'list', true)
   console.log('加载列表页面所有插件', plugins)
   if (plugins && plugins.length > 0) {
     for (const p of plugins) {
@@ -129,6 +131,10 @@ function registerContextMenu(
  * @param pluginId 插件ID
  */
 async function loadPlugin(pluginId: string): Promise<void> {
+  if (loadedPluginSet.has(pluginId)) {
+    console.log('插件已加载，不再重复加载', pluginId)
+    return;
+  }
   console.log('加载插件', pluginId)
 
   const manifestJson = await loadPluginManifest(pluginId)
@@ -160,6 +166,7 @@ async function loadPlugin(pluginId: string): Promise<void> {
       }
     }
   }
+  loadedPluginSet.add(pluginId)
 }
 
 /**
@@ -167,6 +174,10 @@ async function loadPlugin(pluginId: string): Promise<void> {
  * @param pluginId 插件ID
  */
 async function removePlugin(pluginId: string): Promise<void> {
+  if (!loadedPluginSet.has(pluginId)) {
+    console.log('插件已移除，不再重复移除', pluginId)
+    return
+  }
   const manifestJson = await loadPluginManifest(pluginId)
   console.log('加载' + pluginId, manifestJson)
   const features = manifestJson.features
@@ -204,6 +215,7 @@ async function removePlugin(pluginId: string): Promise<void> {
       }
     }
   }
+  loadedPluginSet.delete(pluginId)
 }
 
 /**
@@ -236,6 +248,20 @@ function initUninstallPluginListener(): Promise<UnlistenFn> {
   })
 }
 
+let togglePluginEnableListener: any = null
+function initTogglePluginEnableListener(): Promise<UnlistenFn> {
+  return listen('toggle-plugin-enable', async (event: any) => {
+    console.log('卸载插件', event)
+    const pluginId = event.payload.pluginId
+    const enable = event.payload.enable
+    if (enable) {
+      await loadPlugin(pluginId)
+    } else {
+      await removePlugin(pluginId)
+    }
+  })
+}
+
 export const initializePlugins = async (): Promise<void> => {
   try {
     await initPlugins()
@@ -243,6 +269,8 @@ export const initializePlugins = async (): Promise<void> => {
     installPluginListener = await initInstallPluginListener()
     // 添加插件卸载事件监听
     uninstallPluginListener = await initUninstallPluginListener()
+    // 添加插件启用禁用事件监听
+    togglePluginEnableListener = await initTogglePluginEnableListener()
     info('插件加载完成')
   } catch (e) {
     error('插件加载失败')
@@ -251,11 +279,9 @@ export const initializePlugins = async (): Promise<void> => {
 
 export const destroyPlugins = async (): Promise<void> => {
   // 移除插件安装事件监听
-  if (installPluginListener) {
-    await installPluginListener()
-  }
+  await installPluginListener?.()
   // 移除插件卸载事件监听
-  if (uninstallPluginListener) {
-    await uninstallPluginListener()
-  }
+  await uninstallPluginListener?.()
+  // 移除插件启用禁用事件监听
+  await togglePluginEnableListener?.()
 }

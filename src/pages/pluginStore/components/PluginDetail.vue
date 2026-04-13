@@ -26,8 +26,8 @@ const message = useMessage()
 const hasSettings = ref(false)
 
 const loadingState = computed(() => {
-  if (loadingMap.value.has(selectedPlugin.plugin_id)) {
-    let stateCode = loadingMap.value.get(selectedPlugin.plugin_id) || 'loading'
+  if (loadingMap.value.has(selectedPlugin.pluginId)) {
+    let stateCode = loadingMap.value.get(selectedPlugin.pluginId) || 'loading'
     switch (stateCode) {
       case 'downloading':
         return currentLanguage.value.pages.pluginStore.downloading
@@ -69,7 +69,7 @@ async function checkSettingsSupport(pluginId: string | undefined) {
 
 // 监听选中插件变化，检查是否支持设置
 watch(
-  () => selectedPlugin?.plugin_id,
+  () => selectedPlugin?.pluginId,
   pluginId => {
     checkSettingsSupport(pluginId)
   },
@@ -83,7 +83,7 @@ const settingsTitle = ref('')
 // 打开设置
 function openSettings() {
   settingsTitle.value =
-    selectedPlugin.plugin_name + ' ' + currentLanguage.value.pages.pluginStore.settingsBtn
+    selectedPlugin.pluginName + ' ' + currentLanguage.value.pages.pluginStore.settingsBtn
   settingsVisible.value = true
 }
 
@@ -94,19 +94,19 @@ const btnOptions = computed(() => [
   {
     key: 'update',
     label: currentLanguage.value.pages.pluginStore.updateBtn,
-    onClick: () => update(selectedPlugin.plugin_id, message),
-    show: hasUpdate(selectedPlugin.plugin_id),
+    onClick: () => update(selectedPlugin.pluginId, message),
+    show: hasUpdate(selectedPlugin.pluginId),
   },
   {
     key: 'disable',
     label: currentLanguage.value.pages.pluginStore.disableBtn,
-    onClick: () => togglePluginEnable(selectedPlugin.plugin_id, false),
+    onClick: () => togglePluginEnable(selectedPlugin.pluginId, false),
     show: selectedPlugin.enable === 1,
   },
   {
     key: 'enable',
     label: currentLanguage.value.pages.pluginStore.enableBtn,
-    onClick: () => togglePluginEnable(selectedPlugin.plugin_id, true),
+    onClick: () => togglePluginEnable(selectedPlugin.pluginId, true),
     show: selectedPlugin.enable === 0,
   },
   {
@@ -128,7 +128,7 @@ const btnOptions = computed(() => [
  * 卸载插件
  */
 async function onUninstall(): Promise<void> {
-  await uninstall(selectedPlugin.plugin_id, message)
+  await uninstall(selectedPlugin.pluginId, message)
   clearSelectPlugin()
 }
 </script>
@@ -139,7 +139,7 @@ async function onUninstall(): Promise<void> {
       <div class="plugin-detail-main-left">
         <div class="plugin-detail-main-title">
           <div class="plugin-detail-main-name">
-            {{ selectedPlugin.plugin_name }}
+            {{ selectedPlugin.pluginName }}
           </div>
           <div class="plugin-detail-main-platform">
             {{
@@ -153,13 +153,13 @@ async function onUninstall(): Promise<void> {
         </div>
         <div class="plugin-detail-main-version">
           <font-awesome-icon :icon="['fas', 'version']" class="plugin-detail-main-version-icon" />
-          <span v-if="hasUpdate(selectedPlugin.plugin_id)">
+          <span v-if="hasUpdate(selectedPlugin.pluginId)">
             {{
               (tabValue === 'local'
                 ? selectedPlugin.version
-                : getLocalVersion(selectedPlugin.plugin_id)) +
+                : getLocalVersion(selectedPlugin.pluginId)) +
               '  → ' +
-              getLatestVersion(selectedPlugin.plugin_id)
+              getLatestVersion(selectedPlugin.pluginId)
             }}
           </span>
           <span v-else>{{ selectedPlugin.version }}</span>
@@ -171,7 +171,7 @@ async function onUninstall(): Promise<void> {
           processing
           :percentage="100"
           indicator-placement="inside"
-          v-if="loadingMap.has(selectedPlugin.plugin_id)"
+          v-if="loadingMap.has(selectedPlugin.pluginId)"
         >
           {{ loadingState }}
         </n-progress>
@@ -180,17 +180,17 @@ async function onUninstall(): Promise<void> {
           size="small"
           type="primary"
           v-if="
-            !loadingMap.has(selectedPlugin.plugin_id) &&
+            !loadingMap.has(selectedPlugin.pluginId) &&
             tabValue === 'store' &&
-            !isInstall(selectedPlugin.plugin_id)
+            !isInstall(selectedPlugin.pluginId)
           "
-          @click="install(selectedPlugin.plugin_id, message)"
+          @click="install(selectedPlugin.pluginId, message)"
         >
           {{ currentLanguage.pages.pluginStore.installBtn }}
         </n-button>
         <button-group
           :data="btnOptions"
-          v-if="!loadingMap.has(selectedPlugin.plugin_id) && isInstall(selectedPlugin.plugin_id)"
+          v-if="!loadingMap.has(selectedPlugin.pluginId) && isInstall(selectedPlugin.pluginId)"
         />
       </div>
     </div>
@@ -198,7 +198,7 @@ async function onUninstall(): Promise<void> {
     <!-- 设置弹窗 -->
     <plugin-settings
       v-model:visible="settingsVisible"
-      :plugin-id="selectedPlugin.plugin_id"
+      :plugin-id="selectedPlugin.pluginId"
       :title="settingsTitle"
     />
   </div>

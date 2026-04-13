@@ -131,7 +131,7 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
         await loadPluginLanguage()
 
         // 如果当前选中的插件是刚安装的，更新选中状态以触发设置按钮检查
-        if (selectedPlugin.plugin_id === pluginId) {
+        if (selectedPlugin.pluginId === pluginId) {
           const newlyInstalled = localPlugins.value.find(l => l.plugin_id === pluginId)
           if (newlyInstalled) {
             onSelectLocal(newlyInstalled)
@@ -285,7 +285,7 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
             console.log('开始更新插件', storePlugin, storePlugin.downloadUrl)
             loadingMap.value.set(storePlugin.id, 'uninstalling')
             const configDir = await getPluginPath()
-            const pluginFolderPath = await join(configDir, selectedPlugin.plugin_id)
+            const pluginFolderPath = await join(configDir, selectedPlugin.pluginId)
             console.log('插件安装目录', pluginFolderPath)
             // 卸载插件
             try {
@@ -404,8 +404,8 @@ async function updatePluginInfo(id: number, value: StorePlugin): Promise<void> {
  */
 export const onSelectLocal = (plugin: LocalPlugin): void => {
   selectedPlugin.id = plugin.id
-  selectedPlugin.plugin_id = plugin.plugin_id
-  selectedPlugin.plugin_name = plugin.plugin_name
+  selectedPlugin.pluginId = plugin.plugin_id
+  selectedPlugin.pluginName = plugin.plugin_name
   selectedPlugin.version = plugin.version
   selectedPlugin.platform = plugin.platform
   selectedPlugin.url = plugin.url
@@ -421,8 +421,8 @@ export const onSelectStore = (plugin: StorePlugin): void => {
   const localPlugin = getLocalPlugin(plugin.id)
   selectedPlugin.id = localPlugin ? localPlugin.id : 1
   selectedPlugin.enable = localPlugin ? localPlugin.enable : 1
-  selectedPlugin.plugin_id = plugin.id
-  selectedPlugin.plugin_name = plugin.name
+  selectedPlugin.pluginId = plugin.id
+  selectedPlugin.pluginName = plugin.name
   selectedPlugin.url = plugin.downloadUrl
   selectedPlugin.version = plugin.version
   selectedPlugin.platform = plugin.platform
@@ -434,7 +434,7 @@ export const onSelectStore = (plugin: StorePlugin): void => {
  */
 export const clearSelectPlugin = (): void => {
   selectedPlugin.id = null
-  selectedPlugin.plugin_id = ''
+  selectedPlugin.pluginId = ''
 }
 
 /**
@@ -447,7 +447,7 @@ export const togglePluginEnable = async (pluginId: string, enable: boolean): Pro
     loadingMap.value.set(pluginId, 'loading')
 
     const plugin = localPlugins.value.find(l => l.plugin_id === pluginId)
-    if (selectedPlugin.plugin_id === pluginId) {
+    if (selectedPlugin.pluginId === pluginId) {
       selectedPlugin.enable = enable ? 1 : 0
     }
     localPlugins.value.forEach(l => {
@@ -460,6 +460,7 @@ export const togglePluginEnable = async (pluginId: string, enable: boolean): Pro
       await db.togglePluginEnable(plugin.id, enable ? 1 : 0)
       // 发送消息加载或取消加载插件
       await loadLocalPlugins()
+      await emit('toggle-plugin-enable', { pluginId: pluginId, enable: enable })
       console.log('插件启用/禁用成功', pluginId, enable)
     }
   } catch (e) {

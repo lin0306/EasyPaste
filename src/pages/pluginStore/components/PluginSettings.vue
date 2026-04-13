@@ -1,7 +1,7 @@
 <template>
   <n-modal
     :show="visible"
-    :title="currentLanguage.pages.plugins[selectedPlugin.plugin_id]?.['settingsTitle'] || title"
+    :title="currentLanguage.pages.plugins[selectedPlugin.pluginId]?.['settingsTitle'] || title"
     preset="card"
     style="width: 600px; max-width: 90vh"
     :mask-closable="false"

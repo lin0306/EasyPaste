@@ -32,11 +32,11 @@ declare interface LocalPlugin {
  */
 declare interface SelectPlugin {
   id: number | null // id
-  plugin_id: string // 插件唯一id
-  plugin_name: string // 插件名称
+  pluginId: string // 插件唯一id
+  pluginName: string // 插件名称
   version: string // 插件版本
   platform: string // 可用平台，Windows，Mac，General
   url: string // 插件下载地址
-  enable: number | null // 插件是否启用
+  enable: number // 插件是否启用
   description: string // 插件描述
 }

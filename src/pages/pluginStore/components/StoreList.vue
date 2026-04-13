@@ -43,7 +43,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
       class="plugin-item"
       v-for="plugin in pluginStore"
       :key="plugin.id"
-      :class="{ 'item-selected': selectedPlugin && selectedPlugin.plugin_id === plugin.id }"
+      :class="{ 'item-selected': selectedPlugin && selectedPlugin.pluginId === plugin.id }"
       @click="onSelectStore(plugin)"
     >
       <div class="plugin-item-icon">
