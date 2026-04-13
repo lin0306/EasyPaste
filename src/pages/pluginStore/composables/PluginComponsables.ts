@@ -14,11 +14,14 @@ import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageS
 import { getPluginPath } from '../../../store/Settings.ts'
 import { invoke } from '@tauri-apps/api/core'
 
+// 插件状态
+type loadingState = 'downloading' | 'unzipping' | 'loading' | 'uninstalling' | 'updating'
+
 export const tabValue = ref<string>('local')
 export const pluginStore = ref<StorePlugin[]>([])
 export const localPlugins = ref<LocalPlugin[]>([])
 export const selectedPlugin = reactive({} as SelectPlugin)
-export const loadingSet = ref<Set<string>>(new Set<string>())
+export const loadingMap = ref<Map<string, loadingState>>(new Map<string, loadingState>())
 export const storeListLoading = ref(false)
 export const localListLoading = ref(false)
 
@@ -83,17 +86,15 @@ async function installPlugin(
 ) {
   try {
     // 下载并解压文件
-    await installPluginFile(plugin.downloadUrl, pluginFolderPath)
+    await installPluginFile(plugin.downloadUrl, pluginFolderPath, plugin.id)
     // 保存插件信息
     await savePluginInfo(plugin)
-    // 重新加载插件
-    await loadLocalPlugins()
     return true
   } catch (error) {
     console.error('下载失败:', error)
     message.error(currentLanguage.value.pages.pluginStore.installFailedHint)
     deleteFolder(pluginFolderPath)
-    loadingSet.value.delete(plugin.id)
+    loadingMap.value.delete(plugin.id)
     return false
   }
 }
@@ -106,7 +107,7 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
   if (plugin) {
     try {
       console.log('开始安装插件', plugin)
-      loadingSet.value.add(plugin.id)
+      loadingMap.value.set(plugin.id, 'downloading')
       const configDir = await getPluginPath()
       const pluginFolderPath = await join(configDir, plugin.id)
       // 删除已安装的插件
@@ -121,6 +122,9 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
           return
         }
         console.log('安装成功', pluginId)
+        loadingMap.value.set(plugin.id, 'loading')
+        // 重新加载插件
+        await loadLocalPlugins()
         // 后端载入插件的语言
         await invoke('load_plugin_locales', { pluginId: pluginId })
         // 前端获取插件的语言
@@ -144,10 +148,10 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
       } else {
         message.error(currentLanguage.value.pages.pluginStore.installNotUrlHint)
       }
-    }catch (e) {
+    } catch (e) {
       console.log('安装插件失败', e)
     } finally {
-      loadingSet.value.delete(plugin.id)
+      loadingMap.value.delete(plugin.id)
     }
   }
 }
@@ -157,10 +161,15 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
  * @param url 插件下载地址
  * @param pluginFolderPath 插件安装目录
  */
-async function installPluginFile(url: string, pluginFolderPath: string): Promise<void> {
+async function installPluginFile(
+  url: string,
+  pluginFolderPath: string,
+  pluginId: string
+): Promise<void> {
   // 文件下载
   const response = await fetch(url, { method: 'GET' })
   console.log('文件下载完成，开始解压文件', response)
+  loadingMap.value.set(pluginId, 'unzipping')
   await mkdir(pluginFolderPath, { recursive: true })
   console.log('文件保存目录', pluginFolderPath)
   // 文件解压
@@ -235,7 +244,7 @@ export const uninstall = async (pluginId: string, message: MessageApiInjection):
   if (plugin) {
     try {
       console.log('开始卸载插件', plugin.plugin_id)
-      loadingSet.value.add(plugin.plugin_id)
+      loadingMap.value.set(plugin.plugin_id, 'uninstalling')
       if (plugin.id && plugin.id > 0) {
         await emit('uninstall-plugin', { pluginId: plugin.plugin_id })
         // 删除插件数据
@@ -256,7 +265,7 @@ export const uninstall = async (pluginId: string, message: MessageApiInjection):
       console.error(e)
       message.error(currentLanguage.value.pages.pluginStore.uninstallFailedHint)
     } finally {
-      loadingSet.value.delete(plugin.plugin_id)
+      loadingMap.value.delete(plugin.plugin_id)
     }
   }
 }
@@ -266,6 +275,7 @@ export const uninstall = async (pluginId: string, message: MessageApiInjection):
  */
 export const update = async (pluginId: string, message: MessageApiInjection): Promise<void> => {
   if (pluginId) {
+    loadingMap.value.set(pluginId, 'updating')
     const storePlugin = pluginStore.value.find(l => l.id === pluginId)
     const localPlugin = localPlugins.value.find(l => l.plugin_id === pluginId)
     if (storePlugin) {
@@ -273,7 +283,7 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
         if (storePlugin && storePlugin.downloadUrl) {
           try {
             console.log('开始更新插件', storePlugin, storePlugin.downloadUrl)
-            loadingSet.value.add(storePlugin.id)
+            loadingMap.value.set(storePlugin.id, 'uninstalling')
             const configDir = await getPluginPath()
             const pluginFolderPath = await join(configDir, selectedPlugin.plugin_id)
             console.log('插件安装目录', pluginFolderPath)
@@ -287,13 +297,21 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
               message.error(currentLanguage.value.pages.pluginStore.updateUnInstallFailedHint)
               return
             }
+            loadingMap.value.set(storePlugin.id, 'downloading')
             // 安装插件
             try {
               console.log('开始下载文件', storePlugin, storePlugin.downloadUrl)
               // 下载并解压文件
-              await installPluginFile(storePlugin.downloadUrl, pluginFolderPath)
+              await installPluginFile(storePlugin.downloadUrl, pluginFolderPath, storePlugin.id)
               // 保存插件信息
               await updatePluginInfo(localPlugin.id, storePlugin)
+              console.log('安装成功', pluginId)
+
+              loadingMap.value.set(storePlugin.id, 'loading')
+              // 后端载入插件的语言
+              await invoke('load_plugin_locales', { pluginId: pluginId })
+              // 前端获取插件的语言
+              await loadPluginLanguage()
               // 重新加载插件
               await loadLocalPlugins()
               await emit('install-plugin', { pluginId: pluginId })
@@ -313,7 +331,7 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
               await loadLocalPlugins()
             }
           } finally {
-            loadingSet.value.delete(storePlugin.id)
+            loadingMap.value.delete(storePlugin.id)
           }
         } else {
           message.error(currentLanguage.value.pages.pluginStore.installNotUrlHint)
@@ -325,6 +343,7 @@ export const update = async (pluginId: string, message: MessageApiInjection): Pr
     } else {
       message.error(currentLanguage.value.pages.pluginStore.notPluginHint)
     }
+    loadingMap.value.delete(pluginId)
   } else {
     message.error(currentLanguage.value.pages.pluginStore.notSelectPluginHint)
   }
@@ -425,7 +444,8 @@ export const clearSelectPlugin = (): void => {
  */
 export const togglePluginEnable = async (pluginId: string, enable: boolean): Promise<void> => {
   try {
-    loadingSet.value.add(pluginId)
+    loadingMap.value.set(pluginId, 'loading')
+
     const plugin = localPlugins.value.find(l => l.plugin_id === pluginId)
     if (selectedPlugin.plugin_id === pluginId) {
       selectedPlugin.enable = enable ? 1 : 0
@@ -446,7 +466,7 @@ export const togglePluginEnable = async (pluginId: string, enable: boolean): Pro
     error('插件启用/禁用异常' + e)
   } finally {
     setTimeout(() => {
-      loadingSet.value.delete(pluginId)
+      loadingMap.value.delete(pluginId)
     }, 300)
   }
 }

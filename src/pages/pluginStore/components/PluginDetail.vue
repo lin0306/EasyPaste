@@ -6,7 +6,7 @@ import {
   hasUpdate,
   install,
   isInstall,
-  loadingSet,
+  loadingMap,
   selectedPlugin,
   tabValue,
   togglePluginEnable,
@@ -24,6 +24,27 @@ const message = useMessage()
 
 // 判断是否支持设置功能
 const hasSettings = ref(false)
+
+const loadingState = computed(() => {
+  if (loadingMap.value.has(selectedPlugin.plugin_id)) {
+    let stateCode = loadingMap.value.get(selectedPlugin.plugin_id) || 'loading'
+    switch (stateCode) {
+      case 'downloading':
+        return currentLanguage.value.pages.pluginStore.downloading
+      case 'loading':
+        return currentLanguage.value.pages.pluginStore.loading
+      case 'unzipping':
+        return currentLanguage.value.pages.pluginStore.unzipping
+      case 'uninstalling':
+        return currentLanguage.value.pages.pluginStore.uninstalling
+      case 'updating':
+        return currentLanguage.value.pages.pluginStore.updating
+      default:
+        return ''
+    }
+  }
+  return ''
+})
 
 // 检查插件是否支持设置
 async function checkSettingsSupport(pluginId: string | undefined) {
@@ -147,17 +168,19 @@ async function onUninstall(): Promise<void> {
       <div class="plugin-detail-main-right">
         <n-progress
           type="line"
-          :show-indicator="false"
           processing
           :percentage="100"
-          v-if="loadingSet.has(selectedPlugin.plugin_id)"
-        />
+          indicator-placement="inside"
+          v-if="loadingMap.has(selectedPlugin.plugin_id)"
+        >
+          {{ loadingState }}
+        </n-progress>
         <n-button
           round
           size="small"
           type="primary"
           v-if="
-            !loadingSet.has(selectedPlugin.plugin_id) &&
+            !loadingMap.has(selectedPlugin.plugin_id) &&
             tabValue === 'store' &&
             !isInstall(selectedPlugin.plugin_id)
           "
@@ -167,7 +190,7 @@ async function onUninstall(): Promise<void> {
         </n-button>
         <button-group
           :data="btnOptions"
-          v-if="!loadingSet.has(selectedPlugin.plugin_id) && isInstall(selectedPlugin.plugin_id)"
+          v-if="!loadingMap.has(selectedPlugin.plugin_id) && isInstall(selectedPlugin.plugin_id)"
         />
       </div>
     </div>

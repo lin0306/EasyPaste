@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { themeColors } from '../../../services/ThemeService.ts'
 import { convertFileSize } from '../../../utils/FileUtil.ts'
 import {
   hasUpdate,
   install,
   isInstall,
-  loadingSet,
+  loadingMap,
   onSelectStore,
   pluginStore,
   selectedPlugin,
@@ -16,8 +15,14 @@ import { useMessage } from 'naive-ui'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { faCubes } from '@fortawesome/free-solid-svg-icons'
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
+import { computed } from 'vue'
+import { themeColors } from '../../../services/ThemeService.ts'
 
 const message = useMessage()
+
+const tagColor = computed(() => {
+  return { color: themeColors.value.universal.border, textColor: themeColors.value.universal.text }
+})
 
 const onInstall = async (plugin: StorePlugin): Promise<void> => {
   await install(plugin.id, message)
@@ -52,7 +57,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
             :bordered="false"
             size="small"
             v-if="plugin.platform !== 'General'"
-            :color="{ color: themeColors.universal.border, textColor: themeColors.universal.text }"
+            :color="tagColor"
           >
             <span v-if="plugin.platform === 'Windows'">Windows</span>
             <span v-if="plugin.platform === 'Mac'">Mac</span>
@@ -84,7 +89,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
           :show-indicator="false"
           processing
           :percentage="100"
-          v-if="loadingSet.has(plugin.id)"
+          v-if="loadingMap.has(plugin.id)"
         />
         <n-button
           round

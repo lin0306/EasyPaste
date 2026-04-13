@@ -393,6 +393,11 @@
       "updateFailedHint": "插件安装失败，请重新安装",
       "notPluginHint": "未找到插件信息",
       "notSelectPluginHint": "请选择需要更新的插件",
+      "downloading": "下载中",
+      "unzipping": "解压中",
+      "loading": "数据加载中",
+      "uninstalling": "卸载中",
+      "updating": "更新中",
       "settings": {
         "loadError": "加载失败",
         "loadFailed": "加载插件设置失败"

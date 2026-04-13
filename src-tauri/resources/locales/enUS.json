@@ -393,6 +393,11 @@
       "updateFailedHint": "Plugin installation failed. Please reinstall.",
       "notPluginHint": "No plugin information found.",
       "notSelectPluginHint": "Please select the plugins that need to be updated.",
+      "downloading": "Downloading",
+      "unzipping": "Unzipping",
+      "loading": "Data Loading",
+      "uninstalling": "Uninstalling",
+      "updating": "Updating",
       "settings": {
         "loadError": "Load Error",
         "loadFailed": "Failed to load plugin settings"

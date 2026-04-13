@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   hasUpdate,
-  loadingSet,
+  loadingMap,
   localListLoading,
   localPlugins,
   onSelectLocal,
@@ -15,18 +15,21 @@ import { themeColors } from '../../../services/ThemeService.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { faCubes } from '@fortawesome/free-solid-svg-icons'
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
+import { computed } from 'vue'
 
 const message = useMessage()
+
+const tagColor = computed(() => {
+  return { color: themeColors.value.universal.border, textColor: themeColors.value.universal.text }
+})
 
 /**
  * 插件更新
  * @param plugin 本地插件
  */
 const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
-  loadingSet.value.add(plugin.plugin_id)
   onSelectLocal(plugin)
   await update(plugin.plugin_id, message)
-  loadingSet.value.delete(plugin.plugin_id)
 }
 </script>
 
@@ -54,7 +57,7 @@ const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
             :bordered="false"
             size="small"
             v-if="plugin.platform !== 'General'"
-            :color="{ color: themeColors.universal.border, textColor: themeColors.universal.text }"
+            :color="tagColor"
           >
             <span v-if="plugin.platform === 'Windows'">Windows</span>
             <span v-if="plugin.platform === 'Mac'">Mac</span>
@@ -85,7 +88,7 @@ const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
           :show-indicator="false"
           processing
           :percentage="100"
-          v-if="loadingSet.has(plugin.plugin_id)"
+          v-if="loadingMap.has(plugin.plugin_id)"
         />
         <n-button
           round

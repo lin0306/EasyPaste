@@ -417,6 +417,11 @@ declare interface PageConfig {
     updateFailedHint: string
     notPluginHint: string
     notSelectPluginHint: string
+    downloading: string
+    unzipping: string
+    loading: string
+    uninstalling: string
+    updating: string
     settings: {
       loadError: string
       loadFailed: string
