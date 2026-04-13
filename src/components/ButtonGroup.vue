@@ -9,7 +9,12 @@
       trigger="click"
       :render-option="renderOption"
     >
-      <n-button style="padding: 0 8px" round @click="showDropdown = true">
+      <n-button
+        style="padding: 0 8px"
+        round
+        @click="showDropdown = !showDropdown"
+        class="dropdown-second-btn"
+      >
         <n-icon>
           <font-awesome-icon :icon="faChevronDown" />
         </n-icon>
@@ -19,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, VNode } from 'vue'
+import { computed, h, onMounted, onUnmounted, VNode } from 'vue'
 import { themeColors } from '../services/ThemeService.ts'
 import { NButton, NButtonGroup, NDropdown, NIcon } from 'naive-ui'
 import { DropdownGroupOption, DropdownOption } from 'naive-ui/es/dropdown/src/interface'
@@ -29,6 +34,9 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 const props = defineProps<{
   data: ButtonGroup[]
 }>()
+
+// 下拉菜单显隐
+const showDropdown = ref(false)
 
 // 菜单项
 const options = computed(() => {
@@ -44,9 +52,6 @@ const options = computed(() => {
       }
     })
 })
-
-// 下拉菜单显隐
-const showDropdown = ref(false)
 
 // 主按钮点击
 const handleMainAction = (): void => {
@@ -156,4 +161,22 @@ const renderOption = ({
     ]
   )
 }
+
+/**
+ * 点击页面其他区域关闭下拉菜单
+ * @param event 事件对象
+ */
+const handleClickOutside = (event: any): void => {
+  if (showDropdown.value && !event.target.closest('.dropdown-second-btn')) {
+    showDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
