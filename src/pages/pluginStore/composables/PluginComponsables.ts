@@ -457,7 +457,7 @@ export const togglePluginEnable = async (pluginId: string, enable: boolean): Pro
     })
     if (plugin) {
       const db = await ClipboardDBService.getInstance()
-      await db.togglePluginEnable(plugin.id, enable ? 1 : 0)
+      await db.togglePluginEnable(plugin.id, enable)
       // 发送消息加载或取消加载插件
       await loadLocalPlugins()
       await emit('toggle-plugin-enable', { pluginId: pluginId, enable: enable })

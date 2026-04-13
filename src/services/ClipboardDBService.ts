@@ -759,8 +759,9 @@ class ClipboardDBService {
    * 搜索插件
    * @param pluginName 插件名称
    * @param useLocation 使用位置
+   * @param enable 启用状态
    */
-  async searchPlugins(pluginName?: string, useLocation?: string): Promise<LocalPlugin[]> {
+  async searchPlugins(pluginName?: string, useLocation?: string, enable?: boolean): Promise<LocalPlugin[]> {
     let sql = 'SELECT * FROM plugins WHERE 1=1'
     let params = []
     if (pluginName && pluginName.trim() !== '') {
@@ -770,6 +771,10 @@ class ClipboardDBService {
     if (useLocation && useLocation.trim() !== '') {
       sql += ` AND use_location LIKE ?`
       params.push(`%${useLocation}%`)
+    }
+    if (enable !== undefined) {
+      sql += ` AND enable = ?`
+      params.push(enable ? 1: 0)
     }
     console.debug(sql, params)
     return (await this.db?.select(sql, params)) as LocalPlugin[]
@@ -786,12 +791,12 @@ class ClipboardDBService {
    * @param id 插件ID
    * @param enable 启用状态
    */
-  async togglePluginEnable(id: number, enable: number): Promise<void> {
+  async togglePluginEnable(id: number, enable: boolean): Promise<void> {
     await this.db?.execute(
       `
             UPDATE plugins SET enable = ? WHERE id = ?
         `,
-      [enable, id]
+      [enable ? 1 : 0, id]
     )
   }
 
