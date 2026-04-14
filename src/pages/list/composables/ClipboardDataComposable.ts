@@ -135,6 +135,14 @@ export const insertClipboardItem = async (item: ClipboardItem): Promise<void> =>
   ) {
     return
   }
+  // 复制的内容的类型与搜索内容的类型不符，不展示
+  if (
+    searchBoxState.selectTypes
+    && searchBoxState.selectTypes.length > 0
+    && !searchBoxState.selectTypes.some(type => item.type === type)
+  ) {
+    return
+  }
   // 如果列表为空，则直接插入
   if (clipboardItems.value.length === 0) {
     clipboardItems.value.unshift({ ...item })
