@@ -344,7 +344,6 @@ function onOpenContextMenuByFile(filePath: string): void {
   -webkit-line-clamp: 3;
   text-overflow: ellipsis;
   line-clamp: 3;
-  max-height: 5.7em;
   width: 96%;
   word-wrap: break-word;
   word-break: break-all;
@@ -357,10 +356,12 @@ function onOpenContextMenuByFile(filePath: string): void {
 .text-line {
   white-space: pre-wrap;
   user-select: text;
+  max-height: 5.7em;
 }
 
 .code-line {
   user-select: text;
+  max-height: 5.7em;
 }
 
 .link-line {
@@ -369,10 +370,14 @@ function onOpenContextMenuByFile(filePath: string): void {
   height: 3.4em !important;
 }
 
-.link-line {
-  display: flex;
-  align-items: center;
-  height: 3.4em !important;
+.file-line {
+  height: 5em;
+  overflow-x: auto;
+}
+
+.image-line {
+  overflow-y: auto;
+  height: 8em !important;
 }
 
 .link-icon-container {
@@ -412,16 +417,10 @@ function onOpenContextMenuByFile(filePath: string): void {
   font-size: 14px;
 }
 
-.file-line {
-}
-
-.image-line {
-  overflow-y: auto;
-}
-
 .image-preview {
-  object-fit: fill;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .card-tags {
