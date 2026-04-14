@@ -1,7 +1,7 @@
 use log::info;
 use std::io::Write;
 use std::path::PathBuf;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
 
 /**
@@ -28,16 +28,32 @@ pub async fn run_external_plugin(
 
             info!("plugin_path: {:?}", plugin_path);
 
+            let identifier = app.config().identifier.clone();
+            // 数据目录
             let app_data_dir = dirs::data_dir()
-                .map(|d| d.join(app.config().identifier.clone()))
+                .map(|d| d.join(identifier.clone()))
                 .unwrap_or_else(|| PathBuf::from("."));
+            info!("app_data_dir: {:?}", app_data_dir);
+
+            // 日志路径
+            let log_path = match app.path().app_log_dir() {
+                Ok(log_dir) => {
+                    log_dir.to_string_lossy().to_string()
+                },
+                Err(_e) => {
+                    "".to_string()
+                }
+            };
+            info!("log_path: {:?}", log_path);
+
 
             let mut child = std::process::Command::new(plugin_path)
                 .stdin(std::process::Stdio::piped())
                 .stdout(std::process::Stdio::piped())
                 .stderr(std::process::Stdio::piped())
                 .env("EASYPASTE_DATA_DIR", app_data_dir.to_string_lossy().to_string())
-                .env("EASYPASTE_IDENTIFIER", app.config().identifier.clone())
+                .env("EASYPASTE_IDENTIFIER", identifier.clone())
+                .env("EASYPASTE_LOGS", log_path)
                 .spawn()
                 .map_err(|e| format!("Failed to spawn plugin: {}", e))?;
 
@@ -52,10 +68,16 @@ pub async fn run_external_plugin(
                 .wait_with_output()
                 .map_err(|e| format!("Plugin process failed: {}", e))?;
 
+            println!("output：{:?}", output);
+            println!("output.stdout：{:?}", String::from_utf8(output.stdout.clone()));
+
             if output.status.success() {
                 let stdout_str = String::from_utf8(output.stdout)
                     .map_err(|e| format!("Invalid UTF-8 from plugin: {}", e))?;
-                Ok(stdout_str.trim().to_string())
+
+                // 提取第一个完整的 JSON 对象（处理可能存在的额外输出）
+                let json_str = extract_json_from_output(&stdout_str);
+                Ok(json_str.trim().to_string())
             } else {
                 let stderr_str = String::from_utf8_lossy(&output.stderr);
                 Err(format!(
@@ -67,6 +89,23 @@ pub async fn run_external_plugin(
         }
         _ => Err("插件文件夹获取失败".into()),
     }
+}
+
+/**
+ * 从输出中提取第一个完整的 JSON 对象
+ * 处理第三方库可能输出的额外信息
+ */
+fn extract_json_from_output(output: &str) -> String {
+    // 查找第一个 '{' 和最后一个 '}' 之间的内容
+    if let Some(start) = output.find('{') {
+        if let Some(end) = output.rfind('}') {
+            if start <= end {
+                return output[start..=end].to_string();
+            }
+        }
+    }
+    // 如果没有找到 JSON 格式，返回原始输出
+    output.to_string()
 }
 
 /**

@@ -144,6 +144,7 @@ const handleContextMenuClick = (item: ContextMenu): void => {
 
   // 设置参数
   paramMap.set('itemId', props.item.id)
+  paramMap.set('filePath', props.item.file_path)
 
   // 调用点击事件处理函数
   if (item.onClick) {
