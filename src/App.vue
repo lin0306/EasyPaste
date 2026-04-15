@@ -116,29 +116,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-/* 全局样式 */
-body {
-  margin: 0;
-  padding: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--theme-universal-background);
-  color: var(--theme-universal-text);
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-  overflow-y: hidden;
-  -moz-user-select: none; /* Firefox私有属性 */
-  -webkit-user-select: none; /* WebKit内核私有属性 */
-  -ms-user-select: none; /* IE私有属性(IE10及以后) */
-  -khtml-user-select: none; /* KHTML内核私有属性 */
-  -o-user-select: none; /* Opera私有属性 */
-  user-select: none; /* CSS3属性 */
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-tap-highlight-color: transparent;
-  touch-action: none;
-}
-
 /*fix:折叠面板第一条没有垂直居中*/
 .n-collapse .n-collapse-item:first-child {
   margin-top: 5px;
