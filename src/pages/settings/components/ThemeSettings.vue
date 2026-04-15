@@ -4,6 +4,7 @@ import { useMessage } from 'naive-ui'
 import { computed, onMounted } from 'vue'
 import {
   getAnimationSpeedLevel,
+  getBackgroundAnimationEffect,
   getEnableAnimationEffects,
   getTheme,
   saveAnimationDuration,
@@ -207,6 +208,10 @@ onMounted(async () => {
     const animationSpeedLevel = await getAnimationSpeedLevel()
     originalConfig.animationSpeedLevel = animationSpeedLevel
     currentConfig.animationSpeedLevel = animationSpeedLevel
+
+    const backgroundAnimationEffect = await getBackgroundAnimationEffect()
+    originalConfig.backgroundAnimationEffect = backgroundAnimationEffect
+    currentConfig.backgroundAnimationEffect = backgroundAnimationEffect
   } catch (e) {
     console.error('页面初始化失败:', e)
     error('页面初始化失败：' + e)
@@ -308,7 +313,7 @@ onMounted(async () => {
     <!-- 配置背景动效 -->
     <div class="line" v-if="currentConfig.enableAnimationEffects">
       <div class="main-item">
-        <span class="label">背景动效</span>
+        <span class="label">{{ currentLanguage.pages.settings.backgroundAnimationEffect }}</span>
         <n-select
           class="select"
           v-model:value="currentConfig.backgroundAnimationEffect"

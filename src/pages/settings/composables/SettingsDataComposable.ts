@@ -33,6 +33,7 @@ export const originalConfig = reactive<Settings>({
   enableImageSave: true,
   pluginPath: '',
   displayDetailTime: false,
+  backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,
 })
 
 // 当前编辑的配置
