@@ -24,10 +24,7 @@ const onClickClearData = async (): Promise<void> => {
   <div class="footer">
     <div class="footer-left">
       <div class="listen-status">
-        <div
-          :style="{ 'background-color': isListening ? 'lawngreen' : 'orangered' }"
-          class="point"
-        ></div>
+        <div :class="{ point: true, 'listening-dot': isListening, 'unlisten-dot': !isListening }"></div>
         {{
           isListening ? currentLanguage.pages.list.listening : currentLanguage.pages.list.stopListen
         }}
@@ -96,10 +93,45 @@ const onClickClearData = async (): Promise<void> => {
   align-items: center;
 }
 
+.listening-dot {
+  background: lawngreen;
+  position: relative;
+  box-shadow: 0 0 20px lawngreen;
+}
+
+.listening-dot::before,
+.listening-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: lawngreen;
+  animation: pulse 2s ease-out infinite;
+}
+
+.listening-dot::after {
+  animation-delay: 1s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.unlisten-dot {
+  background: orangered;
+}
+
 .point {
-  width: 5px;
-  height: 5px;
-  border-radius: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   margin: 0 4px;
 }
 
