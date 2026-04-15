@@ -347,7 +347,7 @@ function onOpenContextMenuByFile(filePath: string): void {
   width: 96%;
   word-wrap: break-word;
   word-break: break-all;
-  font-size: 16px;
+  font-size: 14px;
   border: 2px solid var(--theme-universal-border);
   border-radius: 8px;
   padding: 5px;
@@ -356,12 +356,12 @@ function onOpenContextMenuByFile(filePath: string): void {
 .text-line {
   white-space: pre-wrap;
   user-select: text;
-  max-height: 5.7em;
+  height: 3em;
 }
 
 .code-line {
   user-select: text;
-  max-height: 5.7em;
+  height: 4em;
 }
 
 .link-line {

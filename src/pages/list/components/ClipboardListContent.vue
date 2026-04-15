@@ -108,8 +108,8 @@ const handleChildContextMenu = (data: any): void => {
 }
 
 .clipboard-container {
-  height: calc(100vh - 80px);
-  /* 减去TitleBar(25px)和NavBar(30px)的高度 */
+  height: calc(100vh - 75px);
+  /* 减去TitleBar(25px)和NavBar(30px)和Footer(20px)的高度 */
   z-index: 1;
   position: relative;
   overflow-y: auto;
@@ -120,9 +120,9 @@ const handleChildContextMenu = (data: any): void => {
 }
 
 .clipboard-container.clipboard-container-search {
-  height: calc(100vh - 155px);
+  height: calc(100vh - 150px);
   transform: translateY(75px);
-  /* 减去TitleBar(25px)和NavBar(30px)的高度 */
+  /* 减去TitleBar(25px)和NavBar(30px)和Footer(20px)的高度 */
 }
 
 /**
