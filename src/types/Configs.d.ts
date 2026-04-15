@@ -18,6 +18,7 @@ declare interface Settings {
   enableAnimationEffects: boolean // 启用动画效果
   animationDuration: number // 动画持续时间（毫秒）
   animationSpeedLevel: string // 动画速度级别
+  backgroundAnimationEffect: string // 背景动画效果
   // 更新设置
   autoCheckUpdate: boolean // 自动检查更新
   updateMode: string // 自动检查更新方式

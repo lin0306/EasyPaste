@@ -1,12 +1,17 @@
 import { reactive } from 'vue'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { error } from '@tauri-apps/plugin-log'
-import { getAnimationDuration, getEnableAnimationEffects } from '../../store/Settings.ts'
+import {
+  getAnimationDuration,
+  getBackgroundAnimationEffect,
+  getEnableAnimationEffects,
+} from '../../../store/Settings.ts'
 
 // 动画效果
 export const animationEffect = reactive({
   enabled: true,
   duration: 300,
+  backgroundAnimationEffect: 'none'
 })
 
 /**
@@ -18,8 +23,10 @@ const initUpdateAnimationEffectListener = async (): Promise<UnlistenFn> => {
   return await listen('update-animation-effect', async (event: any) => {
     const enable = event.payload.isEnable
     const duration = event.payload.duration
+    const backgroundAnimationEffect = event.payload.backgroundAnimationEffect
     animationEffect.enabled = enable
     animationEffect.duration = duration
+    animationEffect.backgroundAnimationEffect = backgroundAnimationEffect
     // 设置动画持续时长
     document.documentElement.style.setProperty(
       '--animation-duration',
@@ -39,6 +46,7 @@ export const initializeAnimationEffect = async (): Promise<void> => {
     // 初始化动画效果
     animationEffect.enabled = await getEnableAnimationEffects()
     animationEffect.duration = await getAnimationDuration()
+    animationEffect.backgroundAnimationEffect = await getBackgroundAnimationEffect()
     // 设置动画持续时长
     document.documentElement.style.setProperty(
       '--animation-duration',

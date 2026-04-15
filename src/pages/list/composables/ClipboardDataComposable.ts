@@ -20,7 +20,7 @@ import DataClearService from '../../../services/DataClearService.ts'
 import { getAutoGoToLatestData, getDataRetentionDays } from '../../../store/Settings.ts'
 import { scrollToDiv } from '../../../utils/DomUtil.ts'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 
 // 剪贴板监听

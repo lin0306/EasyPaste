@@ -8,6 +8,7 @@ import {
   getTheme,
   saveAnimationDuration,
   saveAnimationSpeedLevel,
+  saveBackgroundAnimationEffect,
   saveEnableAnimationEffects,
 } from '../../../store/Settings.ts'
 import { emit } from '@tauri-apps/api/event'
@@ -46,6 +47,34 @@ const animationSpeedOptions = computed(() => [
   },
 ])
 
+// 背景动画效果选项
+const backgroundAnimationOptions = computed(() => [
+  {
+    label: currentLanguage.value.pages.settings.none,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.NONE,
+  },
+  {
+    label: currentLanguage.value.pages.settings.star,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.STAR,
+  },
+  {
+    label: currentLanguage.value.pages.settings.orb,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.ORB,
+  },
+  {
+    label: currentLanguage.value.pages.settings.aurora,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.AURORA,
+  },
+  {
+    label: currentLanguage.value.pages.settings.ember,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.EMBER,
+  },
+  {
+    label: currentLanguage.value.pages.settings.starrySky,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.STARRY_SKY,
+  },
+])
+
 /**
  * 修改是否启用动画效果
  * @param enableAnimationEffects 是否启用动画效果
@@ -73,6 +102,7 @@ const onChangeEnableAnimationEffects = async (enableAnimationEffects: boolean): 
     await emit('update-animation-effect', {
       isEnable: enableAnimationEffects,
       duration: currentConfig.animationDuration,
+      backgroundAnimationEffect: currentConfig.backgroundAnimationEffect,
     })
   } catch (e) {
     error('修改是否启用动画效果设置出错:' + e)
@@ -108,6 +138,7 @@ const onChangeAnimationSpeedLevel = async (animationSpeedLevel: string): Promise
     await emit('update-animation-effect', {
       isEnable: currentConfig.enableAnimationEffects,
       duration: duration,
+      backgroundAnimationEffect: currentConfig.backgroundAnimationEffect,
     })
   } catch (e) {
     error('修改动画速度级别设置出错:' + e)
@@ -119,6 +150,37 @@ const onChangeAnimationSpeedLevel = async (animationSpeedLevel: string): Promise
       '--animation-duration',
       currentConfig.animationDuration + 'ms'
     )
+    onLoading.value = false
+  }
+}
+
+/**
+ * 修改背景动画效果
+ * @param backgroundAnimationEffect 背景动画效果
+ */
+const onChangeBackgroundAnimationEffect = async (
+  backgroundAnimationEffect: string
+): Promise<void> => {
+  if (backgroundAnimationEffect === originalConfig.backgroundAnimationEffect) {
+    return
+  }
+  onLoading.value = true
+  try {
+    await saveBackgroundAnimationEffect(backgroundAnimationEffect)
+
+    originalConfig.backgroundAnimationEffect = backgroundAnimationEffect
+    currentConfig.backgroundAnimationEffect = backgroundAnimationEffect
+    // 发送全局消息
+    await emit('update-animation-effect', {
+      isEnable: currentConfig.enableAnimationEffects,
+      duration: currentConfig.animationDuration,
+      backgroundAnimationEffect: currentConfig.backgroundAnimationEffect,
+    })
+  } catch (e) {
+    error('修改动画速度级别设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.backgroundAnimationEffect = originalConfig.backgroundAnimationEffect
+  } finally {
     onLoading.value = false
   }
 }
@@ -222,24 +284,44 @@ onMounted(async () => {
     </div>
 
     <!-- 配置动画速度 -->
-    <div class="form-item" v-if="currentConfig.enableAnimationEffects">
-      <span class="label">{{ currentLanguage.pages.settings.transitionSpeed }}</span>
-      <n-select
-        class="select"
-        v-model:value="currentConfig.animationSpeedLevel"
-        :loading="onLoading"
-        :options="animationSpeedOptions"
-        @update:value="onChangeAnimationSpeedLevel"
-      />
-    </div>
-
-    <!-- 动画配置提示 -->
     <div class="line" v-if="currentConfig.enableAnimationEffects">
+      <div class="main-item">
+        <span class="label">{{ currentLanguage.pages.settings.transitionSpeed }}</span>
+        <n-select
+          class="select"
+          v-model:value="currentConfig.animationSpeedLevel"
+          :loading="onLoading"
+          :options="animationSpeedOptions"
+          @update:value="onChangeAnimationSpeedLevel"
+        />
+      </div>
       <div class="second-item">
         <div class="hint">
           <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
           <span class="hint-text">
             {{ currentLanguage.pages.settings.animationHint }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 配置背景动效 -->
+    <div class="line" v-if="currentConfig.enableAnimationEffects">
+      <div class="main-item">
+        <span class="label">背景动效</span>
+        <n-select
+          class="select"
+          v-model:value="currentConfig.backgroundAnimationEffect"
+          :loading="onLoading"
+          :options="backgroundAnimationOptions"
+          @update:value="onChangeBackgroundAnimationEffect"
+        />
+      </div>
+      <div class="second-item">
+        <div class="hint">
+          <font-awesome-icon :icon="faCircleInfo" class="hint-icon" />
+          <span class="hint-text">
+            {{ currentLanguage.pages.settings.backgroundAnimationEffectHint }}
           </span>
         </div>
       </div>

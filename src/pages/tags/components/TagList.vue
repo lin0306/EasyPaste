@@ -13,7 +13,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faChevronLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 

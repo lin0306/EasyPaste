@@ -9,7 +9,7 @@ import SettingsMenu from './components/SettingsMenu.vue'
 import TitleBar from '../../components/TitleBar.vue'
 import { computed } from 'vue'
 import TagSettings from './components/TagSettings.vue'
-import { animationEffect } from '../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../services/LanguageService.ts'
 import MainWindowSettings from './components/MainWindowSettings.vue'
 

@@ -49,7 +49,7 @@ import {
   scrollState,
   searchBoxState,
 } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { reactive, ref } from 'vue'
 import ContextMenu from './ContextMenu.vue'
 import { currentLanguage } from '../../../services/LanguageService.ts'

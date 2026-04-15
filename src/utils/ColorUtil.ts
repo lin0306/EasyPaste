@@ -117,6 +117,19 @@ export function getContrastColor(color: string): string {
 }
 
 /**
+ * 获取颜色RGB颜色值
+ * @param color 颜色值
+ */
+export function getColorRGBColorValue(color: string) {
+  if (!color) {
+    return color
+  }
+
+  const rgba = parseColor(color)
+  return `${rgba.r}, ${rgba.g}, ${rgba.b}`
+}
+
+/**
  * 颜色混合函数（假设白色背景）
  * @param colorValue 颜色值
  * @param alpha 透明度

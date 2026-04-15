@@ -7,10 +7,11 @@ import { getPluginThemeOverrides, setupThemeListener } from './services/ThemeSer
 import {
   destroyAnimationEffect,
   initializeAnimationEffect,
-} from './components/composables/AnimationComposable.ts'
+} from './components/effect/composables/AnimationComposable.ts'
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core'
 import { dateLocale, locale } from './utils/LanguageUtil.ts'
+import BackgroundAnimation from './components/effect/BackgroundAnimation.vue'
 
 // 屏蔽鼠标右键菜单
 document.oncontextmenu = function () {
@@ -110,6 +111,7 @@ onUnmounted(() => {
     :hljs="hljs"
   >
     <n-message-provider>
+      <background-animation />
       <router-view />
     </n-message-provider>
   </n-config-provider>

@@ -102,7 +102,7 @@
 <script lang="ts" setup>
 import { NIcon, NInput } from 'naive-ui'
 import { loadClipboardItems, searchBoxState } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { themeColors } from '../../../services/ThemeService.ts'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'

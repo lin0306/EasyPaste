@@ -56,7 +56,7 @@ export const blueTheme: ThemeConfig = {
       itemHover: 'rgba(230,240,250,1)',
     },
     customCard: {
-      background: 'rgba(245,250,255,1)',
+      background: 'rgba(245,250,255,0.5)',
       backgroundHover: 'rgba(230,240,250,1)',
     },
     wavesurfer: {

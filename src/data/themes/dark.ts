@@ -56,7 +56,7 @@ export const darkTheme: ThemeConfig = {
       itemHover: 'rgba(45,45,45,1)',
     },
     customCard: {
-      background: 'rgb(53,53,53)',
+      background: 'rgba(53,53,53,0.5)',
       backgroundHover: 'rgb(64,64,64)',
     },
     wavesurfer: {

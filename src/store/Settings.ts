@@ -34,6 +34,7 @@ const defaultSettings: Settings = {
   enableImageSave: true,
   pluginPath: '',
   displayDetailTime: false,
+  backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,
 }
 
 /**
@@ -515,6 +516,29 @@ export async function getDisplayDetailTime(): Promise<boolean> {
 }
 
 /**
+ * 保存背景动画效果
+ * @param backgroundAnimationEffect 背景动画效果
+ */
+export async function saveBackgroundAnimationEffect(
+  backgroundAnimationEffect: string
+): Promise<void> {
+  info('保存背景动画效果: ' + backgroundAnimationEffect)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.BACKGROUND_ANIMATION_EFFECT, backgroundAnimationEffect)
+}
+
+/**
+ * 获取背景动画效果
+ */
+export async function getBackgroundAnimationEffect(): Promise<string> {
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return (
+    (await store.get<string>(SETTINGS_KEYS.BACKGROUND_ANIMATION_EFFECT)) ||
+    defaultSettings.backgroundAnimationEffect
+  )
+}
+
+/**
  * 初始化用户配置
  */
 export async function initSettings(): Promise<void> {
@@ -620,6 +644,12 @@ export async function initSettings(): Promise<void> {
     if (!userSettingsString.includes(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) {
       await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime)
     }
+    if (!userSettingsString.includes(SETTINGS_KEYS.BACKGROUND_ANIMATION_EFFECT)) {
+      await settings.set(
+        SETTINGS_KEYS.BACKGROUND_ANIMATION_EFFECT,
+        defaultSettings.backgroundAnimationEffect
+      )
+    }
     await settings.save()
   } else {
     // 用户配置文件不存在
@@ -661,6 +691,10 @@ export async function initSettings(): Promise<void> {
     await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave)
     await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir + (isMac ? '/' : '\\') + 'plugins')
     await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime)
+    await settings.set(
+      SETTINGS_KEYS.BACKGROUND_ANIMATION_EFFECT,
+      defaultSettings.backgroundAnimationEffect
+    )
 
     await settings.save()
   }

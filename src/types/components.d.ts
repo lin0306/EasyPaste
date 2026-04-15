@@ -8,7 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AuroraBackground: typeof import('./../components/effect/AuroraBackground.vue')['default']
+    BackgroundAnimation: typeof import('./../components/effect/BackgroundAnimation.vue')['default']
     ButtonGroup: typeof import('./../components/ButtonGroup.vue')['default']
+    EmberBackground: typeof import('./../components/effect/EmberBackground.vue')['default']
     NavBar: typeof import('./../components/NavBar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCode: typeof import('naive-ui')['NCode']
@@ -38,8 +41,12 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     NTooltip: typeof import('naive-ui')['NTooltip']
     NTree: typeof import('naive-ui')['NTree']
+    OrbBackground: typeof import('./../components/effect/OrbBackground.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StarBackground: typeof import('./../components/effect/StarBackground.vue')['default']
+    StarField: typeof import('./../components/effect/StarField.vue')['default']
+    StarrySkyBackground: typeof import('./../components/effect/StarrySkyBackground.vue')['default']
     TitleBar: typeof import('./../components/TitleBar.vue')['default']
   }
 }

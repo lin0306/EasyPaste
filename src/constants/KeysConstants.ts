@@ -26,6 +26,7 @@ export const SETTINGS_KEYS = {
   ENABLE_IMAGE_SAVE: 'enableImageSave',
   PLUGIN_PATH: 'pluginPath',
   DISPLAY_DETAIL_TIME: 'displayDetailTime',
+  BACKGROUND_ANIMATION_EFFECT: 'backgroundAnimationEffect',
 }
 
 /**

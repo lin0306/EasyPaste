@@ -41,6 +41,17 @@ export const SETTINGS = {
         SLOW: { key: 'slow', duration: 500 },
       },
     },
+    BACKGROUND_ANIMATION: {
+      DEFAULT_EFFECT: 'none',
+      EFFECT_OPTIONS: {
+        NONE: 'none',
+        STAR: 'star',
+        ORB: 'orb',
+        AURORA: 'aurora',
+        EMBER: 'ember',
+        STARRY_SKY: 'starry-sky',
+      }
+    }
   },
   // 语言设置常量
   LANGUAGE: {

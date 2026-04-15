@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { animationEffect } from './composables/AnimationComposable.ts'
+import { animationEffect } from './effect/composables/AnimationComposable.ts'
 import { themeColors } from '../services/ThemeService.ts'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 

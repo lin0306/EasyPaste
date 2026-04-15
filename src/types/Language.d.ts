@@ -119,6 +119,15 @@ declare interface PageConfig {
     transitionSpeedNormal: string
     transitionSpeedSlow: string
     animationHint: string
+    // 背景动效相关设置
+    backgroundAnimationEffect: string
+    backgroundAnimationEffectHint: string
+    none: string
+    star: string
+    orb: string
+    aurora: string
+    ember: string
+    starrySky: string
     // 主题编辑器相关
     themeEditor: {
       title: string

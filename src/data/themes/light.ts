@@ -56,7 +56,7 @@ export const lightTheme: ThemeConfig = {
       itemHover: 'rgba(240,240,240,1)',
     },
     customCard: {
-      background: 'rgb(255,255,255)',
+      background: 'rgba(255,255,255,0.5)',
       backgroundHover: 'rgb(240,240,240)',
     },
     wavesurfer: {

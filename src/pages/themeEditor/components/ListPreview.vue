@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { isDev } from '../../../data/SystemParams.ts'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { themeColors } from '../../../services/ThemeService.ts'
 import { getTimeAgo } from '../../../utils/DateUtil.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'

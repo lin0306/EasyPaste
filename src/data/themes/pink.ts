@@ -56,7 +56,7 @@ export const pinkTheme: ThemeConfig = {
       itemHover: 'rgba(248,230,240,1)',
     },
     customCard: {
-      background: 'rgb(255,255,255)',
+      background: 'rgba(255,255,255,0.5)',
       backgroundHover: 'rgb(245,225,235)',
     },
     wavesurfer: {

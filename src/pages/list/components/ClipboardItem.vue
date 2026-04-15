@@ -204,7 +204,7 @@ import { handleDragEnd, handleDragStart } from '../composables/DragComposable.ts
 import { tagSettingState } from '../composables/TagDataComposable.ts'
 import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
 import FilePreview from './FilePreview.vue'
-import { animationEffect } from '../../../components/composables/AnimationComposable.ts'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { getTimeAgo } from '../../../utils/DateUtil.ts'
