@@ -278,7 +278,7 @@ onUnmounted(() => {
 }
 
 .context-menu-item:hover {
-  background-color: var(--theme-menu-itemHover);
+  background-color: var(--theme-menuBar-itemHover);
 }
 
 .context-menu-item span {
