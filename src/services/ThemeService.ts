@@ -9,7 +9,7 @@ import { pinkTheme } from '../data/themes/pink.ts'
 import { getTheme, saveTheme } from '../store/Settings.ts'
 import { SETTINGS } from '../constants/UserSettingsConstant.ts'
 import { getCustomTheme, initCustomTheme } from '../store/CustomThemeConfig.ts'
-import { getContrastColor, setTransparency } from '../utils/ColorUtil.ts'
+import { setTransparency } from '../utils/ColorUtil.ts'
 
 // 所有可用主题
 export const themes = ref<ThemeConfig[]>([lightTheme, darkTheme, blueTheme, pinkTheme])
@@ -114,7 +114,7 @@ export async function toggleTheme(themeId: string): Promise<void> {
     // 发送主题变更事件，通知所有窗口
     await emit('theme-changed', themeId)
 
-    emit('easy-paste-theme-changed');
+    emit('easy-paste-theme-changed')
 
     info('主题已切换为:' + themeId)
   } catch (er) {
@@ -136,7 +136,7 @@ export async function setupThemeListener(): Promise<void> {
         currentThemeId.value = event.payload
         themeColors.value = theme.colors
         applyThemeToDOM(theme.colors)
-        emit('easy-paste-theme-changed');
+        emit('easy-paste-theme-changed')
         console.log('[ThemeService] 已派发 easy-paste-theme-changed 事件')
       }
     } else {
@@ -405,7 +405,7 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
     Progress: {
       fillColor: colors.button.primary.backgroundColor,
       textColorCircle: colors.universal.text,
-      textColorLineInner: getContrastColor(colors.button.primary.backgroundColor),
+      textColorLineInner: colors.universal.text,
       textColorLineOuter: colors.universal.textHint,
     },
     Split: {
