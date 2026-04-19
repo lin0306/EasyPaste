@@ -307,6 +307,12 @@
     },
     "itemSearch": {
       "title": "Search",
+      "filterType": "Filter by Type",
+      "selectedFilters": "Selected Filters:",
+      "keywordLabel": "Keyword: ",
+      "clearSearchBtn": "Clear Search",
+      "searchBtn": "Search",
+      "searchHint": "Input keywords to search",
       "typeText": "Text",
       "typeCode": "Code",
       "typeFile": "File",

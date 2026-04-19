@@ -23,13 +23,13 @@ const searchText = ref('')
 const selectTypes = ref<string[]>([])
 
 // 可用的类型选项
-const typeOptions = [
+const typeOptions = computed(() => [
   { key: 'text', label: currentLanguage.value.pages.itemSearch.typeText, icon: faFileLines },
   { key: 'code', label: currentLanguage.value.pages.itemSearch.typeCode, icon: faCode },
   { key: 'file', label: currentLanguage.value.pages.itemSearch.typeFile, icon: faFile },
   { key: 'image', label: currentLanguage.value.pages.itemSearch.typeImage, icon: faImage },
   { key: 'link', label: currentLanguage.value.pages.itemSearch.typeLink, icon: faLink },
-]
+])
 
 /**
  * 切换类型选择
@@ -104,7 +104,7 @@ onUnmounted(() => {
           <n-input
             id="search-input"
             v-model:value="searchText"
-            :placeholder="currentLanguage.pages.list.searchHint"
+            :placeholder="currentLanguage.pages.itemSearch.searchHint"
             clearable
             size="large"
             round
@@ -123,7 +123,7 @@ onUnmounted(() => {
             <n-icon size="16" :color="themeColors.universal.primary">
               <font-awesome-icon :icon="faFilter" />
             </n-icon>
-            <span class="filter-title">类型筛选</span>
+            <span class="filter-title">{{ currentLanguage.pages.itemSearch.filterType }}</span>
           </div>
 
           <n-space class="type-tags" wrap :size="[8, 8]">
@@ -160,7 +160,10 @@ onUnmounted(() => {
         <transition name="fade">
           <div v-if="searchText || selectTypes.length > 0" class="custom-card selected-filters">
             <div class="filter-summary">
-              <span class="summary-label">已选条件：</span>
+              <span class="summary-label">
+                {{ currentLanguage.pages.itemSearch.selectedFilters }}
+              </span>
+
               <n-space wrap :size="[6, 6]" class="tags-container">
                 <n-tag
                   v-if="searchText"
@@ -169,7 +172,9 @@ onUnmounted(() => {
                   @close="searchText = ''"
                   class="keyword-tag"
                 >
-                  <span class="tag-text">关键词: {{ searchText }}</span>
+                  <span class="tag-text">
+                    {{ currentLanguage.pages.itemSearch.keywordLabel }}{{ searchText }}
+                  </span>
                 </n-tag>
                 <n-tag
                   v-for="typeKey in selectTypes"
@@ -197,7 +202,7 @@ onUnmounted(() => {
             <font-awesome-icon :icon="faTimes" />
           </n-icon>
         </template>
-        清空搜索内容
+        {{ currentLanguage.pages.itemSearch.clearSearchBtn }}
       </n-button>
 
       <n-button type="primary" size="large" :bordered="false" @click="executeSearch">
@@ -206,7 +211,7 @@ onUnmounted(() => {
             <font-awesome-icon :icon="faMagnifyingGlass" />
           </n-icon>
         </template>
-        搜索
+        {{ currentLanguage.pages.itemSearch.searchBtn }}
       </n-button>
     </div>
   </div>

@@ -333,6 +333,12 @@ declare interface PageConfig {
   }
   itemSearch: {
     title: string
+    filterType: string
+    selectedFilters: string
+    keywordLabel: string
+    clearSearchBtn: string
+    searchBtn: string
+    searchHint: string
     typeText: string
     typeCode: string
     typeFile: string
