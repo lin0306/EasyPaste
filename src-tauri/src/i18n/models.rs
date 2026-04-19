@@ -19,11 +19,16 @@ pub struct LanguageConfig {
 #[derive(Deserialize, Serialize, Clone)]
 pub struct Pages {
     pub settings: Value,
+    #[serde(rename = "themeEditor")]
+    pub theme_editor: Value,
     pub list: Value,
+    #[serde(rename = "itemEditor")]
+    pub item_editor: Value,
     pub tags: Value,
     pub about: Value,
     pub update: Value,
     pub preview: Value,
+
     #[serde(rename = "pluginStore")]
     pub plugin_store: Value,
     #[serde(rename = "pluginView")]
@@ -36,7 +41,9 @@ impl Pages {
     pub fn get_by_key(&self, key: &str) -> Option<&Value> {
         match key {
             "settings" => Some(&self.settings),
+            "themeEditor" => Some(&self.theme_editor),
             "list" => Some(&self.list),
+            "itemEditor" => Some(&self.item_editor),
             "tags" => Some(&self.tags),
             "about" => Some(&self.about),
             "update" => Some(&self.update),

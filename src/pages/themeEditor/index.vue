@@ -24,12 +24,12 @@ const selectBasicTheme = ref('')
 const themeOptions = themes.value
   .filter(t => t.id !== 'custom')
   .map(t => {
-    return { value: t.id, label: currentLanguage.value.pages.list.menu[t.id] }
+    return { value: t.id, label: currentLanguage.value.pages.themeEditor[t.id] }
   })
 const showThemeText = computed(() => {
   return (
-    currentLanguage.value.pages.list.menu[selectBasicTheme.value] ||
-    currentLanguage.value.pages.settings.themeEditor.selectTheme
+    currentLanguage.value.pages.themeEditor[selectBasicTheme.value] ||
+    currentLanguage.value.pages.themeEditor.selectTheme
   )
 })
 
@@ -44,10 +44,10 @@ const onImport = async (): Promise<void> => {
   const filePath = await open({
     multiple: false,
     directory: false,
-    title: currentLanguage.value.pages.settings.themeEditor.themeImport,
+    title: currentLanguage.value.pages.themeEditor.themeImport,
     filters: [
       {
-        name: currentLanguage.value.pages.settings.themeEditor.themeFile,
+        name: currentLanguage.value.pages.themeEditor.themeFile,
         extensions: ['epth'],
       },
     ],
@@ -55,17 +55,14 @@ const onImport = async (): Promise<void> => {
   if (!filePath) {
     return
   }
-  const msg = message.loading(
-    currentLanguage.value.pages.settings.themeEditor.loadingThemeFileMsg,
-    {
-      duration: 0,
-    }
-  )
+  const msg = message.loading(currentLanguage.value.pages.themeEditor.loadingThemeFileMsg, {
+    duration: 0,
+  })
   try {
     const data = await readTextFile(filePath)
     Object.assign(themeConfig, JSON.parse(data))
   } catch (e) {
-    message.error(currentLanguage.value.pages.settings.themeEditor.loadingThemeFileErrorMsg)
+    message.error(currentLanguage.value.pages.themeEditor.loadingThemeFileErrorMsg)
   } finally {
     msg.destroy()
   }
@@ -77,10 +74,10 @@ const onImport = async (): Promise<void> => {
 const onExport = async (): Promise<void> => {
   const filePath = await save({
     defaultPath: 'customTheme',
-    title: currentLanguage.value.pages.settings.themeEditor.themeExport,
+    title: currentLanguage.value.pages.themeEditor.themeExport,
     filters: [
       {
-        name: currentLanguage.value.pages.settings.themeEditor.themeFile,
+        name: currentLanguage.value.pages.themeEditor.themeFile,
         extensions: ['epth'],
       },
     ],
@@ -89,12 +86,9 @@ const onExport = async (): Promise<void> => {
   if (!filePath) {
     return
   }
-  const msg = message.loading(
-    currentLanguage.value.pages.settings.themeEditor.exportingThemeFileMsg,
-    {
-      duration: 0,
-    }
-  )
+  const msg = message.loading(currentLanguage.value.pages.themeEditor.exportingThemeFileMsg, {
+    duration: 0,
+  })
   await writeTextFile(filePath, JSON.stringify(themeConfig))
   msg.destroy()
   exportSuccessModalVisible.value = true
@@ -118,7 +112,7 @@ const onReset = async (): Promise<void> => {
   const oldTheme = await getCustomTheme()
   Object.assign(themeConfig, oldTheme.colors)
   applyPreviewThemeToDOM(themeConfig)
-  message.success(currentLanguage.value.pages.settings.themeEditor.resetFinishMsg)
+  message.success(currentLanguage.value.pages.themeEditor.resetFinishMsg)
 }
 
 /**
@@ -149,9 +143,9 @@ onMounted(async () => {
 
 <template>
   <titleBar
-    :title="currentLanguage.pages.settings.themeEditor.title"
+    :title="currentLanguage.pages.themeEditor.title"
     :showCloseBtn="true"
-    :dev-tool="`theme-editor`"
+    :dev-tool="`themeEditor`"
   />
 
   <!-- 按钮行 -->
@@ -160,17 +154,11 @@ onMounted(async () => {
       <n-popselect v-model:value="selectBasicTheme" :options="themeOptions" trigger="click">
         <n-button>{{ showThemeText }}</n-button>
       </n-popselect>
-      <n-button @click="onImport">{{
-        currentLanguage.pages.settings.themeEditor.importBtn
-      }}</n-button>
-      <n-button @click="onExport">{{
-        currentLanguage.pages.settings.themeEditor.exportBtn
-      }}</n-button>
-      <n-button @click="onReset">{{
-        currentLanguage.pages.settings.themeEditor.resetBtn
-      }}</n-button>
+      <n-button @click="onImport">{{ currentLanguage.pages.themeEditor.importBtn }}</n-button>
+      <n-button @click="onExport">{{ currentLanguage.pages.themeEditor.exportBtn }}</n-button>
+      <n-button @click="onReset">{{ currentLanguage.pages.themeEditor.resetBtn }}</n-button>
       <n-button type="primary" @click="saveTheme">{{
-        currentLanguage.pages.settings.themeEditor.saveBtn
+        currentLanguage.pages.themeEditor.saveBtn
       }}</n-button>
     </div>
 
@@ -194,15 +182,15 @@ onMounted(async () => {
       :closable="false"
     >
       <span
-        >{{ currentLanguage.pages.settings.themeEditor.exportedThemeFileModeContent
+        >{{ currentLanguage.pages.themeEditor.exportedThemeFileModeContent
         }}{{ exportFilePath }}</span
       >
       <template #action>
         <n-button @click="onShowFile">{{
-          currentLanguage.pages.settings.themeEditor.openInFolderBtn
+          currentLanguage.pages.themeEditor.openInFolderBtn
         }}</n-button>
         <n-button type="primary" @click="exportSuccessModalVisible = false">
-          {{ currentLanguage.pages.settings.themeEditor.closeBtn }}
+          {{ currentLanguage.pages.themeEditor.closeBtn }}
         </n-button>
       </template>
     </n-modal>

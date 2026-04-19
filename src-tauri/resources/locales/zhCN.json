@@ -107,108 +107,115 @@
       "aurora": "极光",
       "ember": "灰烬",
       "starrySky": "星光",
-      "themeEditor": {
-        "title": "主题编辑器",
-        "themeEdit": "主题编辑",
-        "themePreview": "主题预览",
-        "themeImport": "导入主题文件",
-        "themeExport": "导出主题文件",
-        "selectTheme": "选择主题",
-        "themeFile": "主题文件",
-        "importBtn": "导入",
-        "exportBtn": "导出",
-        "resetBtn": "重置",
-        "saveBtn": "保存",
-        "loadingThemeFileMsg": "正在加载主题文件...",
-        "loadingThemeFileErrorMsg": "无法加载主题文件",
-        "exportingThemeFileMsg": "正在导出成主题文件...",
-        "resetFinishMsg": "重置完成",
-        "themeSaveSuccessMsg": "主题保存成功",
-        "exportedThemeFileModeContent": "主题文件已保存至：",
-        "openInFolderBtn": "打开文件所在位置",
-        "closeBtn": "关闭",
-        "editor": {
-          "global": {
-            "title": "全局颜色配置",
-            "primaryColor": "主色调：",
-            "secondaryColor": "次色调：",
-            "backgroundColor": "背景颜色：",
-            "deleteColor": "删除颜色：",
-            "textColor": "文本颜色：",
-            "hintTextColor": "提示颜色：",
-            "borderColor": "边框颜色："
-          },
-          "button": {
-            "title": "按钮颜色配置",
-            "primary": {
-              "bgColor": "主按钮背景色：",
-              "hoverBgColor": "主按钮背景色（悬浮）：",
-              "disableBgColor": "主按钮背景色（禁用）：",
-              "textColor": "主按钮文本色：",
-              "textHoverColor": "主按钮文本色（悬浮）：",
-              "textDisableColor": "主按钮文本色（禁用）："
-            },
-            "normal": {
-              "bgColor": "普通按钮背景色：",
-              "hoverBgColor": "普通按钮背景色（悬浮）：",
-              "disableBgColor": "普通按钮背景色（禁用）：",
-              "textColor": "普通按钮文本色：",
-              "textHoverColor": "普通按钮文本色（悬浮）：",
-              "textDisableColor": "普通按钮文本色（禁用）："
-            },
-            "error": {
-              "bgColor": "异常按钮背景色：",
-              "hoverBgColor": "异常按钮背景色（悬浮）：",
-              "disableBgColor": "异常按钮背景色（禁用）：",
-              "textColor": "异常按钮文本色：",
-              "textHoverColor": "异常按钮文本色（悬浮）：",
-              "textDisableColor": "异常按钮文本色（禁用）："
-            }
-          },
-          "select": {
-            "title": "选择器颜色配置",
-            "hoverBgColor": "背景色（悬浮未选中）：",
-            "activeBgColor": "背景色（选中）：",
-            "activeHoverBgColor": "背景色（悬浮选中）："
-          },
-          "titleBar": {
-            "title": "标题栏颜色配置",
-            "bgColor": "背景色：",
-            "btnHoverBgColor": "按钮背景色（悬浮）：",
-            "closeBtnHoverBgColor": "关闭按钮背景色（悬浮）："
-          },
-          "menuBar": {
-            "title": "菜单栏颜色配置",
-            "bgColor": "背景色：",
-            "hoverBgColor": "背景色（悬浮）：",
-            "activeBgColor": "背景色（选中）："
-          },
-          "customCard": {
-            "title": "列表卡片颜色配置",
-            "bgColor": "背景色：",
-            "hoverBgColor": "背景色（悬浮）："
-          },
-          "audio": {
-            "title": "音频颜色配置",
-            "waveColor": "波形颜色：",
-            "cursorColor": "光标颜色：",
-            "progressColor": "进度颜色："
-          },
-          "textEditor": {
-            "title": "文本编辑器颜色配置",
-            "bgColor": "背景色：",
-            "lineNumberBgColor": "行号背景色：",
-            "lineNumberActiveBgColor": "行号背景色（选中）："
-          }
-        },
-        "preview": {}
-      },
+      "searchMode": "搜索模式",
+      "simpleSearch": "简单搜索",
+      "advancedSearch": "高级搜索",
       "colors": {
         "light": "浅色",
         "dark": "深色",
         "blue": "蓝色",
         "pink": "粉色"
       }
+    },
+    "themeEditor": {
+      "title": "主题编辑器",
+      "themeEdit": "主题编辑",
+      "themePreview": "主题预览",
+      "themeImport": "导入主题文件",
+      "themeExport": "导出主题文件",
+      "selectTheme": "选择主题",
+      "themeFile": "主题文件",
+      "importBtn": "导入",
+      "exportBtn": "导出",
+      "resetBtn": "重置",
+      "saveBtn": "保存",
+      "loadingThemeFileMsg": "正在加载主题文件...",
+      "loadingThemeFileErrorMsg": "无法加载主题文件",
+      "exportingThemeFileMsg": "正在导出成主题文件...",
+      "resetFinishMsg": "重置完成",
+      "themeSaveSuccessMsg": "主题保存成功",
+      "exportedThemeFileModeContent": "主题文件已保存至：",
+      "openInFolderBtn": "打开文件所在位置",
+      "closeBtn": "关闭",
+      "editor": {
+        "global": {
+          "title": "全局颜色配置",
+          "primaryColor": "主色调：",
+          "secondaryColor": "次色调：",
+          "backgroundColor": "背景颜色：",
+          "deleteColor": "删除颜色：",
+          "textColor": "文本颜色：",
+          "hintTextColor": "提示颜色：",
+          "borderColor": "边框颜色："
+        },
+        "button": {
+          "title": "按钮颜色配置",
+          "primary": {
+            "bgColor": "主按钮背景色：",
+            "hoverBgColor": "主按钮背景色（悬浮）：",
+            "disableBgColor": "主按钮背景色（禁用）：",
+            "textColor": "主按钮文本色：",
+            "textHoverColor": "主按钮文本色（悬浮）：",
+            "textDisableColor": "主按钮文本色（禁用）："
+          },
+          "normal": {
+            "bgColor": "普通按钮背景色：",
+            "hoverBgColor": "普通按钮背景色（悬浮）：",
+            "disableBgColor": "普通按钮背景色（禁用）：",
+            "textColor": "普通按钮文本色：",
+            "textHoverColor": "普通按钮文本色（悬浮）：",
+            "textDisableColor": "普通按钮文本色（禁用）："
+          },
+          "error": {
+            "bgColor": "异常按钮背景色：",
+            "hoverBgColor": "异常按钮背景色（悬浮）：",
+            "disableBgColor": "异常按钮背景色（禁用）：",
+            "textColor": "异常按钮文本色：",
+            "textHoverColor": "异常按钮文本色（悬浮）：",
+            "textDisableColor": "异常按钮文本色（禁用）："
+          }
+        },
+        "select": {
+          "title": "选择器颜色配置",
+          "hoverBgColor": "背景色（悬浮未选中）：",
+          "activeBgColor": "背景色（选中）：",
+          "activeHoverBgColor": "背景色（悬浮选中）："
+        },
+        "titleBar": {
+          "title": "标题栏颜色配置",
+          "bgColor": "背景色：",
+          "btnHoverBgColor": "按钮背景色（悬浮）：",
+          "closeBtnHoverBgColor": "关闭按钮背景色（悬浮）："
+        },
+        "menuBar": {
+          "title": "菜单栏颜色配置",
+          "bgColor": "背景色：",
+          "hoverBgColor": "背景色（悬浮）：",
+          "activeBgColor": "背景色（选中）："
+        },
+        "customCard": {
+          "title": "列表卡片颜色配置",
+          "bgColor": "背景色：",
+          "hoverBgColor": "背景色（悬浮）："
+        },
+        "audio": {
+          "title": "音频颜色配置",
+          "waveColor": "波形颜色：",
+          "cursorColor": "光标颜色：",
+          "progressColor": "进度颜色："
+        },
+        "textEditor": {
+          "title": "文本编辑器颜色配置",
+          "bgColor": "背景色：",
+          "lineNumberBgColor": "行号背景色：",
+          "lineNumberActiveBgColor": "行号背景色（选中）："
+        }
+      },
+      "preview": {},
+      "light": "浅色",
+      "dark": "深色",
+      "blue": "蓝色",
+      "pink": "粉色"
     },
     "list": {
       "title": "剪贴板列表",
@@ -249,6 +256,8 @@
       "linkNotTitle": "无标题",
       "listening": "监听中",
       "stopListen": "停止监听",
+      "alreadyLatestHint": "已经是最新版本",
+      "checkUpdateErrorHint": "检查更新异常：",
       "menu": {
         "program": "程序",
         "settings": "偏好设置",
@@ -287,14 +296,14 @@
         "edit": "修改内容",
         "delete": "删除",
         "openLink": "打开链接"
-      },
-      "editor": {
-        "title": "编辑文本内容",
-        "saveBtn": "保存",
-        "resetBtn": "重置",
-        "saveSuccessMsg": "保存成功",
-        "saveFailedMsg": "保存失败"
       }
+    },
+    "itemEditor": {
+      "title": "编辑文本内容",
+      "saveBtn": "保存",
+      "resetBtn": "重置",
+      "saveSuccessMsg": "保存成功",
+      "saveFailedMsg": "保存失败"
     },
     "tags": {
       "title": "标签管理",
@@ -341,9 +350,7 @@
       "viewMoreBtn": "查看更多",
       "downloadingTitle": "下载更新中",
       "backupTitle": "备份用户数据",
-      "backupCompleted": "备份完成",
-      "alreadyLatestHint": "已经是最新版本",
-      "checkUpdateErrorHint": "检查更新异常："
+      "backupCompleted": "备份完成"
     },
     "tray": {
       "settings": "设置",

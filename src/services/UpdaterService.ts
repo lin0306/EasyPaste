@@ -1,9 +1,5 @@
-import { info } from '@tauri-apps/plugin-log'
-import {
-  isPermissionGranted,
-  requestPermission,
-  sendNotification,
-} from '@tauri-apps/plugin-notification'
+import { error, info } from '@tauri-apps/plugin-log'
+import { isPermissionGranted, requestPermission, sendNotification, } from '@tauri-apps/plugin-notification'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { check, DownloadEvent, DownloadOptions, Update } from '@tauri-apps/plugin-updater'
 import { openUpdaterWindow } from './WindowService.ts'
@@ -85,6 +81,7 @@ export default class UpdaterService {
           }
         }
       } else {
+        info('当前版本已是最新版本')
         if (isManual) {
           let permissionGranted = await isPermissionGranted()
           if (!permissionGranted) {
@@ -95,17 +92,17 @@ export default class UpdaterService {
           if (permissionGranted) {
             sendNotification({
               title: 'EasyPaste',
-              body: currentLanguage.value.pages.update.alreadyLatestHint,
+              body: currentLanguage.value.pages.list.alreadyLatestHint,
             })
           }
         }
       }
-    } catch (error) {
-      console.error('Error occurred while checking for updates:', error)
+    } catch (e) {
+      error('在检查更新时出现错误：' + e)
       if (isManual) {
         sendNotification({
           title: 'EasyPaste',
-          body: currentLanguage.value.pages.update.checkUpdateErrorHint + error,
+          body: currentLanguage.value.pages.list.checkUpdateErrorHint + e,
         })
       }
     }

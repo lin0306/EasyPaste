@@ -1,6 +1,6 @@
 use crate::i18n::models::LanguageConfig;
 use crate::i18n::I18nState;
-use log::{error, info, warn};
+use log::{error, warn};
 use serde_json::from_reader;
 use std::fs;
 use std::fs::File;

@@ -87,13 +87,13 @@ watch(themeConfig, newVal => {
   <div class="theme-editor">
     <n-collapse>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.global.title"
+        :title="currentLanguage.pages.themeEditor.editor.global.title"
         name="1"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.primaryColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.primaryColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -106,7 +106,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.secondaryColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.secondaryColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -119,7 +119,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.backgroundColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.backgroundColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -132,7 +132,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.deleteColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.deleteColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -145,7 +145,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.textColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.textColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -158,7 +158,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.hintTextColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.hintTextColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -171,7 +171,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-line">
-              {{ currentLanguage.pages.settings.themeEditor.editor.global.borderColor }}
+              {{ currentLanguage.pages.themeEditor.editor.global.borderColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -185,14 +185,14 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.button.title"
+        :title="currentLanguage.pages.themeEditor.editor.button.title"
         name="2"
       >
         <div class="sectorization">
           <!-- 主按钮颜色配置 -->
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.primary.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -205,7 +205,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.primary.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -218,7 +218,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.primary.disableBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.disableBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -231,7 +231,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.primary.textColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.textColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -244,7 +244,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.primary.textHoverColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.textHoverColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -258,7 +258,7 @@ watch(themeConfig, newVal => {
           <div class="color-line">
             <div class="color-label">
               {{
-                currentLanguage.pages.settings.themeEditor.editor.button.primary.textDisableColor
+                currentLanguage.pages.themeEditor.editor.button.primary.textDisableColor
               }}
             </div>
             <div class="color-select">
@@ -273,7 +273,7 @@ watch(themeConfig, newVal => {
           <!-- 次按钮颜色配置 -->
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -286,7 +286,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -299,7 +299,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.disableBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.disableBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -312,7 +312,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.textColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.textColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -325,7 +325,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.textHoverColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.textHoverColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -338,7 +338,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.normal.textDisableColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.normal.textDisableColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -352,7 +352,7 @@ watch(themeConfig, newVal => {
           <!-- 异常按钮颜色配置 -->
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -365,7 +365,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -378,7 +378,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.disableBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.disableBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -391,7 +391,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.textColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.textColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -404,7 +404,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.textHoverColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.textHoverColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -417,7 +417,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.button.error.textDisableColor }}
+              {{ currentLanguage.pages.themeEditor.editor.button.error.textDisableColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -431,13 +431,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.select.title"
+        :title="currentLanguage.pages.themeEditor.editor.select.title"
         name="3"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.select.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.select.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -450,7 +450,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.select.activeBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.select.activeBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -463,7 +463,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.select.activeHoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.select.activeHoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -477,13 +477,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.titleBar.title"
+        :title="currentLanguage.pages.themeEditor.editor.titleBar.title"
         name="4"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.titleBar.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.titleBar.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -496,7 +496,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.titleBar.btnHoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.titleBar.btnHoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -509,7 +509,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.titleBar.closeBtnHoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.titleBar.closeBtnHoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -523,13 +523,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.menuBar.title"
+        :title="currentLanguage.pages.themeEditor.editor.menuBar.title"
         name="5"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.menuBar.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.menuBar.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -542,7 +542,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.menuBar.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.menuBar.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -555,7 +555,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.menuBar.activeBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.menuBar.activeBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -569,13 +569,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.customCard.title"
+        :title="currentLanguage.pages.themeEditor.editor.customCard.title"
         name="6"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.customCard.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.customCard.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -588,7 +588,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.customCard.hoverBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.customCard.hoverBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -602,13 +602,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.audio.title"
+        :title="currentLanguage.pages.themeEditor.editor.audio.title"
         name="7"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.audio.waveColor }}
+              {{ currentLanguage.pages.themeEditor.editor.audio.waveColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -621,7 +621,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.audio.cursorColor }}
+              {{ currentLanguage.pages.themeEditor.editor.audio.cursorColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -634,7 +634,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.audio.progressColor }}
+              {{ currentLanguage.pages.themeEditor.editor.audio.progressColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -648,13 +648,13 @@ watch(themeConfig, newVal => {
         </div>
       </n-collapse-item>
       <n-collapse-item
-        :title="currentLanguage.pages.settings.themeEditor.editor.textEditor.title"
+        :title="currentLanguage.pages.themeEditor.editor.textEditor.title"
         name="8"
       >
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.textEditor.bgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.textEditor.bgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -667,7 +667,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{ currentLanguage.pages.settings.themeEditor.editor.textEditor.lineNumberBgColor }}
+              {{ currentLanguage.pages.themeEditor.editor.textEditor.lineNumberBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -681,7 +681,7 @@ watch(themeConfig, newVal => {
           <div class="color-line">
             <div class="color-label">
               {{
-                currentLanguage.pages.settings.themeEditor.editor.textEditor.lineNumberActiveBgColor
+                currentLanguage.pages.themeEditor.editor.textEditor.lineNumberActiveBgColor
               }}
             </div>
             <div class="color-select">

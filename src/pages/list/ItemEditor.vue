@@ -1,16 +1,16 @@
 <template>
   <TitleBar
-    :dev-tool="`item-editor`"
-    :title="currentLanguage.pages.list.editor.title"
+    :dev-tool="`itemEditor`"
+    :title="currentLanguage.pages.itemEditor.title"
     showCloseBtn
   />
   <div class="text-editor">
     <n-space class="button-lines" reverse>
       <n-button type="primary" @click="saveItemContent">{{
-        currentLanguage.pages.list.editor.saveBtn
+        currentLanguage.pages.itemEditor.saveBtn
       }}</n-button>
       <n-button @click="item.currentContent = item.originContent">{{
-        currentLanguage.pages.list.editor.resetBtn
+        currentLanguage.pages.itemEditor.resetBtn
       }}</n-button>
     </n-space>
     <div class="editor-container">
@@ -155,10 +155,10 @@ const saveItemContent = async () => {
   const result = await db.updateItemContent(item.id, item.currentContent)
   if (result) {
     await emit('update-content', { itemId: item.id })
-    message.success(currentLanguage.value.pages.list.editor.saveSuccessMsg)
+    message.success(currentLanguage.value.pages.itemEditor.saveSuccessMsg)
     item.originContent = item.currentContent
   } else {
-    message.error(currentLanguage.value.pages.list.editor.saveFailedMsg)
+    message.error(currentLanguage.value.pages.itemEditor.saveFailedMsg)
   }
 }
 

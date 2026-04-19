@@ -27,4 +27,6 @@ declare interface WebViewWindowOptions extends WebviewOptions, WindowOptions {
   contentProtected?: boolean // 窗口是否允许捕捉
   preventOverflow?: boolean // 创建时窗口内容是否超出窗口边界
   incognito?: boolean // 是否使用无痕模式
+  parent?: string, // 父窗口
+  openDevTools?: boolean // 是否打开开发者工具
 }

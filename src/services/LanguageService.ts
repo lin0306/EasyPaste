@@ -35,9 +35,17 @@ async function loadLanguage() {
   // 获取页面语言
   const window = getCurrentWindow()
   const label = window.label
-  console.log("页面label", label)
-  const pageLocaleStr = await invoke<string>('get_page_locale', { page: label })
-  currentLanguage.value.pages[label] = JSON.parse(pageLocaleStr)
+  console.log('页面label', label)
+  await loadPageLanguage(label)
+}
+
+/**
+ * 加载页面语言
+ * @param page 页面名称
+ */
+export async function loadPageLanguage(page: string) {
+  const pageLocaleStr = await invoke<string>('get_page_locale', { page: page })
+  currentLanguage.value.pages[page] = JSON.parse(pageLocaleStr)
 }
 
 /**
@@ -55,9 +63,9 @@ export async function loadPluginLanguage() {
  */
 export async function initializePluginLanguage() {
   console.log('初始化语言配置...')
-  await loadPluginLanguage();
+  await loadPluginLanguage()
   // 注销旧的语言变更事件监听
-  destroyLanguage();
+  destroyLanguage()
   // 添加语言变更事件监听
   languageChangedListener = await listen<string>('language-changed', async event => {
     // 确保不重复应用相同语言
