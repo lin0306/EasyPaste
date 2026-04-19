@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   { path: '/list', component: () => import('../pages/list/index.vue') },
   { path: '/item-editor', component: () => import('../pages/list/ItemEditor.vue') },
+  { path: '/item-search', component: () => import('../pages/list/ItemSearch.vue') },
   { path: '/settings', component: () => import('../pages/settings/index.vue') },
   { path: '/theme-editor', component: () => import('../pages/themeEditor/index.vue') },
   { path: '/tags', component: () => import('../pages/tags/index.vue') },

@@ -34,6 +34,7 @@ export const originalConfig = reactive<Settings>({
   pluginPath: '',
   displayDetailTime: false,
   backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,
+  searchModel: SETTINGS.SEARCH.DEFAULT,
 })
 
 // 当前编辑的配置

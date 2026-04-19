@@ -50,8 +50,8 @@ export const SETTINGS = {
         AURORA: 'aurora',
         EMBER: 'ember',
         STARRY_SKY: 'starry-sky',
-      }
-    }
+      },
+    },
   },
   // 语言设置常量
   LANGUAGE: {
@@ -69,6 +69,13 @@ export const SETTINGS = {
     HINT_MODE: {
       TOAST: 'toast',
       DIALOG: 'dialog',
+    },
+  },
+  SEARCH: {
+    DEFAULT: 'simple',
+    MODEL: {
+      ADVANCED: 'advanced',
+      SIMPLE: 'simple',
     },
   },
 }

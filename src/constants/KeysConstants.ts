@@ -27,6 +27,7 @@ export const SETTINGS_KEYS = {
   PLUGIN_PATH: 'pluginPath',
   DISPLAY_DETAIL_TIME: 'displayDetailTime',
   BACKGROUND_ANIMATION_EFFECT: 'backgroundAnimationEffect',
+  SEARCH_MODEL: 'searchModel',
 }
 
 /**

@@ -24,6 +24,8 @@ pub struct Pages {
     pub list: Value,
     #[serde(rename = "itemEditor")]
     pub item_editor: Value,
+    #[serde(rename = "itemSearch")]
+    pub item_search: Value,
     pub tags: Value,
     pub about: Value,
     pub update: Value,
@@ -44,6 +46,7 @@ impl Pages {
             "themeEditor" => Some(&self.theme_editor),
             "list" => Some(&self.list),
             "itemEditor" => Some(&self.item_editor),
+            "itemSearch" => Some(&self.item_search),
             "tags" => Some(&self.tags),
             "about" => Some(&self.about),
             "update" => Some(&self.update),

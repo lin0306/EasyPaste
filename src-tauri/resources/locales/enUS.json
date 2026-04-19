@@ -305,6 +305,14 @@
       "saveSuccessMsg": "Save Success",
       "saveFailedMsg": "Save Failed"
     },
+    "itemSearch": {
+      "title": "Search",
+      "typeText": "Text",
+      "typeCode": "Code",
+      "typeFile": "File",
+      "typeImage": "Image",
+      "typeLink": "Link"
+    },
     "tags": {
       "title": "Tag Manager",
       "bindDataHint": "associated data: ",

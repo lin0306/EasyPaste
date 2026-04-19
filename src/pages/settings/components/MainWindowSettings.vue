@@ -8,18 +8,33 @@ import {
   getAutoHideWindow,
   getDisplayDetailTime,
   getDisplayThumbnailImage,
+  getSearchModel,
   saveAlwaysOnTop,
   saveAutoGoToLatestData,
   saveAutoHideWindow,
   saveDisplayDetailTime,
   saveDisplayThumbnailImage,
+  saveSearchModel,
 } from '../../../store/Settings.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
 
 const message = useMessage()
+
+// 动画速度选项
+const searchModelOptions = computed(() => [
+  {
+    label: currentLanguage.value.pages.settings.simpleSearch,
+    value: SETTINGS.SEARCH.MODEL.SIMPLE,
+  },
+  {
+    label: currentLanguage.value.pages.settings.advancedSearch,
+    value: SETTINGS.SEARCH.MODEL.ADVANCED,
+  },
+])
 
 /**
  * 修改自动隐藏窗口配置
@@ -130,6 +145,27 @@ const onChangeDisplayDetailTime = async (displayDetailTime: boolean): Promise<vo
   }
 }
 
+/**
+ * 修改搜索模式
+ * @param searchModel 搜索模式
+ */
+const onChangeSearchModel = async (searchModel: string): Promise<void> => {
+  onLoading.value = true
+  try {
+    await saveSearchModel(searchModel)
+    originalConfig.searchModel = searchModel
+    currentConfig.searchModel = searchModel
+    // 发送更新了启用标签状态消息
+    await emit('update-search-model', { searchModel: currentConfig.searchModel })
+  } catch (e) {
+    error('修改搜索模式出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.searchModel = originalConfig.searchModel
+  } finally {
+    onLoading.value = false
+  }
+}
+
 // 加载配置
 onMounted(async () => {
   try {
@@ -153,6 +189,10 @@ onMounted(async () => {
     const displayDetailTime = await getDisplayDetailTime()
     originalConfig.displayDetailTime = displayDetailTime
     currentConfig.displayDetailTime = displayDetailTime
+
+    const searchModel = await getSearchModel()
+    originalConfig.searchModel = searchModel
+    currentConfig.searchModel = searchModel
   } catch (e) {
     console.error('页面初始化失败:', e)
     error('页面初始化失败：' + e)
@@ -219,6 +259,17 @@ onMounted(async () => {
         :loading="onLoading"
         :disabled="onLoading"
         @update:value="onChangeDisplayDetailTime"
+      />
+    </div>
+    <div class="form-item">
+      <span class="label">{{ currentLanguage.pages.settings.searchMode }}</span>
+      <n-select
+        class="select"
+        v-model:value="currentConfig.searchModel"
+        :options="searchModelOptions"
+        :loading="onLoading"
+        :disabled="onLoading"
+        @update:value="onChangeSearchModel"
       />
     </div>
   </div>

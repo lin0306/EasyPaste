@@ -58,7 +58,6 @@ export async function createWin(options: WebViewWindowOptions): Promise<void> {
     }
     return
   }
-  console.log(args)
   // 创建窗口对象
   const win = new WebviewWindow(args.label, obj)
 
@@ -221,5 +220,21 @@ export async function openThemeEditorWindow(): Promise<void> {
     height: 700,
     minWidth: 1000,
     minHeight: 700,
+  })
+}
+
+/**
+ * 打开高级搜索窗口
+ */
+export async function openSearchWindow(): Promise<void> {
+  await loadPageLanguage('itemSearch')
+  await createWin({
+    label: 'itemSearch',
+    title: currentLanguage.value.pages.itemSearch.title,
+    url: '/item-search',
+    width: 600,
+    height: 450,
+    minWidth: 600,
+    minHeight: 450,
   })
 }

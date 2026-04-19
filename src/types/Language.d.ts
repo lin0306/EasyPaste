@@ -333,6 +333,11 @@ declare interface PageConfig {
   }
   itemSearch: {
     title: string
+    typeText: string
+    typeCode: string
+    typeFile: string
+    typeImage: string
+    typeLink: string
   }
   tags: {
     title: string

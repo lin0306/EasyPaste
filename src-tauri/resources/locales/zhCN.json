@@ -305,6 +305,14 @@
       "saveSuccessMsg": "保存成功",
       "saveFailedMsg": "保存失败"
     },
+    "itemSearch": {
+      "title": "搜索",
+      "typeText": "文本",
+      "typeCode": "代码",
+      "typeFile": "文件",
+      "typeImage": "图片",
+      "typeLink": "链接"
+    },
     "tags": {
       "title": "标签管理",
       "bindDataHint": "关联数据：",

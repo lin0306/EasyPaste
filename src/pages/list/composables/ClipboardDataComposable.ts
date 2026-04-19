@@ -17,11 +17,17 @@ import {
 } from './FileDataComposable.ts'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
 import DataClearService from '../../../services/DataClearService.ts'
-import { getAutoGoToLatestData, getDataRetentionDays } from '../../../store/Settings.ts'
+import {
+  getAutoGoToLatestData,
+  getDataRetentionDays,
+  getSearchModel,
+} from '../../../store/Settings.ts'
 import { scrollToDiv } from '../../../utils/DomUtil.ts'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+import { openSearchWindow } from '../../../services/WindowService.ts'
 
 // 剪贴板监听
 let clipboardListener: any = null
@@ -137,9 +143,9 @@ export const insertClipboardItem = async (item: ClipboardItem): Promise<void> =>
   }
   // 复制的内容的类型与搜索内容的类型不符，不展示
   if (
-    searchBoxState.selectTypes
-    && searchBoxState.selectTypes.length > 0
-    && !searchBoxState.selectTypes.some(type => item.type === type)
+    searchBoxState.selectTypes &&
+    searchBoxState.selectTypes.length > 0 &&
+    !searchBoxState.selectTypes.some(type => item.type === type)
   ) {
     return
   }
@@ -443,23 +449,28 @@ export const onCopyFile = async (
 /**
  * 切换搜索框显示状态
  */
-export const toggleSearchBox = (): void => {
+export const toggleSearchBox = async (): Promise<void> => {
   console.log('切换搜索框显示状态')
-  searchBoxState.visible = !searchBoxState.visible
-  if (searchBoxState.visible) {
-    const input = document.querySelector('.n-input__input-el') as HTMLInputElement
-    if (input) {
-      input.focus()
-    }
+  const searchMode = await getSearchModel()
+  if (searchMode === SETTINGS.SEARCH.MODEL.ADVANCED) {
+    await openSearchWindow()
   } else {
-    // 当搜索框隐藏时，清空搜索内容并重新加载列表
-    if (
-      searchBoxState.text ||
-      (searchBoxState.selectTypes && searchBoxState.selectTypes.length > 0)
-    ) {
-      searchBoxState.text = ''
-      searchBoxState.selectTypes = []
-      loadClipboardItems(true)
+    searchBoxState.visible = !searchBoxState.visible
+    if (searchBoxState.visible) {
+      const input = document.querySelector('.n-input__input-el') as HTMLInputElement
+      if (input) {
+        input.focus()
+      }
+    } else {
+      // 当搜索框隐藏时，清空搜索内容并重新加载列表
+      if (
+        searchBoxState.text ||
+        (searchBoxState.selectTypes && searchBoxState.selectTypes.length > 0)
+      ) {
+        searchBoxState.text = ''
+        searchBoxState.selectTypes = []
+        loadClipboardItems(true)
+      }
     }
   }
 }
@@ -561,6 +572,21 @@ async function initReloadItemsListener(): Promise<UnlistenFn> {
 }
 
 /**
+ * 初始化搜索更新监听
+ */
+let searchUpdateListener: any = null
+
+async function initSearchUpdateListener(): Promise<UnlistenFn> {
+  return await listen('search-update', async (event: any) => {
+    const { text, types } = event.payload
+    searchBoxState.text = text || ''
+    searchBoxState.selectTypes = types || []
+    // 重新加载数据
+    await loadClipboardItems(true)
+  })
+}
+
+/**
  * 初始化数据重新加载监听
  */
 let displayDetailTimeListener: any = null
@@ -606,6 +632,9 @@ export async function initializeClipboardData(): Promise<void> {
 
     // 添加修改是否显示详细时间事件监听
     displayDetailTimeListener = await initDisplayDetailTimeListener()
+
+    // 添加搜索更新事件监听
+    searchUpdateListener = await initSearchUpdateListener()
   } catch (e) {
     console.error('初始化剪贴板数据配置失败:', e)
     await error('初始化剪贴板数据配置失败:' + e)
@@ -648,5 +677,10 @@ export async function destroyClipboardData(): Promise<void> {
   // 销毁监听修改是否显示详细时间事件
   if (displayDetailTimeListener) {
     displayDetailTimeListener()
+  }
+
+  // 销毁监听搜索更新事件
+  if (searchUpdateListener) {
+    searchUpdateListener()
   }
 }
