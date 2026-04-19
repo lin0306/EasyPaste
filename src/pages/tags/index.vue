@@ -7,7 +7,7 @@ import { currentLanguage } from '../../services/LanguageService.ts'
 
 <template>
   <div class="tag-manager-container">
-    <TitleBar :title="currentLanguage.pages.tags.title" :showCloseBtn="true" :dev-tool="`tags`" />
+    <TitleBar :title="currentLanguage.pages.tags.title" :showCloseBtn="true" />
 
     <div class="tag-manager-content">
       <!-- 左右分栏布局 -->

@@ -10,7 +10,7 @@
       <div v-if="isDev" class="control-button" @click="onRefresh">
         <font-awesome-icon :icon="faArrowRotateRight" class="program-btn" id="refresh-button-img" />
       </div>
-      <div v-if="isDev && devTool" class="control-button" @click="openDevTool">
+      <div v-if="isDev" class="control-button" @click="openDevTool">
         <font-awesome-icon :icon="faLaptopCode" class="program-btn" id="devtool-button-img" />
       </div>
       <div
@@ -64,7 +64,6 @@ const props = withDefaults(
     showCloseBtn?: boolean
     showHideBtn?: boolean // 是否显示窗口隐藏按钮
     showFixedBtn?: boolean
-    devTool?: string
     showMinimizeBtn?: boolean // 是否显示窗口最小化按钮，当窗口属性skipTaskbar设置为true时，此设置不生效
     showUpdateIcon?: boolean
   }>(),
@@ -128,9 +127,8 @@ const onHide = (): void => {
  * 打开开发者工具
  */
 const openDevTool = async (): Promise<void> => {
-  if (props.devTool) {
-    await invoke('open_dev_tool', { windowName: props.devTool })
-  }
+  const label = getCurrentWebviewWindow().label
+  await invoke('open_dev_tool', { windowName: label })
 }
 
 /**

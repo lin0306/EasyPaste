@@ -14,7 +14,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <TitleBar :title="currentLanguage.pages.about.title" :showCloseBtn="true" :dev-tool="`about`" />
+  <TitleBar :title="currentLanguage.pages.about.title" :showCloseBtn="true" />
 
   <div class="about-container">
     <img src="/logo.svg" class="logo" alt="程序logo" />

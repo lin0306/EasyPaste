@@ -129,7 +129,7 @@ onMounted(async () => {
     return
   }
   updater = updateInfo
-  console.log("更新信息",updater)
+  console.log('更新信息', updater)
   updaterVer.version = updateInfo.version
   updaterVer.pubDate = updateInfo.date || ''
   updaterVer.notes = await marked(updateInfo.body || '')
@@ -142,7 +142,6 @@ onMounted(async () => {
       :title="currentLanguage.pages.update.title"
       :showMinimizeBtn="true"
       :showCloseBtn="true"
-      :dev-tool="`updater`"
     />
     <!-- 加载展示 -->
     <div v-if="onLoading" class="loading-container">

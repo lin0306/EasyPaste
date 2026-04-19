@@ -142,11 +142,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <titleBar
-    :title="currentLanguage.pages.themeEditor.title"
-    :showCloseBtn="true"
-    :dev-tool="`themeEditor`"
-  />
+  <titleBar :title="currentLanguage.pages.themeEditor.title" :showCloseBtn="true" />
 
   <!-- 按钮行 -->
   <div class="editor-content">

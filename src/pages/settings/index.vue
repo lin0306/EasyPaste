@@ -32,11 +32,7 @@ const currentComponent = computed(() => {
 
 <template>
   <div class="settings-container">
-    <titleBar
-      :title="currentLanguage.pages.settings.title"
-      :showCloseBtn="true"
-      :dev-tool="`settings`"
-    />
+    <titleBar :title="currentLanguage.pages.settings.title" :showCloseBtn="true" />
     <div class="settings-content">
       <!-- 左侧菜单 -->
       <SettingsMenu />

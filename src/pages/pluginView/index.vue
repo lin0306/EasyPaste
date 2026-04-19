@@ -119,9 +119,11 @@ onMounted(async () => {
 
 <template>
   <TitleBar
-    :title="currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] || currentLanguage.pages.pluginView.title"
+    :title="
+      currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] ||
+      currentLanguage.pages.pluginView.title
+    "
     :show-close-btn="true"
-    :dev-tool="`pluginView`"
   />
   <div id="plugin-container"></div>
 </template>

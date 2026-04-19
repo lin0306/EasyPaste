@@ -1,9 +1,5 @@
 <template>
-  <TitleBar
-    :dev-tool="`itemEditor`"
-    :title="currentLanguage.pages.itemEditor.title"
-    showCloseBtn
-  />
+  <TitleBar :title="currentLanguage.pages.itemEditor.title" showCloseBtn />
   <div class="text-editor">
     <n-space class="button-lines" reverse>
       <n-button type="primary" @click="saveItemContent">{{

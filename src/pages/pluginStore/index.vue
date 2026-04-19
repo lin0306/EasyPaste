@@ -41,11 +41,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <TitleBar
-    :title="currentLanguage.pages.pluginStore.title"
-    :showCloseBtn="true"
-    :dev-tool="`pluginStore`"
-  />
+  <TitleBar :title="currentLanguage.pages.pluginStore.title" :showCloseBtn="true" />
   <div class="container">
     <n-tabs type="line" justify-content="center" v-model:value="tabValue">
       <n-tab name="store">

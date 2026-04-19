@@ -76,7 +76,7 @@ const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
 
   // 当搜索框显示时，按ESC键隐藏
   if (searchBoxState.visible && event.key === 'Escape') {
-    toggleSearchBox()
+    await toggleSearchBox()
     return
   }
 
@@ -95,7 +95,7 @@ const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
     event.shiftKey === isShift &&
     event.metaKey === isMeta
   ) {
-    toggleSearchBox()
+    await toggleSearchBox()
     return
   }
 }
@@ -174,6 +174,7 @@ onMounted(async () => {
     })
 
     // 增加事件监听
+    document.removeEventListener('keydown', handleKeyDown)
     document.addEventListener('keydown', handleKeyDown)
   } catch (err) {
     console.error('列表页面初始化失败', err)
@@ -217,7 +218,6 @@ onUnmounted(async () => {
   </div>
   <TitleBar
     v-if="!isLoading"
-    :dev-tool="`list`"
     :show-hide-btn="!isAutoHideWindow"
     :show-update-icon="hasNewVersion"
     :showFixedBtn="true"

@@ -82,11 +82,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TitleBar
-    :title="currentLanguage.pages.preview.title"
-    :showCloseBtn="true"
-    :dev-tool="`preview`"
-  />
+  <TitleBar :title="currentLanguage.pages.preview.title" :showCloseBtn="true" />
   <div class="viewer-container">
     <div class="viewer-header">
       <div class="viewer-file-path">
