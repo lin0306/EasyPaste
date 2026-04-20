@@ -336,9 +336,27 @@ declare interface PageConfig {
     filterType: string
     selectedFilters: string
     keywordLabel: string
+    excludeLabel: string
+    lengthLabel: string
+    timeLabel: string
     clearSearchBtn: string
     searchBtn: string
     searchHint: string
+    exactMatch: string
+    advancedOptions: string
+    excludeKeywords: string
+    excludeKeywordsPlaceholder: string
+    contentLength: string
+    minLength: string
+    maxLength: string
+    timeRange: string
+    startDate: string
+    endDate: string
+    sortOrder: string
+    sortByTime: string
+    sortByLength: string
+    sortAsc: string
+    sortDesc: string
     typeText: string
     typeCode: string
     typeFile: string

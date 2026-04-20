@@ -233,8 +233,8 @@ export async function openSearchWindow(): Promise<void> {
     title: currentLanguage.value.pages.itemSearch.title,
     url: '/item-search',
     width: 600,
-    height: 450,
+    height: 600,
     minWidth: 600,
-    minHeight: 450,
+    minHeight: 600,
   })
 }
