@@ -1,35 +1,39 @@
 <template>
   <TitleBar :title="currentLanguage.pages.itemEditor.title" showCloseBtn />
   <div class="text-editor">
-    <n-space class="button-lines" reverse>
-      <n-button type="primary" @click="saveItemContent">{{
-        currentLanguage.pages.itemEditor.saveBtn
-      }}</n-button>
-      <n-button @click="item.currentContent = item.originContent">{{
-        currentLanguage.pages.itemEditor.resetBtn
-      }}</n-button>
-    </n-space>
-    <div class="editor-container">
-      <div ref="lineNumbers" class="line-numbers">
-        <div
-          v-for="line in lineCount"
-          :key="line"
-          :class="{ 'active-line': line === currentLine }"
-          class="line-number"
-        >
-          {{ line }}
+    <div class="editor-wrapper">
+      <div class="editor-container">
+        <div ref="lineNumbers" class="line-numbers">
+          <div
+            v-for="line in lineCount"
+            :key="line"
+            :class="{ 'active-line': line === currentLine }"
+            class="line-number"
+          >
+            {{ line }}
+          </div>
         </div>
+        <textarea
+          ref="textarea"
+          v-model="item.currentContent"
+          class="editor-textarea"
+          spellcheck="false"
+          @click="updateCurrentLine($event)"
+          @input="updateLineCount($event)"
+          @keydown="handleKeydown"
+          @scroll="syncScroll"
+        />
       </div>
-      <textarea
-        ref="textarea"
-        v-model="item.currentContent"
-        class="editor-textarea"
-        spellcheck="false"
-        @click="updateCurrentLine($event)"
-        @input="updateLineCount($event)"
-        @keydown="handleKeydown"
-        @scroll="syncScroll"
-      />
+    </div>
+    <div class="button-bar">
+      <n-space reverse>
+        <n-button type="primary" size="large" @click="saveItemContent">
+          {{ currentLanguage.pages.itemEditor.saveBtn }}
+        </n-button>
+        <n-button size="large" @click="item.currentContent = item.originContent">
+          {{ currentLanguage.pages.itemEditor.resetBtn }}
+        </n-button>
+      </n-space>
     </div>
   </div>
 </template>
@@ -126,6 +130,10 @@ const handleKeydown = (e: any) => {
     setTimeout(() => {
       updateCurrentLine()
     }, 0)
+  } else if (e.key === 'ArrowDown' || 'ArrowUp') {
+    setTimeout(() => {
+      updateCurrentLine()
+    }, 0)
   }
 }
 
@@ -195,59 +203,126 @@ onUnmounted(() => {
 <style scoped>
 .text-editor {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 25px);
+  display: flex;
+  flex-direction: column;
   background-color: var(--theme-editor-backgroundColor);
 }
 
-.button-lines {
-  padding: 10px;
+.editor-wrapper {
+  flex: 1;
+  overflow: hidden;
+  padding: 16px;
+  min-height: 0;
 }
 
 .editor-container {
   display: flex;
   border: 1px solid var(--theme-universal-border);
+  border-radius: 8px;
   overflow: hidden;
-  height: calc(100vh - 80px);
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
+}
+
+.editor-container:focus-within {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--theme-primary-color);
 }
 
 .line-numbers {
-  background-color: var(--theme-editor-lineNumberBackgroundColor);
-  padding: 10px 0;
+  background: linear-gradient(
+    to bottom,
+    var(--theme-editor-lineNumberBackgroundColor),
+    var(--theme-editor-lineNumberBackgroundColor)
+  );
+  padding: 12px 0;
   text-align: right;
   overflow: hidden;
   user-select: none;
   border-right: 1px solid var(--theme-universal-border);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+  min-width: 50px;
+  transition: background-color 0.2s ease;
 }
 
 .line-number {
-  padding: 0 8px;
+  padding: 0 12px;
   color: var(--theme-universal-textHint);
-  height: 21px; /* 匹配textarea行高 */
+  height: 22.4px;
+  transition: all 0.2s ease;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
 .line-number.active-line {
   background-color: var(--theme-editor-lineNumberBackgroundColorActive);
   color: var(--theme-universal-text);
+  font-weight: 600;
+  position: relative;
+}
+
+.line-number.active-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--theme-primary-color);
 }
 
 .editor-textarea {
   flex: 1;
-  margin: 10px 0;
+  margin: 0;
+  padding: 12px 16px;
   border: none;
   resize: none;
   font-size: 14px;
-  line-height: 1.5;
-  font-family: inherit;
+  line-height: 1.6;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   outline: none;
-  white-space: nowrap;
-  overflow: auto;
+  white-space: pre;
+  overflow-y: auto;
+  overflow-x: auto;
   background-color: var(--theme-editor-backgroundColor);
   color: var(--theme-universal-text);
+  tab-size: 4;
+}
+
+.editor-textarea::placeholder {
+  color: var(--theme-universal-textHint);
+  opacity: 0.6;
 }
 
 .editor-textarea:focus {
   box-shadow: none;
+}
+
+.line-numbers::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.button-bar {
+  flex-shrink: 0;
+  padding: 16px;
+  background-color: var(--theme-editor-backgroundColor);
+  border-top: 1px solid var(--theme-universal-border);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.button-bar :deep(.n-space) {
+  justify-content: flex-end;
+}
+
+.button-bar :deep(.n-button) {
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.button-bar :deep(.n-button:hover) {
+  transform: translateY(-2px);
 }
 </style>
