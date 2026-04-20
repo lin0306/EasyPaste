@@ -1,7 +1,7 @@
 import {
   clipboardItems,
   onCopy,
-  searchBoxState,
+  showSearchBox,
   toggleSearchBox,
 } from './ClipboardDataComposable.ts'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
@@ -51,7 +51,7 @@ export const isListening = ref(true)
 export async function hideWindow(): Promise<void> {
   if (!listFixedListen.stateData()) {
     // 失焦隐藏窗口、搜索框显示时，需要隐藏搜索框
-    if (searchBoxState.visible) {
+    if (showSearchBox.value) {
       toggleSearchBox()
     }
     // 窗口未固定，触发失焦，隐藏窗口
@@ -151,7 +151,7 @@ async function registerQuickPasteKey(
   number: number,
   message: MessageApiInjection
 ): Promise<void> {
-  console.debug("注册快捷键快速粘贴数据: " + shortcutKeys)
+  console.debug('注册快捷键快速粘贴数据: ' + shortcutKeys)
   await register(shortcutKeys, async event => {
     // 只监听按键按下，松开忽略
     if (event.state === 'Released') {

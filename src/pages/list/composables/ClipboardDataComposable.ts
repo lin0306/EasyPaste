@@ -35,11 +35,21 @@ let clipboardListener: any = null
 // 内容列表
 export const clipboardItems = ref<ClipboardItem[]>([])
 
-// 搜索框状态
-export const searchBoxState = reactive({
-  visible: false,
-  text: '',
+// 搜索框显示状态
+export const showSearchBox = ref(false)
+
+// 搜索过滤条件
+export const searchFilters = reactive<SearchFilters>({
+  content: '',
   selectTypes: [] as string[],
+  excludeText: '' as string, // 排除关键词
+  minLength: undefined, // 最小长度
+  maxLength: undefined, // 最大长度
+  startDate: undefined, // 开始日期
+  endDate: undefined, // 结束日期
+  exactMatch: false, // 精确匹配
+  sortField: 'time', // 排序字段
+  sortOrder: 'desc', // 排序方向
 })
 
 // 无限滚动相关状态
@@ -79,18 +89,14 @@ export const loadClipboardItems = async (reset: boolean = true): Promise<void> =
   try {
     scrollState.isLoading = true
     // 使用选中的标签ID进行过滤
-    const tagId = selectedTagState.selectedTagId
-
-    const db = await ClipboardDBService.getInstance()
-    const { total, items } = await db.searchItems(
-      searchBoxState.text,
-      tagId,
-      scrollState.pageSize,
+    searchFilters.pageSize = scrollState.pageSize
+    searchFilters.tagId = selectedTagState.selectedTagId
+    searchFilters.lastItemId =
       clipboardItems.value && clipboardItems.value.length > 0
         ? clipboardItems.value[clipboardItems.value.length - 1].id
-        : undefined,
-      searchBoxState.selectTypes
-    )
+        : undefined
+    const db = await ClipboardDBService.getInstance()
+    const { total, items } = await db.searchItems(searchFilters)
 
     // 更新数据列表和分页信息
     if (reset) {
@@ -132,23 +138,64 @@ export const insertClipboardItem = async (item: ClipboardItem): Promise<void> =>
     // 新加的数据肯定没有绑定标签，可以忽略
     return
   }
+
   // 复制的内容与搜索内容不符，不展示
-  if (
-    searchBoxState.text &&
-    searchBoxState.text !== '' &&
-    !item.content.includes(searchBoxState.text) &&
-    !item.file_path.includes(searchBoxState.text)
-  ) {
-    return
+  if (searchFilters.content && searchFilters.content !== '') {
+    if (searchFilters.exactMatch) {
+      // 精确匹配
+      if (
+        !item.content.includes(searchFilters.content) &&
+        !item.file_path.includes(searchFilters.content)
+      ) {
+        return
+      }
+    } else {
+      // 模糊匹配
+      if (
+        !item.content.toLowerCase().includes(searchFilters.content.toLowerCase()) &&
+        !item.file_path.toLowerCase().includes(searchFilters.content.toLowerCase())
+      ) {
+        return
+      }
+    }
   }
+
+  // 排除关键词过滤
+  if (searchFilters.excludeText && searchFilters.excludeText !== '') {
+    if (
+      item.content.includes(searchFilters.excludeText) ||
+      item.file_path.includes(searchFilters.excludeText)
+    ) {
+      return
+    }
+  }
+
   // 复制的内容的类型与搜索内容的类型不符，不展示
   if (
-    searchBoxState.selectTypes &&
-    searchBoxState.selectTypes.length > 0 &&
-    !searchBoxState.selectTypes.some(type => item.type === type)
+    searchFilters.selectTypes &&
+    searchFilters.selectTypes.length > 0 &&
+    !searchFilters.selectTypes.some(type => item.type === type)
   ) {
     return
   }
+
+  // 内容长度过滤
+  const contentLength = item.chars
+  if (searchFilters.minLength && contentLength < searchFilters.minLength) {
+    return
+  }
+  if (searchFilters.maxLength && contentLength > searchFilters.maxLength) {
+    return
+  }
+
+  // 时间范围过滤
+  if (searchFilters.startDate && item.copy_time < searchFilters.startDate) {
+    return
+  }
+  if (searchFilters.endDate && item.copy_time > searchFilters.endDate) {
+    return
+  }
+
   // 如果列表为空，则直接插入
   if (clipboardItems.value.length === 0) {
     clipboardItems.value.unshift({ ...item })
@@ -207,10 +254,10 @@ export const insertClipboardItem = async (item: ClipboardItem): Promise<void> =>
 /**
  * 加载更多数据
  */
-export const loadMoreItems = (): void => {
+export const loadMoreItems = async (): Promise<void> => {
   // 如果有更多数据，增加页码
   if (!scrollState.isLoading && scrollState.hasMore) {
-    loadClipboardItems(false)
+    await loadClipboardItems(false)
   }
 }
 
@@ -455,21 +502,39 @@ export const toggleSearchBox = async (): Promise<void> => {
   if (searchMode === SETTINGS.SEARCH.MODEL.ADVANCED) {
     await openSearchWindow()
   } else {
-    searchBoxState.visible = !searchBoxState.visible
-    if (searchBoxState.visible) {
+    showSearchBox.value = !showSearchBox.value
+    if (showSearchBox.value) {
       const input = document.querySelector('.n-input__input-el') as HTMLInputElement
       if (input) {
         input.focus()
       }
     } else {
       // 当搜索框隐藏时，清空搜索内容并重新加载列表
-      if (
-        searchBoxState.text ||
-        (searchBoxState.selectTypes && searchBoxState.selectTypes.length > 0)
-      ) {
-        searchBoxState.text = ''
-        searchBoxState.selectTypes = []
-        loadClipboardItems(true)
+      const hasActiveFilters =
+        searchFilters.content ||
+        (searchFilters.selectTypes && searchFilters.selectTypes.length > 0) ||
+        searchFilters.excludeText ||
+        searchFilters.minLength !== null ||
+        searchFilters.maxLength !== null ||
+        searchFilters.startDate !== null ||
+        searchFilters.endDate !== null ||
+        searchFilters.exactMatch ||
+        searchFilters.sortField !== 'time' ||
+        searchFilters.sortOrder !== 'desc'
+
+      if (hasActiveFilters) {
+        // 重置所有搜索条件
+        searchFilters.content = ''
+        searchFilters.selectTypes = []
+        searchFilters.excludeText = ''
+        searchFilters.minLength = undefined
+        searchFilters.maxLength = undefined
+        searchFilters.startDate = undefined
+        searchFilters.endDate = undefined
+        searchFilters.exactMatch = false
+        searchFilters.sortField = 'time'
+        searchFilters.sortOrder = 'desc'
+        await loadClipboardItems(true)
       }
     }
   }
@@ -567,7 +632,7 @@ let reloadItemsListener: any = null
 
 async function initReloadItemsListener(): Promise<UnlistenFn> {
   return await listen('reload-items', async (_event: any) => {
-    loadClipboardItems()
+    await loadClipboardItems()
   })
 }
 
@@ -578,9 +643,31 @@ let searchUpdateListener: any = null
 
 async function initSearchUpdateListener(): Promise<UnlistenFn> {
   return await listen('search-update', async (event: any) => {
-    const { text, types } = event.payload
-    searchBoxState.text = text || ''
-    searchBoxState.selectTypes = types || []
+    const {
+      text,
+      types,
+      excludeText,
+      minLength,
+      maxLength,
+      startDate,
+      endDate,
+      exactMatch,
+      sortField,
+      sortOrder,
+    } = event.payload
+
+    // 更新搜索状态
+    searchFilters.content = text || ''
+    searchFilters.selectTypes = types || []
+    searchFilters.excludeText = excludeText || ''
+    searchFilters.minLength = minLength || null
+    searchFilters.maxLength = maxLength || null
+    searchFilters.startDate = startDate || null
+    searchFilters.endDate = endDate || null
+    searchFilters.exactMatch = exactMatch || false
+    searchFilters.sortField = sortField || 'time'
+    searchFilters.sortOrder = sortOrder || 'desc'
+
     // 重新加载数据
     await loadClipboardItems(true)
   })

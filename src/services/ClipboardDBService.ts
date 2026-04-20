@@ -210,19 +210,9 @@ class ClipboardDBService {
 
   /**
    * 搜索剪贴板项目 - 游标分页，降低查询性能
-   * @param content 搜索内容
-   * @param tagId 标签ID
-   * @param pageSize 每页数量
-   * @param lastItemId 上一页最后一个条目ID
-   * @param selectTypes 筛选的数据类型
+   * @param filters 搜索过滤器
    */
-  async searchItems(
-    content?: string,
-    tagId?: number,
-    pageSize: number = 10,
-    lastItemId?: number,
-    selectTypes?: string[]
-  ): Promise<{
+  async searchItems(filters: SearchFilters): Promise<{
     total: number
     items: ClipboardItem[]
   }> {
@@ -253,8 +243,8 @@ class ClipboardDBService {
       const countParams = []
 
       // 传了id，查的不是第一页
-      if (lastItemId) {
-        const latestItem = await this.getItem(lastItemId)
+      if (filters.lastItemId) {
+        const latestItem = await this.getItem(filters.lastItemId)
         if (latestItem) {
           if (latestItem.top_time) {
             // 最后一条数据是置顶数据，如果当前数据有置顶时间，则需要过滤出比最后一条数据的置顶时间小的数据，否则按照复制时间排序
@@ -276,38 +266,100 @@ class ClipboardDBService {
       }
 
       // 生成查询参数
-      if (tagId) {
+      if (filters.tagId) {
         itemsSql += `and t.id = ?`
         countSql += `and t.id = ?`
-        queryParams.push(tagId)
-        countParams.push(tagId)
+        queryParams.push(filters.tagId)
+        countParams.push(filters.tagId)
       }
 
-      if (content && content.trim() !== '') {
-        itemsSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`
-        countSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`
-        queryParams.push(`%${content}%`)
-        queryParams.push(`%${content}%`)
-        countParams.push(`%${content}%`)
-        countParams.push(`%${content}%`)
+      // 根据类型进行筛选
+      if (filters.selectTypes && filters.selectTypes.length > 0) {
+        itemsSql += `and ci.type in (${filters.selectTypes.map(() => '?').join(',')})`
+        countSql += `and ci.type in (${filters.selectTypes.map(() => '?').join(',')})`
+        queryParams.push(...filters.selectTypes)
+        countParams.push(...filters.selectTypes)
       }
 
-      if (selectTypes && selectTypes.length > 0) {
-        itemsSql += `and ci.type in (${selectTypes.map(() => '?').join(',')})`
-        countSql += `and ci.type in (${selectTypes.map(() => '?').join(',')})`
-        queryParams.push(...selectTypes)
-        countParams.push(...selectTypes)
+      // 内容长度范围
+      if (filters.minLength !== undefined && filters.minLength !== null) {
+        itemsSql += `and ci.chars >= ?`
+        countSql += `and ci.chars >= ?`
+        queryParams.push(filters.minLength)
+        countParams.push(filters.minLength)
       }
 
-      // 拼接过滤参数
+      if (filters.maxLength !== undefined && filters.maxLength !== null) {
+        itemsSql += `and ci.chars <= ?`
+        countSql += `and ci.chars <= ?`
+        queryParams.push(filters.maxLength)
+        countParams.push(filters.maxLength)
+      }
+
+      // 时间范围
+      if (filters.startDate !== undefined && filters.startDate !== null) {
+        itemsSql += `and ci.copy_time >= ?`
+        countSql += `and ci.copy_time >= ?`
+        queryParams.push(filters.startDate)
+        countParams.push(filters.startDate)
+      }
+
+      // 时间范围
+      if (filters.endDate !== undefined && filters.endDate !== null) {
+        itemsSql += `and ci.copy_time <= ?`
+        countSql += `and ci.copy_time <= ?`
+        queryParams.push(filters.endDate)
+        countParams.push(filters.endDate)
+      }
+
+      // 根据内容进行筛选
+      if (filters.content && filters.content.trim() !== '') {
+        if (filters.exactMatch) {
+          // 精确匹配
+          itemsSql += 'and (ci.content = ? or ci.file_path = ?)'
+          countSql += 'and (ci.content = ? or ci.file_path = ?)'
+          queryParams.push(filters.content)
+          queryParams.push(filters.content)
+          countParams.push(filters.content)
+          countParams.push(filters.content)
+        } else {
+          // 模糊匹配
+          itemsSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`
+          countSql += `and (ci.content LIKE ? or ci.file_path LIKE ?)`
+          queryParams.push(`%${filters.content}%`)
+          queryParams.push(`%${filters.content}%`)
+          countParams.push(`%${filters.content}%`)
+          countParams.push(`%${filters.content}%`)
+        }
+      }
+
+      // 排除关键词
+      if (filters.excludeText && filters.excludeText.trim() !== '') {
+        itemsSql += `and (ci.content IS NULL or ci.content NOT LIKE ?) and (ci.file_path IS NULL or ci.file_path NOT LIKE ?)`
+        countSql += `and (ci.content IS NULL or ci.content NOT LIKE ?) and (ci.file_path IS NULL or ci.file_path NOT LIKE ?)`
+        queryParams.push(`%${filters.excludeText}%`)
+        queryParams.push(`%${filters.excludeText}%`)
+        countParams.push(`%${filters.excludeText}%`)
+        countParams.push(`%${filters.excludeText}%`)
+      }
+
+      // 拼接排序参数
+      const orderField = filters.sortField === 'length' ? 'ci.chars' : 'ci.copy_time'
+      const orderDirection = filters.sortOrder === 'asc' ? 'asc' : 'desc'
+
       itemsSql += `
                 group by ci.id, ci.top_time, ci.copy_time
-                order by ci.top_time desc, ci.copy_time desc, ci.id desc
+                order by ci.top_time desc, ${orderField} ${orderDirection}, ci.id desc
             `
 
       // 拼接分页
       itemsSql += ` limit ?`
-      queryParams.push(pageSize)
+      queryParams.push(filters.pageSize)
+
+      console.log('[数据库进程] 获取剪贴板条目SQL:', itemsSql)
+      console.log('[数据库进程] 获取剪贴板条目参数:', queryParams)
+      console.log('[数据库进程] 获取剪贴板内容总条数SQL:', countSql)
+      console.log('[数据库进程] 获取剪贴板内容总条数参数:', countParams)
 
       // 获取总条数
       const countResult = (await this.db?.select(countSql, countParams)) as [{ total: number }]
@@ -761,7 +813,11 @@ class ClipboardDBService {
    * @param useLocation 使用位置
    * @param enable 启用状态
    */
-  async searchPlugins(pluginName?: string, useLocation?: string, enable?: boolean): Promise<LocalPlugin[]> {
+  async searchPlugins(
+    pluginName?: string,
+    useLocation?: string,
+    enable?: boolean
+  ): Promise<LocalPlugin[]> {
     let sql = 'SELECT * FROM plugins WHERE 1=1'
     let params = []
     if (pluginName && pluginName.trim() !== '') {
@@ -774,7 +830,7 @@ class ClipboardDBService {
     }
     if (enable !== undefined) {
       sql += ` AND enable = ?`
-      params.push(enable ? 1: 0)
+      params.push(enable ? 1 : 0)
     }
     console.debug(sql, params)
     return (await this.db?.select(sql, params)) as LocalPlugin[]
@@ -817,7 +873,7 @@ export default ClipboardDBService
  * @param itemId 条目ID
  */
 export async function getItemContent(itemId: number) {
-  console.log('getItemContent', itemId);
+  console.log('getItemContent', itemId)
   const db = await ClipboardDBService.getInstance()
   const item = await db.getItem(itemId)
   return item?.content
@@ -828,7 +884,7 @@ export async function getItemContent(itemId: number) {
  * @param itemId 条目ID
  */
 export async function getItemFilePath(itemId: number) {
-  console.log('getItemFilePath', itemId);
+  console.log('getItemFilePath', itemId)
   const db = await ClipboardDBService.getInstance()
   const item = await db.getItem(itemId)
   return item?.file_path

@@ -1,11 +1,11 @@
 <template>
   <transition :css="animationEffect.enabled" appear name="search">
-    <div v-if="searchBoxState.visible" key="search" class="search-container">
+    <div v-if="showSearchBox" key="search" class="search-container">
       <!-- 搜索框 -->
       <n-input
         id="search-input"
         key="search-input"
-        v-model:value="searchBoxState.text"
+        v-model:value="searchFilters.content"
         :placeholder="currentLanguage.pages.list.searchHint"
         clearable
         size="small"
@@ -19,79 +19,19 @@
       </n-input>
       <!-- 类型选择 -->
       <n-space class="type-list">
-        <n-tag
-          :color="
-            searchBoxState.selectTypes.includes('text')
-              ? {
-                  color: themeColors.universal.primary,
-                  textColor: themeColors.universal.background,
-                }
-              : {}
-          "
-          round
-          size="small"
-          @click="selectType('text')"
-        >
+        <n-tag :color="hasSelect('text')" round size="small" @click="selectType('text')">
           {{ currentLanguage.pages.list.typeText }}
         </n-tag>
-        <n-tag
-          :color="
-            searchBoxState.selectTypes.includes('code')
-              ? {
-                  color: themeColors.universal.primary,
-                  textColor: themeColors.universal.background,
-                }
-              : {}
-          "
-          round
-          size="small"
-          @click="selectType('code')"
-        >
+        <n-tag :color="hasSelect('code')" round size="small" @click="selectType('code')">
           {{ currentLanguage.pages.list.typeCode }}
         </n-tag>
-        <n-tag
-          :color="
-            searchBoxState.selectTypes.includes('file')
-              ? {
-                  color: themeColors.universal.primary,
-                  textColor: themeColors.universal.background,
-                }
-              : {}
-          "
-          round
-          size="small"
-          @click="selectType('file')"
-        >
+        <n-tag :color="hasSelect('file')" round size="small" @click="selectType('file')">
           {{ currentLanguage.pages.list.typeFile }}
         </n-tag>
-        <n-tag
-          :color="
-            searchBoxState.selectTypes.includes('image')
-              ? {
-                  color: themeColors.universal.primary,
-                  textColor: themeColors.universal.background,
-                }
-              : {}
-          "
-          round
-          size="small"
-          @click="selectType('image')"
-        >
+        <n-tag :color="hasSelect('image')" round size="small" @click="selectType('image')">
           {{ currentLanguage.pages.list.typeImage }}
         </n-tag>
-        <n-tag
-          :color="
-            searchBoxState.selectTypes.includes('link')
-              ? {
-                  color: themeColors.universal.primary,
-                  textColor: themeColors.universal.background,
-                }
-              : {}
-          "
-          round
-          size="small"
-          @click="selectType('link')"
-        >
+        <n-tag :color="hasSelect('link')" round size="small" @click="selectType('link')">
           {{ currentLanguage.pages.list.typeLink }}
         </n-tag>
       </n-space>
@@ -101,23 +41,40 @@
 
 <script lang="ts" setup>
 import { NIcon, NInput } from 'naive-ui'
-import { loadClipboardItems, searchBoxState } from '../composables/ClipboardDataComposable.ts'
+import {
+  loadClipboardItems,
+  searchFilters,
+  showSearchBox,
+} from '../composables/ClipboardDataComposable.ts'
 import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { themeColors } from '../../../services/ThemeService.ts'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
+const hasSelect = (type: string) => {
+  if (searchFilters.selectTypes) {
+    if (searchFilters.selectTypes.includes(type)) {
+      return {
+        color: themeColors.value.universal.primary,
+        textColor: themeColors.value.universal.background,
+      }
+    }
+  }
+}
 
 /**
  * 根据数据类型类型筛选数据
  * @param type 数据类型
  */
 const selectType = async (type: string) => {
-  if (searchBoxState.selectTypes.includes(type)) {
-    searchBoxState.selectTypes = searchBoxState.selectTypes.filter(item => item !== type)
-  } else {
-    searchBoxState.selectTypes.push(type)
+  if (searchFilters.selectTypes) {
+    if (searchFilters.selectTypes.includes(type)) {
+      searchFilters.selectTypes = searchFilters.selectTypes.filter(item => item !== type)
+    } else {
+      searchFilters.selectTypes.push(type)
+    }
+    loadClipboardItems(true)
   }
-  loadClipboardItems(true)
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div
     key="clipboard-container"
-    :class="{ 'clipboard-container-search': searchBoxState.visible }"
+    :class="{ 'clipboard-container-search': showSearchBox }"
     class="clipboard-container"
   >
     <n-infinite-scroll
@@ -47,7 +47,7 @@ import {
   clipboardItems,
   loadMoreItems,
   scrollState,
-  searchBoxState,
+  showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
 import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { reactive, ref } from 'vue'

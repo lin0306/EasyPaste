@@ -14,7 +14,7 @@ import {
   destroyClipboardData,
   initializeClipboardData,
   insertClipboardItem,
-  searchBoxState,
+  showSearchBox,
   toggleSearchBox,
 } from './composables/ClipboardDataComposable.ts'
 import { destroyTag, initializeTag } from './composables/TagDataComposable.ts'
@@ -75,7 +75,7 @@ const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
   if (!searchKey) return
 
   // 当搜索框显示时，按ESC键隐藏
-  if (searchBoxState.visible && event.key === 'Escape') {
+  if (showSearchBox.value && event.key === 'Escape') {
     await toggleSearchBox()
     return
   }

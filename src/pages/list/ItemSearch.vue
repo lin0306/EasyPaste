@@ -39,17 +39,21 @@ const selectTypes = ref<string[]>([])
 const searchFilters = reactive<SearchFilters>({
   showAdvancedOptions: false,
   excludeText: '', // 排除关键词
-  minLength: null as number | null, // 最小长度
-  maxLength: null as number | null, // 最大长度
-  startDate: null as number | null, // 开始日期
-  endDate: null as number | null, // 结束日期
+  minLength: undefined, // 最小长度
+  maxLength: undefined, // 最大长度
+  startDate: undefined, // 开始日期
+  endDate: undefined, // 结束日期
   exactMatch: false, // 精确匹配
   sortValue: 'time-desc', // 排序值：time-desc, time-asc, length-desc, length-asc
 })
 
 // 从 sortValue 解析出排序字段和方向
-const sortField = computed(() => searchFilters.sortValue.split('-')[0] as 'time' | 'length')
-const sortOrder = computed(() => searchFilters.sortValue.split('-')[1] as 'desc' | 'asc')
+const sortField = computed(() =>
+  searchFilters.sortValue ? searchFilters.sortValue.split('-')[0] : 'length'
+)
+const sortOrder = computed(() =>
+  searchFilters.sortValue ? searchFilters.sortValue.split('-')[1] : 'asc'
+)
 
 // 可用的类型选项
 const typeOptions = computed(() => [
@@ -113,10 +117,10 @@ const clearSearch = async () => {
   searchText.value = ''
   selectTypes.value = []
   searchFilters.excludeText = ''
-  searchFilters.minLength = null
-  searchFilters.maxLength = null
-  searchFilters.startDate = null
-  searchFilters.endDate = null
+  searchFilters.minLength = undefined
+  searchFilters.maxLength = undefined
+  searchFilters.startDate = undefined
+  searchFilters.endDate = undefined
   searchFilters.exactMatch = false
   searchFilters.sortValue = 'time-desc'
 
@@ -418,8 +422,8 @@ onUnmounted(async () => {
               closable
               @close="
                 () => {
-                  searchFilters.minLength = null
-                  searchFilters.maxLength = null
+                  searchFilters.minLength = undefined
+                  searchFilters.maxLength = undefined
                 }
               "
             >
@@ -432,8 +436,8 @@ onUnmounted(async () => {
               closable
               @close="
                 () => {
-                  searchFilters.startDate = null
-                  searchFilters.endDate = null
+                  searchFilters.startDate = undefined
+                  searchFilters.endDate = undefined
                 }
               "
             >
