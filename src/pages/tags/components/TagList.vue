@@ -293,15 +293,15 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: var(--theme-universal-secondary);
+  background-color: var(--theme-customCard-background);
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
   transition: all var(--animation-duration, 0.3s) ease;
   cursor: pointer;
 }
 
 .tag-item:hover {
-  background-color: var(--theme-universal-primary) !important;
+  background-color: var(--theme-customCard-backgroundHover) !important;
 }
 
 /*内容列表动画效果start*/
@@ -335,7 +335,7 @@ onUnmounted(() => {
 /*内容列表动画效果end*/
 
 .tag-item-active {
-  background-color: var(--theme-universal-border) !important;
+  background-color: var(--theme-customCard-backgroundHover) !important;
   border-left-width: 6px !important;
 }
 
@@ -350,7 +350,7 @@ onUnmounted(() => {
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px var(--theme-universal-border);
   flex-shrink: 0;
 }
 
@@ -403,7 +403,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 0 8px var(--theme-universal-border);
   cursor: pointer;
   transition: all var(--animation-duration, 0.3s);
   z-index: 3;
