@@ -346,7 +346,7 @@ onMounted(async () => {
   width: 70px;
   height: 70px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
 }
 
 .theme-title {
@@ -374,7 +374,7 @@ onMounted(async () => {
   width: 95%;
   padding: 5px 0;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
 }
 
 .theme-selected {

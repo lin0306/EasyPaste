@@ -499,7 +499,7 @@ const handleMouseLeave = (): void => {
 
 .navbar {
   background-color: var(--preview-menuBar-background);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--theme-universal-border);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -529,7 +529,7 @@ const handleMouseLeave = (): void => {
 .dropdown-menu {
   position: fixed;
   background-color: var(--preview-universal-secondary);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--theme-universal-border);
   list-style: none;
   padding: 5px 0;
   border-radius: 4px;
@@ -602,7 +602,7 @@ const handleMouseLeave = (): void => {
 .clipboard-card {
   background-color: var(--preview-customCard-background);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
   padding: 7px;
   transition: all var(--animation-duration, 0.3s) cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid transparent;
@@ -610,7 +610,7 @@ const handleMouseLeave = (): void => {
 
 .clipboard-card:hover {
   background-color: var(--preview-customCard-backgroundHover);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--theme-universal-border);
 }
 
 .card-header {
@@ -776,7 +776,7 @@ const handleMouseLeave = (): void => {
 }
 
 .item-tag {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px var(--theme-universal-border);
 }
 
 .item-tag-content {
@@ -791,7 +791,7 @@ const handleMouseLeave = (): void => {
   width: 12px;
   height: 12px;
   border-radius: 10px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 3px var(--theme-universal-border);
 }
 
 .item-tag-name {

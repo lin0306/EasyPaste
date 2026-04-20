@@ -129,7 +129,7 @@ const selectType = async (type: string) => {
   margin-bottom: 4px;
   background-color: var(--theme-universal-secondary);
   border-radius: 0 0 8px 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
   padding: 8px;
   overflow: hidden;
   top: 55px;

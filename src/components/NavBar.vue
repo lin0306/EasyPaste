@@ -103,7 +103,7 @@ const handleMouseLeave = (): void => {
 <style scoped>
 .navbar {
   background-color: var(--theme-menuBar-background);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--theme-universal-border);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -133,7 +133,7 @@ const handleMouseLeave = (): void => {
 .dropdown-menu {
   position: fixed;
   background-color: var(--theme-universal-secondary);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--theme-universal-border);
   list-style: none;
   padding: 5px 0;
   border-radius: 4px;

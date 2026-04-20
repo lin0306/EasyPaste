@@ -254,13 +254,13 @@ function onOpenContextMenuByFile(filePath: string): void {
 
 .clipboard-card:hover {
   background-color: var(--theme-customCard-backgroundHover);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--theme-universal-border);
 }
 
 .clipboard-card {
   background-color: var(--theme-customCard-background);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--theme-universal-border);
   padding: 7px;
   transition: all var(--animation-duration, 0.3s) cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid transparent;
@@ -432,7 +432,7 @@ function onOpenContextMenuByFile(filePath: string): void {
 }
 
 .item-tag {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px var(--theme-universal-border);
 }
 
 .item-tag-content {
@@ -447,7 +447,7 @@ function onOpenContextMenuByFile(filePath: string): void {
   width: 12px;
   height: 12px;
   border-radius: 10px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 3px var(--theme-universal-border);
 }
 
 .item-tag-name {

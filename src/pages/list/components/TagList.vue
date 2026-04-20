@@ -109,7 +109,7 @@ const message = useMessage()
   margin-bottom: -4px;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px var(--theme-universal-border);
   transform-origin: left center;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0.2;
@@ -206,7 +206,7 @@ const message = useMessage()
 
 .tag-disabled:hover {
   width: 24px !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 4px var(--theme-universal-border) !important;
   transform: none !important;
 }
 

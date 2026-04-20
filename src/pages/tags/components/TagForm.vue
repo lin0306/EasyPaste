@@ -181,7 +181,7 @@ const addTag = async (): Promise<void> => {
 .panel-visible {
   /* 显示时移动到可见区域 */
   right: 0;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: -2px 0 10px var(--theme-universal-border);
 }
 
 .panel-header {
@@ -266,7 +266,7 @@ const addTag = async (): Promise<void> => {
   width: 100px;
   height: 30px;
   border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px var(--theme-universal-border);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -285,7 +285,7 @@ const addTag = async (): Promise<void> => {
 
 .preview-item-tag {
   margin-top: 10px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px var(--theme-universal-border);
 }
 
 .preview-item-tag-content {
@@ -300,7 +300,7 @@ const addTag = async (): Promise<void> => {
   width: 12px;
   height: 12px;
   border-radius: 10px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 3px var(--theme-universal-border);
 }
 
 .preview-item-tag-name {
