@@ -182,7 +182,7 @@ export async function openItemEditWindow(itemId: number): Promise<void> {
     await createWin({
       label: 'itemEditor',
       title: currentLanguage.value.pages.itemEditor.title,
-      url: '/itemEditor?itemId=' + itemId,
+      url: '/item-editor?itemId=' + itemId,
       width: 600,
       height: 500,
       resizable: true,
