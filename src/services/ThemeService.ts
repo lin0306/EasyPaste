@@ -449,5 +449,33 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
         },
       },
     },
+    DatePicker: {
+      panelColor: colors.universal.secondary, // 面板背景色
+      panelTextColor: colors.universal.text, // 面板文字颜色
+      itemTextColor: colors.universal.text, // 列表项文字颜色
+      itemTextColorDisabled: colors.universal.textHint, // 列表项禁用文字颜色
+      itemTextColorActive: colors.universal.background, // 列表项选中文字颜色
+      itemColorHover: colors.universal.background, // 列表项悬浮背景颜色
+      itemColorActive: colors.universal.primary, // 列表项悬浮背景颜色
+      itemColorDisabled: colors.universal.background, // 列表项禁用背景颜色
+      arrowColor: colors.universal.textHint, // 箭头颜色
+      calendarTitleTextColor: colors.universal.text, // 日期标题文字颜色
+      calendarTitleColorHover: colors.universal.background, // 日期标题悬浮背景色
+      calendarDaysTextColor: colors.universal.background, // 星期文字颜色
+      panelHeaderDividerColor: colors.universal.border, // 顶部分割线
+      calendarDaysDividerColor: colors.universal.border, // 星期分割线
+      panelActionDividerColor: colors.universal.border, // 底部分割线
+      iconColor: colors.universal.text,
+      iconColorDisabled: colors.universal.textHint,
+    },
+    TimePicker: {
+      panelColor: colors.universal.secondary, // 面板背景色
+      panelDividerColor: colors.universal.border, // 分割线颜色
+      itemTextColor: colors.universal.text, // 列表项文字颜色
+      itemTextColorActive: colors.universal.background, // 列表项选中文字颜色
+      itemColorHover: colors.universal.primary, // 列表项悬浮背景颜色
+      iconColor: colors.universal.text, // 图标颜色
+      iconColorDisabled: colors.universal.textHint, // 图标禁用颜色
+    },
   } as GlobalThemeOverrides
 }

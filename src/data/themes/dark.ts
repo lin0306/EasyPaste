@@ -9,7 +9,7 @@ export const darkTheme: ThemeConfig = {
       background: 'rgba(20,20,20,1)',
       delete: 'rgb(243, 57, 57)',
       text: 'rgb(188,188,188)',
-      textHint: 'rgba(230,230,230,0.6)',
+      textHint: 'rgba(230,230,230,0.49)',
       border: 'rgba(253, 253, 253, 0.12)',
     },
     button: {
