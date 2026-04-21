@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   hasUpdate,
+  installFromLocalFile,
   loadingMap,
   localListLoading,
   localPlugins,
@@ -10,14 +11,15 @@ import {
   togglePluginEnable,
   update,
 } from '../composables/PluginComponsables.ts'
-import { useMessage } from 'naive-ui'
+import { useDialog, useMessage } from 'naive-ui'
 import { themeColors } from '../../../services/ThemeService.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
-import { faCubes } from '@fortawesome/free-solid-svg-icons'
+import { faCubes, faFileImport } from '@fortawesome/free-solid-svg-icons'
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
 import { computed } from 'vue'
 
 const message = useMessage()
+const dialog = useDialog()
 
 const tagColor = computed(() => {
   return { color: themeColors.value.universal.border, textColor: themeColors.value.universal.text }
@@ -31,10 +33,26 @@ const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
   onSelectLocal(plugin)
   await update(plugin.plugin_id, message)
 }
+
+/**
+ * 从本地文件安装插件
+ */
+const onInstallFromLocal = async (): Promise<void> => {
+  await installFromLocalFile(message, dialog)
+}
 </script>
 
 <template>
   <div class="plugin-list">
+    <!-- 本地安装按钮 -->
+    <div class="local-install-bar">
+      <n-button round size="small" type="primary" @click="onInstallFromLocal">
+        <template #icon>
+          <font-awesome-icon :icon="faFileImport" />
+        </template>
+        {{ currentLanguage.pages.pluginStore.localInstallBtn }}
+      </n-button>
+    </div>
     <div v-if="localListLoading" class="loading">
       <n-spin size="large" />
     </div>
@@ -126,6 +144,13 @@ const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
   width: 100%;
   height: 100vh;
   align-content: center;
+  justify-content: center;
+}
+
+.local-install-bar {
+  padding: 10px;
+  border-bottom: 1px solid var(--theme-universal-border);
+  display: flex;
   justify-content: center;
 }
 </style>

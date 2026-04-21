@@ -111,8 +111,10 @@ onUnmounted(() => {
     :hljs="hljs"
   >
     <n-message-provider>
-      <background-animation />
-      <router-view />
+      <n-dialog-provider>
+        <background-animation />
+        <router-view />
+      </n-dialog-provider>
     </n-message-provider>
   </n-config-provider>
 </template>

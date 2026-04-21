@@ -1,18 +1,20 @@
 import { reactive, ref } from 'vue'
 import { loadPluginManifest } from '../../../services/PluginService.ts'
 import { dirname, join } from '@tauri-apps/api/path'
-import { exists, mkdir, writeFile } from '@tauri-apps/plugin-fs'
+import { exists, mkdir, readFile, writeFile } from '@tauri-apps/plugin-fs'
 import { deleteFolder } from '../../../utils/FileUtil.ts'
 import { fetch } from '@tauri-apps/plugin-http'
 import { isMac } from '../../../data/SystemParams.ts'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
-import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageService.ts'
 import { getPluginPath } from '../../../store/Settings.ts'
 import { invoke } from '@tauri-apps/api/core'
+import { open } from '@tauri-apps/plugin-dialog'
+import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
+import { DialogApiInjection } from 'naive-ui/es/dialog/src/DialogProvider'
 
 // 插件状态
 type loadingState = 'downloading' | 'unzipping' | 'loading' | 'uninstalling' | 'updating'
@@ -541,6 +543,268 @@ async function loadLocalPlugins(): Promise<void> {
   } finally {
     localListLoading.value = false
   }
+}
+
+/**
+ * 比较版本号
+ * @param version1 版本号1
+ * @param version2 版本号2
+ * @returns 1: version1 > version2, -1: version1 < version2, 0: version1 === version2
+ */
+function compareVersion(version1: string, version2: string): number {
+  const v1Parts = version1.split('.').map(Number)
+  const v2Parts = version2.split('.').map(Number)
+  const maxLength = Math.max(v1Parts.length, v2Parts.length)
+
+  for (let i = 0; i < maxLength; i++) {
+    const v1 = v1Parts[i] || 0
+    const v2 = v2Parts[i] || 0
+
+    if (v1 > v2) return 1
+    if (v1 < v2) return -1
+  }
+
+  return 0
+}
+
+/**
+ * 从本地文件安装插件
+ */
+export const installFromLocalFile = async (
+  message: MessageApiInjection,
+  dialog: DialogApiInjection
+): Promise<void> => {
+  try {
+    // 打开文件选择对话框
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Plugin Package',
+          extensions: ['zip'],
+        },
+      ],
+    })
+
+    if (!selected) {
+      console.log('用户取消了文件选择')
+      return
+    }
+
+    console.log('选择的文件路径:', selected)
+    loadingMap.value.set('local-file-install', 'downloading')
+
+    // 读取 zip 文件
+    const fileContent = await readFile(selected as string)
+    const blob = new Blob([fileContent])
+
+    // 先读取 manifest.json 获取插件信息
+    const reader = new ZipReader(new BlobReader(blob))
+    const entries = await reader.getEntries()
+
+    // 查找 manifest.json 文件
+    const manifestEntry = entries.find(
+      entry => entry.filename.endsWith('manifest.json') || entry.filename.includes('/manifest.json')
+    )
+
+    if (!manifestEntry) {
+      message.error(currentLanguage.value.pages.pluginStore.localInstallNoManifestHint)
+      loadingMap.value.delete('local-file-install')
+      await reader.close()
+      return
+    }
+
+    if (manifestEntry.directory) {
+      loadingMap.value.delete('local-file-install')
+      await reader.close()
+      return
+    }
+
+    // 读取并解析 manifest.json
+    const manifestData = await manifestEntry.getData(new BlobWriter())
+    const manifestText = await manifestData.text()
+    const manifest = JSON.parse(manifestText)
+
+    console.log('插件清单:', manifest)
+
+    // 验证必要的字段
+    if (!manifest.id || !manifest.name || !manifest.version) {
+      message.error(currentLanguage.value.pages.pluginStore.localInstallInvalidManifestHint)
+      loadingMap.value.delete('local-file-install')
+      await reader.close()
+      return
+    }
+
+    const pluginId = manifest.id
+    const configDir = await getPluginPath()
+    const pluginFolderPath = await join(configDir, pluginId)
+
+    // 检查是否已安装
+    const existingPlugin = localPlugins.value.find(p => p.plugin_id === pluginId)
+    if (existingPlugin) {
+      console.log('插件已存在，检查版本', existingPlugin.version, manifest.version)
+
+      // 比较版本号
+      const compareResult = compareVersion(manifest.version, existingPlugin.version)
+
+      if (compareResult <= 0) {
+        console.log('已安装的版本相同或已安装更新的版本，不进行安装')
+        // 新版本 <= 当前版本，不安装
+        if (compareResult === 0) {
+          message.warning(
+            currentLanguage.value.pages.pluginStore.localInstallSameVersionHint
+              .replace('${pluginName}', manifest.name)
+              .replace('${version}', manifest.version)
+          )
+        } else {
+          message.warning(
+            currentLanguage.value.pages.pluginStore.localInstallOldVersionHint
+              .replace('${pluginName}', manifest.name)
+              .replace('${newVersion}', manifest.version)
+              .replace('${currentVersion}', existingPlugin.version)
+          )
+        }
+        loadingMap.value.delete('local-file-install')
+        await reader.close()
+        return
+      }
+
+      // 新版本 > 当前版本，询问用户是否替换
+      const shouldReplace = await new Promise<boolean>(resolve => {
+        dialog.warning({
+          title: currentLanguage.value.pages.pluginStore.localInstallUpdateTitle,
+          content: currentLanguage.value.pages.pluginStore.localInstallUpdateContent
+            .replace('${pluginName}', manifest.name)
+            .replace('${oldVersion}', existingPlugin.version)
+            .replace('${newVersion}', manifest.version),
+          positiveText: currentLanguage.value.pages.pluginStore.localInstallUpdateConfirmBtn,
+          negativeText: currentLanguage.value.pages.pluginStore.localInstallUpdateCancelBtn,
+          onPositiveClick: () => resolve(true),
+          onNegativeClick: () => resolve(false),
+          onClose: () => resolve(false),
+        })
+      })
+
+      if (!shouldReplace) {
+        console.log('用户取消了更新')
+        loadingMap.value.delete('local-file-install')
+        await reader.close()
+        return
+      }
+
+      // 用户确认更新，卸载旧版本
+      console.log('用户确认更新，开始卸载旧版本')
+      try {
+        await emit('uninstall-plugin', { pluginId: pluginId })
+        await deleteFolder(pluginFolderPath)
+        const db = await ClipboardDBService.getInstance()
+        await db.removePlugin(existingPlugin.id)
+      } catch (e) {
+        error('插件卸载失败' + e)
+        message.error(currentLanguage.value.pages.pluginStore.localInstallUninstallFailedHint)
+        loadingMap.value.delete('local-file-install')
+        await reader.close()
+        return
+      }
+    }
+
+    // 关闭当前 reader，重新解压整个文件
+    await reader.close()
+
+    // 创建新的 reader 进行完整解压
+    const newReader = new ZipReader(new BlobReader(blob))
+    loadingMap.value.set('local-file-install', 'unzipping')
+
+    // 解压文件
+    await extractZipToFolder(newReader, pluginFolderPath)
+
+    // 保存插件信息到数据库
+    const useLocationSet = await getUseLocations(pluginId)
+    const db = await ClipboardDBService.getInstance()
+    await db.addPlugin({
+      id: 0,
+      enable: 1,
+      plugin_id: pluginId,
+      plugin_name: manifest.name,
+      version: manifest.version,
+      use_location: JSON.stringify([...useLocationSet]),
+      platform: manifest.platform || 'General',
+      url: '', // 本地安装的插件没有 URL
+      description: manifest.description || '',
+      install_time: Date.now(),
+    })
+
+    loadingMap.value.set('local-file-install', 'loading')
+
+    // 重新加载插件列表
+    await loadLocalPlugins()
+
+    // 后端载入插件的语言
+    await invoke('load_plugin_locales', { pluginId: pluginId })
+    // 前端获取插件的语言
+    await loadPluginLanguage()
+
+    // 发送安装事件
+    await emit('install-plugin', { pluginId: pluginId })
+
+    message.success(
+      currentLanguage.value.pages.pluginStore.localInstallSuccessHint.replace(
+        '${pluginName}',
+        manifest.name
+      )
+    )
+
+    // 如果当前选中的是刚安装的插件，更新选中状态
+    if (selectedPlugin.pluginId === pluginId) {
+      const newlyInstalled = localPlugins.value.find(l => l.plugin_id === pluginId)
+      if (newlyInstalled) {
+        onSelectLocal(newlyInstalled)
+      }
+    }
+  } catch (e) {
+    console.error('本地文件安装失败:', e)
+    error('本地文件安装失败' + e)
+    message.error(currentLanguage.value.pages.pluginStore.localInstallFailedHint)
+  } finally {
+    loadingMap.value.delete('local-file-install')
+  }
+}
+
+/**
+ * 解压 zip 文件到指定文件夹
+ * @param reader ZipReader 实例
+ * @param pluginFolderPath 目标文件夹路径
+ */
+async function extractZipToFolder(
+  reader: ZipReader<BlobReader>,
+  pluginFolderPath: string
+): Promise<void> {
+  await mkdir(pluginFolderPath, { recursive: true })
+  const entries = await reader.getEntries()
+  let processedFiles = 0
+
+  for (const entry of entries) {
+    let relativePath = entry.filename
+    if (!relativePath || relativePath === '/' || relativePath === '\\') {
+      continue
+    }
+
+    if (!entry.directory) {
+      const data = await entry.getData(new BlobWriter())
+      const targetPath = await join(pluginFolderPath, relativePath)
+      const parentDir = await dirname(targetPath)
+      await mkdir(parentDir, { recursive: true })
+      await writeFile(targetPath, new Uint8Array(await data.arrayBuffer()))
+    } else if (relativePath !== '') {
+      const targetPath = await join(pluginFolderPath, relativePath)
+      await mkdir(targetPath, { recursive: true })
+    }
+
+    processedFiles++
+  }
+
+  await reader.close()
+  console.log('文件解压完成，已处理文件数', processedFiles)
 }
 
 /**

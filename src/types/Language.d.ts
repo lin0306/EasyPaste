@@ -449,6 +449,7 @@ declare interface PageConfig {
     installedBtn: string
     unInstallBtn: string
     settingsBtn: string
+    localInstallBtn: string
     pluginPlatformGeneral: string
     pluginPlatformMac: string
     pluginPlatformWindows: string
@@ -471,6 +472,17 @@ declare interface PageConfig {
     loading: string
     uninstalling: string
     updating: string
+    localInstallSuccessHint: string
+    localInstallFailedHint: string
+    localInstallNoManifestHint: string
+    localInstallInvalidManifestHint: string
+    localInstallUninstallFailedHint: string
+    localInstallSameVersionHint: string
+    localInstallOldVersionHint: string
+    localInstallUpdateTitle: string
+    localInstallUpdateContent: string
+    localInstallUpdateConfirmBtn: string
+    localInstallUpdateCancelBtn: string
     settings: {
       loadError: string
       loadFailed: string
