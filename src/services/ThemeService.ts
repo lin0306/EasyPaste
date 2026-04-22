@@ -177,6 +177,9 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
       primaryColorHover: colors.universal.primary,
       primaryColorPressed: colors.universal.primary,
       borderRadius: '5px',
+      boxShadow1: `0 0 5px 1px ${colors.universal.border}`,
+      boxShadow2: `0 0 5px 1px ${colors.universal.border}`,
+      boxShadow3: `0 0 5px 1px ${colors.universal.border}`,
     },
     Button: {
       color: colors.button.normal.backgroundColor,
