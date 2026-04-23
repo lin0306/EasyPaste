@@ -4,7 +4,7 @@ import { dirname, join } from '@tauri-apps/api/path'
 import { exists, mkdir, readFile, writeFile } from '@tauri-apps/plugin-fs'
 import { deleteFolder } from '../../../utils/FileUtil.ts'
 import { fetch } from '@tauri-apps/plugin-http'
-import { isMac } from '../../../data/SystemParams.ts'
+import { isDev, isMac } from '../../../data/SystemParams.ts'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
 import { error } from '@tauri-apps/plugin-log'
@@ -485,30 +485,10 @@ async function loadPluginStore(): Promise<void> {
       'https://gh.llkk.cc/https://raw.githubusercontent.com/lin0306/EasyPaste-Plugins/master/plugins-list.json',
       { method: 'GET' }
     )
-    const data: StorePlugin[] = await response.json()
-    // 暂时保留后续测试可用
-    // data.push(
-    //     {
-    //         id: "ocr1",
-    //         name: "OCR1",
-    //         version: "0.0.1",
-    //         description: "Windows OCR插件，暂时只支持纯简体中文的图片进行OCR，如果图片中存在除中文以外的其他字符，可能会出现识别错误的情况，这一版的OCR插件识别速度快，但是图片解析能力弱",
-    //         platform: "General",
-    //         downloadUrl: "https://gh-proxy.com/https://github.com/lin0306/EasyPaste-Plugins/releases/download/ocr-0.0.1/ocr.zip",
-    //         size: 265955
-    //     }
-    // )
-    // data.push(
-    //     {
-    //         id: "ocr2",
-    //         name: "OCR2",
-    //         version: "0.0.1",
-    //         description: "Windows OCR插件，暂时只支持纯简体中文的图片进行OCR，如果图片中存在除中文以外的其他字符，可能会出现识别错误的情况，这一版的OCR插件识别速度快，但是图片解析能力弱",
-    //         platform: "Mac",
-    //         downloadUrl: "https://gh-proxy.com/https://github.com/lin0306/EasyPaste-Plugins/releases/download/ocr-0.0.1/ocr.zip",
-    //         size: 265955
-    //     }
-    // )
+    let data: StorePlugin[] = await response.json()
+    if (!isDev) {
+      data = data.filter(p => p.branch === 'GA')
+    }
     console.log('插件商店数据', data)
     // 筛选出当前操作系统的插件
     if (isMac) {
