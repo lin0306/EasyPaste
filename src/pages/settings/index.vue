@@ -105,11 +105,11 @@ const currentComponent = computed(() => {
 }
 
 :deep(.select) {
-  width: 40%;
+  width: 60%;
 }
 
 :deep(.input-number) {
-  width: 30%;
+  width: 60%;
 }
 
 :deep(.line) {

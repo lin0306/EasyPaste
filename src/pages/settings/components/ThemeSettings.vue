@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { currentConfig, onLoading, originalConfig } from '../composables/SettingsDataComposable.ts'
-import { useMessage } from 'naive-ui'
+import { NText, SelectRenderLabel, SelectRenderTag, useMessage } from 'naive-ui'
 import { computed, onMounted } from 'vue'
 import {
   getAnimationSpeedLevel,
@@ -15,7 +15,7 @@ import {
 import { emit } from '@tauri-apps/api/event'
 import { error } from '@tauri-apps/plugin-log'
 import { getSpeedDuration, SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { currentThemeId, themes, toggleTheme } from '../../../services/ThemeService.ts'
+import { currentThemeId, themeColors, themes, toggleTheme } from '../../../services/ThemeService.ts'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { openThemeEditorWindow } from '../../../services/WindowService.ts'
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
@@ -57,24 +57,124 @@ const backgroundAnimationOptions = computed(() => [
   {
     label: currentLanguage.value.pages.settings.star,
     value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.STAR,
-  },
-  {
-    label: currentLanguage.value.pages.settings.orb,
-    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.ORB,
-  },
-  {
-    label: currentLanguage.value.pages.settings.aurora,
-    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.AURORA,
-  },
-  {
-    label: currentLanguage.value.pages.settings.ember,
-    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.EMBER,
+    hint: currentLanguage.value.pages.settings.starHint,
   },
   {
     label: currentLanguage.value.pages.settings.starrySky,
     value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.STARRY_SKY,
+    hint: currentLanguage.value.pages.settings.starrySkyHint,
+  },
+  {
+    label: currentLanguage.value.pages.settings.orb,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.ORB,
+    hint: currentLanguage.value.pages.settings.orbHint,
+  },
+  {
+    label: currentLanguage.value.pages.settings.aurora,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.AURORA,
+    hint: currentLanguage.value.pages.settings.auroraHint,
+  },
+  {
+    label: currentLanguage.value.pages.settings.ember,
+    value: SETTINGS.THEME.BACKGROUND_ANIMATION.EFFECT_OPTIONS.EMBER,
+    hint: currentLanguage.value.pages.settings.emberHint,
   },
 ])
+
+/**
+ * 背景动画下拉选项展示效果
+ * @param option
+ */
+const backgroundAnimationRenderLabel: SelectRenderLabel = option => {
+  if (option.hint) {
+    return h(
+      'div',
+      {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          maxWidth: '350px',
+        },
+      },
+      [
+        h(
+          'div',
+          {
+            style: {
+              marginLeft: '12px',
+              padding: '4px 0',
+              flex: 1,
+              minWidth: 0,
+            },
+          },
+          [
+            h('div', { style: { color: themeColors.value.universal.text } }, [
+              option.label as string,
+            ]),
+            h(
+              NText,
+              {
+                depth: 3,
+                tag: 'div',
+                style: {
+                  color: themeColors.value.universal.textHint,
+                  fontSize: '12px',
+                  whiteSpace: 'normal',
+                  wordWrap: 'break-word',
+                  wordBreak: 'break-word',
+                  lineHeight: '1.4',
+                  marginTop: '2px',
+                },
+              },
+              {
+                default: () => option.hint,
+              }
+            ),
+          ]
+        ),
+      ]
+    )
+  } else {
+    return h(
+      'div',
+      {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+        },
+      },
+      [
+        h(
+          'div',
+          {
+            style: {
+              marginLeft: '12px',
+              padding: '4px 0',
+            },
+          },
+          [h('div', null, [option.label as string])]
+        ),
+      ]
+    )
+  }
+}
+
+/**
+ * 背景动画选择项展示效果
+ * @param option
+ */
+const backgroundAnimationRenderSingleSelectTag: SelectRenderTag = ({ option }) => {
+  return h(
+    'div',
+    {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+      },
+    },
+    [option.label as string]
+  )
+}
 
 /**
  * 修改是否启用动画效果
@@ -318,8 +418,10 @@ onMounted(async () => {
           class="select"
           v-model:value="currentConfig.backgroundAnimationEffect"
           :loading="onLoading"
-          :options="backgroundAnimationOptions"
           @update:value="onChangeBackgroundAnimationEffect"
+          :options="backgroundAnimationOptions"
+          :render-label="backgroundAnimationRenderLabel"
+          :render-tag="backgroundAnimationRenderSingleSelectTag"
         />
       </div>
       <div class="second-item">

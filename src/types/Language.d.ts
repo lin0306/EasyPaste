@@ -127,10 +127,15 @@ declare interface PageConfig {
     backgroundAnimationEffectHint: string
     none: string
     star: string
+    starHint: string
     orb: string
+    orbHint: string
     aurora: string
+    auroraHint: string
     ember: string
+    emberHint: string
     starrySky: string
+    starrySkyHint: string
     // 主题颜色
     colors: {
       [x: string]: string
