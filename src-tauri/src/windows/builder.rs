@@ -53,7 +53,13 @@ pub fn build_main_window(app: AppHandle) -> tauri::Result<WebviewWindow> {
         }
     };
 
-    Ok(build.build().expect("Failed to build window"))
+    let window = build.build().expect("Failed to build window");
+    #[cfg(debug_assertions)]{
+        use crate::commands::dev::open_dev_tool;
+
+        open_dev_tool(app.clone(), "list");
+    }
+    Ok(window)
 }
 
 /**
