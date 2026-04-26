@@ -43,6 +43,9 @@ const languageOptions = ref<[{ value: string; label: string }]>([])
 // 重启确认弹窗状态
 const restartModalVisible = ref(false)
 
+// 唤醒程序快捷键
+const key = ['meta', 'v']
+
 /**
  * 加载所有语言
  */
@@ -58,7 +61,6 @@ async function loadAllLanguages() {
  * 更新系统快捷键
  */
 const updateToSystemShortcutKeys = async (): Promise<void> => {
-  const key = ['meta', 'v']
   // 没有找到注册表配置，直接修改快捷键
   info('唤醒程序快捷键已修改，重新注册')
 
@@ -249,12 +251,11 @@ const checkSystemClipboardKeyOccupied = async (): Promise<void> => {
     const wakeUpRoutineKey = await getWakeUpRoutine()
     // 系统剪贴板快捷键占用检查
     systemClipboardKeyOccupied.value =
-      JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(['meta', 'v'])
+      JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(key)
     if (!systemClipboardKeyOccupied.value) {
       // 检测系统剪贴板快捷键是否可用
       systemClipboardEnable.value = await invoke('valid_clipboard_regedit')
       if (!systemClipboardEnable.value) {
-        const key = ['meta', 'v']
         try {
           await register(convertRegisterKeys(key), () => {})
           systemClipboardKeysRegistered.value = false
