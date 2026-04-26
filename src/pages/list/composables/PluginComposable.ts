@@ -19,7 +19,6 @@ async function initPlugins(): Promise<void> {
     for (const p of plugins) {
       await loadPlugin(p.plugin_id)
     }
-    await loadPluginLanguage()
   }
 }
 

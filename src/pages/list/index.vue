@@ -166,6 +166,7 @@ onMounted(async () => {
     // 初始化文件数据配置
     await initializeFileData()
 
+    // 初始化插件语言
     await initializePluginLanguage()
 
     // 加载插件
