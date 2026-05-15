@@ -48,7 +48,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StarBackground: typeof import('./../components/effect/StarBackground.vue')['default']
-    StarField: typeof import('./../components/effect/StarField.vue')['default']
     StarrySkyBackground: typeof import('./../components/effect/StarrySkyBackground.vue')['default']
     TitleBar: typeof import('./../components/TitleBar.vue')['default']
   }
