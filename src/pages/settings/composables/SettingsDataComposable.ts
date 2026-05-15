@@ -35,6 +35,8 @@ export const originalConfig = reactive<Settings>({
   displayDetailTime: false,
   backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,
   searchModel: SETTINGS.SEARCH.DEFAULT,
+  windowHeight: 0,
+  windowWidth: 0,
 })
 
 // 当前编辑的配置
