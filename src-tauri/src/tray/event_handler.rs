@@ -25,7 +25,14 @@ pub fn handle_tray_click(tray: &tauri::tray::TrayIcon) {
                 win.show().expect("窗口显示失败");
                 win.unminimize().expect("窗口取消最小化失败");
                 win.set_focus().expect("窗口聚焦失败");
-                win.center().expect("居中窗口失败");
+                match &win.outer_position() {
+                    Ok(position) => {
+                        if position.x == -1000 && position.y == -1000 {
+                            win.center().expect("居中窗口失败");
+                        }
+                    }
+                    _ => {}
+                }
 
                 state.win_current_visible = true;
                 state.win_enter_visible = true;
