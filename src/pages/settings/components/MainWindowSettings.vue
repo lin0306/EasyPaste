@@ -267,6 +267,7 @@ onMounted(async () => {
           v-if="isChangeWindowSize"
           @click="onSaveWindowSize"
           :loading="onLoading"
+          class="save-btn"
         >
           <font-awesome-icon :icon="faFloppyDisk" />
         </n-input-group-label>

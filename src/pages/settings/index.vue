@@ -167,4 +167,13 @@ const currentComponent = computed(() => {
 :deep(.refresh-icon:hover) {
   opacity: 0.8;
 }
+
+:deep(.save-btn) {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+:deep(.save-btn:hover) {
+  opacity: 0.8;
+}
 </style>
