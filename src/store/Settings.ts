@@ -737,7 +737,7 @@ export async function initSettings(): Promise<void> {
     )
     await settings.set(SETTINGS_KEYS.ANIMATION_DURATION, defaultSettings.animationDuration)
     await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.animationSpeedLevel)
-    await settings.set(SETTINGS_KEYS.ANIMATION_SPEED_LEVEL, defaultSettings.autoGoToLatestData)
+    await settings.set(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA, defaultSettings.autoGoToLatestData)
     await settings.set(SETTINGS_KEYS.TAG_LIST_LOCATION, defaultSettings.tagListLocation)
     await settings.set(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE, defaultSettings.displayThumbnailImage)
     await settings.set(
