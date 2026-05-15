@@ -13,6 +13,8 @@ export const SETTINGS_KEYS = {
   AUTO_CHECK_UPDATE_INTERVAL: 'autoCheckUpdateInterval',
   ENABLE_TAG: 'enableTag',
   BIND_TAG_BTN_SHOW_LOCATION: 'bindTagBtnShowLocation',
+  WINDOW_WIDTH: 'windowWidth',
+  WINDOW_HEIGHT: 'windowHeight',
   AUTO_HIDE_WINDOW: 'autoHideWindow',
   ALWAYS_ON_TOP: 'alwaysOnTop',
   NEW_VERSION_ALERT_MODE: 'newVersionAlertMode',

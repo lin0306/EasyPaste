@@ -21,6 +21,8 @@ const defaultSettings: Settings = {
   autoCheckUpdateInterval: 1,
   enableTag: true,
   bindTagBtnShowLocation: SETTINGS.TAG.BIND_TAG_LOCATION.TOP_RIGHT,
+  windowWidth: 350,
+  windowHeight: 550,
   autoHideWindow: false,
   alwaysOnTop: true,
   newVersionAlertMode: SETTINGS.UPDATER.HINT_MODE.TOAST,
@@ -254,6 +256,30 @@ export async function getBindTagBtnShowLocation(): Promise<string> {
     (await store.get<string>(SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION)) ||
     defaultSettings.bindTagBtnShowLocation
   )
+}
+
+/**
+ * 保存窗口大小
+ * @param width 窗口宽度
+ * @param height 窗口高度
+ */
+export async function saveWindowSize(width: number, height: number): Promise<void> {
+  info('保存窗口大小: {width:' + width + ', height:' + height + '}')
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.WINDOW_WIDTH, width)
+  await settings.set(SETTINGS_KEYS.WINDOW_HEIGHT, height)
+}
+
+/**
+ * 获取窗口大小
+ */
+export async function getWindowSize(): Promise<{ width: number; height: number }> {
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  return {
+    width: (await store.get<number>(SETTINGS_KEYS.WINDOW_WIDTH)) || defaultSettings.windowWidth,
+    height:
+      (await store.get<number>(SETTINGS_KEYS.WINDOW_HEIGHT)) || defaultSettings.windowHeight,
+  }
 }
 
 /**
@@ -539,7 +565,6 @@ export async function getBackgroundAnimationEffect(): Promise<string> {
   )
 }
 
-
 /**
  * 保存搜索模式
  * @param searchModel 搜索模式
@@ -612,6 +637,12 @@ export async function initSettings(): Promise<void> {
         SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION,
         defaultSettings.bindTagBtnShowLocation
       )
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.WINDOW_WIDTH)) {
+      await settings.set(SETTINGS_KEYS.WINDOW_WIDTH, defaultSettings.windowWidth)
+    }
+    if (!userSettingsString.includes(SETTINGS_KEYS.WINDOW_HEIGHT)) {
+      await settings.set(SETTINGS_KEYS.WINDOW_HEIGHT, defaultSettings.windowHeight)
     }
     if (!userSettingsString.includes(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) {
       await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow)
@@ -695,6 +726,8 @@ export async function initSettings(): Promise<void> {
       SETTINGS_KEYS.BIND_TAG_BTN_SHOW_LOCATION,
       defaultSettings.bindTagBtnShowLocation
     )
+    await settings.set(SETTINGS_KEYS.WINDOW_WIDTH, defaultSettings.windowWidth)
+    await settings.set(SETTINGS_KEYS.WINDOW_HEIGHT, defaultSettings.windowHeight)
     await settings.set(SETTINGS_KEYS.AUTO_HIDE_WINDOW, defaultSettings.autoHideWindow)
     await settings.set(SETTINGS_KEYS.ALWAYS_ON_TOP, defaultSettings.alwaysOnTop)
     await settings.set(SETTINGS_KEYS.NEW_VERSION_ALERT_MODE, defaultSettings.newVersionAlertMode)

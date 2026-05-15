@@ -29,6 +29,7 @@ import { getQuickPaste, getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
 import { invoke } from '@tauri-apps/api/core'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { LogicalSize } from '@tauri-apps/api/dpi'
 
 // 监听当前窗口是否固定
 const listFixedListen = listFixedStore()
@@ -382,6 +383,20 @@ function initUpdateListeningStatusListener(): Promise<UnlistenFn> {
 }
 
 /**
+ * 初始化更新数据是否监听状态监听
+ */
+let updateWindowSizeListener: any = null
+
+function initUpdateWindowSizeListener(): Promise<UnlistenFn> {
+  return listen('update-window-size', async (event: any) => {
+    const width: number = event.payload.width
+    const height: number = event.payload.height
+    const window = getCurrentWindow()
+    await window.setSize(new LogicalSize(width, height))
+  })
+}
+
+/**
  * 初始化窗口配置
  */
 export async function initializeWindow(message: MessageApiInjection): Promise<void> {
@@ -429,8 +444,12 @@ export async function initializeWindow(message: MessageApiInjection): Promise<vo
 
     // 初始化是否监听剪贴板
     isListening.value = await invoke<boolean>('is_listening')
+
     // 添加修改是否监听剪贴板事件监听
     updateListeningStatusListener = initUpdateListeningStatusListener()
+
+    // 添加更新窗口大小事件监听
+    updateWindowSizeListener = initUpdateWindowSizeListener()
   } catch (e) {
     console.error('窗口配置初始化失败', e)
     error('窗口配置初始化失败' + e)
@@ -485,4 +504,7 @@ export function destroyWindow(): void {
   if (updateListeningStatusListener) {
     updateListeningStatusListener()
   }
+
+  // 清除更新窗口大小事件监听
+  updateWindowSizeListener?.()
 }

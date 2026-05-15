@@ -9,18 +9,21 @@ import {
   getDisplayDetailTime,
   getDisplayThumbnailImage,
   getSearchModel,
+  getWindowSize,
   saveAlwaysOnTop,
   saveAutoGoToLatestData,
   saveAutoHideWindow,
   saveDisplayDetailTime,
   saveDisplayThumbnailImage,
   saveSearchModel,
+  saveWindowSize,
 } from '../../../store/Settings.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 
 const message = useMessage()
 
@@ -35,6 +38,38 @@ const searchModelOptions = computed(() => [
     value: SETTINGS.SEARCH.MODEL.ADVANCED,
   },
 ])
+
+// 是否改变窗口大小
+const isChangeWindowSize = computed(() => {
+  return (
+    originalConfig.windowHeight !== currentConfig.windowHeight ||
+    originalConfig.windowWidth !== currentConfig.windowWidth
+  )
+})
+
+/**
+ * 保存窗口大小
+ */
+const onSaveWindowSize = async () => {
+  onLoading.value = true
+  try {
+    await saveWindowSize(currentConfig.windowWidth, currentConfig.windowHeight)
+    originalConfig.windowWidth = currentConfig.windowWidth
+    originalConfig.windowHeight = currentConfig.windowHeight
+    // 发送更新了启用标签状态消息
+    await emit('update-window-size', {
+      width: currentConfig.windowWidth,
+      height: currentConfig.windowHeight,
+    })
+  } catch (e) {
+    error('修改窗口大小设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.windowWidth = originalConfig.windowWidth
+    currentConfig.windowHeight = originalConfig.windowHeight
+  } finally {
+    onLoading.value = false
+  }
+}
 
 /**
  * 修改自动隐藏窗口配置
@@ -170,6 +205,12 @@ const onChangeSearchModel = async (searchModel: string): Promise<void> => {
 onMounted(async () => {
   try {
     // 初始化用户配置
+    const windowSize = await getWindowSize()
+    originalConfig.windowWidth = windowSize.width
+    currentConfig.windowWidth = windowSize.width
+    originalConfig.windowHeight = windowSize.height
+    currentConfig.windowHeight = windowSize.height
+
     const autoHideWindow = await getAutoHideWindow()
     originalConfig.autoHideWindow = autoHideWindow
     currentConfig.autoHideWindow = autoHideWindow
@@ -206,6 +247,31 @@ onMounted(async () => {
     <n-divider title-placement="left">{{
       currentLanguage.pages.settings.mainWindowTitle
     }}</n-divider>
+    <div class="form-item">
+      <span class="label">窗口大小</span>
+      <n-input-group class="input-group">
+        <n-input-number
+          :style="{ width: '50%' }"
+          :min="350"
+          :max="800"
+          v-model:value="currentConfig.windowWidth"
+        />
+        <n-input-group-label>x</n-input-group-label>
+        <n-input-number
+          :style="{ width: '50%' }"
+          :min="550"
+          :max="1000"
+          v-model:value="currentConfig.windowHeight"
+        />
+        <n-input-group-label
+          v-if="isChangeWindowSize"
+          @click="onSaveWindowSize"
+          :loading="onLoading"
+        >
+          <font-awesome-icon :icon="faFloppyDisk" />
+        </n-input-group-label>
+      </n-input-group>
+    </div>
     <div class="form-item">
       <span class="label">{{ currentLanguage.pages.settings.autoHideWindow }}</span>
       <n-switch

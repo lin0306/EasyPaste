@@ -117,6 +117,7 @@
     "core:window:allow-set-skip-taskbar",
     "core:window:allow-minimize",
     "core:window:allow-unminimize",
+    "core:window:allow-set-size",
     "process:default",
     "process:allow-exit",
     "process:allow-restart",

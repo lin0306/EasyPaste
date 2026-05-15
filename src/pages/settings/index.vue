@@ -104,6 +104,9 @@ const currentComponent = computed(() => {
   gap: 5px;
 }
 
+:deep(.input-group) {
+  width: 60%;
+}
 :deep(.select) {
   width: 60%;
 }
