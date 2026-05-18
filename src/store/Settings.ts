@@ -92,10 +92,8 @@ export async function savePowerOnSelfStart(powerOnSelfStart: boolean): Promise<v
  */
 export async function getPowerOnSelfStart(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.POWER_ON_SELF_START)) ||
-    defaultSettings.powerOnSelfStart
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.POWER_ON_SELF_START)
+  return value !== undefined && value !== null ? value : defaultSettings.powerOnSelfStart
 }
 
 /**
@@ -113,10 +111,8 @@ export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean): Pro
  */
 export async function getReplaceGlobalHotkey(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)) ||
-    defaultSettings.replaceGlobalHotkey
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.REPLACE_GLOBAL_HOTKEY)
+  return value !== undefined && value !== null ? value : defaultSettings.replaceGlobalHotkey
 }
 
 /**
@@ -175,9 +171,8 @@ export async function saveAutoCheckUpdate(autoCheckUpdate: boolean): Promise<voi
  */
 export async function getAutoCheckUpdate(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.AUTO_CHECK_UPDATE)) || defaultSettings.autoCheckUpdate
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.AUTO_CHECK_UPDATE)
+  return value !== undefined && value !== null ? value : defaultSettings.autoCheckUpdate
 }
 
 /**
@@ -234,7 +229,8 @@ export async function saveEnableTag(enableTag: boolean): Promise<void> {
  */
 export async function getEnableTag(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (await store.get<boolean>(SETTINGS_KEYS.ENABLE_TAG)) || defaultSettings.enableTag
+  const value = await store.get<boolean>(SETTINGS_KEYS.ENABLE_TAG)
+  return value !== undefined && value !== null ? value : defaultSettings.enableTag
 }
 
 /**
@@ -277,8 +273,7 @@ export async function getWindowSize(): Promise<{ width: number; height: number }
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
   return {
     width: (await store.get<number>(SETTINGS_KEYS.WINDOW_WIDTH)) || defaultSettings.windowWidth,
-    height:
-      (await store.get<number>(SETTINGS_KEYS.WINDOW_HEIGHT)) || defaultSettings.windowHeight,
+    height: (await store.get<number>(SETTINGS_KEYS.WINDOW_HEIGHT)) || defaultSettings.windowHeight,
   }
 }
 
@@ -297,9 +292,8 @@ export async function saveAutoHideWindow(autoHideWindow: boolean): Promise<void>
  */
 export async function getAutoHideWindow(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.AUTO_HIDE_WINDOW)) || defaultSettings.autoHideWindow
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.AUTO_HIDE_WINDOW)
+  return value !== undefined && value !== null ? value : defaultSettings.autoHideWindow
 }
 
 /**
@@ -317,7 +311,8 @@ export async function saveAlwaysOnTop(alwaysOnTop: boolean): Promise<void> {
  */
 export async function getAlwaysOnTop(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (await store.get<boolean>(SETTINGS_KEYS.ALWAYS_ON_TOP)) || defaultSettings.alwaysOnTop
+  const value = await store.get<boolean>(SETTINGS_KEYS.ALWAYS_ON_TOP)
+  return value !== undefined && value !== null ? value : defaultSettings.alwaysOnTop
 }
 
 /**
@@ -356,10 +351,8 @@ export async function saveEnableAnimationEffects(enableAnimationEffects: boolean
  */
 export async function getEnableAnimationEffects(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)) ||
-    defaultSettings.enableAnimationEffects
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.ENABLE_ANIMATION_EFFECTS)
+  return value !== undefined && value !== null ? value : defaultSettings.enableAnimationEffects
 }
 
 /**
@@ -418,10 +411,8 @@ export async function saveAutoGoToLatestData(autoGoToLatestData: boolean): Promi
  */
 export async function getAutoGoToLatestData(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)) ||
-    defaultSettings.autoGoToLatestData
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.AUTO_GO_TO_LATEST_DATA)
+  return value !== undefined && value !== null ? value : defaultSettings.autoGoToLatestData
 }
 
 /**
@@ -459,10 +450,8 @@ export async function saveDisplayThumbnailImage(displayThumbnailImage: boolean):
  */
 export async function getDisplayThumbnailImage(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)) ||
-    defaultSettings.displayThumbnailImage
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.DISPLAY_THUMBNAIL_IMAGE)
+  return value !== undefined && value !== null ? value : defaultSettings.displayThumbnailImage
 }
 
 /**
@@ -498,9 +487,8 @@ export async function saveEnableImageSave(enableImageSave: boolean): Promise<voi
  */
 export async function getEnableImageSave(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) || defaultSettings.enableImageSave
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)
+  return value !== undefined && value !== null ? value : defaultSettings.enableImageSave
 }
 
 /**
@@ -536,10 +524,8 @@ export async function saveDisplayDetailTime(displayDetailTime: boolean): Promise
  */
 export async function getDisplayDetailTime(): Promise<boolean> {
   const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
-  return (
-    (await store.get<boolean>(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)) ||
-    defaultSettings.displayDetailTime
-  )
+  const value = await store.get<boolean>(SETTINGS_KEYS.DISPLAY_DETAIL_TIME)
+  return value !== undefined && value !== null ? value : defaultSettings.displayDetailTime
 }
 
 /**
