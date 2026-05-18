@@ -18,6 +18,7 @@ class ClipboardDBService {
       await this.initDatabase()
       info('[数据库进程] 数据库初始化完成')
     } catch (er) {
+      console.log('[数据库进程] 创建数据库失败', er)
       error('[数据库进程] 数据库加载失败:' + er)
       throw er
     }
@@ -107,6 +108,7 @@ class ClipboardDBService {
                 `)
       }
     } catch (er) {
+      console.log('[数据库进程] 创建数据库表失败', er)
       error('[数据库进程] 数据库表初始化失败:' + er)
       throw er
     }
@@ -142,6 +144,7 @@ class ClipboardDBService {
       await clearTimer.dataClear()
       info('[数据库进程] 剪贴板内容添加成功')
     } catch (err) {
+      console.log('[数据库进程] 剪贴板内容添加失败', err)
       error('[数据库进程] 剪贴板内容添加失败' + err)
       throw err
     }
@@ -356,11 +359,6 @@ class ClipboardDBService {
       itemsSql += ` limit ?`
       queryParams.push(filters.pageSize)
 
-      console.log('[数据库进程] 获取剪贴板条目SQL:', itemsSql)
-      console.log('[数据库进程] 获取剪贴板条目参数:', queryParams)
-      console.log('[数据库进程] 获取剪贴板内容总条数SQL:', countSql)
-      console.log('[数据库进程] 获取剪贴板内容总条数参数:', countParams)
-
       // 获取总条数
       const countResult = (await this.db?.select(countSql, countParams)) as [{ total: number }]
       const total = countResult[0].total
@@ -376,6 +374,7 @@ class ClipboardDBService {
         try {
           item.tags = item.tags_json ? JSON.parse(item.tags_json) : []
         } catch (err) {
+          console.log('[数据库进程] 解析标签JSON失败，itemId:' + item.id, err)
           error('[数据库进程] 解析标签JSON失败，itemId:' + item.id + ':' + err)
           item.tags = []
         }
@@ -384,6 +383,7 @@ class ClipboardDBService {
       return { total, items }
     } catch (e) {
       console.error('[数据库进程] 获取剪贴板条目失败:' + e)
+      error('[数据库进程] 获取剪贴板条目失败:' + e)
       return { total: 0, items: [] }
     }
   }
@@ -404,6 +404,7 @@ class ClipboardDBService {
       )
       return true
     } catch (err) {
+      console.log('[数据库进程] 更新剪贴板项目置顶状态失败:' + err)
       error('[数据库进程] 更新剪贴板项目置顶状态失败:' + err)
       return false
     }
@@ -419,6 +420,7 @@ class ClipboardDBService {
       await this.db?.execute('UPDATE clipboard_items SET content = ? WHERE id = ?', [content, id])
       return true
     } catch (err) {
+      console.log('[数据库进程] 更新剪贴板项目内容失败:' + err)
       error('[数据库进程] 更新剪贴板项目内容失败:' + err)
       return false
     }
@@ -437,6 +439,7 @@ class ClipboardDBService {
       ])
       return true
     } catch (err) {
+      console.log('[数据库进程] 更新剪贴板项目文件地址失败:' + err)
       error('[数据库进程] 更新剪贴板项目文件地址失败:' + err)
       return false
     }
@@ -454,6 +457,7 @@ class ClipboardDBService {
       }
       return true
     } catch (err) {
+      console.log('[数据库进程] 删除剪贴板项目失败:', err)
       error('[数据库进程] 删除剪贴板项目失败:' + err)
       return false
     }
@@ -485,7 +489,7 @@ class ClipboardDBService {
       }
       return true
     } catch (err) {
-      console.log(err)
+      console.log('[数据库进程] 删除剪贴板项目失败:', err)
       error('[数据库进程] 删除剪贴板项目失败:' + err)
       return false
     }
@@ -505,6 +509,7 @@ class ClipboardDBService {
         info('[数据库进程] 剪贴板内容清理完成')
         resolve()
       } catch (err) {
+        console.log('[数据库进程] 清空剪贴板时发生错误:', err)
         error('[数据库进程] 清空剪贴板时发生错误:' + err)
         reject(err)
       }
@@ -525,6 +530,7 @@ class ClipboardDBService {
         info('[数据库进程] 剪贴板内容清理完成')
         resolve()
       } catch (err) {
+        console.log('[数据库进程] 清空剪贴板时发生错误:', err)
         error('[数据库进程] 清空剪贴板时发生错误:' + err)
         reject(err)
       }
@@ -761,7 +767,6 @@ class ClipboardDBService {
    * @param plugin 插件信息
    */
   async addPlugin(plugin: LocalPlugin): Promise<void> {
-    console.log('添加插件', plugin)
     await this.db?.execute(
       `
             INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, url, description )
@@ -832,7 +837,6 @@ class ClipboardDBService {
       sql += ` AND enable = ?`
       params.push(enable ? 1 : 0)
     }
-    console.debug(sql, params)
     return (await this.db?.select(sql, params)) as LocalPlugin[]
   }
 
@@ -873,7 +877,6 @@ export default ClipboardDBService
  * @param itemId 条目ID
  */
 export async function getItemContent(itemId: number) {
-  console.log('getItemContent', itemId)
   const db = await ClipboardDBService.getInstance()
   const item = await db.getItem(itemId)
   return item?.content
@@ -884,7 +887,6 @@ export async function getItemContent(itemId: number) {
  * @param itemId 条目ID
  */
 export async function getItemFilePath(itemId: number) {
-  console.log('getItemFilePath', itemId)
   const db = await ClipboardDBService.getInstance()
   const item = await db.getItem(itemId)
   return item?.file_path
