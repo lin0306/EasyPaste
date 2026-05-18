@@ -133,53 +133,47 @@
         </div>
       </div>
       <!-- 标签展示 -->
-      <transition-group
+      <div
         v-if="tagSettingState.isShow"
-        :css="animationEffect.enabled"
-        name="tag-line"
+        ref="cardTagsRef"
+        v-show="
+          tagSettingState.location === SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT ||
+          (item.tags && item.tags.length > 0)
+        "
+        class="card-tags"
       >
-        <div
-          v-show="
-            tagSettingState.location === SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT ||
-            (item.tags && item.tags.length > 0)
-          "
-          key="card-tags"
-          class="card-tags"
+        <n-tag
+          v-for="tag in item.tags"
+          :key="tag.id"
+          :ref="(el: any) => setTagRef(el, tag.id)"
+          bordered
+          class="item-tag"
+          closable
+          round
+          size="small"
+          @close="removeItemTag(item, tag, index, currentLanguage, message)"
         >
-          <transition-group :css="animationEffect.enabled" name="tag-item">
-            <n-tag
-              v-for="tag in item.tags"
-              :key="tag.id"
-              bordered
-              class="item-tag"
-              closable
-              round
-              size="small"
-              @close="removeItemTag(item, tag, index, currentLanguage, message)"
-            >
-              <div class="item-tag-content">
-                <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
-                <div class="item-tag-name">
-                  {{ tag.name }}
-                </div>
-              </div>
-            </n-tag>
-          </transition-group>
-          <div
-            v-if="
-              tagSettingState.isShow &&
-              tagSettingState.location === SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT
-            "
-            class="bind-tag-button"
-            draggable="true"
-            @dragend="handleDragEnd"
-            @dragstart="handleDragStart(item, index, $event)"
-          >
-            <font-awesome-icon :icon="['fas', 'bind-tag']" class="bind-tag-icon" />
-            <span v-if="tagSettingState.isShow">{{ currentLanguage.pages.list.bindTagBtn }}</span>
+          <div class="item-tag-content">
+            <div :style="{ backgroundColor: tag.color }" class="item-tag-color"></div>
+            <div class="item-tag-name">
+              {{ tag.name }}
+            </div>
           </div>
+        </n-tag>
+        <div
+          v-if="
+            tagSettingState.isShow &&
+            tagSettingState.location === SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT
+          "
+          class="bind-tag-button"
+          draggable="true"
+          @dragend="handleDragEnd"
+          @dragstart="handleDragStart(item, index, $event)"
+        >
+          <font-awesome-icon :icon="['fas', 'bind-tag']" class="bind-tag-icon" />
+          <span v-if="tagSettingState.isShow">{{ currentLanguage.pages.list.bindTagBtn }}</span>
         </div>
-      </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -210,6 +204,8 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import { getTimeAgo } from '../../../utils/DateUtil.ts'
 import { faAlignLeft, faCode, faLink } from '@fortawesome/free-solid-svg-icons'
 import { faFile, faImage, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { gsap } from 'gsap'
+import { ref, watch } from 'vue'
 
 // Naive UI 框架的消息组件
 const message = useMessage()
@@ -223,6 +219,106 @@ const props = defineProps<{
  * 获取父级的事件
  */
 const emit = defineEmits(['custom-event'])
+
+// GSAP 动画相关 refs
+const cardTagsRef = ref<HTMLElement | null>(null)
+const tagItemRefsMap = new Map<number, any>()
+
+// 设置标签项引用
+const setTagRef = (el: any, tagId: number) => {
+  if (el) {
+    tagItemRefsMap.set(tagId, el)
+  }
+}
+
+// 监听标签变化，执行 GSAP 动画
+watch(
+  () => props.item.tags,
+  (newTags, oldTags) => {
+    if (!animationEffect.enabled || !cardTagsRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    // 如果是新增标签
+    if (!oldTags || (newTags && newTags.length > oldTags.length)) {
+      const newTagIds = newTags?.map(tag => tag.id) || []
+      const oldTagIds = oldTags?.map(tag => tag.id) || []
+      const addedIds = newTagIds.filter(id => !oldTagIds.includes(id))
+
+      // 为新增的标签执行进入动画
+      addedIds.forEach((tagId, index) => {
+        const element = tagItemRefsMap.get(tagId)?.$el
+        if (element) {
+          gsap.fromTo(element,
+            {
+              opacity: 0,
+              scale: 0.8,
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              duration: duration,
+              delay: index * 0.05,
+              ease: 'power2.out',
+            }
+          )
+        }
+      })
+
+      // 标签容器展开动画
+      gsap.fromTo(cardTagsRef.value,
+        {
+          maxHeight: 0,
+          opacity: 0,
+        },
+        {
+          maxHeight: 200,
+          opacity: 1,
+          duration: duration,
+          ease: 'power2.out',
+        }
+      )
+    }
+
+    // 如果是删除标签
+    if (oldTags && newTags && newTags.length < oldTags.length) {
+      const newTagIds = newTags.map(tag => tag.id)
+      const oldTagIds = oldTags.map(tag => tag.id)
+      const removedIds = oldTagIds.filter(id => !newTagIds.includes(id))
+
+      // 为删除的标签执行离开动画
+      removedIds.forEach((tagId) => {
+        const element = tagItemRefsMap.get(tagId)?.$el
+        if (element) {
+          gsap.to(element, {
+            opacity: 0,
+            scale: 0.8,
+            x: -20,
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              tagItemRefsMap.delete(tagId)
+            }
+          })
+        }
+      })
+
+      // 如果没有标签了，执行容器收起动画
+      if (newTags.length === 0 &&
+          tagSettingState.location !== SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT) {
+        gsap.to(cardTagsRef.value, {
+          maxHeight: 0,
+          opacity: 0,
+          duration: duration,
+          ease: 'power2.in',
+        })
+      }
+    }
+  },
+  { flush: 'post', deep: true }
+)
 
 function onOpenContextMenu(): void {
   // 向父组件传递数据（可以是对象、字符串、数字等）
@@ -248,7 +344,6 @@ function onOpenContextMenuByFile(filePath: string): void {
 <style scoped>
 .clipboard-item {
   margin: 6px 6px;
-  transition: all var(--animation-duration, 0.3s) ease;
   display: block;
 }
 
@@ -262,8 +357,8 @@ function onOpenContextMenuByFile(filePath: string): void {
   border-radius: 10px;
   box-shadow: 0 2px 8px var(--theme-universal-border);
   padding: 7px;
-  transition: all var(--animation-duration, 0.3s) cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid transparent;
+  will-change: transform, box-shadow;
 }
 
 .card-header {
@@ -314,8 +409,8 @@ function onOpenContextMenuByFile(filePath: string): void {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--animation-duration, 0.3s);
   opacity: 0.5;
+  will-change: opacity;
 }
 
 .card-header-right-button:hover {
@@ -429,10 +524,13 @@ function onOpenContextMenuByFile(filePath: string): void {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  overflow: hidden;
+  will-change: max-height, opacity;
 }
 
 .item-tag {
   box-shadow: 0 1px 2px var(--theme-universal-border);
+  will-change: opacity, transform;
 }
 
 .item-tag-content {
@@ -474,6 +572,7 @@ function onOpenContextMenuByFile(filePath: string): void {
   opacity: 0.5;
   margin-left: auto;
   height: 22px;
+  will-change: opacity;
 }
 
 .bind-tag-button:hover {
@@ -483,62 +582,6 @@ function onOpenContextMenuByFile(filePath: string): void {
 .bind-tag-icon {
   width: 12px;
   height: 12px;
-}
-
-/* 标签区域整体动画 */
-.tag-line-enter-from {
-  max-height: 0;
-  opacity: 0;
-}
-
-.tag-line-enter-to {
-  max-height: 200px; /* 根据实际需要调整 */
-  opacity: 1;
-}
-
-.tag-line-leave-from {
-  max-height: 200px; /* 根据实际需要调整 */
-  opacity: 1;
-}
-
-.tag-line-leave-to {
-  max-height: 0;
-  opacity: 0;
-}
-
-.tag-line-enter-active,
-.tag-line-leave-active {
-  transition: all var(--animation-duration, 0.3s) ease;
-  overflow: hidden;
-}
-
-/* 单个标签动画 */
-.tag-item-enter-from {
-  opacity: 0;
-  transform: scale(0.8);
-}
-
-.tag-item-enter-to {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.tag-item-leave-from {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.tag-item-leave-to {
-  opacity: 0;
-  transform: scale(0.8) translateX(-20px);
-}
-
-.tag-item-enter-active {
-  transition: all var(--animation-duration, 0.3s) ease 0.1s; /* 延迟进入动画，让容器先展开 */
-}
-
-.tag-item-leave-active {
-  transition: all var(--animation-duration, 0.3s) ease;
 }
 
 :deep(.n-divider:not(.n-divider--vertical)) {

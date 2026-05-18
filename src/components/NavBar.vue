@@ -11,43 +11,44 @@
         {{ item.label }}
 
         <!-- 二级菜单 -->
-        <transition name="slide-fade" :css="animationEffect.enabled">
-          <ul
-            v-if="item.children && activeMenu === item.key"
-            class="dropdown-menu"
-            :style="dropdownStyle"
+        <ul
+          v-if="item.children && activeMenu === item.key"
+          ref="dropdownRefs"
+          :data-key="item.key"
+          class="dropdown-menu"
+          :style="dropdownStyle"
+        >
+          <li
+            v-for="child in item.children"
+            :key="child.key"
+            class="dropdown-item"
+            @click="child.onClick"
           >
-            <li
-              v-for="child in item.children"
-              :key="child.key"
-              class="dropdown-item"
-              @click="child.onClick"
-            >
-              <div v-if="child.type === 'divider'" class="divider" />
-              <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
-                {{ child.label }}
-                <font-awesome-icon
-                  :icon="faCheck"
-                  v-if="child.isCheck"
-                  :color="themeColors.universal.text"
-                  class="checked-icon"
-                />
-                <div v-else class="unchecked-icon"></div>
-              </div>
-              <div v-else class="dropdown-link">{{ child.label }}</div>
-            </li>
-          </ul>
-        </transition>
+            <div v-if="child.type === 'divider'" class="divider" />
+            <div v-else-if="child.type === 'radio'" @click="child.onClick" class="dropdown-link">
+              {{ child.label }}
+              <font-awesome-icon
+                :icon="faCheck"
+                v-if="child.isCheck"
+                :color="themeColors.universal.text"
+                class="checked-icon"
+              />
+              <div v-else class="unchecked-icon"></div>
+            </div>
+            <div v-else class="dropdown-link">{{ child.label }}</div>
+          </li>
+        </ul>
       </li>
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { animationEffect } from './effect/composables/AnimationComposable.ts'
 import { themeColors } from '../services/ThemeService.ts'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { gsap } from 'gsap'
 
 const props = defineProps<{
   menuItems: NavBarItem[]
@@ -75,6 +76,55 @@ const menus = computed(() => {
 // 状态管理
 const activeMenu = ref<string>('')
 const dropdownStyle = ref({})
+const dropdownRefs = ref<HTMLElement[]>([])
+
+// 监听 activeMenu 变化，执行 GSAP 动画
+watch(
+  () => activeMenu.value,
+  async (newKey, oldKey) => {
+    if (!animationEffect.enabled) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    // 获取旧的下拉菜单元素并执行离开动画
+    if (oldKey) {
+      const oldDropdown = dropdownRefs.value.find(el => el?.dataset.key === oldKey)
+      if (oldDropdown) {
+        gsap.to(oldDropdown, {
+          y: -10,
+          opacity: 0,
+          duration: duration,
+          ease: 'power2.in',
+          onComplete: () => {
+            gsap.set(oldDropdown, { clearProps: 'all' })
+          }
+        })
+      }
+    }
+
+    // 获取新的下拉菜单元素并执行进入动画
+    if (newKey) {
+      const newDropdown = dropdownRefs.value.find(el => el?.dataset.key === newKey)
+      if (newDropdown) {
+        gsap.fromTo(newDropdown,
+          {
+            y: -10,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: duration,
+            ease: 'power2.out',
+          }
+        )
+      }
+    }
+  },
+  { flush: 'post' }
+)
 
 // 处理鼠标进入事件
 const handleMouseEnter = (menuItem: NavBarItem, event: any): void => {
@@ -176,22 +226,8 @@ const handleMouseLeave = (): void => {
   vertical-align: middle;
 }
 
-/* 动画效果 */
-.slide-fade-enter-active {
-  transition: all var(--animation-duration, 0.3s) ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all var(--animation-duration, 0.3s) cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from {
-  transform: translateY(-10px);
-  opacity: 0;
-}
-
-.slide-fade-leave-to {
-  transform: translateY(-10px);
-  opacity: 0;
+/* GSAP 动画样式 - 禁用 CSS 过渡，完全由 GSAP 控制 */
+.dropdown-menu {
+  will-change: transform, opacity;
 }
 </style>

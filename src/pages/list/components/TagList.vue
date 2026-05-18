@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="tagSettingState.isShow"
+    ref="tagListRef"
     :class="{ 'has-selected-tag': dragState.isDragging }"
     :style="{
       'flex-direction':
@@ -10,40 +11,41 @@
     }"
     class="tag-list"
   >
-    <transition-group name="tag">
-      <div
-        v-for="tag in TagItems"
-        :key="tag.id"
-        :class="{
-          'tag-dragging-over': dragState.draggedOverTagId === tag.id,
-          'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
-          'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
-          'tag-selected': selectedTagState.selectedTagId === tag.id,
-        }"
-        :style="{ backgroundColor: tag.color }"
-        class="tag-item"
-        @click="handleTagClick(tag.id)"
-        @dragenter="handleDragEnterTag(tag.id)"
-        @dragleave="handleDragLeaveTag($event)"
-        @drop="handleDropOnTag(tag, message)"
-        @dragover.prevent
-      >
-        <span :style="{ color: getContrastColor(tag.color) }" class="tag-name">{{ tag.name }}</span>
-      </div>
-      <div
-        key="tagManage"
-        :style="{ backgroundColor: themeColors.universal.background }"
-        class="tag-item tag-manage"
-        @click="openTagsWindow"
-      >
-        <span class="tag-name tag-manage-name">
-          <font-awesome-icon :icon="['fas', 'tag-manager']" class="tag-manage-icon" />
-          <span class="tag-manage-text">
-            {{ currentLanguage.pages.list.tagManager }}
-          </span>
+    <div
+      v-for="tag in TagItems"
+      :key="tag.id"
+      ref="tagItemRefs"
+      :data-tag-id="tag.id"
+      :class="{
+        'tag-dragging-over': dragState.draggedOverTagId === tag.id,
+        'tag-disabled': dragState.isDragging && isItemTagged(dragState.dragItem.id, tag.id),
+        'tag-expanded': dragState.isDragging && !isItemTagged(dragState.dragItem.id, tag.id),
+        'tag-selected': selectedTagState.selectedTagId === tag.id,
+      }"
+      :style="{ backgroundColor: tag.color }"
+      class="tag-item"
+      @click="handleTagClick(tag.id)"
+      @dragenter="handleDragEnterTag(tag.id)"
+      @dragleave="handleDragLeaveTag($event)"
+      @drop="handleDropOnTag(tag, message)"
+      @dragover.prevent
+    >
+      <span :style="{ color: getContrastColor(tag.color) }" class="tag-name">{{ tag.name }}</span>
+    </div>
+    <div
+      ref="tagManageRef"
+      key="tagManage"
+      :style="{ backgroundColor: themeColors.universal.background }"
+      class="tag-item tag-manage"
+      @click="openTagsWindow"
+    >
+      <span class="tag-name tag-manage-name">
+        <font-awesome-icon :icon="['fas', 'tag-manager']" class="tag-manage-icon" />
+        <span class="tag-manage-text">
+          {{ currentLanguage.pages.list.tagManager }}
         </span>
-      </div>
-    </transition-group>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -67,8 +69,84 @@ import { openTagsWindow } from '../../../services/WindowService.ts'
 import { useMessage } from 'naive-ui'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { themeColors } from '../../../services/ThemeService.ts'
+import { ref, watch } from 'vue'
+import { gsap } from 'gsap'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 
 const message = useMessage()
+
+const tagListRef = ref<HTMLElement | null>(null)
+const tagItemRefs = ref<HTMLElement[]>([])
+const tagManageRef = ref<HTMLElement | null>(null)
+
+// 监听标签列表变化，执行进入/离开动画
+watch(
+  () => tagSettingState.isShow,
+  (newValue) => {
+    if (!animationEffect.enabled || !tagListRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    if (newValue) {
+      // 显示时执行淡入+右移动画
+      gsap.fromTo(tagListRef.value,
+        {
+          opacity: 0,
+          x: -100,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          duration: duration,
+          ease: 'power2.out',
+        }
+      )
+    } else {
+      // 隐藏时执行淡出+左移动画
+      gsap.to(tagListRef.value, {
+        opacity: 0,
+        x: -100,
+        duration: duration,
+        ease: 'power2.in',
+      })
+    }
+  },
+  { flush: 'post' }
+)
+
+// 监听标签项变化，为每个标签添加动画
+watch(
+  () => TagItems.value,
+  () => {
+    if (!animationEffect.enabled) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    // 为新添加的标签执行进入动画
+    tagItemRefs.value.forEach((el, index) => {
+      if (el) {
+        gsap.fromTo(el,
+          {
+            opacity: 0,
+            x: -50,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            duration: duration,
+            delay: index * 0.05,
+            ease: 'power2.out',
+          }
+        )
+      }
+    })
+  },
+  { flush: 'post', deep: true }
+)
 </script>
 
 <style scoped>
@@ -151,34 +229,6 @@ const message = useMessage()
 .tag-item.tag-expanded .tag-name {
   opacity: 1;
   transform: translateY(-50%);
-}
-
-/* 进入动画 - 从左侧进入 */
-.tag-enter-from {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-.tag-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 离开动画 - 向左侧离开 */
-.tag-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.tag-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-/* 离开中 */
-.tag-leave-active {
-  position: absolute;
-  width: calc(100%); /* 考虑左右 margin */
 }
 
 .tag-dragging-over {

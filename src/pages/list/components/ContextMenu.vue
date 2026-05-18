@@ -9,10 +9,12 @@ import {
 import { openItemEditWindow, openPreviewWindow } from '../../../services/WindowService.ts'
 import { isFolderCache } from '../composables/FileDataComposable.ts'
 import { useMessage } from 'naive-ui'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { currentLanguage } from '../../../services/LanguageService.ts'
 import { imageContextMenus, textContextMenus } from '../composables/WindowComposable.ts'
 import { openLink } from '../../../utils/LinkUtil.ts'
+import { gsap } from 'gsap'
+import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 
 // Naive UI 框架的消息组件
 const message = useMessage()
@@ -32,6 +34,44 @@ defineExpose({ handleMenuShow })
 const isShow = ref(false)
 const menuX = ref(0)
 const menuY = ref(0)
+const contextMenuRef = ref<HTMLElement | null>(null)
+
+// 监听 isShow 变化，执行 GSAP 动画
+watch(
+  () => isShow.value,
+  (newValue) => {
+    if (!animationEffect.enabled || !contextMenuRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.15
+
+    if (newValue) {
+      // 显示时执行淡入+缩放动画
+      gsap.fromTo(contextMenuRef.value,
+        {
+          opacity: 0,
+          scale: 0.95,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: duration,
+          ease: 'power2.out',
+        }
+      )
+    } else {
+      // 隐藏时执行淡出+缩放动画
+      gsap.to(contextMenuRef.value, {
+        opacity: 0,
+        scale: 0.95,
+        duration: duration,
+        ease: 'power2.in',
+      })
+    }
+  },
+  { flush: 'post' }
+)
 
 /**
  * 父组件调用子组件的显示右键菜单
@@ -172,6 +212,7 @@ onUnmounted(() => {
 <template>
   <div
     v-if="isShow"
+    ref="contextMenuRef"
     :style="{ top: menuY + 'px', left: menuX + 'px' }"
     class="context-menu"
     @click="hideContextMenu"
@@ -265,8 +306,8 @@ onUnmounted(() => {
   border-radius: 4px;
   z-index: 1000;
   min-width: 90px;
-  animation: fadeIn 0.15s ease-out;
   font-size: 12px;
+  will-change: transform, opacity;
 }
 
 .context-menu-item {

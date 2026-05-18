@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import {
   NButton,
   NDatePicker,
@@ -30,6 +30,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { emit } from '@tauri-apps/api/event'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { gsap } from 'gsap'
 
 // 搜索状态
 const searchText = ref('')
@@ -184,6 +185,50 @@ const handleClose = async () => {
   await getCurrentWindow().close()
 }
 
+// GSAP 动画相关 refs
+const searchContentRef = ref<HTMLElement | null>(null)
+const advancedOptionsRef = ref<HTMLElement | null>(null)
+
+// 监听高级选项展开/收起
+watch(
+  () => searchFilters.showAdvancedOptions,
+  (newValue) => {
+    if (!animationEffect.enabled || !advancedOptionsRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    if (newValue) {
+      // 展开动画
+      gsap.fromTo(advancedOptionsRef.value,
+        {
+          opacity: 0,
+          height: 0,
+          y: -20,
+        },
+        {
+          opacity: 1,
+          height: 'auto',
+          y: 0,
+          duration: duration,
+          ease: 'power2.out',
+        }
+      )
+    } else {
+      // 收起动画
+      gsap.to(advancedOptionsRef.value, {
+        opacity: 0,
+        height: 0,
+        y: -20,
+        duration: duration,
+        ease: 'power2.in',
+      })
+    }
+  },
+  { flush: 'post' }
+)
+
 onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
 })
@@ -198,8 +243,7 @@ onUnmounted(async () => {
   <div class="search-page-container">
     <TitleBar :title="currentLanguage.pages.itemSearch.title" showCloseBtn @close="handleClose" />
     <n-scrollbar style="max-height: calc(100vh)">
-      <transition :css="animationEffect.enabled" appear name="search-content">
-        <div class="search-content">
+      <div ref="searchContentRef" class="search-content">
           <!-- 搜索输入区域 -->
           <div class="custom-card search-input-card">
             <n-input
@@ -278,8 +322,7 @@ onUnmounted(async () => {
           </div>
 
           <!-- 高级搜索选项 -->
-          <transition name="slide-down">
-            <div v-if="searchFilters.showAdvancedOptions" class="advanced-options">
+          <div v-if="searchFilters.showAdvancedOptions" ref="advancedOptionsRef" class="advanced-options">
               <!-- 排除关键词 -->
               <div class="custom-card advanced-item">
                 <div class="advanced-item-header">
@@ -369,16 +412,14 @@ onUnmounted(async () => {
                 />
               </div>
             </div>
-          </transition>
 
           <!-- 占位元素，防止内容被固定按钮遮挡 -->
           <div class="button-spacer"></div>
         </div>
-      </transition>
     </n-scrollbar>
+
     <!-- 固定在底部的已选条件展示 -->
-    <transition name="slide-up">
-      <div v-if="hasActiveFilters" class="selected-filters-fixed">
+    <div v-if="hasActiveFilters" class="selected-filters-fixed">
         <div class="filter-summary">
           <span class="summary-label">
             {{ currentLanguage.pages.itemSearch.selectedFilters }}
@@ -462,7 +503,6 @@ onUnmounted(async () => {
           </n-space>
         </div>
       </div>
-    </transition>
 
     <!-- 固定在底部的操作按钮区域 -->
     <div class="action-buttons-fixed" :class="{ 'has-filters': hasActiveFilters }">
@@ -504,6 +544,7 @@ onUnmounted(async () => {
   flex-direction: column;
   gap: 16px;
   overflow: hidden;
+  will-change: transform, opacity;
 }
 
 /* 自定义卡片基础样式 */
@@ -609,6 +650,7 @@ onUnmounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  will-change: transform, opacity, height;
 }
 
 .advanced-item {
@@ -696,6 +738,7 @@ onUnmounted(async () => {
   z-index: 99;
   max-height: 120px;
   overflow-y: auto;
+  will-change: transform, opacity;
 }
 
 .selected-filters-fixed .filter-summary {
@@ -758,22 +801,7 @@ onUnmounted(async () => {
   transform: translateY(0);
 }
 
-/* 动画效果 */
-.search-content-enter-active,
-.search-content-leave-active {
-  transition: all var(--animation-duration, 0.3s) cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.search-content-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.search-content-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
+/* 以下为保留的 CSS 过渡（用于不需要 GSAP 的场景） */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
@@ -782,66 +810,5 @@ onUnmounted(async () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-/* 向上滑出动画 */
-.slide-up-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-up-leave-active {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-up-enter-from {
-  opacity: 0;
-  transform: translateY(100%);
-}
-
-.slide-up-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide-up-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide-up-leave-to {
-  opacity: 0;
-  transform: translateY(100%);
-}
-
-.slide-down-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-down-leave-active {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-down-enter-from {
-  opacity: 0;
-  transform: translateY(-20px);
-  max-height: 0;
-}
-
-.slide-down-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-  max-height: 600px;
-}
-
-.slide-down-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-  max-height: 600px;
-}
-
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-  max-height: 0;
 }
 </style>

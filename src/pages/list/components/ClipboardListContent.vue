@@ -1,6 +1,7 @@
 <template>
   <div
     key="clipboard-container"
+    ref="listContainerRef"
     :class="{ 'clipboard-container-search': showSearchBox }"
     class="clipboard-container"
   >
@@ -10,15 +11,16 @@
       @load="loadMoreItems"
     >
       <!-- 内容列表 -->
-      <transition-group :css="animationEffect.enabled" name="item">
+      <div ref="itemsWrapperRef">
         <ClipboardItem
           v-for="(item, index) in clipboardItems"
           :key="item.id"
+          :ref="el => setItemRef(el, item.id)"
           :index="index"
           :item="item"
           @custom-event="handleChildContextMenu"
         />
-      </transition-group>
+      </div>
       <!-- 最底部内容展示 -->
       <div v-if="scrollState.isLoading" class="loading-indicator">
         <n-spin :description="currentLanguage.pages.list.dataLoading" />
@@ -50,9 +52,10 @@ import {
   showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
 import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import ContextMenu from './ContextMenu.vue'
 import { currentLanguage } from '../../../services/LanguageService.ts'
+import { gsap } from 'gsap'
 
 /**
  * 右键菜单信息
@@ -69,12 +72,89 @@ const contextMenuState = reactive({
  */
 const contextMenuRef = ref()
 
+// 列表容器引用
+const listContainerRef = ref<HTMLElement | null>(null)
+const itemsWrapperRef = ref<HTMLElement | null>(null)
+const itemRefsMap = new Map<number, any>()
+
+// 设置子组件引用
+const setItemRef = (el: any, itemId: number) => {
+  if (el) {
+    itemRefsMap.set(itemId, el)
+  }
+}
+
+// 监听剪贴板项目变化，执行 GSAP 动画
+watch(
+  () => clipboardItems.value,
+  (newItems, oldItems) => {
+    if (!animationEffect.enabled || !itemsWrapperRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    // 如果是新增项目（oldItems 为空或新列表更长）
+    if (!oldItems || newItems.length > oldItems.length) {
+      // 找出新增的项目
+      const newItemIds = newItems.map(item => item.id)
+      const oldItemIds = oldItems ? oldItems.map(item => item.id) : []
+      const addedIds = newItemIds.filter(id => !oldItemIds.includes(id))
+
+      // 为新增的项目执行进入动画
+      addedIds.forEach((itemId, index) => {
+        const element = itemRefsMap.get(itemId)?.$el
+        if (element) {
+          gsap.fromTo(element,
+            {
+              opacity: 0,
+              x: 100,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              duration: duration,
+              delay: index * 0.05,
+              ease: 'power2.out',
+            }
+          )
+        }
+      })
+    }
+
+    // 如果是删除项目（新列表更短）
+    if (oldItems && newItems.length < oldItems.length) {
+      const newItemIds = newItems.map(item => item.id)
+      const oldItemIds = oldItems.map(item => item.id)
+      const removedIds = oldItemIds.filter(id => !newItemIds.includes(id))
+
+      // 为删除的项目执行离开动画
+      removedIds.forEach((itemId) => {
+        const element = itemRefsMap.get(itemId)?.$el
+        if (element) {
+          gsap.to(element, {
+            opacity: 0,
+            x: -100,
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              // 动画完成后清理引用
+              itemRefsMap.delete(itemId)
+            }
+          })
+        }
+      })
+    }
+  },
+  { flush: 'post', deep: true }
+)
+
 /**
  * 子组件调用的父组件方法
  * @param data
  */
 const handleChildContextMenu = (data: any): void => {
-  // 这个方法会被子组件“间接调用”
+  // 这个方法会被子组件"间接调用"
   console.log('子组件传来的数据:', data)
   contextMenuState.menuType = data.type
   contextMenuState.item = data.item
@@ -131,35 +211,4 @@ const handleChildContextMenu = (data: any): void => {
 :deep(.n-code__line-numbers) {
   color: var(--theme-universal-textHint);
 }
-
-/*内容列表动画效果start*/
-/* 进入动画 - 从右侧进入 */
-.item-enter-from {
-  opacity: 0;
-  transform: translateX(100%);
-}
-
-.item-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 离开动画 - 向左侧离开 */
-.item-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.item-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-/* 离开中 */
-.item-leave-active {
-  position: absolute;
-  width: calc(100% - 12px); /* 考虑左右 margin */
-}
-
-/*内容列表动画效果end*/
 </style>

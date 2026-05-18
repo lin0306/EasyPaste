@@ -9,13 +9,14 @@ import {
 } from '../composables/TagDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { currentLanguage } from '../../../services/LanguageService.ts'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import ClipboardDBService from '../../../services/ClipboardDBService.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faChevronLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { gsap } from 'gsap'
 
 const message = useMessage()
 
@@ -24,6 +25,9 @@ const searchText = ref('')
 
 // 清理数据弹窗
 const showClearDataModal = ref(false)
+
+// 标签列表容器引用
+const tagListContainerRef = ref<HTMLElement | null>(null)
 
 /**
  * 加载标签列表
@@ -57,7 +61,32 @@ const deleteTag = async (id: number, index: number): Promise<void> => {
       editState.tagId = null
       isPanelVisible.value = false
     }
-    tagItems.value.splice(index, 1)
+
+    // 执行删除动画
+    if (animationEffect.enabled && tagListContainerRef.value) {
+      const tagElements = tagListContainerRef.value.querySelectorAll('.tag-item')
+      const targetElement = tagElements[index] as HTMLElement
+      if (targetElement) {
+        const duration = animationEffect.duration / 1000 || 0.3
+        await new Promise<void>((resolve) => {
+          gsap.to(targetElement, {
+            opacity: 0,
+            x: -100,
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              tagItems.value.splice(index, 1)
+              resolve()
+            }
+          })
+        })
+      } else {
+        tagItems.value.splice(index, 1)
+      }
+    } else {
+      tagItems.value.splice(index, 1)
+    }
+
     console.log(tagItems.value)
     // 刷新剪贴板的标签列表
     await reloadListTags()
@@ -78,8 +107,29 @@ const clearTags = async (): Promise<void> => {
     message.success(currentLanguage.value.pages.tags.deleteSuccessMsg)
     editState.tagId = null
     isPanelVisible.value = false
-    tagItems.value = []
-    showClearDataModal.value = false
+
+    // 执行清空动画
+    if (animationEffect.enabled && tagListContainerRef.value) {
+      const duration = animationEffect.duration / 1000 || 0.3
+      await new Promise<void>((resolve) => {
+        gsap.to(tagListContainerRef.value.querySelectorAll('.tag-item'), {
+          opacity: 0,
+          x: -50,
+          stagger: 0.05,
+          duration: duration,
+          ease: 'power2.in',
+          onComplete: () => {
+            tagItems.value = []
+            showClearDataModal.value = false
+            resolve()
+          }
+        })
+      })
+    } else {
+      tagItems.value = []
+      showClearDataModal.value = false
+    }
+
     // 刷新剪贴板的标签列表
     await reloadListTags()
   } catch (error) {
@@ -98,7 +148,34 @@ const filterTags = (): void => {
   }
 
   const keyword = searchText.value.toLowerCase()
-  tagItems.value = tagItems.value.filter(tag => tag.name.toLowerCase().includes(keyword))
+  const filteredTags = tagItems.value.filter(tag => tag.name.toLowerCase().includes(keyword))
+
+  // 执行过滤动画
+  if (animationEffect.enabled && tagListContainerRef.value) {
+    const duration = animationEffect.duration / 1000 || 0.3
+    const allElements = tagListContainerRef.value.querySelectorAll('.tag-item')
+
+    // 为隐藏的元素执行离开动画
+    allElements.forEach((el, index) => {
+      const tag = tagItems.value[index]
+      if (!filteredTags.includes(tag)) {
+        gsap.to(el, {
+          opacity: 0,
+          height: 0,
+          marginBottom: 0,
+          duration: duration,
+          ease: 'power2.in',
+        })
+      }
+    })
+
+    // 延迟更新数据，等待动画完成
+    setTimeout(() => {
+      tagItems.value = filteredTags
+    }, duration * 1000)
+  } else {
+    tagItems.value = filteredTags
+  }
 }
 
 /**
@@ -128,6 +205,46 @@ const initUpdateBindQuantityListener = (): Promise<UnlistenFn> => {
     loadTags()
   })
 }
+
+// 监听标签列表变化，执行 GSAP 动画
+watch(
+  () => tagItems.value,
+  (newItems, oldItems) => {
+    if (!animationEffect.enabled || !tagListContainerRef.value) {
+      return
+    }
+
+    const duration = animationEffect.duration / 1000 || 0.3
+
+    // 如果是新增标签（列表变长）
+    if (oldItems && newItems.length > oldItems.length) {
+      const newTagIds = newItems.map(tag => tag.id)
+      const oldTagIds = oldItems.map(tag => tag.id)
+      const addedIds = newTagIds.filter(id => !oldTagIds.includes(id))
+
+      // 为新添加的标签执行进入动画
+      addedIds.forEach((tagId, idx) => {
+        const element = tagListContainerRef.value?.querySelector(`[data-tag-id="${tagId}"]`) as HTMLElement
+        if (element) {
+          gsap.fromTo(element,
+            {
+              opacity: 0,
+              x: 100,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              duration: duration,
+              delay: idx * 0.05,
+              ease: 'power2.out',
+            }
+          )
+        }
+      })
+    }
+  },
+  { flush: 'post', deep: true }
+)
 
 // 组件挂载时加载标签列表
 onMounted(() => {
@@ -163,32 +280,31 @@ onUnmounted(() => {
     </div>
 
     <!-- 标签列表 -->
-    <div class="tag-list-container">
+    <div class="tag-list-container" ref="tagListContainerRef">
       <n-empty v-if="tagItems.length === 0" />
       <div v-else class="tag-list">
-        <transition-group name="tag-list" :css="animationEffect.enabled">
-          <div
-            v-for="(tag, index) in tagItems"
-            :key="tag.id"
-            class="tag-item"
-            :class="{ 'tag-item-active': editState.tagId === tag.id }"
-            @click="selectTag(tag, index)"
-            :style="{ borderLeft: `4px solid ${tag.color}` }"
-          >
-            <div class="tag-item-content">
-              <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
-              <div class="tag-item-name">{{ tag.name }}</div>
-              <div v-if="tag.stats && tag.stats > 0" class="tag-item-stats">
-                {{ currentLanguage.pages.tags.bindDataHint }}{{ tag.stats }}
-              </div>
-            </div>
-            <div class="tag-item-actions" @click.stop>
-              <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
-                <font-awesome-icon :icon="faTrashCan" />
-              </div>
+        <div
+          v-for="(tag, index) in tagItems"
+          :key="tag.id"
+          :data-tag-id="tag.id"
+          class="tag-item"
+          :class="{ 'tag-item-active': editState.tagId === tag.id }"
+          @click="selectTag(tag, index)"
+          :style="{ borderLeft: `4px solid ${tag.color}` }"
+        >
+          <div class="tag-item-content">
+            <div class="tag-color-preview" :style="{ backgroundColor: tag.color }"></div>
+            <div class="tag-item-name">{{ tag.name }}</div>
+            <div v-if="tag.stats && tag.stats > 0" class="tag-item-stats">
+              {{ currentLanguage.pages.tags.bindDataHint }}{{ tag.stats }}
             </div>
           </div>
-        </transition-group>
+          <div class="tag-item-actions" @click.stop>
+            <div class="tag-delete-button" @click="deleteTag(tag.id, index)">
+              <font-awesome-icon :icon="faTrashCan" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -245,8 +361,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: width var(--animation-duration, 0.3s) ease;
-  /* 改为transform过渡效果 */
   z-index: 2;
   /* 确保在右侧面板上层 */
 }
@@ -255,8 +369,6 @@ onUnmounted(() => {
 .tag-list-panel-narrow {
   width: 50% !important;
   /* 减小宽度，为右侧面板留出空间 */
-  transition: width var(--animation-duration, 0.3s) ease;
-  /* 添加宽度过渡效果 */
 }
 
 .tag-list-header {
@@ -296,43 +408,13 @@ onUnmounted(() => {
   background-color: var(--theme-customCard-background);
   border-radius: 4px;
   box-shadow: 0 2px 8px var(--theme-universal-border);
-  transition: all var(--animation-duration, 0.3s) ease;
   cursor: pointer;
+  will-change: transform, opacity;
 }
 
 .tag-item:hover {
   background-color: var(--theme-customCard-backgroundHover) !important;
 }
-
-/*内容列表动画效果start*/
-/* 进入动画 - 从右侧进入 */
-.tag-list-enter-from {
-  opacity: 0;
-  transform: translateX(100%);
-}
-
-.tag-list-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 离开动画 - 向左侧离开 */
-.tag-list-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.tag-list-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-/* 离开中 */
-.tag-list-leave-active {
-  position: relative;
-}
-
-/*内容列表动画效果end*/
 
 .tag-item-active {
   background-color: var(--theme-customCard-backgroundHover) !important;
@@ -405,7 +487,6 @@ onUnmounted(() => {
   justify-content: center;
   box-shadow: -2px 0 8px var(--theme-universal-border);
   cursor: pointer;
-  transition: all var(--animation-duration, 0.3s);
   z-index: 3;
   opacity: 0.7;
 }
@@ -420,7 +501,6 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--animation-duration, 0.3s) ease;
 }
 
 .unfold {
@@ -444,7 +524,6 @@ onUnmounted(() => {
   border-top: 1px solid var(--theme-universal-border);
   border-radius: 6px;
   box-shadow: 0 -1px 5px var(--theme-universal-border);
-  transition: all var(--animation-duration, 0.3s) ease;
 }
 
 .clear-icon {
