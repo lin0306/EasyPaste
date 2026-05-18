@@ -27,7 +27,7 @@ const searchText = ref('')
 const showClearDataModal = ref(false)
 
 // 标签列表容器引用
-const tagListContainerRef = ref<HTMLElement | null>(null)
+const tagListContainerRef = ref<HTMLElement | undefined>(undefined)
 
 /**
  * 加载标签列表
@@ -68,7 +68,7 @@ const deleteTag = async (id: number, index: number): Promise<void> => {
       const targetElement = tagElements[index] as HTMLElement
       if (targetElement) {
         const duration = animationEffect.duration / 1000 || 0.3
-        await new Promise<void>((resolve) => {
+        await new Promise<void>(resolve => {
           gsap.to(targetElement, {
             opacity: 0,
             x: -100,
@@ -77,7 +77,7 @@ const deleteTag = async (id: number, index: number): Promise<void> => {
             onComplete: () => {
               tagItems.value.splice(index, 1)
               resolve()
-            }
+            },
           })
         })
       } else {
@@ -111,19 +111,21 @@ const clearTags = async (): Promise<void> => {
     // 执行清空动画
     if (animationEffect.enabled && tagListContainerRef.value) {
       const duration = animationEffect.duration / 1000 || 0.3
-      await new Promise<void>((resolve) => {
-        gsap.to(tagListContainerRef.value.querySelectorAll('.tag-item'), {
-          opacity: 0,
-          x: -50,
-          stagger: 0.05,
-          duration: duration,
-          ease: 'power2.in',
-          onComplete: () => {
-            tagItems.value = []
-            showClearDataModal.value = false
-            resolve()
-          }
-        })
+      await new Promise<void>(resolve => {
+        if (tagListContainerRef.value) {
+          gsap.to(tagListContainerRef.value.querySelectorAll('.tag-item'), {
+            opacity: 0,
+            x: -50,
+            stagger: 0.05,
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              tagItems.value = []
+              showClearDataModal.value = false
+              resolve()
+            },
+          })
+        }
       })
     } else {
       tagItems.value = []
@@ -224,9 +226,12 @@ watch(
 
       // 为新添加的标签执行进入动画
       addedIds.forEach((tagId, idx) => {
-        const element = tagListContainerRef.value?.querySelector(`[data-tag-id="${tagId}"]`) as HTMLElement
+        const element = tagListContainerRef.value?.querySelector(
+          `[data-tag-id="${tagId}"]`
+        ) as HTMLElement
         if (element) {
-          gsap.fromTo(element,
+          gsap.fromTo(
+            element,
             {
               opacity: 0,
               x: 100,

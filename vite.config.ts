@@ -9,7 +9,7 @@ import path from 'path'
 const host = process.env.TAURI_DEV_HOST
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => ({
+export default defineConfig({
   plugins: [
     vue(),
     // 打包分析
@@ -81,58 +81,81 @@ export default defineConfig(async () => ({
   },
   // 添加有关当前构建目标的额外前缀，使这些 CLI 设置的 Tauri 环境变量可以在客户端代码中访问
   envPrefix: ['VITE_', 'TAURI_ENV_*'],
+  // 构建选项
   build: {
     // Tauri 在 Windows 上使用 Chromium，在 macOS 和 Linux 上使用 WebKit
     // target: process.env.TAURI_ENV_PLATFORM == 'windows' ? 'chrome114' : 'safari16',
     target: 'esnext',
     // 在 debug 构建中生成 sourcemap
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
-    terserOptions: {
-      compress: {
-        //生产环境时移除console和debugger
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-    rollupOptions: {
+    // 使用 Oxc 压缩选项（替代 terserOptions）
+    minify: 'oxc', // 默认值，可选 'oxc' | 'esbuild' | 'terser' | boolean
+    // 优化 Rollup 配置
+    rolldownOptions: {
       output: {
+        minify: {
+          compress: {
+            dropConsole: true,
+            dropDebugger: true,
+          },
+        },
         chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
         entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
         assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
 
-        manualChunks: {
-          // Vue 生态
-          'vendor-vue': ['vue', 'vue-router', 'pinia'],
-          // UI 库
-          'vendor-naive': ['naive-ui'],
-          // 图标
-          'vendor-fontawesome': [
-            '@fortawesome/fontawesome-svg-core',
-            '@fortawesome/free-solid-svg-icons',
-            '@fortawesome/free-regular-svg-icons',
-            '@fortawesome/free-brands-svg-icons',
-            '@fortawesome/vue-fontawesome',
+        // 优化分组
+        advancedChunks: {
+          groups: [
+            // Vue 生态
+            {
+              name: 'vendor',
+              test: /[\\/]node_modules[\\/](vue|pinia)[\\/]/,
+            },
+            // UI 库
+            {
+              name: 'vendor-ui',
+              test: /[\\/]node_modules[\\/](naive-ui)[\\/]/,
+            },
+            // 图标
+            {
+              name: 'vendor-fontawesome',
+              test: /[\\/]node_modules[\\/](@fortawesome)[\\/]/,
+            },
+            // Markdown 和处理
+            {
+              name: 'vendor-markdown',
+              test: /[\\/]node_modules[\\/](marked|highlight.js)[\\/]/,
+            },
+            // 媒体播放
+            {
+              name: 'vendor-media',
+              test: /[\\/]node_modules[\\/](plyr|wavesurfer.js|v-viewer)[\\/]/,
+            },
+            // 压缩
+            {
+              name: 'vendor-zip',
+              test: /[\\/]node_modules[\\/](@zip.js)[\\/]/,
+            },
+            // Tauri
+            {
+              name: 'vendor-tauri',
+              test: /[\\/]node_modules[\\/](@tauri-apps)[\\/]/,
+            },
           ],
-          // Markdown 和处理
-          'vendor-markdown': ['marked', 'highlight.js'],
-          // 媒体播放
-          'vendor-media': ['plyr', 'wavesurfer.js', 'v-viewer'],
-          // 压缩
-          'vendor-zip': ['@zip.js/zip.js'],
-          // Tauri
-          'vendor-tauri': ['@tauri-apps/api'],
         },
       },
     },
-    optimizeDeps: {
-      include: ['vue', 'vue-router', 'pinia', 'naive-ui'],
-      // 明确排除这些空模块
-      exclude: ['birpc', 'hookable', 'perfect-debounce'],
-    },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+  },
+  // 优化依赖项
+  optimizeDeps: {
+    include: ['vue', 'vue-router', 'pinia', 'naive-ui'],
+    // 明确排除这些空模块
+    exclude: ['birpc', 'hookable', 'perfect-debounce'],
+  },
+  // 别名
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
   },
-}))
+})

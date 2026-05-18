@@ -123,7 +123,7 @@ onMounted(async () => {
   margin-left: 5px;
 }
 
-:deep(.plugin-title :deep(.n-tag__content)) {
+:deep(.plugin-title .n-tag__content) {
   font-size: 12px;
 }
 
