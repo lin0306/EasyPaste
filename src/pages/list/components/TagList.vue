@@ -82,10 +82,12 @@ const message = useMessage()
   transition: left 0.3s ease;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 90px);
+  height: calc(100vh - 90px);
   margin: auto auto;
   padding-bottom: 5px;
   padding-right: 5px;
+  will-change: transform, opacity;
+  pointer-events: none;
 }
 
 .has-selected-tag {
@@ -113,6 +115,7 @@ const message = useMessage()
   transform-origin: left center;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0.2;
+  pointer-events: auto;
 }
 
 .tag-name {
