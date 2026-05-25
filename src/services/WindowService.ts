@@ -3,7 +3,7 @@ import { WebViewWindowOptions } from '../types/Window'
 import { emit } from '@tauri-apps/api/event'
 import { currentLanguage, loadPageLanguage } from './LanguageService.ts'
 import { invoke } from '@tauri-apps/api/core'
-import { isDev } from '../data/SystemParams.ts'
+import { isDev, OPEN_DEV_TOOLS_ON_STARTUP } from '../data/SystemParams.ts'
 
 // 创建窗口参数配置
 export const windowConfig: WebViewWindowOptions = {
@@ -32,7 +32,6 @@ export const windowConfig: WebViewWindowOptions = {
   preventOverflow: true,
   incognito: true,
   // parent: 'list', // 确保窗口始终置于列表窗口之上
-  openDevTools: true,
 }
 
 /**
@@ -43,15 +42,13 @@ export async function createWin(options: WebViewWindowOptions): Promise<void> {
   console.log('-=-=-=-=-=开始创建窗口')
 
   const args: WebViewWindowOptions = Object.assign({}, windowConfig, options)
-  // 拆分出来 openDevTools
-  const { openDevTools, ...obj } = args
   // 判断窗口是否存在
   const existWin = await WebviewWindow.getByLabel(args.label)
   if (existWin) {
     // 窗口存在，直接聚焦
     await existWin.show()
     await existWin.setFocus()
-    if (isDev && openDevTools) {
+    if (isDev && OPEN_DEV_TOOLS_ON_STARTUP) {
       setTimeout(async () => {
         await invoke('open_dev_tool', { windowName: args.label })
       }, 200)
@@ -59,7 +56,7 @@ export async function createWin(options: WebViewWindowOptions): Promise<void> {
     return
   }
   // 创建窗口对象
-  const win = new WebviewWindow(args.label, obj)
+  const win = new WebviewWindow(args.label, args)
 
   // 窗口创建完毕/失败
   await win.once('tauri://created', async () => {
@@ -75,7 +72,7 @@ export async function createWin(options: WebViewWindowOptions): Promise<void> {
       await win.maximize()
     }
 
-    if (isDev && openDevTools) {
+    if (isDev && OPEN_DEV_TOOLS_ON_STARTUP) {
       setTimeout(async () => {
         await invoke('open_dev_tool', { windowName: args.label })
       }, 200)

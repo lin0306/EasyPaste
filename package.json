@@ -6,9 +6,12 @@
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "dev": "vite",
+    "dev:debug": "cross-env VITE_OPEN_DEV_TOOLS_ON_STARTUP=true vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "tauri:dev": "cross-env OPEN_DEV_TOOLS_ON_STARTUP=false tauri dev",
+    "tauri:dev:debug": "cross-env OPEN_DEV_TOOLS_ON_STARTUP=true tauri dev",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -54,6 +57,7 @@
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/eslint-config-prettier": "^10.2.0",
+    "cross-env": "^7.0.3",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.8.0",

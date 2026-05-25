@@ -75,8 +75,10 @@ pub fn build_main_window(app: AppHandle) -> tauri::Result<WebviewWindow> {
     #[cfg(debug_assertions)]
     {
         use crate::commands::dev::open_dev_tool;
-
-        open_dev_tool(app.clone(), "list");
+        use crate::utils::window_util::should_open_dev_tools_on_startup;
+        if should_open_dev_tools_on_startup() {
+            open_dev_tool(app.clone(), "list");
+        }
     }
     Ok(window)
 }
