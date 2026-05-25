@@ -145,6 +145,7 @@
       "identifier": "http:default",
       "allow": [
         { "url": "https://gh-proxy.com" },
+        { "url": "https://gh-proxy.org" },
         { "url": "https://github.com" },
         { "url": "https://gh.llkk.cc" }
       ]
