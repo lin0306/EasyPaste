@@ -482,7 +482,7 @@ async function loadPluginStore(): Promise<void> {
   try {
     storeListLoading.value = true
     const response = await fetch(
-      'https://gh.llkk.cc/https://raw.githubusercontent.com/lin0306/EasyPaste-Plugins/master/plugins-list.json',
+      'https://gh-proxy.org/https://raw.githubusercontent.com/lin0306/EasyPaste-Plugins/master/plugins-list.json',
       { method: 'GET' }
     )
     let data: StorePlugin[] = await response.json()
