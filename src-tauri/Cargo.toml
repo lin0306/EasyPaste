@@ -16,52 +16,54 @@ name = "easypaste_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "^2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [ "protocol-asset", "tray-icon", "image-png", "unstable"] } # 启用托盘和PNG支持
-tauri-plugin-opener = "2"
-tauri-plugin-fs = "2"
-tauri-plugin-log = "2"
-tauri-plugin-process = "2"
-tauri-plugin-store = "2"
-tauri-plugin-shell = "2"
-tauri-plugin-notification = "2"
-tauri-plugin-os = "2"
-tauri-plugin-dialog = "2"
+tauri = { version = "^2", features = [ "protocol-asset", "tray-icon", "image-png", "unstable"] } # 启用托盘和PNG支持
+tauri-plugin-opener = "^2"
+tauri-plugin-fs = "^2"
+tauri-plugin-log = "^2"
+tauri-plugin-process = "^2"
+tauri-plugin-store = "^2"
+tauri-plugin-shell = "^2"
+tauri-plugin-notification = "^2"
+tauri-plugin-os = "^2"
+tauri-plugin-dialog = "^2"
+tauri-plugin-http = "^2"
 # JSON 处理
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
 # 日志相关配置
-log = "0.4"
+log = "0.4.30"
 # 日期
-chrono = { version = "0.4", features = ["serde"] }
+chrono = { version = "0.4.44", features = ["serde"] }
 # 文件操作
 dirs = "6.0.0"
 # 剪贴板操作
-clipboard-rs = "0.3"
-lazy_static = "1.5"
+clipboard-rs = "0.3.4"
+# 懒加载
+lazy_static = "1.5.0"
 # RAR 文件处理
 unrar = "0.5.8"
 # TAR 文件处理
-tar = "0.4.44"
+tar = "0.4.46"
 # 压缩文件处理
-flate2 = "1.1"
+flate2 = "1.1.9"
 # tcp/ip请求
-tauri-plugin-http = "2"
-reqwest = "0.12.28"
-anyhow = "1.0.100"
+reqwest = "0.13.3"
+anyhow = "1.0.102"
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
-winreg = "0.55.0"
+winreg = "0.56.0"
 
 # 数据库支持
 [dependencies.tauri-plugin-sql]
 features = ["sqlite"] # or "postgres", or "mysql"
-version = "2"
+version = "^2"
 
+# 非 Android/iOS 平台依赖
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-autostart = "2"
-tauri-plugin-global-shortcut = "2"
-tauri-plugin-single-instance = "2"
-tauri-plugin-updater = "2"
+tauri-plugin-autostart = "^2"
+tauri-plugin-global-shortcut = "^2"
+tauri-plugin-single-instance = "^2"
+tauri-plugin-updater = "^2"
