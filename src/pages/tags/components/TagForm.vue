@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getContrastColor } from '../../../utils/ColorUtil.ts'
+import { getContrastColor } from '@/utils/ColorUtil.ts'
 import { NTag, useMessage } from 'naive-ui'
 import {
   editState,
@@ -9,8 +9,8 @@ import {
   resetForm,
   tagItems,
 } from '../composables/TagDataComposable.ts'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 

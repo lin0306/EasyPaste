@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 const props = defineProps<{
   filePath: string

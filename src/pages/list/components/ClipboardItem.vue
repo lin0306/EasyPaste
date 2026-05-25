@@ -196,12 +196,12 @@ import {
 } from '../composables/FileDataComposable.ts'
 import { handleDragEnd, handleDragStart } from '../composables/DragComposable.ts'
 import { tagSettingState } from '../composables/TagDataComposable.ts'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant'
 import FilePreview from './FilePreview.vue'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable'
+import { currentLanguage } from '@/services/LanguageService'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { getTimeAgo } from '../../../utils/DateUtil.ts'
+import { getTimeAgo } from '@/utils/DateUtil'
 import { faAlignLeft, faCode, faLink } from '@fortawesome/free-solid-svg-icons'
 import { faFile, faImage, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { gsap } from 'gsap'
@@ -251,7 +251,8 @@ watch(
       addedIds.forEach((tagId, index) => {
         const element = tagItemRefsMap.get(tagId)?.$el
         if (element) {
-          gsap.fromTo(element,
+          gsap.fromTo(
+            element,
             {
               opacity: 0,
               scale: 0.8,
@@ -268,7 +269,8 @@ watch(
       })
 
       // 标签容器展开动画
-      gsap.fromTo(cardTagsRef.value,
+      gsap.fromTo(
+        cardTagsRef.value,
         {
           maxHeight: 0,
           opacity: 0,
@@ -289,7 +291,7 @@ watch(
       const removedIds = oldTagIds.filter(id => !newTagIds.includes(id))
 
       // 为删除的标签执行离开动画
-      removedIds.forEach((tagId) => {
+      removedIds.forEach(tagId => {
         const element = tagItemRefsMap.get(tagId)?.$el
         if (element) {
           gsap.to(element, {
@@ -300,14 +302,16 @@ watch(
             ease: 'power2.in',
             onComplete: () => {
               tagItemRefsMap.delete(tagId)
-            }
+            },
           })
         }
       })
 
       // 如果没有标签了，执行容器收起动画
-      if (newTags.length === 0 &&
-          tagSettingState.location !== SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT) {
+      if (
+        newTags.length === 0 &&
+        tagSettingState.location !== SETTINGS.TAG.BIND_TAG_LOCATION.BOTTOM_RIGHT
+      ) {
         gsap.to(cardTagsRef.value, {
           maxHeight: 0,
           opacity: 0,

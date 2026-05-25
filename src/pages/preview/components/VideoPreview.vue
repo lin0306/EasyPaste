@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, watch } from 'vue'
 import 'plyr/dist/plyr.css'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { getType } from '../../../utils/VideoUtil.ts'
+import { getType } from '@/utils/VideoUtil.ts'
 // @ts-ignore 这个是Plyr的构造方法
 import Plyr from 'plyr'
 

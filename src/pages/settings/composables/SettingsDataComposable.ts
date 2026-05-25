@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
 
 // 当前选择的菜单
 export const selectedKey = ref<string>('general')

@@ -1,8 +1,8 @@
 import { exists, readDir } from '@tauri-apps/plugin-fs'
 import { ref } from 'vue'
-import { initSettings } from '../../../store/Settings.ts'
-import { initShortcutKeys } from '../../../store/ShortcutKeys.ts'
-import { filePathConvertFileName } from '../../../utils/TextUtil.ts'
+import { initSettings } from '@/store/Settings.ts'
+import { initShortcutKeys } from '@/store/ShortcutKeys.ts'
+import { filePathConvertFileName } from '@/utils/TextUtil.ts'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { info } from '@tauri-apps/plugin-log'
 

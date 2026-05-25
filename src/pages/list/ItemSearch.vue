@@ -11,10 +11,10 @@ import {
   NSwitch,
   NTag,
 } from 'naive-ui'
-import { currentLanguage } from '../../services/LanguageService.ts'
-import { themeColors } from '../../services/ThemeService.ts'
-import TitleBar from '../../components/TitleBar.vue'
-import { animationEffect } from '../../components/effect/composables/AnimationComposable.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import TitleBar from '@/components/TitleBar.vue'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
 import {
   faCalendarAlt,
   faCode,
@@ -192,7 +192,7 @@ const advancedOptionsRef = ref<HTMLElement | null>(null)
 // 监听高级选项展开/收起
 watch(
   () => searchFilters.showAdvancedOptions,
-  (newValue) => {
+  newValue => {
     if (!animationEffect.enabled || !advancedOptionsRef.value) {
       return
     }
@@ -201,7 +201,8 @@ watch(
 
     if (newValue) {
       // 展开动画
-      gsap.fromTo(advancedOptionsRef.value,
+      gsap.fromTo(
+        advancedOptionsRef.value,
         {
           opacity: 0,
           height: 0,
@@ -244,265 +245,269 @@ onUnmounted(async () => {
     <TitleBar :title="currentLanguage.pages.itemSearch.title" showCloseBtn @close="handleClose" />
     <n-scrollbar style="max-height: calc(100vh)">
       <div ref="searchContentRef" class="search-content">
-          <!-- 搜索输入区域 -->
-          <div class="custom-card search-input-card">
-            <n-input
-              id="search-input"
-              v-model:value="searchText"
-              :placeholder="currentLanguage.pages.itemSearch.searchHint"
-              clearable
-              size="large"
+        <!-- 搜索输入区域 -->
+        <div class="custom-card search-input-card">
+          <n-input
+            id="search-input"
+            v-model:value="searchText"
+            :placeholder="currentLanguage.pages.itemSearch.searchHint"
+            clearable
+            size="large"
+            round
+            autofocus
+          >
+            <template #prefix>
+              <n-icon size="18" :color="themeColors.universal.textHint">
+                <font-awesome-icon :icon="faMagnifyingGlass" />
+              </n-icon>
+            </template>
+          </n-input>
+
+          <!-- 精确匹配开关 -->
+          <div class="exact-match-toggle">
+            <n-switch v-model:value="searchFilters.exactMatch" size="small" />
+            <span class="toggle-label">{{ currentLanguage.pages.itemSearch.exactMatch }}</span>
+          </div>
+        </div>
+
+        <!-- 类型筛选区域 -->
+        <div class="custom-card filter-card">
+          <div class="filter-header">
+            <n-icon size="16" :color="themeColors.universal.primary">
+              <font-awesome-icon :icon="faFilter" />
+            </n-icon>
+            <span class="filter-title">{{ currentLanguage.pages.itemSearch.filterType }}</span>
+          </div>
+
+          <n-space class="type-tags" wrap :size="[8, 8]">
+            <n-tag
+              v-for="type in typeOptions"
+              :key="type.key"
+              :color="
+                selectTypes.includes(type.key)
+                  ? {
+                      color: themeColors.universal.primary,
+                      textColor: themeColors.universal.background,
+                    }
+                  : {
+                      color: themeColors.universal.secondary,
+                      textColor: themeColors.universal.text,
+                    }
+              "
               round
-              autofocus
+              size="medium"
+              class="type-tag"
+              @click="toggleType(type.key)"
             >
-              <template #prefix>
-                <n-icon size="18" :color="themeColors.universal.textHint">
-                  <font-awesome-icon :icon="faMagnifyingGlass" />
+              <template #icon>
+                <n-icon size="14">
+                  <font-awesome-icon :icon="type.icon" />
                 </n-icon>
               </template>
-            </n-input>
-
-            <!-- 精确匹配开关 -->
-            <div class="exact-match-toggle">
-              <n-switch v-model:value="searchFilters.exactMatch" size="small" />
-              <span class="toggle-label">{{ currentLanguage.pages.itemSearch.exactMatch }}</span>
-            </div>
-          </div>
-
-          <!-- 类型筛选区域 -->
-          <div class="custom-card filter-card">
-            <div class="filter-header">
-              <n-icon size="16" :color="themeColors.universal.primary">
-                <font-awesome-icon :icon="faFilter" />
-              </n-icon>
-              <span class="filter-title">{{ currentLanguage.pages.itemSearch.filterType }}</span>
-            </div>
-
-            <n-space class="type-tags" wrap :size="[8, 8]">
-              <n-tag
-                v-for="type in typeOptions"
-                :key="type.key"
-                :color="
-                  selectTypes.includes(type.key)
-                    ? {
-                        color: themeColors.universal.primary,
-                        textColor: themeColors.universal.background,
-                      }
-                    : {
-                        color: themeColors.universal.secondary,
-                        textColor: themeColors.universal.text,
-                      }
-                "
-                round
-                size="medium"
-                class="type-tag"
-                @click="toggleType(type.key)"
-              >
-                <template #icon>
-                  <n-icon size="14">
-                    <font-awesome-icon :icon="type.icon" />
-                  </n-icon>
-                </template>
-                {{ type.label }}
-              </n-tag>
-            </n-space>
-          </div>
-
-          <!-- 高级选项展开/收起按钮 -->
-          <div
-            class="advanced-toggle"
-            @click="searchFilters.showAdvancedOptions = !searchFilters.showAdvancedOptions"
-          >
-            <span>{{ currentLanguage.pages.itemSearch.advancedOptions }}</span>
-            <div class="advanced-toggle-actions">
-              <n-icon :class="{ 'rotate-icon': searchFilters.showAdvancedOptions }">
-                <font-awesome-icon :icon="faSortAmountDown" />
-              </n-icon>
-            </div>
-          </div>
-
-          <!-- 高级搜索选项 -->
-          <div v-if="searchFilters.showAdvancedOptions" ref="advancedOptionsRef" class="advanced-options">
-              <!-- 排除关键词 -->
-              <div class="custom-card advanced-item">
-                <div class="advanced-item-header">
-                  <n-icon size="14" :color="themeColors.universal.textHint">
-                    <font-awesome-icon :icon="faTimes" />
-                  </n-icon>
-                  <span>{{ currentLanguage.pages.itemSearch.excludeKeywords }}</span>
-                </div>
-                <n-input
-                  v-model:value="searchFilters.excludeText"
-                  :placeholder="currentLanguage.pages.itemSearch.excludeKeywordsPlaceholder"
-                  clearable
-                  size="medium"
-                />
-              </div>
-
-              <!-- 内容长度范围 -->
-              <div class="custom-card advanced-item">
-                <div class="advanced-item-header">
-                  <n-icon size="14" :color="themeColors.universal.textHint">
-                    <font-awesome-icon :icon="faFileLines" />
-                  </n-icon>
-                  <span>{{ currentLanguage.pages.itemSearch.contentLength }}</span>
-                </div>
-                <div class="range-inputs">
-                  <n-input-number
-                    v-model:value="searchFilters.minLength"
-                    :placeholder="currentLanguage.pages.itemSearch.minLength"
-                    :min="0"
-                    :max="9999999"
-                    size="medium"
-                    style="flex: 1"
-                  />
-                  <span class="range-separator">~</span>
-                  <n-input-number
-                    v-model:value="searchFilters.maxLength"
-                    :placeholder="currentLanguage.pages.itemSearch.maxLength"
-                    :min="0"
-                    :max="9999999"
-                    size="medium"
-                    style="flex: 1"
-                  />
-                </div>
-              </div>
-
-              <!-- 时间范围 -->
-              <div class="custom-card advanced-item">
-                <div class="advanced-item-header">
-                  <n-icon size="14" :color="themeColors.universal.textHint">
-                    <font-awesome-icon :icon="faCalendarAlt" />
-                  </n-icon>
-                  <span>{{ currentLanguage.pages.itemSearch.timeRange }}</span>
-                </div>
-                <div class="date-range">
-                  <n-date-picker
-                    v-model:value="searchFilters.startDate"
-                    type="datetime"
-                    :placeholder="currentLanguage.pages.itemSearch.startDate"
-                    size="medium"
-                    style="flex: 1"
-                    clearable
-                  />
-                  <span class="range-separator">~</span>
-                  <n-date-picker
-                    v-model:value="searchFilters.endDate"
-                    type="datetime"
-                    :placeholder="currentLanguage.pages.itemSearch.endDate"
-                    size="medium"
-                    style="flex: 1"
-                    clearable
-                  />
-                </div>
-              </div>
-
-              <!-- 排序方式 -->
-              <div class="custom-card advanced-item">
-                <div class="advanced-item-header">
-                  <n-icon size="14" :color="themeColors.universal.textHint">
-                    <font-awesome-icon :icon="faSortAmountUp" />
-                  </n-icon>
-                  <span>{{ currentLanguage.pages.itemSearch.sortOrder }}</span>
-                </div>
-                <n-select
-                  v-model:value="searchFilters.sortValue"
-                  :options="sortOptions"
-                  size="medium"
-                />
-              </div>
-            </div>
-
-          <!-- 占位元素，防止内容被固定按钮遮挡 -->
-          <div class="button-spacer"></div>
+              {{ type.label }}
+            </n-tag>
+          </n-space>
         </div>
+
+        <!-- 高级选项展开/收起按钮 -->
+        <div
+          class="advanced-toggle"
+          @click="searchFilters.showAdvancedOptions = !searchFilters.showAdvancedOptions"
+        >
+          <span>{{ currentLanguage.pages.itemSearch.advancedOptions }}</span>
+          <div class="advanced-toggle-actions">
+            <n-icon :class="{ 'rotate-icon': searchFilters.showAdvancedOptions }">
+              <font-awesome-icon :icon="faSortAmountDown" />
+            </n-icon>
+          </div>
+        </div>
+
+        <!-- 高级搜索选项 -->
+        <div
+          v-if="searchFilters.showAdvancedOptions"
+          ref="advancedOptionsRef"
+          class="advanced-options"
+        >
+          <!-- 排除关键词 -->
+          <div class="custom-card advanced-item">
+            <div class="advanced-item-header">
+              <n-icon size="14" :color="themeColors.universal.textHint">
+                <font-awesome-icon :icon="faTimes" />
+              </n-icon>
+              <span>{{ currentLanguage.pages.itemSearch.excludeKeywords }}</span>
+            </div>
+            <n-input
+              v-model:value="searchFilters.excludeText"
+              :placeholder="currentLanguage.pages.itemSearch.excludeKeywordsPlaceholder"
+              clearable
+              size="medium"
+            />
+          </div>
+
+          <!-- 内容长度范围 -->
+          <div class="custom-card advanced-item">
+            <div class="advanced-item-header">
+              <n-icon size="14" :color="themeColors.universal.textHint">
+                <font-awesome-icon :icon="faFileLines" />
+              </n-icon>
+              <span>{{ currentLanguage.pages.itemSearch.contentLength }}</span>
+            </div>
+            <div class="range-inputs">
+              <n-input-number
+                v-model:value="searchFilters.minLength"
+                :placeholder="currentLanguage.pages.itemSearch.minLength"
+                :min="0"
+                :max="9999999"
+                size="medium"
+                style="flex: 1"
+              />
+              <span class="range-separator">~</span>
+              <n-input-number
+                v-model:value="searchFilters.maxLength"
+                :placeholder="currentLanguage.pages.itemSearch.maxLength"
+                :min="0"
+                :max="9999999"
+                size="medium"
+                style="flex: 1"
+              />
+            </div>
+          </div>
+
+          <!-- 时间范围 -->
+          <div class="custom-card advanced-item">
+            <div class="advanced-item-header">
+              <n-icon size="14" :color="themeColors.universal.textHint">
+                <font-awesome-icon :icon="faCalendarAlt" />
+              </n-icon>
+              <span>{{ currentLanguage.pages.itemSearch.timeRange }}</span>
+            </div>
+            <div class="date-range">
+              <n-date-picker
+                v-model:value="searchFilters.startDate"
+                type="datetime"
+                :placeholder="currentLanguage.pages.itemSearch.startDate"
+                size="medium"
+                style="flex: 1"
+                clearable
+              />
+              <span class="range-separator">~</span>
+              <n-date-picker
+                v-model:value="searchFilters.endDate"
+                type="datetime"
+                :placeholder="currentLanguage.pages.itemSearch.endDate"
+                size="medium"
+                style="flex: 1"
+                clearable
+              />
+            </div>
+          </div>
+
+          <!-- 排序方式 -->
+          <div class="custom-card advanced-item">
+            <div class="advanced-item-header">
+              <n-icon size="14" :color="themeColors.universal.textHint">
+                <font-awesome-icon :icon="faSortAmountUp" />
+              </n-icon>
+              <span>{{ currentLanguage.pages.itemSearch.sortOrder }}</span>
+            </div>
+            <n-select
+              v-model:value="searchFilters.sortValue"
+              :options="sortOptions"
+              size="medium"
+            />
+          </div>
+        </div>
+
+        <!-- 占位元素，防止内容被固定按钮遮挡 -->
+        <div class="button-spacer"></div>
+      </div>
     </n-scrollbar>
 
     <!-- 固定在底部的已选条件展示 -->
     <div v-if="hasActiveFilters" class="selected-filters-fixed">
-        <div class="filter-summary">
-          <span class="summary-label">
-            {{ currentLanguage.pages.itemSearch.selectedFilters }}
-          </span>
+      <div class="filter-summary">
+        <span class="summary-label">
+          {{ currentLanguage.pages.itemSearch.selectedFilters }}
+        </span>
 
-          <n-space wrap :size="[6, 6]" class="tags-container">
-            <n-tag
-              v-if="searchText"
-              size="small"
-              closable
-              @close="searchText = ''"
-              class="keyword-tag"
-            >
-              <span class="tag-text">
-                {{ currentLanguage.pages.itemSearch.keywordLabel }}: {{ searchText }}
-              </span>
-            </n-tag>
-            <n-tag
-              v-if="searchFilters.excludeText"
-              size="small"
-              closable
-              @close="searchFilters.excludeText = ''"
-              class="exclude-tag"
-            >
-              <span class="tag-text">
-                {{ currentLanguage.pages.itemSearch.excludeLabel }}: {{ searchFilters.excludeText }}
-              </span>
-            </n-tag>
-            <n-tag
-              v-for="typeKey in selectTypes"
-              :key="typeKey"
-              size="small"
-              closable
-              @close="toggleType(typeKey)"
-            >
-              {{ typeOptions.find(t => t.key === typeKey)?.label }}
-            </n-tag>
-            <n-tag
-              v-if="searchFilters.minLength !== null || searchFilters.maxLength !== null"
-              size="small"
-              closable
-              @close="
-                () => {
-                  searchFilters.minLength = undefined
-                  searchFilters.maxLength = undefined
-                }
-              "
-            >
-              {{ currentLanguage.pages.itemSearch.lengthLabel }}:
-              {{ searchFilters.minLength || 0 }}~{{ searchFilters.maxLength || '∞' }}
-            </n-tag>
-            <n-tag
-              v-if="searchFilters.startDate || searchFilters.endDate"
-              size="small"
-              closable
-              @close="
-                () => {
-                  searchFilters.startDate = undefined
-                  searchFilters.endDate = undefined
-                }
-              "
-            >
-              {{ currentLanguage.pages.itemSearch.timeLabel }}
-            </n-tag>
-            <n-tag
-              v-if="searchFilters.exactMatch"
-              size="small"
-              closable
-              @close="searchFilters.exactMatch = false"
-            >
-              {{ currentLanguage.pages.itemSearch.exactMatch }}
-            </n-tag>
-            <n-tag
-              v-if="searchFilters.sortValue !== 'time-desc'"
-              size="small"
-              closable
-              @close="searchFilters.sortValue = 'time-desc'"
-            >
-              {{ sortOptions.find(s => s.value === searchFilters.sortValue)?.label }}
-            </n-tag>
-          </n-space>
-        </div>
+        <n-space wrap :size="[6, 6]" class="tags-container">
+          <n-tag
+            v-if="searchText"
+            size="small"
+            closable
+            @close="searchText = ''"
+            class="keyword-tag"
+          >
+            <span class="tag-text">
+              {{ currentLanguage.pages.itemSearch.keywordLabel }}: {{ searchText }}
+            </span>
+          </n-tag>
+          <n-tag
+            v-if="searchFilters.excludeText"
+            size="small"
+            closable
+            @close="searchFilters.excludeText = ''"
+            class="exclude-tag"
+          >
+            <span class="tag-text">
+              {{ currentLanguage.pages.itemSearch.excludeLabel }}: {{ searchFilters.excludeText }}
+            </span>
+          </n-tag>
+          <n-tag
+            v-for="typeKey in selectTypes"
+            :key="typeKey"
+            size="small"
+            closable
+            @close="toggleType(typeKey)"
+          >
+            {{ typeOptions.find(t => t.key === typeKey)?.label }}
+          </n-tag>
+          <n-tag
+            v-if="searchFilters.minLength !== null || searchFilters.maxLength !== null"
+            size="small"
+            closable
+            @close="
+              () => {
+                searchFilters.minLength = undefined
+                searchFilters.maxLength = undefined
+              }
+            "
+          >
+            {{ currentLanguage.pages.itemSearch.lengthLabel }}:
+            {{ searchFilters.minLength || 0 }}~{{ searchFilters.maxLength || '∞' }}
+          </n-tag>
+          <n-tag
+            v-if="searchFilters.startDate || searchFilters.endDate"
+            size="small"
+            closable
+            @close="
+              () => {
+                searchFilters.startDate = undefined
+                searchFilters.endDate = undefined
+              }
+            "
+          >
+            {{ currentLanguage.pages.itemSearch.timeLabel }}
+          </n-tag>
+          <n-tag
+            v-if="searchFilters.exactMatch"
+            size="small"
+            closable
+            @close="searchFilters.exactMatch = false"
+          >
+            {{ currentLanguage.pages.itemSearch.exactMatch }}
+          </n-tag>
+          <n-tag
+            v-if="searchFilters.sortValue !== 'time-desc'"
+            size="small"
+            closable
+            @close="searchFilters.sortValue = 'time-desc'"
+          >
+            {{ sortOptions.find(s => s.value === searchFilters.sortValue)?.label }}
+          </n-tag>
+        </n-space>
       </div>
+    </div>
 
     <!-- 固定在底部的操作按钮区域 -->
     <div class="action-buttons-fixed" :class="{ 'has-filters': hasActiveFilters }">

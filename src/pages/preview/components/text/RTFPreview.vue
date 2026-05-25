@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { currentLanguage } from '../../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 // const props = defineProps<{
 //   filePath: string

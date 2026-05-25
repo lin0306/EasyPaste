@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { isDev } from '../../../data/SystemParams.ts'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
-import { themeColors } from '../../../services/ThemeService.ts'
-import { getTimeAgo } from '../../../utils/DateUtil.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { filePathConvertFileName } from '../../../utils/TextUtil.ts'
+import { isDev } from '@/data/SystemParams.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { getTimeAgo } from '@/utils/DateUtil.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { filePathConvertFileName } from '@/utils/TextUtil.ts'
 import { NCode, NImage, NTag } from 'naive-ui'
-import UpdateIcon from '../../../assets/icons/UpdateIcon.vue'
+import UpdateIcon from '@/assets/icons/UpdateIcon.vue'
 import { ref, watch } from 'vue'
 import {
   faAlignLeft,
@@ -184,7 +184,7 @@ watch(
           ease: 'power2.in',
           onComplete: () => {
             gsap.set(oldDropdown, { clearProps: 'all' })
-          }
+          },
         })
       }
     }
@@ -193,7 +193,8 @@ watch(
     if (newKey) {
       const newDropdown = dropdownRefs.value.find(el => el?.dataset.key === newKey)
       if (newDropdown) {
-        gsap.fromTo(newDropdown,
+        gsap.fromTo(
+          newDropdown,
           {
             y: -10,
             opacity: 0,

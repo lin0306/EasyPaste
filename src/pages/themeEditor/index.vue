@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { currentLanguage } from '../../services/LanguageService.ts'
-import TitleBar from '../../components/TitleBar.vue'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import TitleBar from '@/components/TitleBar.vue'
 import ThemeEditor from './components/ThemeEditor.vue'
 import ThemePreview from './components/ThemePreview.vue'
-import { getCustomTheme, saveCustomTheme } from '../../store/CustomThemeConfig.ts'
+import { getCustomTheme, saveCustomTheme } from '@/store/CustomThemeConfig.ts'
 import {
   applyPreviewThemeToDOM,
   forbidCalculate,
@@ -11,7 +11,7 @@ import {
 } from './composables/ThemeEditorDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { computed, onMounted, ref, watch } from 'vue'
-import { themes } from '../../services/ThemeService.ts'
+import { themes } from '@/services/ThemeService.ts'
 import { open, save } from '@tauri-apps/plugin-dialog'
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
 import { invoke } from '@tauri-apps/api/core'

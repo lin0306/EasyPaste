@@ -14,10 +14,10 @@ import {
   update,
 } from '../composables/PluginComponsables.ts'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import ButtonGroup from '../../../components/ButtonGroup.vue'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import ButtonGroup from '@/components/ButtonGroup.vue'
 import { computed, ref, watch } from 'vue'
-import { loadPluginManifest } from '../../../services/PluginService.ts'
+import { loadPluginManifest } from '@/services/PluginService.ts'
 import PluginSettings from './PluginSettings.vue'
 
 const message = useMessage()

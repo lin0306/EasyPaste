@@ -2,7 +2,7 @@
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { NIcon, NInput } from 'naive-ui'
 import { readTextFile } from '@tauri-apps/plugin-fs'
-import { currentLanguage } from '../../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 const props = defineProps<{
   filePath: string

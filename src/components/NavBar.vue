@@ -99,7 +99,7 @@ watch(
           ease: 'power2.in',
           onComplete: () => {
             gsap.set(oldDropdown, { clearProps: 'all' })
-          }
+          },
         })
       }
     }
@@ -108,7 +108,8 @@ watch(
     if (newKey) {
       const newDropdown = dropdownRefs.value.find(el => el?.dataset.key === newKey)
       if (newDropdown) {
-        gsap.fromTo(newDropdown,
+        gsap.fromTo(
+          newDropdown,
           {
             y: -10,
             opacity: 0,

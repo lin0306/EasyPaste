@@ -2,9 +2,9 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js'
-import { convertSecondsToTime } from '../../../utils/DateUtil.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { currentThemeId, themeColors } from '../../../services/ThemeService.ts'
+import { convertSecondsToTime } from '@/utils/DateUtil.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { currentThemeId, themeColors } from '@/services/ThemeService.ts'
 
 const props = defineProps<{
   filePath: string

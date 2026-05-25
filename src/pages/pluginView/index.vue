@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
-import TitleBar from '../../components/TitleBar.vue'
+import { currentLanguage, initializePluginLanguage } from '@/services/LanguageService.ts'
+import TitleBar from '@/components/TitleBar.vue'
 import { onMounted, ref } from 'vue'
-import {
-  getPluginCSSPath,
-  getPluginJSPath,
-  loadPluginManifest,
-} from '../../services/PluginService.ts'
+import { getPluginCSSPath, getPluginJSPath, loadPluginManifest } from '@/services/PluginService.ts'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { exists } from '@tauri-apps/plugin-fs'
 

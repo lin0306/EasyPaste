@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import TitleBar from '../../components/TitleBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
 
 import { getVersion } from '@tauri-apps/api/app'
 import { onMounted, ref } from 'vue'
-import { openLink } from '../../utils/LinkUtil.ts'
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { openLink } from '@/utils/LinkUtil'
+import { currentLanguage } from '@/services/LanguageService'
 
 // @ts-ignore
 const appVersion = ref<string>('')

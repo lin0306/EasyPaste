@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { themeColors } from '../../services/ThemeService.ts'
-import { setTransparency } from '../../utils/ColorUtil.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { setTransparency } from '@/utils/ColorUtil.ts'
 
 interface Ember {
   id: number

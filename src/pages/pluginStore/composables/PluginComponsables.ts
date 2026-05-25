@@ -1,16 +1,16 @@
 import { reactive, ref } from 'vue'
-import { loadPluginManifest } from '../../../services/PluginService.ts'
+import { loadPluginManifest } from '@/services/PluginService.ts'
 import { dirname, join } from '@tauri-apps/api/path'
 import { exists, mkdir, readFile, writeFile } from '@tauri-apps/plugin-fs'
-import { deleteFolder } from '../../../utils/FileUtil.ts'
+import { deleteFolder } from '@/utils/FileUtil.ts'
 import { fetch } from '@tauri-apps/plugin-http'
-import { isDev, isMac } from '../../../data/SystemParams.ts'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+import { isDev, isMac } from '@/data/SystemParams.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
-import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageService.ts'
-import { getPluginPath } from '../../../store/Settings.ts'
+import { currentLanguage, loadPluginLanguage } from '@/services/LanguageService.ts'
+import { getPluginPath } from '@/store/Settings.ts'
 import { invoke } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
@@ -162,6 +162,7 @@ export const install = async (pluginId: string, message: MessageApiInjection): P
  * 安装插件文件
  * @param url 插件下载地址
  * @param pluginFolderPath 插件安装目录
+ * @param pluginId 插件id
  */
 async function installPluginFile(
   url: string,

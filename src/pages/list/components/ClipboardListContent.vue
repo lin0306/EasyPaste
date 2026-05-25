@@ -51,10 +51,10 @@ import {
   scrollState,
   showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable'
 import { reactive, ref, watch } from 'vue'
 import ContextMenu from './ContextMenu.vue'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService'
 import { gsap } from 'gsap'
 
 /**
@@ -105,7 +105,8 @@ watch(
       addedIds.forEach((itemId, index) => {
         const element = itemRefsMap.get(itemId)?.$el
         if (element) {
-          gsap.fromTo(element,
+          gsap.fromTo(
+            element,
             {
               opacity: 0,
               x: 100,
@@ -129,7 +130,7 @@ watch(
       const removedIds = oldItemIds.filter(id => !newItemIds.includes(id))
 
       // 为删除的项目执行离开动画
-      removedIds.forEach((itemId) => {
+      removedIds.forEach(itemId => {
         const element = itemRefsMap.get(itemId)?.$el
         if (element) {
           gsap.to(element, {
@@ -140,7 +141,7 @@ watch(
             onComplete: () => {
               // 动画完成后清理引用
               itemRefsMap.delete(itemId)
-            }
+            },
           })
         }
       })

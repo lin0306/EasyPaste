@@ -10,8 +10,8 @@ import TextEditorPreview from './TextEditorPreview.vue'
 // 代码高亮引入
 import hljs from 'highlight.js/lib/core'
 import html from 'highlight.js/lib/languages/vbscript-html'
-import { setTransparency } from '../../../utils/ColorUtil.ts'
-import { dateLocale, locale } from '../../../utils/LanguageUtil.ts'
+import { setTransparency } from '@/utils/ColorUtil.ts'
+import { dateLocale, locale } from '@/utils/LanguageUtil.ts'
 
 hljs.registerLanguage('html', html)
 

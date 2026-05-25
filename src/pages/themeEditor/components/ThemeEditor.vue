@@ -5,8 +5,8 @@ import {
   themeConfig,
 } from '../composables/ThemeEditorDataComposable.ts'
 import { watch } from 'vue'
-import { calculateButtonColors } from '../../../utils/ColorUtil.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { calculateButtonColors } from '@/utils/ColorUtil.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { ColorPickerMode } from 'naive-ui/es/color-picker/src/utils'
 
 // 颜色模式
@@ -86,10 +86,7 @@ watch(themeConfig, newVal => {
 <template>
   <div class="theme-editor">
     <n-collapse>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.global.title"
-        name="1"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.global.title" name="1">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -184,10 +181,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.button.title"
-        name="2"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.button.title" name="2">
         <div class="sectorization">
           <!-- 主按钮颜色配置 -->
           <div class="color-line">
@@ -257,9 +251,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{
-                currentLanguage.pages.themeEditor.editor.button.primary.textDisableColor
-              }}
+              {{ currentLanguage.pages.themeEditor.editor.button.primary.textDisableColor }}
             </div>
             <div class="color-select">
               <n-color-picker
@@ -430,10 +422,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.select.title"
-        name="3"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.select.title" name="3">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -476,10 +465,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.titleBar.title"
-        name="4"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.titleBar.title" name="4">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -522,10 +508,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.menuBar.title"
-        name="5"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.menuBar.title" name="5">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -568,10 +551,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.customCard.title"
-        name="6"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.customCard.title" name="6">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -601,10 +581,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.audio.title"
-        name="7"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.audio.title" name="7">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -647,10 +624,7 @@ watch(themeConfig, newVal => {
           </div>
         </div>
       </n-collapse-item>
-      <n-collapse-item
-        :title="currentLanguage.pages.themeEditor.editor.textEditor.title"
-        name="8"
-      >
+      <n-collapse-item :title="currentLanguage.pages.themeEditor.editor.textEditor.title" name="8">
         <div class="sectorization">
           <div class="color-line">
             <div class="color-label">
@@ -680,9 +654,7 @@ watch(themeConfig, newVal => {
           </div>
           <div class="color-line">
             <div class="color-label">
-              {{
-                currentLanguage.pages.themeEditor.editor.textEditor.lineNumberActiveBgColor
-              }}
+              {{ currentLanguage.pages.themeEditor.editor.textEditor.lineNumberActiveBgColor }}
             </div>
             <div class="color-select">
               <n-color-picker

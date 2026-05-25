@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { themeColors } from '../../services/ThemeService.ts'
-import { getColorRGBColorValue } from '../../utils/ColorUtil.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { getColorRGBColorValue } from '@/utils/ColorUtil.ts'
 
 /**
  * 星星接口定义

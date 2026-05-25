@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { convertFileSize } from '../../../utils/FileUtil.ts'
+import { convertFileSize } from '@/utils/FileUtil.ts'
 import {
   hasUpdate,
   install,
@@ -12,11 +12,11 @@ import {
   update,
 } from '../composables/PluginComponsables.ts'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { faCubes } from '@fortawesome/free-solid-svg-icons'
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
 import { computed } from 'vue'
-import { themeColors } from '../../../services/ThemeService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
 
 const message = useMessage()
 

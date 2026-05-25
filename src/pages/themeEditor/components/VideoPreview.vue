@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from 'vue'
-import { convertSecondsToTime } from '../../../utils/DateUtil.ts'
+import { convertSecondsToTime } from '@/utils/DateUtil.ts'
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js'
 import { themeConfig } from '../composables/ThemeEditorDataComposable.ts'
 

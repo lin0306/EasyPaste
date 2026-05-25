@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { filePathConvertFileName } from '../../../utils/TextUtil.ts'
+import { filePathConvertFileName } from '@/utils/TextUtil.ts'
 import { NGradientText, NImage, TreeOption } from 'naive-ui'
 import { readDir } from '@tauri-apps/plugin-fs'
-import { isMac } from '../../../data/SystemParams.ts'
-import { updatePrefixWithExpanded } from '../../../utils/TreeUtil.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { themeColors } from '../../../services/ThemeService.ts'
+import { isMac } from '@/data/SystemParams.ts'
+import { updatePrefixWithExpanded } from '@/utils/TreeUtil.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
 
 const props = defineProps<{
   filePath: string

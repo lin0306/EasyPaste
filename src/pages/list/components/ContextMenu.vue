@@ -6,15 +6,15 @@ import {
   onUnTop,
   removeItem,
 } from '../composables/ClipboardDataComposable.ts'
-import { openItemEditWindow, openPreviewWindow } from '../../../services/WindowService.ts'
+import { openItemEditWindow, openPreviewWindow } from '@/services/WindowService'
 import { isFolderCache } from '../composables/FileDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService'
 import { imageContextMenus, textContextMenus } from '../composables/WindowComposable.ts'
-import { openLink } from '../../../utils/LinkUtil.ts'
+import { openLink } from '@/utils/LinkUtil'
 import { gsap } from 'gsap'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable'
 
 // Naive UI 框架的消息组件
 const message = useMessage()
@@ -39,7 +39,7 @@ const contextMenuRef = ref<HTMLElement | null>(null)
 // 监听 isShow 变化，执行 GSAP 动画
 watch(
   () => isShow.value,
-  (newValue) => {
+  newValue => {
     if (!animationEffect.enabled || !contextMenuRef.value) {
       return
     }
@@ -48,7 +48,8 @@ watch(
 
     if (newValue) {
       // 显示时执行淡入+缩放动画
-      gsap.fromTo(contextMenuRef.value,
+      gsap.fromTo(
+        contextMenuRef.value,
         {
           opacity: 0,
           scale: 0.95,

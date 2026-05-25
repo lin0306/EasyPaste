@@ -1,13 +1,13 @@
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
-import UpdaterService from '../../../services/UpdaterService.ts'
+import UpdaterService from '@/services/UpdaterService.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { ref } from 'vue'
 import {
   getAutoCheckUpdate,
   getAutoCheckUpdateInterval,
   getUpdateMode,
-} from '../../../store/Settings.ts'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+} from '@/store/Settings.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
 
 export const hasNewVersion = ref(false)
 

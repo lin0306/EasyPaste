@@ -8,12 +8,12 @@ import {
   saveBindTagBtnShowLocation,
   saveEnableTag,
   saveTagListLocation,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 const message = useMessage()
 

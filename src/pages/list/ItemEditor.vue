@@ -40,9 +40,9 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { currentLanguage } from '../../services/LanguageService.ts'
-import TitleBar from '../../components/TitleBar.vue'
-import ClipboardDBService from '../../services/ClipboardDBService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import TitleBar from '@/components/TitleBar.vue'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { emit, listen } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
 

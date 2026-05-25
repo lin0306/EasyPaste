@@ -11,11 +11,11 @@ import {
   saveAutoCheckUpdateInterval,
   saveNewVersionAlertMode,
   saveUpdateMode,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { emit } from '@tauri-apps/api/event'
 import { error } from '@tauri-apps/plugin-log'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()

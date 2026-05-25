@@ -11,13 +11,13 @@ import {
   saveAnimationSpeedLevel,
   saveBackgroundAnimationEffect,
   saveEnableAnimationEffects,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { emit } from '@tauri-apps/api/event'
 import { error } from '@tauri-apps/plugin-log'
-import { getSpeedDuration, SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { currentThemeId, themeColors, themes, toggleTheme } from '../../../services/ThemeService.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { openThemeEditorWindow } from '../../../services/WindowService.ts'
+import { getSpeedDuration, SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { currentThemeId, themeColors, themes, toggleTheme } from '@/services/ThemeService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { openThemeEditorWindow } from '@/services/WindowService.ts'
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 

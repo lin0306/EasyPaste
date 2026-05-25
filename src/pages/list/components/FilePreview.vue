@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { NImage } from 'naive-ui'
-import { filePathConvertFileName, isText } from '../../../utils/TextUtil.ts'
+import { filePathConvertFileName, isText } from '@/utils/TextUtil'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { isProgram } from '../../../utils/ProgramUtil.ts'
-import { isVideo } from '../../../utils/VideoUtil.ts'
-import { isImage } from '../../../utils/ImageUtil.ts'
-import { isCode } from '../../../utils/CodeUtil.ts'
-import { isAudio } from '../../../utils/AudioUtil.ts'
-import { isExcel, isPDF, isPPT, isWord } from '../../../utils/OfficeUtil.ts'
-import { isPackage } from '../../../utils/PackageUtil.ts'
-import { displayThumbnailImage } from '../composables/FileDataComposable.ts'
+import { isProgram } from '@/utils/ProgramUtil'
+import { isVideo } from '@/utils/VideoUtil'
+import { isImage } from '@/utils/ImageUtil'
+import { isCode } from '@/utils/CodeUtil'
+import { isAudio } from '@/utils/AudioUtil'
+import { isExcel, isPDF, isPPT, isWord } from '@/utils/OfficeUtil'
+import { isPackage } from '@/utils/PackageUtil'
+import { displayThumbnailImage } from '../composables/FileDataComposable'
 import {
   faFileAudio,
   faFileCode,

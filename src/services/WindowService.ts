@@ -1,5 +1,5 @@
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
-import { WebViewWindowOptions } from '../types/Window'
+import { WebViewWindowOptions } from '@/types/Window'
 import { emit } from '@tauri-apps/api/event'
 import { currentLanguage, loadPageLanguage } from './LanguageService.ts'
 import { invoke } from '@tauri-apps/api/core'

@@ -2,10 +2,10 @@
 import { error, info } from '@tauri-apps/plugin-log'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import TitleBar from '../../components/TitleBar.vue'
-import { firstRun } from '../../store/FirstRun.ts'
-import { clipboardListenStore } from '../../store/CopyStatus.ts'
-import { COPY_STATE } from '../../constants/CopyStateConstant.ts'
+import TitleBar from '@/components/TitleBar.vue'
+import { firstRun } from '@/store/FirstRun.ts'
+import { clipboardListenStore } from '@/store/CopyStatus.ts'
+import { COPY_STATE } from '@/constants/CopyStateConstant.ts'
 import ClipboardListContent from './components/ClipboardListContent.vue'
 import HeadNavigationBar from './components/HeadNavigationBar.vue'
 import SearchBox from './components/SearchBox.vue'
@@ -33,11 +33,11 @@ import {
   initializeFileData,
   initUserSettings,
 } from './composables/FileDataComposable.ts'
-import { getSearchKey } from '../../store/ShortcutKeys.ts'
+import { getSearchKey } from '@/store/ShortcutKeys.ts'
 import ClipboardFooter from './components/ClipboardFooter.vue'
-import { getPowerOnSelfStart } from '../../store/Settings.ts'
+import { getPowerOnSelfStart } from '@/store/Settings.ts'
 import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart'
-import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
+import { currentLanguage, initializePluginLanguage } from '@/services/LanguageService.ts'
 import { destroyPlugins, initializePlugins } from './composables/PluginComposable.ts'
 
 // 代码高亮引入

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { currentLanguage, initializePluginLanguage } from '../../services/LanguageService.ts'
-import TitleBar from '../../components/TitleBar.vue'
+import { currentLanguage, initializePluginLanguage } from '@/services/LanguageService.ts'
+import TitleBar from '@/components/TitleBar.vue'
 import { onMounted, watch } from 'vue'
 import {
   clearSelectPlugin,

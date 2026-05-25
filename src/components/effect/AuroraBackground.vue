@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { themeColors } from '../../services/ThemeService.ts'
-import { getColorRGBColorValue } from '../../utils/ColorUtil.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { getColorRGBColorValue } from '@/utils/ColorUtil.ts'
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 let ctx: CanvasRenderingContext2D | null = null
@@ -19,9 +19,21 @@ const getAuroraColors = () => {
   const accentRGB = getColorRGBColorValue(colors.universal.textHint) || '200, 150, 255'
 
   return [
-    { r: parseInt(primaryRGB.split(',')[0]), g: parseInt(primaryRGB.split(',')[1]), b: parseInt(primaryRGB.split(',')[2]) },
-    { r: parseInt(secondaryRGB.split(',')[0]), g: parseInt(secondaryRGB.split(',')[1]), b: parseInt(secondaryRGB.split(',')[2]) },
-    { r: parseInt(accentRGB.split(',')[0]), g: parseInt(accentRGB.split(',')[1]), b: parseInt(accentRGB.split(',')[2]) },
+    {
+      r: parseInt(primaryRGB.split(',')[0]),
+      g: parseInt(primaryRGB.split(',')[1]),
+      b: parseInt(primaryRGB.split(',')[2]),
+    },
+    {
+      r: parseInt(secondaryRGB.split(',')[0]),
+      g: parseInt(secondaryRGB.split(',')[1]),
+      b: parseInt(secondaryRGB.split(',')[2]),
+    },
+    {
+      r: parseInt(accentRGB.split(',')[0]),
+      g: parseInt(accentRGB.split(',')[1]),
+      b: parseInt(accentRGB.split(',')[2]),
+    },
   ]
 }
 
@@ -29,22 +41,22 @@ const drawAurora = (t: number) => {
   if (!ctx) return
 
   const colors = getAuroraColors()
-  
+
   // 使用 additive 混合模式创造发光效果
   ctx.globalCompositeOperation = 'lighter'
-  
+
   // 绘制多层极光 - 更大范围、更柔和
   for (let layer = 0; layer < 3; layer++) {
     ctx.save()
-    
+
     // 三层分布：上部、中部、下部，覆盖全屏
     const baseY = height * (0.25 + layer * 0.22)
     const layerOffset = layer * 2000
-    
+
     const color = colors[layer]
     // 每层不同的透明度，上层最亮
-    const opacity = [0.15, 0.12, 0.10][layer]
-    
+    const opacity = [0.15, 0.12, 0.1][layer]
+
     // 创建大范围垂直渐变
     const gradient = ctx.createLinearGradient(0, baseY - 250, 0, baseY + 250)
     gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`)
@@ -52,32 +64,32 @@ const drawAurora = (t: number) => {
     gradient.addColorStop(0.5, `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity * 1.2})`)
     gradient.addColorStop(0.7, `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`)
     gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`)
-    
+
     ctx.fillStyle = gradient
-    
+
     // 应用较强的模糊，创造柔和光效
     ctx.filter = 'blur(30px)'
-    
+
     // 绘制宽广的极光带
     ctx.beginPath()
     ctx.moveTo(0, height)
-    
+
     const segments = 100
     const segmentWidth = width / segments
     const points: { x: number; y: number }[] = []
-    
+
     for (let i = 0; i <= segments; i++) {
       const x = i * segmentWidth
-      
+
       // 使用低频大幅波动，创造舒缓的曲线
       const wave1 = Math.sin((x + layerOffset) * 0.0015 + t * 0.25) * 100
       const wave2 = Math.sin((x + layerOffset) * 0.003 + t * 0.35) * 50
       const wave3 = Math.sin((x + layerOffset) * 0.0008 + t * 0.2) * 70
-      
+
       const y = baseY + wave1 + wave2 + wave3
       points.push({ x, y })
     }
-    
+
     // 使用平滑曲线连接
     ctx.moveTo(points[0].x, points[0].y)
     for (let i = 1; i < points.length - 1; i++) {
@@ -86,14 +98,14 @@ const drawAurora = (t: number) => {
       ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc)
     }
     ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y)
-    
+
     ctx.lineTo(width, height)
     ctx.closePath()
     ctx.fill()
-    
+
     ctx.restore()
   }
-  
+
   // 重置混合模式
   ctx.globalCompositeOperation = 'source-over'
 }

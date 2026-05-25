@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { h, onMounted, reactive, ref, watch } from 'vue'
-import { getFileSize } from '../../../utils/FileUtil.ts'
-import { convertChildren, getType, readZipData } from '../../../utils/PackageUtil.ts'
+import { getFileSize } from '@/utils/FileUtil.ts'
+import { convertChildren, getType, readZipData } from '@/utils/PackageUtil.ts'
 import { NGradientText, NImage, useMessage } from 'naive-ui'
 import { readFile } from '@tauri-apps/plugin-fs'
-import { filePathConvertFileName } from '../../../utils/TextUtil.ts'
-import { PackageTreeOption } from '../../../types/PackageTreeOption'
+import { filePathConvertFileName } from '@/utils/TextUtil.ts'
+import { PackageTreeOption } from '@/types/PackageTreeOption'
 import { Uint8ArrayReader, ZipReader } from '@zip.js/zip.js'
-import { updatePrefixWithExpanded } from '../../../utils/TreeUtil.ts'
+import { updatePrefixWithExpanded } from '@/utils/TreeUtil.ts'
 import { invoke } from '@tauri-apps/api/core'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { themeColors } from '../../../services/ThemeService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
 
 const message = useMessage()
 

@@ -12,8 +12,8 @@ import {
   update,
 } from '../composables/PluginComponsables.ts'
 import { useDialog, useMessage } from 'naive-ui'
-import { themeColors } from '../../../services/ThemeService.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { faCubes, faFileImport } from '@fortawesome/free-solid-svg-icons'
 import { faApple, faWindows } from '@fortawesome/free-brands-svg-icons'
 import { computed } from 'vue'

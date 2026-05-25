@@ -5,7 +5,7 @@ import {
   showClearDataModal,
 } from '../composables/ClipboardDataComposable.ts'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService'
 import { isListening } from '../composables/WindowComposable.ts'
 
 const message = useMessage()
@@ -24,7 +24,9 @@ const onClickClearData = async (): Promise<void> => {
   <div class="footer">
     <div class="footer-left">
       <div class="listen-status">
-        <div :class="{ point: true, 'listening-dot': isListening, 'unlisten-dot': !isListening }"></div>
+        <div
+          :class="{ point: true, 'listening-dot': isListening, 'unlisten-dot': !isListening }"
+        ></div>
         {{
           isListening ? currentLanguage.pages.list.listening : currentLanguage.pages.list.stopListen
         }}

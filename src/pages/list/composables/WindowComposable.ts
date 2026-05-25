@@ -5,16 +5,16 @@ import {
   toggleSearchBox,
 } from './ClipboardDataComposable.ts'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
-import { listFixedStore } from '../../../store/Fixed.ts'
+import { listFixedStore } from '@/store/Fixed.ts'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
-import { openAboutWindow, openSettingsWindow } from '../../../services/WindowService.ts'
-import UpdaterService from '../../../services/UpdaterService.ts'
-import { convertRegisterKeys, formatKeysDisplay } from '../../../utils/ShortcutKeysUtil.ts'
+import { openAboutWindow, openSettingsWindow } from '@/services/WindowService.ts'
+import UpdaterService from '@/services/UpdaterService.ts'
+import { convertRegisterKeys, formatKeysDisplay } from '@/utils/ShortcutKeysUtil.ts'
 import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-shortcut'
 import {
   saveQuickPasteKeyAvailable,
   saveWakeUpRoutineKeyAvailable,
-} from '../../../store/ShortcutKeyAvailableStatus.ts'
+} from '@/store/ShortcutKeyAvailableStatus.ts'
 import { error, info } from '@tauri-apps/plugin-log'
 import { sendNotification } from '@tauri-apps/plugin-notification'
 import {
@@ -24,11 +24,11 @@ import {
   PhysicalPosition,
 } from '@tauri-apps/api/window'
 import { ref } from 'vue'
-import { getAutoHideWindow } from '../../../store/Settings.ts'
-import { getQuickPaste, getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
+import { getAutoHideWindow } from '@/store/Settings.ts'
+import { getQuickPaste, getWakeUpRoutine } from '@/store/ShortcutKeys.ts'
 import { invoke } from '@tauri-apps/api/core'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { LogicalSize } from '@tauri-apps/api/dpi'
 
 // 监听当前窗口是否固定

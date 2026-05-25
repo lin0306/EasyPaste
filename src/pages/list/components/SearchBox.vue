@@ -44,9 +44,9 @@ import {
   searchFilters,
   showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { themeColors } from '../../../services/ThemeService.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable'
+import { currentLanguage } from '@/services/LanguageService'
+import { themeColors } from '@/services/ThemeService'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
@@ -56,7 +56,7 @@ const searchBoxRef = ref<HTMLElement | null>(null)
 // 监听 showSearchBox 变化，执行 GSAP 动画
 watch(
   () => showSearchBox.value,
-  (newValue) => {
+  newValue => {
     if (!animationEffect.enabled || !searchBoxRef.value) {
       return
     }
@@ -65,7 +65,8 @@ watch(
 
     if (newValue) {
       // 显示时执行淡入+下滑动画
-      gsap.fromTo(searchBoxRef.value,
+      gsap.fromTo(
+        searchBoxRef.value,
         {
           opacity: 0,
           y: -75,

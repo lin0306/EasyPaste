@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import NavBar from '../../../components/NavBar.vue'
+import NavBar from '@/components/NavBar.vue'
 import { computed } from 'vue'
 import {
   openAboutWindow,
   openPluginStoreWindow,
   openSettingsWindow,
   openTagsWindow,
-} from '../../../services/WindowService.ts'
+} from '@/services/WindowService'
 import { exit, relaunch } from '@tauri-apps/plugin-process'
-import { currentThemeId, themes, toggleTheme } from '../../../services/ThemeService.ts'
+import { currentThemeId, themes, toggleTheme } from '@/services/ThemeService'
 import { useMessage } from 'naive-ui'
-import UpdaterService from '../../../services/UpdaterService.ts'
+import UpdaterService from '@/services/UpdaterService.ts'
 import { tagSettingState } from '../composables/TagDataComposable.ts'
 import { showClearDataModal, toggleSearchBox } from '../composables/ClipboardDataComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService'
 
 // Naive UI 框架的消息组件
 const message = useMessage()

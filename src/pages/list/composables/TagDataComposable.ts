@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { loadClipboardItems } from './ClipboardDataComposable.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
@@ -7,9 +7,9 @@ import {
   getBindTagBtnShowLocation,
   getEnableTag,
   getTagListLocation,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 /**
  * 标签列表

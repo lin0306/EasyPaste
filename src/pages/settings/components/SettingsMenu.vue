@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { selectedKey } from '../composables/SettingsDataComposable.ts'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 // 菜单项
 const menuItems = computed(() =>

@@ -2,7 +2,7 @@
 import { onMounted, reactive, watch } from 'vue'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import { marked } from 'marked'
-import { getRenderer } from '../../../../utils/MarkdownUtil.ts'
+import { getRenderer } from '@/utils/MarkdownUtil.ts'
 
 const props = defineProps<{
   filePath: string

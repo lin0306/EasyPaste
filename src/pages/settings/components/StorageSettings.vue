@@ -15,15 +15,15 @@ import {
   saveEnableImageSave,
   saveImageBasePath,
   saveMaxHistoryItems,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { emit } from '@tauri-apps/api/event'
 import { error } from '@tauri-apps/plugin-log'
 import { onMounted, reactive, ref } from 'vue'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { open } from '@tauri-apps/plugin-dialog'
-import { isMac } from '../../../data/SystemParams.ts'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
-import { convertFileSize, deleteFile, deleteFolder, moveFile } from '../../../utils/FileUtil.ts'
+import { isMac } from '@/data/SystemParams.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
+import { convertFileSize, deleteFile, deleteFolder, moveFile } from '@/utils/FileUtil.ts'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { readDir, stat } from '@tauri-apps/plugin-fs'
 import { invoke } from '@tauri-apps/api/core'

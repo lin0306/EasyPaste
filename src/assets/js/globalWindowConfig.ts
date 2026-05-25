@@ -1,10 +1,10 @@
 import * as Vue from 'vue'
 import * as naive from 'naive-ui'
-import { getPluginThemeOverrides, themeColors } from '../../services/ThemeService.ts'
-import { createPluginVueApp } from '../../services/PluginService.ts'
+import { getPluginThemeOverrides, themeColors } from '@/services/ThemeService.ts'
+import { createPluginVueApp } from '@/services/PluginService.ts'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { getItemContent, getItemFilePath } from '../../services/ClipboardDBService.ts'
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { getItemContent, getItemFilePath } from '@/services/ClipboardDBService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 // 暴露 Vue 和 naive-ui 为全局变量
 // @ts-ignore

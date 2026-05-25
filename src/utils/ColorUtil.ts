@@ -1,6 +1,6 @@
 /**
  * 计算按钮颜色
- * @param backgroundColor 按钮背景色
+ * @param bgColor 按钮背景色
  */
 export function calculateButtonColors(bgColor: string): ButtonColor {
   // 解析 RGBA 颜色值

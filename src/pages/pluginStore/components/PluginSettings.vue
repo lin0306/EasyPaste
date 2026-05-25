@@ -30,8 +30,8 @@
 import { nextTick, onUnmounted, ref, watch } from 'vue'
 import { NAlert, NModal, NSpin, useMessage } from 'naive-ui'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { getPluginCSSPath, getPluginJSPath } from '../../../services/PluginService.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { getPluginCSSPath, getPluginJSPath } from '@/services/PluginService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { selectedPlugin } from '../composables/PluginComponsables.ts'
 
 const props = defineProps<{

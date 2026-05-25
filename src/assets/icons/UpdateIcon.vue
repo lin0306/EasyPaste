@@ -28,7 +28,7 @@
   </svg>
 </template>
 <script lang="ts" setup>
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 </script>
 <style>
 svg {

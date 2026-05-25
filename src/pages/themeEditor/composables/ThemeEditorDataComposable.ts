@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue'
-import { setTransparency } from '../../../utils/ColorUtil.ts'
+import { setTransparency } from '@/utils/ColorUtil.ts'
 
 // 是否禁止主题色计算
 export const forbidCalculate = ref(true)

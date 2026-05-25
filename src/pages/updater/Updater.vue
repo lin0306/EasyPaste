@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import TitleBar from '../../components/TitleBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
 
 import { check, Update } from '@tauri-apps/plugin-updater'
 import { onMounted, reactive, ref } from 'vue'
-import UpdaterService from '../../services/UpdaterService.ts'
+import UpdaterService from '@/services/UpdaterService.ts'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { marked } from 'marked'
-import { getRenderer } from '../../utils/MarkdownUtil.ts'
-import { openLink } from '../../utils/LinkUtil.ts'
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { getRenderer } from '@/utils/MarkdownUtil.ts'
+import { openLink } from '@/utils/LinkUtil.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 marked.setOptions({
   breaks: true,

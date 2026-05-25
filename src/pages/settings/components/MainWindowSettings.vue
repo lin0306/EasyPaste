@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { currentConfig, onLoading, originalConfig } from '../composables/SettingsDataComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { onMounted } from 'vue'
 import {
   getAlwaysOnTop,
@@ -17,12 +17,12 @@ import {
   saveDisplayThumbnailImage,
   saveSearchModel,
   saveWindowSize,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
 import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 
 const message = useMessage()

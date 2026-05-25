@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { isMac } from '../../../data/SystemParams.ts'
-import { openLink } from '../../../utils/LinkUtil.ts'
+import { isMac } from '@/data/SystemParams.ts'
+import { openLink } from '@/utils/LinkUtil.ts'
 import {
   currentConfig,
   currentShortcutKeys,
@@ -14,7 +14,7 @@ import {
   systemClipboardKeyOccupied,
   systemClipboardKeysRegistered,
 } from '../composables/SettingsDataComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { onMounted, ref } from 'vue'
 import {
   getLanguage,
@@ -23,15 +23,15 @@ import {
   saveLanguage,
   savePowerOnSelfStart,
   saveReplaceGlobalHotkey,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart'
 import { error, info } from '@tauri-apps/plugin-log'
 import { emit } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/core'
-import { convertRegisterKeys } from '../../../utils/ShortcutKeysUtil.ts'
+import { convertRegisterKeys } from '@/utils/ShortcutKeysUtil.ts'
 import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-shortcut'
 import { useMessage } from 'naive-ui'
-import { getWakeUpRoutine } from '../../../store/ShortcutKeys.ts'
+import { getWakeUpRoutine } from '@/store/ShortcutKeys.ts'
 import { faArrowRotateRight, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const message = useMessage()
@@ -250,8 +250,7 @@ const checkSystemClipboardKeyOccupied = async (): Promise<void> => {
     info('加载系统剪贴板快捷键占用情况')
     const wakeUpRoutineKey = await getWakeUpRoutine()
     // 系统剪贴板快捷键占用检查
-    systemClipboardKeyOccupied.value =
-      JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(key)
+    systemClipboardKeyOccupied.value = JSON.stringify(wakeUpRoutineKey.key) === JSON.stringify(key)
     if (!systemClipboardKeyOccupied.value) {
       // 检测系统剪贴板快捷键是否可用
       systemClipboardEnable.value = await invoke('valid_clipboard_regedit')

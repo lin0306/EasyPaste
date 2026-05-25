@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { getFileSize } from '../../../utils/FileUtil.ts'
-import { getCodeLanguage } from '../../../utils/CodeUtil.ts'
+import { getFileSize } from '@/utils/FileUtil.ts'
+import { getCodeLanguage } from '@/utils/CodeUtil.ts'
 import { NIcon, NInput } from 'naive-ui'
 import hljs from 'highlight.js/lib/core'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 import c from 'highlight.js/lib/languages/c'
 import cpp from 'highlight.js/lib/languages/cpp'

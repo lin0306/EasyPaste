@@ -5,13 +5,13 @@ import {
   getAnimationDuration,
   getBackgroundAnimationEffect,
   getEnableAnimationEffects,
-} from '../../../store/Settings.ts'
+} from '@/store/Settings.ts'
 
 // 动画效果
 export const animationEffect = reactive({
   enabled: true,
   duration: 300,
-  backgroundAnimationEffect: 'none'
+  backgroundAnimationEffect: 'none',
 })
 
 /**

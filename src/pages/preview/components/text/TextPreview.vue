@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import PlainTextPreview from './PlainTextPreview.vue'
-import { isMarkdown, isPlainText, isRTF } from '../../../../utils/TextUtil.ts'
+import { isMarkdown, isPlainText, isRTF } from '@/utils/TextUtil.ts'
 import MarkdownPreview from './MarkdownPreview.vue'
 import RTFPreview from './RTFPreview.vue'
-import { getFileSize } from '../../../../utils/FileUtil.ts'
+import { getFileSize } from '@/utils/FileUtil.ts'
 import { onMounted, ref, watch } from 'vue'
-import { currentLanguage } from '../../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 const props = defineProps<{
   filePath: string

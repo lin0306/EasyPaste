@@ -1,13 +1,13 @@
 import { reactive, ref } from 'vue'
 import { selectedTagState } from './TagDataComposable.ts'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { error } from '@tauri-apps/plugin-log'
 import { exists } from '@tauri-apps/plugin-fs'
 import {
   copyFileToClipboard,
   copyToClipboard,
   initClipboardListener,
-} from '../../../services/ClipboardService.ts'
+} from '@/services/ClipboardService.ts'
 import { hideWindow, isAutoHideWindow } from './WindowComposable.ts'
 import {
   checkFileExist,
@@ -16,18 +16,18 @@ import {
   removeCache,
 } from './FileDataComposable.ts'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
-import DataClearService from '../../../services/DataClearService.ts'
+import DataClearService from '@/services/DataClearService.ts'
 import {
   getAutoGoToLatestData,
   getDataRetentionDays,
   getSearchModel,
-} from '../../../store/Settings.ts'
-import { scrollToDiv } from '../../../utils/DomUtil.ts'
+} from '@/store/Settings.ts'
+import { scrollToDiv } from '@/utils/DomUtil.ts'
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { openSearchWindow } from '../../../services/WindowService.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { openSearchWindow } from '@/services/WindowService.ts'
 
 // 剪贴板监听
 let clipboardListener: any = null

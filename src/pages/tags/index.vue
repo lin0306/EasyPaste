@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import TitleBar from '../../components/TitleBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
 import TagList from './components/TagList.vue'
 import TagForm from './components/TagForm.vue'
-import { currentLanguage } from '../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 </script>
 
 <template>

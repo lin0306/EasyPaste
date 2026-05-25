@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getContrastColor } from '../../../utils/ColorUtil.ts'
+import { getContrastColor } from '@/utils/ColorUtil'
 import {
   handleTagClick,
   selectedTagState,
@@ -64,14 +64,14 @@ import {
   handleDropOnTag,
 } from '../composables/DragComposable.ts'
 import { isItemTagged } from '../composables/ClipboardDataComposable.ts'
-import { SETTINGS } from '../../../constants/UserSettingsConstant.ts'
-import { openTagsWindow } from '../../../services/WindowService.ts'
+import { SETTINGS } from '@/constants/UserSettingsConstant'
+import { openTagsWindow } from '@/services/WindowService'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '../../../services/LanguageService.ts'
-import { themeColors } from '../../../services/ThemeService.ts'
+import { currentLanguage } from '@/services/LanguageService'
+import { themeColors } from '@/services/ThemeService'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
-import { animationEffect } from '../../../components/effect/composables/AnimationComposable.ts'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable'
 
 const message = useMessage()
 
@@ -82,7 +82,7 @@ const tagManageRef = ref<HTMLElement | null>(null)
 // 监听标签列表变化，执行进入/离开动画
 watch(
   () => tagSettingState.isShow,
-  (newValue) => {
+  newValue => {
     if (!animationEffect.enabled || !tagListRef.value) {
       return
     }
@@ -91,7 +91,8 @@ watch(
 
     if (newValue) {
       // 显示时执行淡入+右移动画
-      gsap.fromTo(tagListRef.value,
+      gsap.fromTo(
+        tagListRef.value,
         {
           opacity: 0,
           x: -100,
@@ -129,7 +130,8 @@ watch(
     // 为新添加的标签执行进入动画
     tagItemRefs.value.forEach((el, index) => {
       if (el) {
-        gsap.fromTo(el,
+        gsap.fromTo(
+          el,
           {
             opacity: 0,
             x: -50,
@@ -175,11 +177,6 @@ watch(
 /* 隐藏 Chrome、Safari 和 Opera 的滚动条 */
 .tag-list::-webkit-scrollbar {
   width: 0;
-}
-
-/* 拖拽激活时，标签列表稍微向右移动，增加可见性 */
-.tag-list.dragging-active {
-  left: -5px;
 }
 
 .tag-item {

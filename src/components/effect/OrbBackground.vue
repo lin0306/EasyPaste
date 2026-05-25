@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { themeColors } from '../../services/ThemeService.ts'
-import { getColorRGBColorValue } from '../../utils/ColorUtil.ts'
+import { themeColors } from '@/services/ThemeService.ts'
+import { getColorRGBColorValue } from '@/utils/ColorUtil.ts'
 
 interface Orb {
   id: number

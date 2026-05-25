@@ -3,7 +3,7 @@ import {
   convertRegisterKeys,
   formatKeyDisplay,
   formatKeysDisplay,
-} from '../../../utils/ShortcutKeysUtil.ts'
+} from '@/utils/ShortcutKeysUtil.ts'
 import {
   currentShortcutKeys,
   onLoading,
@@ -13,7 +13,7 @@ import { useMessage } from 'naive-ui'
 import {
   getQuickPasteKeyAvailable,
   getWakeUpRoutineKeyAvailable,
-} from '../../../store/ShortcutKeyAvailableStatus.ts'
+} from '@/store/ShortcutKeyAvailableStatus.ts'
 import {
   getQuickPaste,
   getSearchKey,
@@ -21,14 +21,14 @@ import {
   saveQuickPasteKey,
   saveSearchKey,
   saveWakeUpRoutineKey,
-} from '../../../store/ShortcutKeys.ts'
+} from '@/store/ShortcutKeys.ts'
 import { error, info } from '@tauri-apps/plugin-log'
 import { isRegistered, register, unregister } from '@tauri-apps/plugin-global-shortcut'
 import { emit } from '@tauri-apps/api/event'
-import { isMac } from '../../../data/SystemParams.ts'
+import { isMac } from '@/data/SystemParams.ts'
 import { onMounted, ref } from 'vue'
 import { debounce } from 'lodash-es'
-import { currentLanguage } from '../../../services/LanguageService.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
 import { faCircleCheck, faCircleExclamation, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 

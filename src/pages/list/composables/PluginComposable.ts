@@ -1,13 +1,13 @@
-import { loadPluginManifest } from '../../../services/PluginService.ts'
-import { currentLanguage, loadPluginLanguage } from '../../../services/LanguageService.ts'
+import { loadPluginManifest } from '@/services/PluginService.ts'
+import { currentLanguage, loadPluginLanguage } from '@/services/LanguageService.ts'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { emit, listen, UnlistenFn } from '@tauri-apps/api/event'
-import { createWin } from '../../../services/WindowService.ts'
+import { createWin } from '@/services/WindowService.ts'
 import { imageContextMenus, textContextMenus } from './WindowComposable.ts'
 import { error, info } from '@tauri-apps/plugin-log'
-import ClipboardDBService from '../../../services/ClipboardDBService.ts'
+import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { invoke } from '@tauri-apps/api/core'
-import { copyToClipboard } from '../../../services/ClipboardService.ts'
+import { copyToClipboard } from '@/services/ClipboardService.ts'
 
 const loadedPluginSet: Set<string> = new Set<string>()
 
@@ -132,7 +132,7 @@ function registerContextMenu(
 async function loadPlugin(pluginId: string): Promise<void> {
   if (loadedPluginSet.has(pluginId)) {
     console.log('插件已加载，不再重复加载', pluginId)
-    return;
+    return
   }
   console.log('加载插件', pluginId)
 
