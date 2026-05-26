@@ -408,7 +408,7 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
     Progress: {
       fillColor: colors.button.primary.backgroundColor,
       textColorCircle: colors.universal.text,
-      textColorLineInner: colors.universal.text,
+      textColorLineInner: colors.button.primary.textColor,
       textColorLineOuter: colors.universal.textHint,
     },
     Split: {
