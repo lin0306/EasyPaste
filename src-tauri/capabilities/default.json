@@ -146,8 +146,9 @@
       "allow": [
         { "url": "https://gh-proxy.com" },
         { "url": "https://gh-proxy.org" },
+        { "url": "https://gh.llkk.cc" },
         { "url": "https://github.com" },
-        { "url": "https://gh.llkk.cc" }
+        { "url": "https://raw.githubusercontent.com" }
       ]
     }
   ]
