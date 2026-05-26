@@ -1,5 +1,4 @@
 <template>
-  <TitleBar :title="currentLanguage.pages.itemEditor.title" showCloseBtn />
   <div class="text-editor">
     <div class="editor-wrapper">
       <div class="editor-container">
@@ -41,7 +40,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { currentLanguage } from '@/services/LanguageService.ts'
-import TitleBar from '@/components/TitleBar.vue'
 import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { emit, listen } from '@tauri-apps/api/event'
 import { useMessage } from 'naive-ui'
@@ -203,7 +201,7 @@ onUnmounted(() => {
 <style scoped>
 .text-editor {
   width: 100%;
-  height: calc(100vh - 25px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: var(--theme-editor-backgroundColor);

@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import TitleBar from '@/components/TitleBar.vue'
 import TagList from './components/TagList.vue'
 import TagForm from './components/TagForm.vue'
-import { currentLanguage } from '@/services/LanguageService.ts'
 </script>
 
 <template>
   <div class="tag-manager-container">
-    <TitleBar :title="currentLanguage.pages.tags.title" :showCloseBtn="true" />
-
     <div class="tag-manager-content">
       <!-- 左右分栏布局 -->
       <div class="tag-manager-layout">

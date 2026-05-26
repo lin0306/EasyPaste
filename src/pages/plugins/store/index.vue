@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { currentLanguage, initializePluginLanguage } from '@/services/LanguageService.ts'
-import TitleBar from '@/components/TitleBar.vue'
 import { onMounted, watch } from 'vue'
 import {
   clearSelectPlugin,
@@ -41,7 +40,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.pluginStore.title" :showCloseBtn="true" />
   <div class="container">
     <n-tabs type="line" justify-content="center" v-model:value="tabValue">
       <n-tab name="store">

@@ -2,7 +2,6 @@
 import { error, info } from '@tauri-apps/plugin-log'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import TitleBar from '@/components/TitleBar.vue'
 import { firstRun } from '@/store/FirstRun.ts'
 import { clipboardListenStore } from '@/store/CopyStatus.ts'
 import { COPY_STATE } from '@/constants/CopyStateConstant.ts'
@@ -53,6 +52,24 @@ const message = useMessage()
 // 监听系统复制状态
 const clipboardListen = clipboardListenStore()
 const isLoading = ref(true)
+
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+const emit = defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
+// 监听 TitleBar 配置变化并通知父组件
+watch(
+  [() => isAutoHideWindow.value, () => hasNewVersion.value],
+  () => {
+    emit('update-title-config', {
+      showHideBtn: !isAutoHideWindow.value,
+      showUpdateIcon: hasNewVersion.value,
+      showFixedBtn: true,
+    })
+  },
+  { immediate: true }
+)
 
 /**
  * 处理键盘事件
@@ -217,26 +234,21 @@ onUnmounted(async () => {
   <div v-if="isLoading" class="loading">
     <n-spin size="large" />
   </div>
-  <TitleBar
-    v-if="!isLoading"
-    :show-hide-btn="!isAutoHideWindow"
-    :show-update-icon="hasNewVersion"
-    :showFixedBtn="true"
-    :title="currentLanguage.pages.list.title"
-  />
-  <HeadNavigationBar v-if="!isLoading" />
+  <template v-if="!isLoading">
+    <HeadNavigationBar />
 
-  <!-- 搜索框 -->
-  <SearchBox v-if="!isLoading" />
+    <!-- 搜索框 -->
+    <SearchBox />
 
-  <!-- 数据列表 -->
-  <ClipboardListContent v-if="!isLoading" />
+    <!-- 数据列表 -->
+    <ClipboardListContent />
 
-  <!-- 底部展示 -->
-  <ClipboardFooter v-if="!isLoading" />
+    <!-- 底部展示 -->
+    <ClipboardFooter />
 
-  <!-- 标签列表 -->
-  <TagList v-if="!isLoading" />
+    <!-- 标签列表 -->
+    <TagList />
+  </template>
 </template>
 <style scoped>
 .loading {

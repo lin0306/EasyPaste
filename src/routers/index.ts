@@ -1,17 +1,85 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-const routes = [
-  { path: '/list', component: () => import('../pages/list/index.vue') },
-  { path: '/item-editor', component: () => import('../pages/list/ItemEditor.vue') },
-  { path: '/item-search', component: () => import('../pages/list/ItemSearch.vue') },
-  { path: '/settings', component: () => import('../pages/settings/index.vue') },
-  { path: '/theme-editor', component: () => import('../pages/themeEditor/index.vue') },
-  { path: '/tags', component: () => import('../pages/tags/index.vue') },
-  { path: '/about', component: () => import('../pages/about/About.vue') },
-  { path: '/updater', component: () => import('../pages/updater/Updater.vue') },
-  { path: '/preview', component: () => import('../pages/preview/index.vue') },
-  { path: '/plugin-view', component: () => import('../pages/pluginView/index.vue') },
-  { path: '/plugin-store', component: () => import('../pages/pluginStore/index.vue') },
+// 扩展路由 meta 类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    showCloseBtn?: boolean
+    showHideBtn?: boolean
+    showFixedBtn?: boolean
+    showMinimizeBtn?: boolean
+    showUpdateIcon?: boolean
+  }
+}
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: () => import('@/layouts/DefaultLayout.vue'),
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/pages/list/main/index.vue'),
+        meta: {
+          showHideBtn: true,
+          showFixedBtn: true,
+          showUpdateIcon: true,
+          showCloseBtn: false,
+        },
+      },
+      {
+        path: 'item-editor',
+        component: () => import('@/pages/list/textEditor/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'item-search',
+        component: () => import('@/pages/list/advancedSearch/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'settings',
+        component: () => import('@/pages/settings/main/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'theme-editor',
+        component: () => import('@/pages/settings/themeEditor/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'tags',
+        component: () => import('@/pages/tags/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'about',
+        component: () => import('@/pages/about/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'updater',
+        component: () => import('@/pages/updater/index.vue'),
+        meta: {
+          showMinimizeBtn: true,
+        },
+      },
+      {
+        path: 'preview',
+        component: () => import('@/pages/list/filePreview/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'plugin-view',
+        component: () => import('@/pages/plugins/view/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'plugin-store',
+        component: () => import('@/pages/plugins/store/index.vue'),
+        meta: {},
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

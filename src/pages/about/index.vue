@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import TitleBar from '@/components/TitleBar.vue'
-
 import { getVersion } from '@tauri-apps/api/app'
 import { onMounted, ref } from 'vue'
 import { openLink } from '@/utils/LinkUtil'
@@ -14,8 +12,6 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <TitleBar :title="currentLanguage.pages.about.title" :showCloseBtn="true" />
-
   <div class="about-container">
     <img src="/logo.svg" class="logo" alt="程序logo" />
     <div class="app-name">{{ currentLanguage.pages.about.appName }}</div>
@@ -35,7 +31,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100vh - 25px);
+  height: 100%;
   position: relative;
 }
 

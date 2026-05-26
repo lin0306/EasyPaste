@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TitleBar from '@/components/TitleBar.vue'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { onMounted, onUnmounted, reactive, watch } from 'vue'
 import { isImage } from '@/utils/ImageUtil.ts'
 import { filePathConvertFileName, isText } from '@/utils/TextUtil.ts'
@@ -82,7 +82,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TitleBar :title="currentLanguage.pages.preview.title" :showCloseBtn="true" />
   <div class="viewer-container">
     <div class="viewer-header">
       <div class="viewer-file-path">

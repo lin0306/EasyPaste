@@ -6,11 +6,9 @@ import UpdateSettings from './components/UpdateSettings.vue'
 import StorageSettings from './components/StorageSettings.vue'
 import ShortcutSettings from './components/ShortcutSettings.vue'
 import SettingsMenu from './components/SettingsMenu.vue'
-import TitleBar from '@/components/TitleBar.vue'
 import { computed, ref, watch } from 'vue'
 import TagSettings from './components/TagSettings.vue'
 import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
-import { currentLanguage } from '@/services/LanguageService.ts'
 import MainWindowSettings from './components/MainWindowSettings.vue'
 import { gsap } from 'gsap'
 
@@ -90,7 +88,6 @@ watch(
 
 <template>
   <div class="settings-container">
-    <titleBar :title="currentLanguage.pages.settings.title" :showCloseBtn="true" />
     <div class="settings-content">
       <!-- 左侧菜单 -->
       <SettingsMenu />

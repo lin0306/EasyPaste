@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { currentLanguage } from '@/services/LanguageService.ts'
-import TitleBar from '@/components/TitleBar.vue'
 import ThemeEditor from './components/ThemeEditor.vue'
 import ThemePreview from './components/ThemePreview.vue'
 import { getCustomTheme, saveCustomTheme } from '@/store/CustomThemeConfig.ts'
@@ -142,9 +141,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <titleBar :title="currentLanguage.pages.themeEditor.title" :showCloseBtn="true" />
-
-  <!-- 按钮行 -->
   <div class="editor-content">
     <div class="operation-line">
       <n-popselect v-model:value="selectBasicTheme" :options="themeOptions" trigger="click">
@@ -196,7 +192,7 @@ onMounted(async () => {
 <style scoped>
 .editor-content {
   width: 100%;
-  height: calc(100vh - 25px);
+  height: 100%;
   display: flex;
   flex-direction: column;
 }

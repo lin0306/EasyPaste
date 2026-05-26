@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import TitleBar from '@/components/TitleBar.vue'
-
 import { check, Update } from '@tauri-apps/plugin-updater'
 import { onMounted, reactive, ref } from 'vue'
 import UpdaterService from '@/services/UpdaterService.ts'
@@ -138,11 +136,6 @@ onMounted(async () => {
 </script>
 <template>
   <div class="update-container">
-    <TitleBar
-      :title="currentLanguage.pages.update.title"
-      :showMinimizeBtn="true"
-      :showCloseBtn="true"
-    />
     <!-- 加载展示 -->
     <div v-if="onLoading" class="loading-container">
       <n-spin />

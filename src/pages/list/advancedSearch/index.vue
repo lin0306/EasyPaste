@@ -13,7 +13,6 @@ import {
 } from 'naive-ui'
 import { currentLanguage } from '@/services/LanguageService.ts'
 import { themeColors } from '@/services/ThemeService.ts'
-import TitleBar from '@/components/TitleBar.vue'
 import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
 import {
   faCalendarAlt,
@@ -242,7 +241,6 @@ onUnmounted(async () => {
 
 <template>
   <div class="search-page-container">
-    <TitleBar :title="currentLanguage.pages.itemSearch.title" showCloseBtn @close="handleClose" />
     <n-scrollbar style="max-height: calc(100vh)">
       <div ref="searchContentRef" class="search-content">
         <!-- 搜索输入区域 -->

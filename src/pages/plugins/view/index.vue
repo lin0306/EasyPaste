@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { currentLanguage, initializePluginLanguage } from '@/services/LanguageService.ts'
-import TitleBar from '@/components/TitleBar.vue'
-import { onMounted, ref } from 'vue'
+import { initializePluginLanguage, currentLanguage } from '@/services/LanguageService.ts'
+import { onMounted, ref, watch } from 'vue'
 import { getPluginCSSPath, getPluginJSPath, loadPluginManifest } from '@/services/PluginService.ts'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { exists } from '@tauri-apps/plugin-fs'
@@ -9,6 +8,34 @@ import { exists } from '@tauri-apps/plugin-fs'
 const pluginId = ref('')
 const pageId = ref('')
 const viewPageTitleCode = ref('')
+
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+const emit = defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
+// 计算动态标题
+const updateTitle = () => {
+  const title =
+    currentLanguage.value.pages.plugins?.[pluginId.value]?.[viewPageTitleCode.value] ||
+    currentLanguage.value.pages.pluginView?.title ||
+    '插件视图'
+  
+  emit('update-title-config', {
+    title,
+  })
+}
+
+// 监听相关数据变化，更新标题
+watch(
+  [() => pluginId.value, () => viewPageTitleCode.value, () => currentLanguage.value],
+  () => {
+    if (pluginId.value && viewPageTitleCode.value) {
+      updateTitle()
+    }
+  },
+  { deep: true }
+)
 
 /**
  * 加载插件样式
@@ -94,6 +121,8 @@ const loadManifest = async (): Promise<void> => {
       if (feature.page && feature.page === 'view-page') {
         viewPageTitleCode.value = feature.labelCode
         console.log('viewPageTitleCode:', viewPageTitleCode.value)
+        // 加载完 manifest 后更新标题
+        updateTitle()
       }
     }
   }
@@ -114,13 +143,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <TitleBar
-    :title="
-      currentLanguage.pages.plugins?.[pluginId]?.[viewPageTitleCode] ||
-      currentLanguage.pages.pluginView.title
-    "
-    :show-close-btn="true"
-  />
   <div id="plugin-container"></div>
 </template>
 
