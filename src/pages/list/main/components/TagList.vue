@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getContrastColor } from '@/utils/ColorUtil'
+import { getContrastColor } from '@/utils/ColorUtil.ts'
 import {
   handleTagClick,
   selectedTagState,
@@ -64,14 +64,14 @@ import {
   handleDropOnTag,
 } from '../composables/DragComposable.ts'
 import { isItemTagged } from '../composables/ClipboardDataComposable.ts'
-import { SETTINGS } from '@/constants/UserSettingsConstant'
-import { openTagsWindow } from '@/services/WindowService'
+import { SETTINGS } from '@/constants/UserSettingsConstant.ts'
+import { openTagsWindow } from '@/services/WindowService.ts'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '@/services/LanguageService'
-import { themeColors } from '@/services/ThemeService'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
-import { animationEffect } from '@/components/effect/composables/AnimationComposable'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
 
 const message = useMessage()
 

@@ -6,14 +6,14 @@ import {
   openPluginStoreWindow,
   openSettingsWindow,
   openTagsWindow,
-} from '@/services/WindowService'
+} from '@/services/WindowService.ts'
 import { exit, relaunch } from '@tauri-apps/plugin-process'
-import { currentThemeId, themes, toggleTheme } from '@/services/ThemeService'
+import { currentThemeId, themes, toggleTheme } from '@/services/ThemeService.ts'
 import { useMessage } from 'naive-ui'
 import UpdaterService from '@/services/UpdaterService.ts'
 import { tagSettingState } from '../composables/TagDataComposable.ts'
 import { showClearDataModal, toggleSearchBox } from '../composables/ClipboardDataComposable.ts'
-import { currentLanguage } from '@/services/LanguageService'
+import { currentLanguage } from '@/services/LanguageService.ts'
 
 // Naive UI 框架的消息组件
 const message = useMessage()

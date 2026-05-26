@@ -6,15 +6,15 @@ import {
   onUnTop,
   removeItem,
 } from '../composables/ClipboardDataComposable.ts'
-import { openItemEditWindow, openPreviewWindow } from '@/services/WindowService'
+import { openItemEditWindow, openPreviewWindow } from '@/services/WindowService.ts'
 import { isFolderCache } from '../composables/FileDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { currentLanguage } from '@/services/LanguageService'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { imageContextMenus, textContextMenus } from '../composables/WindowComposable.ts'
-import { openLink } from '@/utils/LinkUtil'
+import { openLink } from '@/utils/LinkUtil.ts'
 import { gsap } from 'gsap'
-import { animationEffect } from '@/components/effect/composables/AnimationComposable'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
 
 // Naive UI 框架的消息组件
 const message = useMessage()

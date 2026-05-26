@@ -5,7 +5,7 @@ import {
   showClearDataModal,
 } from '../composables/ClipboardDataComposable.ts'
 import { useMessage } from 'naive-ui'
-import { currentLanguage } from '@/services/LanguageService'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { isListening } from '../composables/WindowComposable.ts'
 
 const message = useMessage()

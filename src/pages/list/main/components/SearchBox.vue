@@ -44,9 +44,9 @@ import {
   searchFilters,
   showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '@/components/effect/composables/AnimationComposable'
-import { currentLanguage } from '@/services/LanguageService'
-import { themeColors } from '@/services/ThemeService'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
+import { currentLanguage } from '@/services/LanguageService.ts'
+import { themeColors } from '@/services/ThemeService.ts'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'

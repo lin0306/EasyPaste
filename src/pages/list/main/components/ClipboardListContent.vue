@@ -51,10 +51,10 @@ import {
   scrollState,
   showSearchBox,
 } from '../composables/ClipboardDataComposable.ts'
-import { animationEffect } from '@/components/effect/composables/AnimationComposable'
+import { animationEffect } from '@/components/effect/composables/AnimationComposable.ts'
 import { reactive, ref, watch } from 'vue'
 import ContextMenu from './ContextMenu.vue'
-import { currentLanguage } from '@/services/LanguageService'
+import { currentLanguage } from '@/services/LanguageService.ts'
 import { gsap } from 'gsap'
 
 /**
