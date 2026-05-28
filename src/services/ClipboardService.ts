@@ -14,6 +14,19 @@ export const dataMap = ref<Map<{ type: string; content: string; file_path: strin
   new Map()
 )
 
+async function saveFiles(filePaths: string, fileType: string, db: ClipboardDBService) {
+  if (filePaths) {
+    const id = await db.getFileExist(filePaths, fileType)
+    if (id) {
+      await db.updateItemTime(id, Date.now())
+      info('[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间')
+    } else {
+      // 直接将文件路径保存到数据库
+      await db.saveClipboardItem(filePaths, fileType)
+    }
+  }
+}
+
 /**
  * 初始化剪贴板监听服务
  */
@@ -52,50 +65,27 @@ export async function initClipboardListener(): Promise<UnlistenFn> {
           }
         }
       } else if (payload.type === 'file') {
-        const fileName = payload.file_path
-        const files: string[] = JSON.parse(fileName)
-        if (files && files.length === 1 && isImage(files[0])) {
-          // 文件用的是双斜杠，图片用的单斜杠，这里需要转义处理
-          const id = await db.getFileExist(removeEscape(files[0]), 'image')
-          if (id) {
-            await db.updateItemTime(id, Date.now())
-            info('[数据库进程] 有查询到相同图片内容的记录，覆盖复制时间')
-          } else {
-            const id = await db.getFileExist(fileName, 'file')
+        const filesStr = payload.file_path
+        const files: string[] = JSON.parse(filesStr)
+        if (files && files.length === 1) {
+          const file = files[0]
+          if (isImage(file)) {
+            // 文件用的是双斜杠，图片用的单斜杠，这里需要转义处理
+            const id = await db.getFileExist(removeEscape(file), 'image')
             if (id) {
               await db.updateItemTime(id, Date.now())
-              info('[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间')
+              info('[数据库进程] 有查询到相同图片内容的记录，覆盖复制时间')
             } else {
-              if (fileName) {
-                // 直接将文件路径保存到数据库
-                await db.saveClipboardItem(fileName, 'file')
-              }
+              await saveFiles(file, 'image', db)
             }
+          } else {
+            await saveFiles(filesStr, 'file', db)
           }
         } else {
-          const id = await db.getFileExist(fileName, 'file')
-          if (id) {
-            await db.updateItemTime(id, Date.now())
-            info('[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间')
-          } else {
-            if (fileName) {
-              // 直接将文件路径保存到数据库
-              await db.saveClipboardItem(fileName, 'file')
-            }
-          }
+          await saveFiles(filesStr, 'file', db)
         }
       } else if (payload.type === 'image') {
-        const fileName = payload.file_path
-        if (fileName) {
-          const id = await db.getFileExist(fileName, 'image')
-          if (id) {
-            await db.updateItemTime(id, Date.now())
-            info('[数据库进程] 有查询到相同文件内容的记录，覆盖复制时间')
-          } else {
-            // 直接将文件路径保存到数据库
-            await db.saveClipboardItem(fileName, 'image')
-          }
-        }
+        await saveFiles(payload.file_path, 'image', db)
       }
 
       info('剪贴板内容保存完成')
