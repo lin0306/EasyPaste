@@ -480,5 +480,13 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
       iconColor: colors.universal.text, // 图标颜色
       iconColorDisabled: colors.universal.textHint, // 图标禁用颜色
     },
+    BackTop: {
+      color: colors.universal.secondary,
+      textColor: colors.universal.text,
+      iconColor: colors.universal.text,
+      width: '40px',
+      height: '40px',
+      boxShadow: `0 0 5px 1px ${colors.universal.border}`,
+    },
   } as GlobalThemeOverrides
 }

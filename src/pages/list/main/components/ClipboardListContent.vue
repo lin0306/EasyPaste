@@ -28,6 +28,12 @@
       <div v-if="!scrollState.hasMore" class="no-more-indicator">
         {{ currentLanguage.pages.list.allLoaded }}
       </div>
+      <!-- 回到顶部按钮 -->
+      <n-back-top style="z-index: 100" :bottom="40" :right="20" :visibility-height="100">
+        <n-icon>
+          <font-awesome-icon :icon="faArrowUp" />
+        </n-icon>
+      </n-back-top>
     </n-infinite-scroll>
     <!-- 无数据展示 -->
     <n-empty v-else :description="currentLanguage.pages.list.empty" class="empty" />
@@ -56,6 +62,8 @@ import { reactive, ref, watch } from 'vue'
 import ContextMenu from './ContextMenu.vue'
 import { currentLanguage } from '@/services/LanguageService.ts'
 import { gsap } from 'gsap'
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /**
  * 右键菜单信息
