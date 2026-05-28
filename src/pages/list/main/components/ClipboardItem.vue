@@ -470,7 +470,6 @@ function onOpenContextMenuByFile(filePath: string): void {
 }
 
 .file-line {
-  height: 5em;
   overflow-x: auto;
 }
 
