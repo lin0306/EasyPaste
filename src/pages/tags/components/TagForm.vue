@@ -201,7 +201,7 @@ const addTag = async (): Promise<void> => {
 
 .panel-content {
   padding: 8px 16px;
-  height: calc(100% - 130px);
+  height: calc(100% - 150px);
   overflow-y: auto;
 }
 
