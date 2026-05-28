@@ -7,7 +7,7 @@ import {
   removeItem,
 } from '../composables/ClipboardDataComposable.ts'
 import { openItemEditWindow, openPreviewWindow } from '@/services/WindowService.ts'
-import { isFolderCache } from '../composables/FileDataComposable.ts'
+import { fileExistCache, isFolderCache } from '../composables/FileDataComposable.ts'
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { currentLanguage } from '@/services/LanguageService.ts'
@@ -99,7 +99,9 @@ const calculateMenuPosition = (event: any): void => {
     let menuHeight = 110 // 菜单高度估算值
     // 每多一个菜单项，高度增加30
     if (props.menuType === 'image') {
-      menuHeight = 140
+      if (fileExistCache.value.get(props.filePath)) {
+        menuHeight = 140
+      }
       if (imageContextMenus.value && imageContextMenus.value.length > 0) {
         menuHeight += imageContextMenus.value.length * 30
       }
@@ -111,7 +113,10 @@ const calculateMenuPosition = (event: any): void => {
       }
     }
     if (props.menuType === 'file') {
-      if (props.filePath && props.filePath.length > 0) {
+      if (props.filePath && props.filePath.trim()) {
+        menuHeight = 140
+      }
+      if (fileExistCache.value.get(props.filePath)) {
         menuHeight = 170
       }
     } else if (props.menuType === 'link') {
@@ -241,6 +246,7 @@ onUnmounted(() => {
       <div class="context-menu-divider"></div>
       <div
         class="context-menu-item"
+        v-if="fileExistCache.get(props.filePath)"
         @click="openPreviewWindow(props.filePath, isFolderCache.get(props.filePath) || false)"
       >
         <span>{{ currentLanguage.pages.list.contextMenu.filePreview }}</span>
@@ -255,7 +261,11 @@ onUnmounted(() => {
 
     <template v-if="props.menuType === 'image'">
       <div class="context-menu-divider"></div>
-      <div class="context-menu-item" @click="openPreviewWindow(props.filePath, false)">
+      <div
+        class="context-menu-item"
+        v-if="fileExistCache.get(props.filePath)"
+        @click="openPreviewWindow(props.filePath, false)"
+      >
         <span>{{ currentLanguage.pages.list.contextMenu.filePreview }}</span>
       </div>
       <div
