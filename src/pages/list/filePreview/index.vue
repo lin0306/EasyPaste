@@ -20,7 +20,6 @@ import { isPackage } from '@/utils/PackageUtil.ts'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { convertFileSize, getFileSize } from '@/utils/FileUtil.ts'
 import { getType } from '@/constants/FileTypeConstatnts.ts'
-import { currentLanguage } from '@/services/LanguageService.ts'
 
 const fileInfo = reactive({
   filePath: '',
@@ -125,7 +124,7 @@ onUnmounted(() => {
 
 <style scoped>
 .viewer-container {
-  margin: 15px;
+  padding: 10px;
   overflow-y: auto;
 }
 
@@ -150,7 +149,6 @@ onUnmounted(() => {
   opacity: 1;
 }
 
-/*noinspection CssUnusedSymbol*/
 :deep(.n-divider:not(.n-divider--vertical)) {
   margin-top: 5px !important;
   margin-bottom: 7px !important;
@@ -158,7 +156,7 @@ onUnmounted(() => {
 
 .viewer-content {
   padding: 5px;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 115px);
 }
 
 .unknown-file-container {
@@ -185,6 +183,7 @@ onUnmounted(() => {
 
 .file-info {
   display: flex;
+  bottom: 10px;
   justify-content: space-between;
   flex-direction: row-reverse;
   padding: 0 15px;
