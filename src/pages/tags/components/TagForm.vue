@@ -229,12 +229,12 @@ const addTag = async (): Promise<void> => {
   justify-content: flex-end;
   gap: 12px;
   position: absolute;
-  bottom: 0;
+  bottom: 25px;
   right: 0;
   padding: 10px;
   background-color: var(--theme-universal-secondary);
   border-top: 1px solid var(--theme-universal-border);
-  width: 330px;
+  width: calc(100% - 20px);
 }
 
 .add-btn {
