@@ -361,7 +361,7 @@ onUnmounted(() => {
 /* 左侧标签列表面板 */
 .tag-list-panel {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 25px);
   border-right: 1px solid var(--theme-universal-border);
   display: flex;
   flex-direction: column;
@@ -396,6 +396,7 @@ onUnmounted(() => {
   flex: 1;
   overflow-y: auto;
   padding: 8px 0;
+  margin-bottom: 25px;
 }
 
 .tag-list {
