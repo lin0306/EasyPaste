@@ -35,7 +35,7 @@
     <div
       ref="tagManageRef"
       key="tagManage"
-      :style="{ backgroundColor: themeColors.universal.background }"
+      :style="{ backgroundColor: themeColors.universal.secondary }"
       class="tag-item tag-manage"
       @click="openTagsWindow"
     >
