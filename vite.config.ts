@@ -90,6 +90,12 @@ export default defineConfig({
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
     // 使用 Oxc 压缩选项（替代 terserOptions）
     minify: 'oxc', // 默认值，可选 'oxc' | 'esbuild' | 'terser' | boolean
+    // 配置静态资源处理
+    assetsInlineLimit: 4096, // 4kb 以下的资源内联为 base64
+    cssCodeSplit: true, // CSS 代码分割
+    // 启用 gzip 压缩
+    reportCompressedSize: true,
+
     // 优化 Rollup 配置
     rolldownOptions: {
       output: {
@@ -104,17 +110,22 @@ export default defineConfig({
         assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
 
         // 优化分组
-        advancedChunks: {
+        codeSplitting: {
           groups: [
             // Vue 生态
             {
               name: 'vendor',
-              test: /[\\/]node_modules[\\/](vue|pinia)[\\/]/,
+              test: /[\\/]node_modules[\\/](vue|pinia|vue-router)[\\/]/,
             },
             // UI 库
             {
               name: 'vendor-ui',
               test: /[\\/]node_modules[\\/](naive-ui)[\\/]/,
+            },
+            // 动画库
+            {
+              name: 'vendor-animation',
+              test: /[\\/]node_modules[\\/](gsap)[\\/]/,
             },
             // 图标
             {
