@@ -19,7 +19,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "^2", features = [] }
 
 [dependencies]
-tauri = { version = "^2", features = [ "protocol-asset", "tray-icon", "image-png", "unstable"] } # 启用托盘和PNG支持
+tauri = { version = "^2", features = [ "protocol-asset", "tray-icon", "image-png", "unstable", "devtools"] } # 启用托盘和PNG支持
 tauri-plugin-opener = "^2"
 tauri-plugin-fs = "^2"
 tauri-plugin-log = "^2"
@@ -52,6 +52,9 @@ flate2 = "1.1.9"
 # tcp/ip请求
 reqwest = "0.13.3"
 anyhow = "1.0.102"
+# 环境变量
+dotenv = "0.15.0"
+
 # 注册表操作
 [target.'cfg(windows)'.dependencies]
 winreg = "0.56.0"

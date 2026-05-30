@@ -50,7 +50,6 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_sql::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
-            #[cfg(debug_assertions)]
             commands::dev::open_dev_tool,
             commands::system::restart_computer,
             tray::hide_win_msg,

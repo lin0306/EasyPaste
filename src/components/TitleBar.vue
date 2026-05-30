@@ -10,7 +10,7 @@
       <div v-if="isDev" class="control-button" @click="onRefresh">
         <font-awesome-icon :icon="faArrowRotateRight" class="program-btn" id="refresh-button-img" />
       </div>
-      <div v-if="isDev" class="control-button" @click="openDevTool">
+      <div v-if="showDevTool" class="control-button" @click="openDevTool">
         <font-awesome-icon :icon="faLaptopCode" class="program-btn" id="devtool-button-img" />
       </div>
       <div
@@ -46,7 +46,7 @@
 <script lang="ts" setup>
 import { invoke } from '@tauri-apps/api/core'
 import { onMounted, ref } from 'vue'
-import { isDev } from '../data/SystemParams.ts'
+import { isDev, showDevTool } from '../data/SystemParams.ts'
 import { listFixedStore } from '../store/Fixed.ts'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import UpdateIcon from '../assets/icons/UpdateIcon.vue'

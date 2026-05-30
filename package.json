@@ -6,12 +6,11 @@
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "dev": "vite",
-    "dev:debug": "cross-env VITE_OPEN_DEV_TOOLS_ON_STARTUP=true vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:dev": "cross-env OPEN_DEV_TOOLS_ON_STARTUP=false tauri dev",
-    "tauri:dev:debug": "cross-env OPEN_DEV_TOOLS_ON_STARTUP=true tauri dev",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

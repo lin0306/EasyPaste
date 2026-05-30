@@ -21,6 +21,11 @@ export const isDev = env === 'development'
 export const isMac = currentPlatform === 'macos'
 
 /**
+ * 是否显示开发者工具
+ */
+export const showDevTool = import.meta.env.VITE_DEBUG_ENABLE === 'true'
+
+/**
  * 程序配置：启动时是否打开开发者工具
  * 从环境变量 VITE_OPEN_DEV_TOOLS_ON_STARTUP 读取，默认为 false
  */
