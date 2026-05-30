@@ -55,11 +55,11 @@ watch(
     const wrapper = contentWrapperRef.value
 
     // 先重置位置
-    gsap.set(wrapper, { y: 0, opacity: 1 })
+    gsap.set(wrapper, { y: 0, opacity: 0 })
 
     // 创建时间线
     const tl = gsap.timeline()
-    const yIndex = 600
+    const yIndex = 100
     // 当前内容向上滑出并淡出
     tl.to(wrapper, {
       y: isDownward ? -yIndex : yIndex,
