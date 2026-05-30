@@ -1,15 +1,6 @@
 {
   "version": "0.3.0",
-  "notes": "# v0.3.0 (2026-05-30)\n\n## 更新内容\n\n### \uD83C\uDF89 新功能\n\n- 增加可调整主窗口大小设置\n- 增加列表滚动显示回到顶部按钮\n- 增加插件功能，目前可安装图片识别、文本翻译插件\n- 新增多种背景动效（极光、柔和光球、星空、流星雨），可在设置中切换\n- 新增高级搜索功能，更加强大的搜索功能\n\n### \uD83D\uDE80 优化\n\n- 动画效果改用 GSAP 实现，更流畅自然\n- 背景动效全面美化：极光、柔和光球、星空背景效果大幅提升\n- 部分页面 UI 美化\n- 组件阴影、部分页面阴影颜色跟随主题变化\n- 日期时间选择器多主题兼容\n- 标签列表鼠标悬浮展示效果优化\n- 整体项目目录结构统一化重构\n- 修改图标引入逻辑，进行图标的统一管理\n- 优化多语言配置，可在程序根目录下直接查看语言文件内容\n- 调整文件树预览时的展示效果\n- 底层框架版本升级，规避漏洞，提高稳定性\n- 修改GitHub下载加速镜像地址\n\n### ✅ 修复 Bug\n\n- 修复程序第一次启动时，点击托盘图标打开列表窗口，会自动隐藏问题\n- 修复部分图标的颜色显示问题\n- 修复复制图片时，列表显示的是文件而非图片的问题\n- 修复文件不存在但仍可预览的问题\n- 修复按照类型搜索时，复制类型不一致的内容也会展示的问题\n- 修复部分页面语言切换功能失效问题\n- 修复设置界面部分设置打开后，再次查看，仍是关闭状态\n- 修复主界面部分标签无法删除问题",
-  "pub_date": "2026-05-30T15:10:00.465Z",
-  "platforms": {
-    "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcWYrUUxGcVZPam9HdS9oTVVBSGxyRVRwKzd0b0lTMEttVnNITHBKUHZYbXU2cnVjREZHdDZSdkpQVkJQNjh3OHRTTGJqNk5Pd1BYMDFUSFVKR1VFTHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTUzNDkyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKeE1jY1l4SDZrL3k3aHN3ejRJZFFVbmNiMzdTd1NXcE5BMlJEczdrdWZCUUdlbEp4NkZHQXF4UmxUTTFjNnVtcDhVa2M5QU5GaXVyY0tsdE9kM1pDREE9PQo=",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz"
-    },
-    "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcVM1MStLeXY2dHgyZzl1L01kaWZxQ3lRV3NueXh0Qk1xcVB1Q2VUZmF3L2pMNFJsdVdCaGE4R3YxaEQrdzJlWE9NNmJ4ekxLT3QybzB3RWlQS01HUFFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTUzNzYwCWZpbGU6RWFzeVBhc3RlXzAuMy4wX3g2NC1zZXR1cC5leGUKWGg0M2RVMWpvWWRqNDZ4ZlREYVBjbzRtR0d3c1FtNGFnQkFyOTlKcWFnbGV4bXJ3ZUtxc0w5RzYyNXBkWS93Wjg4OUs1c2VrUlFSQXUxdkZkOFhiQXc9PQo=",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe"
-    }
-  }
+  "notes": "",
+  "pub_date": "2026-05-30T18:31:18.000Z",
+  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcVhvcTQ3YkdsOGpDQmFmVnRIWnhCOUR1amRVT1U1UUhtUkMzNDRJNHdJdVJPREx0MEpIWUxpcWY3ZmhIakk5RGpIR05rMThDQmNIa0tEYVRLTlhmdWdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTY1Mzk3CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKUHh4aWZlTnJCOGNpMFVZYUdQNzh0ZmRWWHJ4UXF0aEZZci9lUERzTkxrK2R3UExSYkk5cDhLUDN6MG8xYTEwZHZsczlhQ0xDWlRCY04rVmRRVzlGQ1E9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcVljVnhPMmE1ZDc0MkVSeVhYZFE2dmJpZFFtZXBsRTRNcytJcTF5TVczWGZLZnhhTnBKS3k2cjFVRkVKblpZWXUzOEFIVDEvSXAzalZ1S1RnTXRVaUFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTY1ODQ4CWZpbGU6RWFzeVBhc3RlXzAuMy4wX3g2NC1zZXR1cC5leGUKZ1RoM0czS1U4QlNwb3RtZlVjamgvTHdPMHBCdlpVeC9HeG5GajRJbjVxQTNVWlBlMDdFNkcyMEwwaGdhMFA3dkRpWlFEdjRHRWxlY3BNNVdoN2VxQXc9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe"}}
 }
