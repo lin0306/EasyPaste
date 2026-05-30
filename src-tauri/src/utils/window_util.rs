@@ -4,7 +4,7 @@
  */
 #[cfg(debug_assertions)]
 pub fn should_open_dev_tools_on_startup() -> bool {
-    std::env::var("OPEN_DEV_TOOLS_ON_STARTUP")
+    std::env::var("VITE_OPEN_DEV_TOOLS_ON_STARTUP")
         .map(|v| v == "true")
         .unwrap_or(false)
 }
