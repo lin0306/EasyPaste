@@ -59,7 +59,7 @@ watch(
 
     // 创建时间线
     const tl = gsap.timeline()
-    const yIndex = 100
+    const yIndex = 250
     // 当前内容向上滑出并淡出
     tl.to(wrapper, {
       y: isDownward ? -yIndex : yIndex,
