@@ -97,7 +97,7 @@ export async function getPowerOnSelfStart(): Promise<boolean> {
 }
 
 /**
- * 获取是否替换全局热键
+ * 保存是否替换全局热键
  * @param replaceGlobalHotkey 是否替换全局热键
  */
 export async function saveReplaceGlobalHotkey(replaceGlobalHotkey: boolean): Promise<void> {
