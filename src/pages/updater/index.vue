@@ -216,7 +216,7 @@ onMounted(async () => {
             {{ currentLanguage.pages.updater.downloadNowBtn }}
           </n-button>
           <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'failed'">
-            重新下载
+            {{ currentLanguage.pages.updater.restartDownloadBtn }}
           </n-button>
           <!-- 下载完成后显示立即重启按钮 -->
           <n-button type="primary" @click="installNow" v-if="downloadState === 'completed'">
