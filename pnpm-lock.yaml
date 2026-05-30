@@ -1219,8 +1219,8 @@ packages:
   lodash-es@4.18.0:
     resolution: {integrity: sha512-koAgswPPA+UTaPN64Etp+PGP+WT6oqOS2NMi5yDkMaiGw9qY4VxQbQF0mtKMyr4BlTznWyzePV5UpECTJQmSUA==}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -2567,7 +2567,7 @@ snapshots:
 
   lodash-es@4.18.0: {}
 
-  lodash@4.17.21: {}
+  lodash@4.18.1: {}
 
   magic-string@0.30.17:
     dependencies:
@@ -2609,7 +2609,7 @@ snapshots:
       date-fns-tz: 3.2.0(date-fns@4.3.0)
       evtd: 0.2.4
       highlight.js: 11.11.1
-      lodash: 4.17.21
+      lodash: 4.18.1
       lodash-es: 4.18.0
       seemly: 0.3.10
       treemate: 0.3.11
