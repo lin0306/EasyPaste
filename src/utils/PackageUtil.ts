@@ -1,6 +1,6 @@
 import { Entry } from '@zip.js/zip.js'
-import { PackageTreeOption } from '../types/PackageTreeOption'
-import { NGradientText, NImage } from 'naive-ui'
+import { PackageTreeOption } from '@/types/PackageTreeOption'
+import { NGradientText } from 'naive-ui'
 import { convertFileSize } from './FileUtil.ts'
 import { h } from 'vue'
 import { utf8Decoder } from '../constants/PublicConstants.ts'
@@ -69,7 +69,7 @@ export function convertChildren(packageInfos: PackageInfo[]): PackageTreeOption[
           label: name.split('/').pop() || '',
           children: [],
           date: info.date,
-          prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+          prefix: () => h('span', '📁'),
         })
       }
       fileCount++
@@ -135,7 +135,7 @@ function addPathToTree(tree: PackageTreeOption[], path: string): void {
         key: path,
         label: part,
         children: [],
-        prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+        prefix: () => h('span', '📁'),
       }
       currentNode.push(existingNode)
     }
@@ -170,7 +170,7 @@ function addToDirectory(
         key: key,
         label: part,
         children: [],
-        prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+        prefix: () => h('span', '📁'),
       }
       currentNode.push(existingNode)
     }

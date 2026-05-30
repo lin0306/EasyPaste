@@ -42,7 +42,7 @@ const handleLoad = async (node: TreeOption): Promise<void> => {
         key: key,
         label: entry.name,
         isLeaf: false,
-        prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+        prefix: () => h('span', '📁'),
       }
     } else {
       tree[i] = {
@@ -108,7 +108,7 @@ onMounted(() => {
       key: props.filePath,
       label: folderPath,
       isLeaf: false,
-      prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+      prefix: () => h('span', '📁'),
     },
   ]
 })

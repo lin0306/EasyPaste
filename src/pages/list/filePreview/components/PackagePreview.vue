@@ -149,7 +149,7 @@ const fillFolderTree = (children: PackageTreeOption[]): void => {
       key: baseFileName,
       label: baseFileName,
       children,
-      prefix: () => h(NImage, { src: '/closedFolder.svg', previewDisabled: true }),
+      prefix: () => h('span', '📁'),
       suffix: () =>
         h(
           NGradientText,
