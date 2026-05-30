@@ -1,15 +1,6 @@
 {
-  "version": "0.2.0+1",
-  "notes": "# v0.2.0+1 (2026-03-09)\n\n## 更新内容\n\n### ✅ 修复Bug\n- 修复版本安装后，之前的数据全部消失，配置全部重置问题\n- 修复部分按钮的展示问题\n- 修复更新页面的布局问题，修改更新页面打开默认展示重新下载按钮",
-  "pub_date": "2026-03-09T08:22:34.057Z",
-  "platforms": {
-    "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnRmOXlQazc5UzhuK2FCNzkzNG1uY2NSV3RsT3VHclhoRUtRZnpEcnpseVN6aENEbjZJUkRzKzlxZ1lyTDdBUTk4MDA5Z2dTYWZacVRSbS9RRGMwYlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQ0MDQ0CWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKY2lITk9ZZGVYNHlvbUIxZEl4QkxKcHFzU1phWjJSL2pCWjlCWldMYW0wbVVuQlBienNCUlAyTHhSSmFTTjJIT3dSMkYxTGlvTmZlQ1BrNGRZbVRBRGc9PQo=",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0+1/EasyPaste.app.tar.gz"
-    },
-    "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSZmdHeEhKUjltSnRRMGJ5WVhLelE5RzFWZXRpK2daZVhtU1JjNnI5N3orcE8yN1pOUkpGaUlyUEw4NW55RVljczV2bFBmVnZrNzR5NDhwS0ZtMVNDQkhmUzFBWVZ5MUEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczMDQ0NTA3CWZpbGU6RWFzeVBhc3RlXzAuMi4wKzFfeDY0LXNldHVwLmV4ZQpMZjBadVZocG1FeGdrZ2VLeklGbDVQR2tZWENtU1hkS3NIa0dvU0kra3NnR2xVcTdxYUdtZS96dk9ieTc5dTdjR0NqTU4zbzFySzVlSVR3aEhmVlNDdz09Cg==",
-      "url": "https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.0+1/EasyPaste_0.2.0+1_x64-setup.exe"
-    }
-  }
+  "version": "0.3.0",
+  "notes": "",
+  "pub_date": "2026-05-30T15:10:00.465Z",
+  "platforms": {"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcWYrUUxGcVZPam9HdS9oTVVBSGxyRVRwKzd0b0lTMEttVnNITHBKUHZYbXU2cnVjREZHdDZSdkpQVkJQNjh3OHRTTGJqNk5Pd1BYMDFUSFVKR1VFTHdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTUzNDkyCWZpbGU6RWFzeVBhc3RlLmFwcC50YXIuZ3oKeE1jY1l4SDZrL3k3aHN3ejRJZFFVbmNiMzdTd1NXcE5BMlJEczdrdWZCUUdlbEp4NkZHQXF4UmxUTTFjNnVtcDhVa2M5QU5GaXVyY0tsdE9kM1pDREE9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz"},"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSdEx1eFBhd2FXcVM1MStLeXY2dHgyZzl1L01kaWZxQ3lRV3NueXh0Qk1xcVB1Q2VUZmF3L2pMNFJsdVdCaGE4R3YxaEQrdzJlWE9NNmJ4ekxLT3QybzB3RWlQS01HUFFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwMTUzNzYwCWZpbGU6RWFzeVBhc3RlXzAuMy4wX3g2NC1zZXR1cC5leGUKWGg0M2RVMWpvWWRqNDZ4ZlREYVBjbzRtR0d3c1FtNGFnQkFyOTlKcWFnbGV4bXJ3ZUtxc0w5RzYyNXBkWS93Wjg4OUs1c2VrUlFSQXUxdkZkOFhiQXc9PQo=","url":"https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe"}}
 }
