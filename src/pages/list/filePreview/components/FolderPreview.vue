@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
 import { filePathConvertFileName } from '@/utils/TextUtil.ts'
-import { NGradientText, NImage, TreeOption } from 'naive-ui'
+import { NGradientText, TreeOption } from 'naive-ui'
 import { readDir } from '@tauri-apps/plugin-fs'
 import { isMac } from '@/data/SystemParams.ts'
 import { updatePrefixWithExpanded } from '@/utils/TreeUtil.ts'
