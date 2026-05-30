@@ -47,7 +47,7 @@ GitHub 官方源，确保获得最新版本：
 
 | 平台                        | 下载链接                                                                                                 | 说明         |
 |---------------------------|------------------------------------------------------------------------------------------------------|------------|
-| **Windows**               | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0-setup.exe) | EXE 安装程序   |
+| **Windows**               | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe) | EXE 安装程序   |
 | **macOS (Apple Silicon)** | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)      | TAR.GZ 压缩包 |
 | **所有版本**                  | [Releases 页面](https://github.com/lin0306/EasyPaste/releases)                                         | 完整版本列表     |
 

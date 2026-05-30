@@ -47,7 +47,7 @@ Official GitHub source, ensure getting the latest version:
 
 | Platform                  | Download Link                                                                                              | Description           |
 |---------------------------|------------------------------------------------------------------------------------------------------------|-----------------------|
-| **Windows**               | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0-setup.exe) | EXE Installer         |
+| **Windows**               | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe) | EXE Installer         |
 | **macOS (Apple Silicon)** | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)      | TAR.GZ Archive        |
 | **All Versions**          | [Releases Page](https://github.com/lin0306/EasyPaste/releases)                                             | Complete Version List |
 
