@@ -28,7 +28,7 @@ pub struct Pages {
     pub item_search: Value,
     pub tags: Value,
     pub about: Value,
-    pub update: Value,
+    pub updater: Value,
     pub preview: Value,
 
     #[serde(rename = "pluginStore")]
@@ -49,7 +49,7 @@ impl Pages {
             "itemSearch" => Some(&self.item_search),
             "tags" => Some(&self.tags),
             "about" => Some(&self.about),
-            "update" => Some(&self.update),
+            "updater" => Some(&self.updater),
             "preview" => Some(&self.preview),
             "pluginStore" => Some(&self.plugin_store),
             "pluginView" => Some(&self.plugin_view),

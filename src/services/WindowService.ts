@@ -135,10 +135,10 @@ export async function openAboutWindow(): Promise<void> {
  * 打开更新窗口
  */
 export async function openUpdaterWindow(): Promise<void> {
-  await loadPageLanguage('update')
+  await loadPageLanguage('updater')
   await createWin({
     label: 'updater',
-    title: currentLanguage.value.pages.update.title,
+    title: currentLanguage.value.pages.updater.title,
     url: '/updater',
     width: 600,
     height: 500,

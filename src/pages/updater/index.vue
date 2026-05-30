@@ -150,7 +150,7 @@ onMounted(async () => {
     >
       <div class="release-header">
         <h2 class="release-version">
-          {{ updaterVer.version || currentLanguage.pages.update.versionName }}
+          {{ updaterVer.version || currentLanguage.pages.updater.versionName }}
         </h2>
         <span class="release-tag" v-if="updaterVer.version && updaterVer.version.includes('beta')"
           >Pre-release</span
@@ -162,13 +162,13 @@ onMounted(async () => {
       <div class="divider"></div>
       <div v-if="updaterVer.notes" class="release-notes" v-html="updaterVer.notes" />
       <div class="release-notes" v-else>
-        {{ currentLanguage.pages.update.updateNotes }}
+        {{ currentLanguage.pages.updater.updateNotes }}
       </div>
       <!-- 查看更多按钮 -->
       <div class="view-more-container">
         <n-button text @click="openGitHubReleases">
           <div class="view-more-btn">
-            <span>{{ currentLanguage.pages.update.viewMoreBtn }}</span>
+            <span>{{ currentLanguage.pages.updater.viewMoreBtn }}</span>
             <span class="view-more-icon">→</span>
           </div>
         </n-button>
@@ -190,7 +190,7 @@ onMounted(async () => {
 
     <!-- 下载进度条 -->
     <div class="download-progress" v-if="!onLoading && downloadState === 'downloading'">
-      <div class="progress-title">{{ currentLanguage.pages.update.downloadingTitle }}</div>
+      <div class="progress-title">{{ currentLanguage.pages.updater.downloadingTitle }}</div>
       <div class="progress-bar">
         <div class="progress-inner" :style="{ width: downloadProgress + '%' }"></div>
       </div>
@@ -213,14 +213,14 @@ onMounted(async () => {
         <div class="left-action"></div>
         <div class="right-action">
           <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'unstart'">
-            {{ currentLanguage.pages.update.downloadNowBtn }}
+            {{ currentLanguage.pages.updater.downloadNowBtn }}
           </n-button>
           <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'failed'">
             重新下载
           </n-button>
-          <!-- 备份完成后显示立即重启按钮 -->
+          <!-- 下载完成后显示立即重启按钮 -->
           <n-button type="primary" @click="installNow" v-if="downloadState === 'completed'">
-            {{ currentLanguage.pages.update.restartImmediatelyBtn }}
+            {{ currentLanguage.pages.updater.restartImmediatelyBtn }}
           </n-button>
         </div>
       </div>
@@ -231,7 +231,7 @@ onMounted(async () => {
 .update-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 25px);
   overflow: hidden;
 }
 

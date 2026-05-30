@@ -374,20 +374,15 @@
       "version": "版本",
       "problemFeedback": "问题反馈"
     },
-    "update": {
+    "updater": {
       "title": "更新",
       "versionName": "新版本",
       "updateNotes": "暂无更新说明",
-      "notUpdateBtn": "暂不更新",
-      "reminderText": "下次提醒时间：",
-      "days": "天后",
       "downloadNowBtn": "立即下载",
-      "restartLaterBtn": "稍后重启",
+      "restartDownloadBtn": "重新下载",
       "restartImmediatelyBtn": "立即重启",
       "viewMoreBtn": "查看更多",
-      "downloadingTitle": "下载更新中",
-      "backupTitle": "备份用户数据",
-      "backupCompleted": "备份完成"
+      "downloadingTitle": "下载更新中"
     },
     "tray": {
       "settings": "设置",

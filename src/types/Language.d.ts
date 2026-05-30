@@ -400,20 +400,15 @@ declare interface PageConfig {
     version: string
     problemFeedback: string
   }
-  update: {
+  updater: {
     title: string
     versionName: string
     updateNotes: string
-    notUpdateBtn: string
-    reminderText: string
-    days: string
     downloadNowBtn: string
-    restartLaterBtn: string
+    restartDownloadBtn: string
     restartImmediatelyBtn: string
     viewMoreBtn: string
     downloadingTitle: string
-    backupTitle: string
-    backupCompleted: string
   }
   tray: {
     settings: string

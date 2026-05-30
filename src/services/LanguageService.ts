@@ -16,7 +16,7 @@ export const currentLanguage = ref<LanguageConfig>({
     list: {},
     tags: {},
     about: {},
-    update: {},
+    updater: {},
     tray: {},
     preview: {},
     pluginStore: {},
@@ -37,6 +37,7 @@ async function loadLanguage() {
   const label = window.label
   console.log('页面label', label)
   await loadPageLanguage(label)
+  console.log('当前语言:', currentLanguage.value)
 }
 
 /**

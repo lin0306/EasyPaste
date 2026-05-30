@@ -374,20 +374,15 @@
       "version": "Version",
       "problemFeedback": "Problem Feedback"
     },
-    "update": {
+    "updater": {
       "title": "Update",
       "versionName": "Version",
       "updateNotes": "No Update Notes",
-      "notUpdateBtn": "Not Update",
-      "reminderText": "Next reminder time: ",
-      "days": " days",
       "downloadNowBtn": "Download Now",
-      "restartLaterBtn": "Restart Later",
+      "restartDownloadBtn": "Restart Download",
       "restartImmediatelyBtn": "Restart Immediately",
       "viewMoreBtn": "View More",
-      "downloadingTitle": "Downloading Update",
-      "backupTitle": "Backing Up User Data",
-      "backupCompleted": "Backup Completed"
+      "downloadingTitle": "Downloading Update"
     },
     "tray": {
       "settings": "Settings",

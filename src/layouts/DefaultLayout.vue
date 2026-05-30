@@ -52,7 +52,7 @@ const getTitleByPath = (path: string): string => {
     'theme-editor': currentLanguage.value.pages.themeEditor?.title || '主题编辑器',
     tags: currentLanguage.value.pages.tags?.title || '标签管理',
     about: currentLanguage.value.pages.about?.title || '关于',
-    updater: currentLanguage.value.pages.update?.title || '更新',
+    updater: currentLanguage.value.pages.updater?.title || '更新',
     preview: currentLanguage.value.pages.preview?.title || '预览',
     'plugin-view': currentLanguage.value.pages.pluginView?.title || '插件预览',
     'plugin-store': currentLanguage.value.pages.pluginStore?.title || '插件商店',
