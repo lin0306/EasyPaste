@@ -20,9 +20,9 @@ const routes: RouteRecordRaw[] = [
         path: 'list',
         component: () => import('@/pages/list/main/index.vue'),
         meta: {
-          showHideBtn: true,
+          showHideBtn: false,
           showFixedBtn: true,
-          showUpdateIcon: true,
+          showUpdateIcon: false,
           showCloseBtn: false,
         },
       },

@@ -65,7 +65,6 @@ watch(
     emit('update-title-config', {
       showHideBtn: !isAutoHideWindow.value,
       showUpdateIcon: hasNewVersion.value,
-      showFixedBtn: true,
     })
   },
   { immediate: true }
