@@ -9,8 +9,8 @@
 
   <p>
 
-[![](https://img.shields.io/badge/GitHub%20version-v0.2.1-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
-[![](https://img.shields.io/badge/Gitee%20version-v0.2.1-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/GitHub%20version-v0.3.0-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/Gitee%20version-v0.3.0-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/EasyPaste/releases/latest)
 [![](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey)
 
@@ -23,7 +23,7 @@
 
 > ⚠️ **项目状态**
 >
-> **当前版本**: v0.2.1 (测试版本)
+> **当前版本**: v0.3.0 (测试版本)
 >
 > - ✅ **测试环境**: 已在 Windows 10/11 纯净版系统测试，核心功能稳定
 > - 🔧 **质量保证**: 采用严格的代码规范和安全策略，持续改进中
@@ -38,8 +38,8 @@
 
 | 平台                        | 下载链接                                                                                                                       | 说明         |
 |---------------------------|----------------------------------------------------------------------------------------------------------------------------|------------|
-| **Windows**               | [国内加速下载](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste_0.2.1_x64-setup.exe) | EXE 安装程序   |
-| **macOS (Apple Silicon)** | [国内加速下载](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste.app.tar.gz)          | TAR.GZ 压缩包 |
+| **Windows**               | [国内加速下载](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe) | EXE 安装程序   |
+| **macOS (Apple Silicon)** | [国内加速下载](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)          | TAR.GZ 压缩包 |
 
 ### 🌐 GitHub 官方下载
 
@@ -47,8 +47,8 @@ GitHub 官方源，确保获得最新版本：
 
 | 平台                        | 下载链接                                                                                                 | 说明         |
 |---------------------------|------------------------------------------------------------------------------------------------------|------------|
-| **Windows**               | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste_0.2.1-setup.exe) | EXE 安装程序   |
-| **macOS (Apple Silicon)** | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste.app.tar.gz)      | TAR.GZ 压缩包 |
+| **Windows**               | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0-setup.exe) | EXE 安装程序   |
+| **macOS (Apple Silicon)** | [GitHub 下载](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)      | TAR.GZ 压缩包 |
 | **所有版本**                  | [Releases 页面](https://github.com/lin0306/EasyPaste/releases)                                         | 完整版本列表     |
 
 ### 💡 下载提示

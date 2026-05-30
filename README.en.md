@@ -9,8 +9,8 @@
 
   <p>
 
-[![](https://img.shields.io/badge/GitHub%20version-v0.2.1-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
-[![](https://img.shields.io/badge/Gitee%20version-v0.2.1-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/GitHub%20version-v0.3.0-blue.svg?cacheSeconds=2592000)](https://github.com/lin0306/EasyPaste/releases/latest)
+[![](https://img.shields.io/badge/Gitee%20version-v0.3.0-green.svg?cacheSeconds=2592000)](https://gitee.com/lin0306/EasyPaste/releases/latest)
 [![](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey)
 
@@ -23,7 +23,7 @@
 
 > ⚠️ **Project Status**
 >
-> **Current Version**: v0.2.1 (Test Version)
+> **Current Version**: v0.3.0 (Test Version)
 >
 > - ✅ **Testing Environment**: Tested on Windows 10/11 clean systems, core features are stable
 > - 🔧 **Quality Assurance**: Adopting strict code standards and security policies, continuously improving
@@ -38,8 +38,8 @@ Recommended for users in China for faster download speeds:
 
 | Platform                  | Download Link                                                                                                                            | Description    |
 |---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------|
-| **Windows**               | [Accelerated Download](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste_0.2.1_x64-setup.exe) | EXE Installer  |
-| **macOS (Apple Silicon)** | [Accelerated Download](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste.app.tar.gz)          | TAR.GZ Archive |
+| **Windows**               | [Accelerated Download](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0_x64-setup.exe) | EXE Installer  |
+| **macOS (Apple Silicon)** | [Accelerated Download](https://gh-proxy.com/https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)          | TAR.GZ Archive |
 
 ### 🌐 GitHub Official Download
 
@@ -47,8 +47,8 @@ Official GitHub source, ensure getting the latest version:
 
 | Platform                  | Download Link                                                                                              | Description           |
 |---------------------------|------------------------------------------------------------------------------------------------------------|-----------------------|
-| **Windows**               | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste_0.2.1-setup.exe) | EXE Installer         |
-| **macOS (Apple Silicon)** | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.2.1/EasyPaste.app.tar.gz)      | TAR.GZ Archive        |
+| **Windows**               | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste_0.3.0-setup.exe) | EXE Installer         |
+| **macOS (Apple Silicon)** | [GitHub Download](https://github.com/lin0306/EasyPaste/releases/download/v0.3.0/EasyPaste.app.tar.gz)      | TAR.GZ Archive        |
 | **All Versions**          | [Releases Page](https://github.com/lin0306/EasyPaste/releases)                                             | Complete Version List |
 
 ### 💡 Download Tips
