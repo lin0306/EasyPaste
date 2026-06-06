@@ -83,12 +83,13 @@ class ClipboardDBService {
             version         TEXT    NOT NULL,
             use_location    TEXT    NOT NULL,
             platform        TEXT    NOT NULL,
-            file_name TEXT,
-            release_url TEXT,
+            file_name       TEXT,
+            release_url     TEXT,
             url             TEXT    NOT NULL,
             enable          BOOLEAN DEFAULT 1,
             description     TEXT,
-            install_time  INTEGER
+            size            INTEGER,
+            install_time    INTEGER
           )
       `)
 
@@ -115,6 +116,14 @@ class ClipboardDBService {
         await this.db?.execute(`
                     alter table plugins
                         add release_url TEXT;
+                `)
+      }
+      const pluginsColumnExists3 = pluginsInfo?.some(col => col.name === 'size')
+      if (!pluginsColumnExists3) {
+        // 增加插件发布地址字段
+        await this.db?.execute(`
+                    alter table plugins
+                        add size INTEGER;
                 `)
       }
     } catch (er) {
@@ -779,16 +788,19 @@ class ClipboardDBService {
   async addPlugin(plugin: LocalPlugin): Promise<void> {
     await this.db?.execute(
       `
-            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, url, description )
-                VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         plugin.plugin_id,
         plugin.plugin_name,
         plugin.version,
         plugin.use_location,
         plugin.platform,
+        plugin.fileName,
+        plugin.releaseUrl,
         plugin.url,
         plugin.description,
+        plugin.size,
       ]
     )
   }
@@ -805,8 +817,11 @@ class ClipboardDBService {
                         version = ?,
                         use_location = ?,
                         platform = ?,
+                        file_name = ?,
+                        release_url = ?,
                         url = ?,
                         description = ?,
+                        size = ?,
                         install_time = ?
                     WHERE id = ?`,
       [
@@ -814,8 +829,11 @@ class ClipboardDBService {
         plugin.version,
         plugin.use_location,
         plugin.platform,
+        plugin.fileName,
+        plugin.releaseUrl,
         plugin.url,
         plugin.description,
+        plugin.size,
         Date.now(),
         plugin.id,
       ]

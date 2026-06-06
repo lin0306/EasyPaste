@@ -30,6 +30,7 @@ declare interface LocalPlugin {
   enable: number // 插件是否启用
   description: string // 插件描述
   install_time: number // 安装时间
+  size: number // 插件安装包大小，单位：字节
 }
 
 /**
@@ -41,7 +42,10 @@ declare interface SelectPlugin {
   pluginName: string // 插件名称
   version: string // 插件版本
   platform: 'Windows' | 'MacOS' | 'General' // 可用平台
+  fileName: string // 插件安装包名称
+  releaseUrl: string // 插件发布地址
   url: string // 插件下载地址
   enable: number // 插件是否启用
   description: string // 插件描述
+  size: number // 插件安装包大小，单位：字节
 }

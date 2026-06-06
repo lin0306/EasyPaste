@@ -94,6 +94,7 @@ export class DBHandler extends BaseHandler {
       releaseUrl: plugin.releaseUrl,
       url: plugin.downloadUrl,
       description: plugin.description,
+      size: plugin.size,
     }
   }
 

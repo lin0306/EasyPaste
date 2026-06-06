@@ -215,9 +215,12 @@ export const onSelectLocal = (plugin: LocalPlugin): void => {
   selectedPlugin.pluginName = plugin.plugin_name
   selectedPlugin.version = plugin.version
   selectedPlugin.platform = plugin.platform
+  selectedPlugin.fileName = plugin.fileName
+  selectedPlugin.releaseUrl = plugin.releaseUrl
   selectedPlugin.url = plugin.url
   selectedPlugin.description = plugin.description
   selectedPlugin.enable = plugin.enable
+  selectedPlugin.size = plugin.size
 }
 
 /**
@@ -230,10 +233,13 @@ export const onSelectStore = (plugin: StorePlugin): void => {
   selectedPlugin.enable = localPlugin ? localPlugin.enable : 1
   selectedPlugin.pluginId = plugin.id
   selectedPlugin.pluginName = plugin.name
+  selectedPlugin.fileName = plugin.fileName
+  selectedPlugin.releaseUrl = plugin.releaseUrl
   selectedPlugin.url = plugin.downloadUrl
   selectedPlugin.version = plugin.version
   selectedPlugin.platform = plugin.platform
   selectedPlugin.description = plugin.description
+  selectedPlugin.size = plugin.size
 }
 
 /**
