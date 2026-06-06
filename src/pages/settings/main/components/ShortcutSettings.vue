@@ -385,13 +385,13 @@ onMounted(async () => {
         </div>
       </div>
       <template #action>
-        <n-button @click="cancelEditShortcut" :loading="onLoading" :disabled="onLoading">
+        <n-button @click.stop="cancelEditShortcut" :loading="onLoading" :disabled="onLoading">
           {{ currentLanguage.pages.settings.editHotkeyModalCancelBtn }}
         </n-button>
         <n-button
           type="primary"
           :disabled="tempKeys.length === 0 || !currentKeyAvailableKey || onLoading"
-          @click="confirmEditShortcut"
+          @click.stop="confirmEditShortcut"
           :loading="onLoading"
         >
           {{ currentLanguage.pages.settings.editHotkeyModalConfirmBtn }}

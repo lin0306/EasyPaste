@@ -166,7 +166,7 @@ onMounted(async () => {
       </div>
       <!-- 查看更多按钮 -->
       <div class="view-more-container">
-        <n-button text @click="openGitHubReleases">
+        <n-button text @click.stop="openGitHubReleases">
           <div class="view-more-btn">
             <span>{{ currentLanguage.pages.updater.viewMoreBtn }}</span>
             <span class="view-more-icon">→</span>
@@ -184,7 +184,7 @@ onMounted(async () => {
     >
       <span>安装包下载失败，请检查网络连接并重新下载。</span>
       <template #action>
-        <n-button type="primary" @click="downloadUpdate"> 重新下载 </n-button>
+        <n-button type="primary" @click.stop="downloadUpdate"> 重新下载 </n-button>
       </template>
     </n-modal>
 
@@ -212,14 +212,14 @@ onMounted(async () => {
       <div class="update-actions">
         <div class="left-action"></div>
         <div class="right-action">
-          <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'unstart'">
+          <n-button type="primary" @click.stop="downloadUpdate" v-if="downloadState === 'unstart'">
             {{ currentLanguage.pages.updater.downloadNowBtn }}
           </n-button>
-          <n-button type="primary" @click="downloadUpdate" v-if="downloadState === 'failed'">
+          <n-button type="primary" @click.stop="downloadUpdate" v-if="downloadState === 'failed'">
             {{ currentLanguage.pages.updater.restartDownloadBtn }}
           </n-button>
           <!-- 下载完成后显示立即重启按钮 -->
-          <n-button type="primary" @click="installNow" v-if="downloadState === 'completed'">
+          <n-button type="primary" @click.stop="installNow" v-if="downloadState === 'completed'">
             {{ currentLanguage.pages.updater.restartImmediatelyBtn }}
           </n-button>
         </div>

@@ -509,7 +509,7 @@ onUnmounted(async () => {
 
     <!-- 固定在底部的操作按钮区域 -->
     <div class="action-buttons-fixed" :class="{ 'has-filters': hasActiveFilters }">
-      <n-button size="large" :bordered="false" @click="clearSearch">
+      <n-button size="large" :bordered="false" @click.stop="clearSearch">
         <template #icon>
           <n-icon>
             <font-awesome-icon :icon="faTimes" />
@@ -518,7 +518,7 @@ onUnmounted(async () => {
         {{ currentLanguage.pages.itemSearch.clearSearchBtn }}
       </n-button>
 
-      <n-button type="primary" size="large" :bordered="false" @click="executeSearch">
+      <n-button type="primary" size="large" :bordered="false" @click.stop="executeSearch">
         <template #icon>
           <n-icon>
             <font-awesome-icon :icon="faMagnifyingGlass" />

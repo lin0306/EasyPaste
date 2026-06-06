@@ -319,7 +319,7 @@ onMounted(async () => {
             @click="loadLogFileInfo"
           />
         </span>
-        <n-button dashed @click="clearLogFiles">
+        <n-button dashed @click.stop="clearLogFiles">
           {{ currentLanguage.pages.settings.logClearBtn }}
         </n-button>
       </div>
@@ -394,7 +394,7 @@ onMounted(async () => {
       </div>
       <template #action v-if="!isUpdateImagePath">
         <n-button
-          @click="
+          @click.stop="
             () => {
               updateImagePathVisible = false
               onLoading = false
@@ -403,7 +403,7 @@ onMounted(async () => {
         >
           {{ currentLanguage.pages.settings.replaceImageStorageLocationCancelBtn }}
         </n-button>
-        <n-button type="primary" @click="handleUpdateImagePath">
+        <n-button type="primary" @click.stop="handleUpdateImagePath">
           {{ currentLanguage.pages.settings.replaceImageStorageLocationConfirmBtn }}
         </n-button>
       </template>

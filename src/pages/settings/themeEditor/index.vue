@@ -146,10 +146,10 @@ onMounted(async () => {
       <n-popselect v-model:value="selectBasicTheme" :options="themeOptions" trigger="click">
         <n-button>{{ showThemeText }}</n-button>
       </n-popselect>
-      <n-button @click="onImport">{{ currentLanguage.pages.themeEditor.importBtn }}</n-button>
-      <n-button @click="onExport">{{ currentLanguage.pages.themeEditor.exportBtn }}</n-button>
-      <n-button @click="onReset">{{ currentLanguage.pages.themeEditor.resetBtn }}</n-button>
-      <n-button type="primary" @click="saveTheme">{{
+      <n-button @click.stop="onImport">{{ currentLanguage.pages.themeEditor.importBtn }}</n-button>
+      <n-button @click.stop="onExport">{{ currentLanguage.pages.themeEditor.exportBtn }}</n-button>
+      <n-button @click.stop="onReset">{{ currentLanguage.pages.themeEditor.resetBtn }}</n-button>
+      <n-button type="primary" @click.stop="saveTheme">{{
         currentLanguage.pages.themeEditor.saveBtn
       }}</n-button>
     </div>
@@ -178,10 +178,10 @@ onMounted(async () => {
         }}{{ exportFilePath }}</span
       >
       <template #action>
-        <n-button @click="onShowFile">{{
+        <n-button @click.stop="onShowFile">{{
           currentLanguage.pages.themeEditor.openInFolderBtn
         }}</n-button>
-        <n-button type="primary" @click="exportSuccessModalVisible = false">
+        <n-button type="primary" @click.stop="exportSuccessModalVisible = false">
           {{ currentLanguage.pages.themeEditor.closeBtn }}
         </n-button>
       </template>

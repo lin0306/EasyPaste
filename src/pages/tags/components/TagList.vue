@@ -347,10 +347,10 @@ onUnmounted(() => {
   >
     <p>{{ currentLanguage.pages.tags.clearDataModalContent }}</p>
     <template #action>
-      <n-button @click="showClearDataModal = false">
+      <n-button @click.stop="showClearDataModal = false">
         {{ currentLanguage.pages.tags.clearDataModalCancelBtn }}
       </n-button>
-      <n-button type="primary" @click="clearTags">
+      <n-button type="primary" @click.stop="clearTags">
         {{ currentLanguage.pages.tags.clearDataModalConfirmBtn }}
       </n-button>
     </template>

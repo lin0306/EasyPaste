@@ -148,10 +148,10 @@ const addTag = async (): Promise<void> => {
         </div>
 
         <div class="form-actions">
-          <n-button @click="cancelEdit">
+          <n-button @click.stop="cancelEdit">
             {{ currentLanguage.pages.tags.cancelBtn }}
           </n-button>
-          <n-button type="primary" @click="addTag" :disabled="!editState.tagName.trim()">
+          <n-button type="primary" @click.stop="addTag" :disabled="!editState.tagName.trim()">
             {{ currentLanguage.pages.tags.saveBtn }}
           </n-button>
         </div>

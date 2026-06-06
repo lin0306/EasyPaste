@@ -411,10 +411,10 @@ onMounted(async () => {
     >
       <p>{{ currentLanguage.pages.settings.restartModalContent }}</p>
       <template #action>
-        <n-button @click="restartModalVisible = false">
+        <n-button @click.stop="restartModalVisible = false">
           {{ currentLanguage.pages.settings.restartModalCancelBtn }}
         </n-button>
-        <n-button type="primary" @click="handleRestart">
+        <n-button type="primary" @click.stop="handleRestart">
           {{ currentLanguage.pages.settings.restartModalConfirmBtn }}
         </n-button>
       </template>

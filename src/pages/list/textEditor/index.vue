@@ -26,10 +26,10 @@
     </div>
     <div class="button-bar">
       <n-space reverse>
-        <n-button type="primary" size="large" @click="saveItemContent">
+        <n-button type="primary" size="large" @click.stop="saveItemContent">
           {{ currentLanguage.pages.itemEditor.saveBtn }}
         </n-button>
-        <n-button size="large" @click="item.currentContent = item.originContent">
+        <n-button size="large" @click.stop="item.currentContent = item.originContent">
           {{ currentLanguage.pages.itemEditor.resetBtn }}
         </n-button>
       </n-space>

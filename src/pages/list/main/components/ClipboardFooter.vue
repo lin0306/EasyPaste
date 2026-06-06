@@ -54,10 +54,10 @@ const onClickClearData = async (): Promise<void> => {
   >
     <p>{{ currentLanguage.pages.list.clearDataModalContent }}</p>
     <template #action>
-      <n-button @click="showClearDataModal = false">
+      <n-button @click.stop="showClearDataModal = false">
         {{ currentLanguage.pages.list.clearDataModalCancelBtn }}
       </n-button>
-      <n-button type="primary" @click="onClickClearData">
+      <n-button type="primary" @click.stop="onClickClearData">
         {{ currentLanguage.pages.list.clearDataModalConfirmBtn }}
       </n-button>
     </template>

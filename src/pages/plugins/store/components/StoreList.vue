@@ -96,7 +96,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
           ghost
           size="small"
           v-else-if="hasUpdate(plugin.id)"
-          @click="onUpdate(plugin)"
+          @click.stop="onUpdate(plugin)"
         >
           {{ currentLanguage.pages.pluginStore.updateBtn }}
         </n-button>
@@ -105,7 +105,7 @@ const onUpdate = async (plugin: StorePlugin): Promise<void> => {
           size="small"
           type="primary"
           v-else-if="!isInstall(plugin.id)"
-          @click="onInstall(plugin)"
+          @click.stop="onInstall(plugin)"
         >
           {{ currentLanguage.pages.pluginStore.installBtn }}
         </n-button>
