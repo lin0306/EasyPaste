@@ -20,7 +20,7 @@ const updateTitle = () => {
     currentLanguage.value.pages.plugins?.[pluginId.value]?.[viewPageTitleCode.value] ||
     currentLanguage.value.pages.pluginView?.title ||
     '插件视图'
-  
+
   emit('update-title-config', {
     title,
   })

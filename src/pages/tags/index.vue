@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import TagList from './components/TagList.vue'
 import TagForm from './components/TagForm.vue'
+
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
 </script>
 
 <template>

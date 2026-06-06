@@ -12,6 +12,11 @@ import { animationEffect } from '@/components/effect/composables/AnimationCompos
 import MainWindowSettings from './components/MainWindowSettings.vue'
 import { gsap } from 'gsap'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 // 页面组件map
 const componentMap: Record<string, any> = {
   general: GeneralSettings,

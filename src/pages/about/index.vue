@@ -4,6 +4,11 @@ import { onMounted, ref } from 'vue'
 import { openLink } from '@/utils/LinkUtil'
 import { currentLanguage } from '@/services/LanguageService'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 // @ts-ignore
 const appVersion = ref<string>('')
 

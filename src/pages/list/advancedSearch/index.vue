@@ -31,6 +31,11 @@ import { emit } from '@tauri-apps/api/event'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { gsap } from 'gsap'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 // 搜索状态
 const searchText = ref('')
 const selectTypes = ref<string[]>([])

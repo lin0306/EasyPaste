@@ -14,6 +14,11 @@ import StoreList from './components/StoreList.vue'
 import LocalList from './components/LocalList.vue'
 import PluginDetail from './components/PluginDetail.vue'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 /**
  * 插件页面切换
  */

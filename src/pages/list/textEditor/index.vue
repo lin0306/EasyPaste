@@ -46,6 +46,11 @@ import { useMessage } from 'naive-ui'
 
 const message = useMessage()
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 const item = reactive({
   id: -1,
   originContent: '',

@@ -16,6 +16,11 @@ import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
 import { invoke } from '@tauri-apps/api/core'
 import { emit } from '@tauri-apps/api/event'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 const message = useMessage()
 
 // 预设主题选择

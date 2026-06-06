@@ -20,6 +20,12 @@ import { isPackage } from '@/utils/PackageUtil.ts'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { convertFileSize, getFileSize } from '@/utils/FileUtil.ts'
 import { getType } from '@/constants/FileTypeConstatnts.ts'
+import { faFolderOpen } from '@fortawesome/free-regular-svg-icons'
+
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
 
 const fileInfo = reactive({
   filePath: '',
@@ -87,11 +93,7 @@ onUnmounted(() => {
         {{ currentLanguage.pages.preview.filePathLabel }}
         {{ filePathConvertFileName(fileInfo.filePath) }}
       </div>
-      <font-awesome-icon
-        icon="fa-regular fa-folder-open"
-        @click="openInFolder"
-        class="folder-icon"
-      />
+      <font-awesome-icon :icon="faFolderOpen" @click="openInFolder" class="folder-icon" />
     </div>
     <n-divider />
     <div class="viewer-content">

@@ -8,6 +8,11 @@ import { getRenderer } from '@/utils/MarkdownUtil.ts'
 import { openLink } from '@/utils/LinkUtil.ts'
 import { currentLanguage } from '@/services/LanguageService.ts'
 
+// 定义 emit 用于更新父组件（DefaultLayout）的 TitleBar 配置
+defineEmits<{
+  (e: 'update-title-config', config: any): void
+}>()
+
 marked.setOptions({
   breaks: true,
   gfm: true,
