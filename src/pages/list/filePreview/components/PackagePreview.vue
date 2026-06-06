@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { h, onMounted, reactive, ref, watch } from 'vue'
 import { getFileSize } from '@/utils/FileUtil.ts'
-import { convertChildren, getType, readZipData } from '@/utils/PackageUtil.ts'
-import { NGradientText, useMessage } from 'naive-ui'
-import { readFile } from '@tauri-apps/plugin-fs'
+import { convertChildren, getType } from '@/utils/PackageUtil.ts'
+import { NGradientText } from 'naive-ui'
 import { filePathConvertFileName } from '@/utils/TextUtil.ts'
 import { PackageTreeOption } from '@/types/PackageTreeOption'
-import { Uint8ArrayReader, ZipReader } from '@zip.js/zip.js'
 import { updatePrefixWithExpanded } from '@/utils/TreeUtil.ts'
 import { invoke } from '@tauri-apps/api/core'
 import { currentLanguage } from '@/services/LanguageService.ts'
 import { themeColors } from '@/services/ThemeService.ts'
-
-const message = useMessage()
 
 const props = defineProps<{
   filePath: string
@@ -70,27 +66,12 @@ const onUncompressing = async (): Promise<void> => {
  * 解析 ZIP
  */
 const onUncompressZIP = async (): Promise<boolean> => {
-  fileData.content = await readFile(props.filePath)
-  let content
-  // 创建 ZipReader 实例
-  const reader = new ZipReader(new Uint8ArrayReader(fileData.content))
-  try {
-    // 获取 ZIP 中的所有条目（文件）
-    const entries = await reader.getEntries()
-    console.log('ZIP 文件条目：', entries)
-    // 读取 zip 文件内容
-    content = await readZipData(entries)
-  } catch (err: any) {
-    console.error('解压失败:', err)
-    message.error(currentLanguage.value.pages.preview.packageDecompressionFailed + err.message)
-    return false
-  } finally {
-    // 关闭 reader
-    await reader.close()
-  }
-
+  console.log('开始解析 ZIP')
+  const content = JSON.parse(await invoke<string>('read_zip_data', { path: props.filePath }))
+  console.log('ZIP 文件内容：', content)
   // 文件夹内容转换成文件夹树
   const children = convertChildren(content)
+
   // 填充文件夹树
   fillFolderTree(children)
   return true
@@ -130,7 +111,7 @@ const onUncompressTAR = async (): Promise<boolean> => {
 const onUncompressGZIP = async (): Promise<boolean> => {
   console.log('开始解析 GZIP')
   const content = JSON.parse(await invoke('read_gzip_data', { path: props.filePath }))
-  console.log('TAR 文件内容：', content)
+  console.log('GZIP 文件内容：', content)
   // 文件夹内容转换成文件夹树
   const children = convertChildren(content)
   // 填充文件夹树

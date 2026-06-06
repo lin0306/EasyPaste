@@ -142,11 +142,6 @@ export default defineConfig({
               name: 'vendor-media',
               test: /[\\/]node_modules[\\/](plyr|wavesurfer.js|v-viewer)[\\/]/,
             },
-            // 压缩
-            {
-              name: 'vendor-zip',
-              test: /[\\/]node_modules[\\/](@zip.js)[\\/]/,
-            },
             // Tauri
             {
               name: 'vendor-tauri',

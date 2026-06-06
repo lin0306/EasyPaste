@@ -1,9 +1,7 @@
-import { Entry } from '@zip.js/zip.js'
 import { PackageTreeOption } from '@/types/PackageTreeOption'
 import { NGradientText } from 'naive-ui'
 import { convertFileSize } from './FileUtil.ts'
 import { h } from 'vue'
-import { utf8Decoder } from '../constants/PublicConstants.ts'
 import { packageMimeTypes } from '../constants/FileTypeConstatnts.ts'
 
 /**
@@ -22,29 +20,6 @@ export function isPackage(filePath: string): boolean {
 export function getType(filePath: string): string {
   const ext = filePath.split('.').pop() || ''
   return packageMimeTypes[ext] || ''
-}
-
-/**
- * 读取zip文件
- * @param zipInfo zip文件信息
- * @return 解压后的文件信息
- */
-export async function readZipData(zipInfo: Entry[]): Promise<PackageInfo[]> {
-  const arr: PackageInfo[] = []
-  for (const entry of zipInfo) {
-    // 处理非UTF-8编码的文件名
-    if (!entry.filenameUTF8) {
-      entry.filename = utf8Decoder.decode(entry.rawFilename)
-    }
-    arr.push({
-      path: entry.filename,
-      dir: entry.directory,
-      date: entry.creationDate || new Date(),
-      size: entry.compressedSize,
-    })
-  }
-
-  return arr
 }
 
 /**
