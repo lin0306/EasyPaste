@@ -789,7 +789,7 @@ class ClipboardDBService {
     await this.db?.execute(
       `
             INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size, install_time )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         plugin.plugin_id,
         plugin.plugin_name,
