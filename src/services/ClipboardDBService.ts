@@ -788,7 +788,7 @@ class ClipboardDBService {
   async addPlugin(plugin: LocalPlugin): Promise<void> {
     await this.db?.execute(
       `
-            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size )
+            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size, install_time )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         plugin.plugin_id,
@@ -801,6 +801,7 @@ class ClipboardDBService {
         plugin.url,
         plugin.description,
         plugin.size,
+        Date.now(),
       ]
     )
   }
@@ -821,8 +822,7 @@ class ClipboardDBService {
                         release_url = ?,
                         url = ?,
                         description = ?,
-                        size = ?,
-                        install_time = ?
+                        size = ?
                     WHERE id = ?`,
       [
         plugin.plugin_name,
@@ -834,7 +834,6 @@ class ClipboardDBService {
         plugin.url,
         plugin.description,
         plugin.size,
-        Date.now(),
         plugin.id,
       ]
     )
