@@ -475,6 +475,7 @@ declare interface PageConfig {
     backingUp: string
     resetBackingUp: string
     reading: string
+    homepage: string
     localInstallSuccessHint: string
     localInstallFailedHint: string
     localInstallNoManifestHint: string

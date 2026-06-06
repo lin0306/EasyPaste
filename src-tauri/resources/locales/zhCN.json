@@ -449,6 +449,7 @@
       "backingUp": "备份中",
       "resetBackingUp": "回滚中",
       "reading": "读取中",
+      "homepage": "插件主页",
       "localInstallSuccessHint": "插件${pluginName}安装成功",
       "localInstallFailedHint": "本地文件安装失败",
       "localInstallNoManifestHint": "插件包中未找到manifest.json文件",

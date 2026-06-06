@@ -448,6 +448,7 @@
       "updating": "Updating",
       "backingUp": "Backing up",
       "reading": "Reading",
+      "homepage": "Homepage",
       "localInstallSuccessHint": "Plugin ${pluginName} has been installed successfully.",
       "localInstallFailedHint": "Local file installation failed",
       "localInstallNoManifestHint": "manifest.json file not found in plugin package",
