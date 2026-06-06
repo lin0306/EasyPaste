@@ -31,14 +31,18 @@ const loadingState = computed(() => {
     switch (stateCode) {
       case 'downloading':
         return currentLanguage.value.pages.pluginStore.downloading
-      case 'loading':
-        return currentLanguage.value.pages.pluginStore.loading
       case 'unzipping':
         return currentLanguage.value.pages.pluginStore.unzipping
-      case 'uninstalling':
-        return currentLanguage.value.pages.pluginStore.uninstalling
+      case 'loading':
+        return currentLanguage.value.pages.pluginStore.loading
       case 'updating':
         return currentLanguage.value.pages.pluginStore.updating
+      case 'uninstalling':
+        return currentLanguage.value.pages.pluginStore.uninstalling
+      case 'backingUp':
+        return currentLanguage.value.pages.pluginStore.backingUp
+      case 'resetBackingUp':
+        return currentLanguage.value.pages.pluginStore.resetBackingUp
       default:
         return ''
     }
@@ -184,7 +188,7 @@ async function onUninstall(): Promise<void> {
             tabValue === 'store' &&
             !isInstall(selectedPlugin.pluginId)
           "
-          @click="install(selectedPlugin.pluginId, message)"
+          @click.stop="install(selectedPlugin.pluginId, message)"
         >
           {{ currentLanguage.pages.pluginStore.installBtn }}
         </n-button>

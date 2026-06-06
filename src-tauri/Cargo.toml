@@ -49,11 +49,19 @@ unrar = "0.5.8"
 tar = "0.4.46"
 # 压缩文件处理
 flate2 = "1.1.9"
+# ZIP 文件处理
+zip = "8.6.0"
 # tcp/ip请求
 reqwest = "0.13.3"
+# 错误处理
 anyhow = "1.0.102"
 # 环境变量
 dotenv = "0.15.0"
+# 异步处理
+tokio = "1.52.3"
+# 工具类
+futures-util = "0.3.32"
+
 
 # 注册表操作
 [target.'cfg(windows)'.dependencies]

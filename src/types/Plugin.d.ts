@@ -7,7 +7,9 @@ declare interface StorePlugin {
   branch: 'GA' | 'RC' | 'Beta' | 'Dev' // 分支
   version: string // 插件版本
   description: string // 插件描述
-  platform: 'Windows' | 'Mac' | 'General' // 可用平台
+  platform: 'Windows' | 'MacOS' | 'General' // 可用平台
+  fileName: string // 插件安装包名称
+  releaseUrl: string // 插件发布地址
   downloadUrl: string // 插件下载地址
   size: number // 插件安装包大小，单位：字节
 }
@@ -21,7 +23,9 @@ declare interface LocalPlugin {
   plugin_name: string // 插件名称
   version: string // 插件版本
   use_location: string // 可用位置，list，settings，tags，preview
-  platform: 'Windows' | 'Mac' | 'General' // 可用平台
+  platform: 'Windows' | 'MacOS' | 'General' // 可用平台
+  fileName: string // 插件安装包名称
+  releaseUrl: string // 插件发布地址
   url: string // 插件下载地址
   enable: number // 插件是否启用
   description: string // 插件描述
@@ -36,7 +40,7 @@ declare interface SelectPlugin {
   pluginId: string // 插件唯一id
   pluginName: string // 插件名称
   version: string // 插件版本
-  platform: 'Windows' | 'Mac' | 'General' // 可用平台
+  platform: 'Windows' | 'MacOS' | 'General' // 可用平台
   url: string // 插件下载地址
   enable: number // 插件是否启用
   description: string // 插件描述

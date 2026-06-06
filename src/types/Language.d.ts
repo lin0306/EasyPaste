@@ -472,10 +472,14 @@ declare interface PageConfig {
     loading: string
     uninstalling: string
     updating: string
+    backingUp: string
+    resetBackingUp: string
+    reading: string
     localInstallSuccessHint: string
     localInstallFailedHint: string
     localInstallNoManifestHint: string
     localInstallInvalidManifestHint: string
+    localInstallInstallPlatformNotMatchHint: string
     localInstallUninstallFailedHint: string
     localInstallSameVersionHint: string
     localInstallOldVersionHint: string

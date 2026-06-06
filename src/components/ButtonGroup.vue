@@ -1,13 +1,13 @@
 <template>
   <n-button
-    @click="handleMainAction"
+    @click.stop="handleMainAction"
     round
     v-if="props.data.filter(item => item.show).length === 1"
   >
     {{ props.data.filter(item => item.show)[0].label }}
   </n-button>
   <n-button-group v-else>
-    <n-button @click="handleMainAction" round>
+    <n-button @click.stop="handleMainAction" round>
       {{ props.data.filter(item => item.show)[0].label }}
     </n-button>
     <n-dropdown
@@ -19,7 +19,7 @@
       <n-button
         style="padding: 0 8px"
         round
-        @click="showDropdown = !showDropdown"
+        @click.stop="showDropdown = !showDropdown"
         class="dropdown-second-btn"
       >
         <n-icon>
@@ -181,7 +181,6 @@ const handleClickOutside = (event: any): void => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
-  console.log('ButtonGroup mounted', props.data)
 })
 
 onUnmounted(() => {

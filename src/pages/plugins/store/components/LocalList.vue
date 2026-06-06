@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   hasUpdate,
-  installFromLocalFile,
+  installLocal,
   loadingMap,
   localListLoading,
   localPlugins,
@@ -38,19 +38,33 @@ const onUpdate = async (plugin: LocalPlugin): Promise<void> => {
  * 从本地文件安装插件
  */
 const onInstallFromLocal = async (): Promise<void> => {
-  await installFromLocalFile(message, dialog)
+  await installLocal(message, dialog)
 }
+
+console.log('local-file-install', loadingMap.value.has('local-file-install'))
 </script>
 
 <template>
   <div class="plugin-list">
     <!-- 本地安装按钮 -->
     <div class="local-install-bar">
-      <n-button round size="small" type="primary" @click="onInstallFromLocal">
+      <n-button
+        round
+        size="small"
+        type="primary"
+        @click.stop="onInstallFromLocal"
+        :loading="loadingMap.has('local-file-install')"
+      >
         <template #icon>
           <font-awesome-icon :icon="faFileImport" />
         </template>
-        {{ currentLanguage.pages.pluginStore.localInstallBtn }}
+        {{
+          !loadingMap.has('local-file-install')
+            ? currentLanguage.pages.pluginStore.localInstallBtn
+            : loadingMap.get('local-file-install') === 'reading'
+              ? currentLanguage.pages.pluginStore.reading
+              : currentLanguage.pages.pluginStore.unzipping
+        }}
       </n-button>
     </div>
     <div v-if="localListLoading" class="loading">
@@ -78,7 +92,7 @@ const onInstallFromLocal = async (): Promise<void> => {
             :color="tagColor"
           >
             <span v-if="plugin.platform === 'Windows'">Windows</span>
-            <span v-if="plugin.platform === 'Mac'">Mac</span>
+            <span v-if="plugin.platform === 'MacOS'">Mac</span>
             <template #avatar>
               <font-awesome-icon
                 :icon="faWindows"
@@ -87,7 +101,7 @@ const onInstallFromLocal = async (): Promise<void> => {
               />
               <font-awesome-icon
                 :icon="faApple"
-                v-if="plugin.platform === 'Mac'"
+                v-if="plugin.platform === 'MacOS'"
                 class="platform-icon"
               />
             </template>
@@ -113,7 +127,7 @@ const onInstallFromLocal = async (): Promise<void> => {
           ghost
           size="small"
           v-else-if="hasUpdate(plugin.plugin_id)"
-          @click="onUpdate(plugin)"
+          @click.stop="onUpdate(plugin)"
         >
           {{ currentLanguage.pages.pluginStore.updateBtn }}
         </n-button>
@@ -121,17 +135,22 @@ const onInstallFromLocal = async (): Promise<void> => {
           round
           size="small"
           v-else-if="plugin.enable === 1"
-          @click="togglePluginEnable(plugin.plugin_id, false)"
+          @click.stop="togglePluginEnable(plugin.plugin_id, false)"
         >
           {{ currentLanguage.pages.pluginStore.disableBtn }}
         </n-button>
-        <n-button round size="small" v-else @click="togglePluginEnable(plugin.plugin_id, true)">
+        <n-button
+          round
+          size="small"
+          v-else
+          @click.stop="togglePluginEnable(plugin.plugin_id, true)"
+        >
           {{ currentLanguage.pages.pluginStore.enableBtn }}
         </n-button>
       </div>
     </div>
     <div v-else class="no-plugins-container">
-      <n-button text @click="tabValue = 'store'">
+      <n-button text @click.stop="tabValue = 'store'">
         {{ currentLanguage.pages.pluginStore.localNoPluginHint }}
       </n-button>
     </div>

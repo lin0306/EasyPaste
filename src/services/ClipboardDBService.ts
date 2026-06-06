@@ -75,22 +75,24 @@ class ClipboardDBService {
 
       // 创建已安装插件表
       await this.db?.execute(`
-                CREATE TABLE IF NOT EXISTS plugins
-                (
-                    id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                    plugin_id       TEXT    NOT NULL UNIQUE,
-                    plugin_name     TEXT    NOT NULL,
-                    version         TEXT    NOT NULL,
-                    use_location    TEXT    NOT NULL,
-                    platform        TEXT    NOT NULL,
-                    url             TEXT    NOT NULL,
-                    enable          BOOLEAN DEFAULT 1,
-                    description     TEXT,
-                    install_time  INTEGER
-                )
-            `)
+        CREATE TABLE IF NOT EXISTS plugins
+          (
+            id              INTEGER PRIMARY KEY AUTOINCREMENT,
+            plugin_id       TEXT    NOT NULL UNIQUE,
+            plugin_name     TEXT    NOT NULL,
+            version         TEXT    NOT NULL,
+            use_location    TEXT    NOT NULL,
+            platform        TEXT    NOT NULL,
+            file_name TEXT,
+            release_url TEXT,
+            url             TEXT    NOT NULL,
+            enable          BOOLEAN DEFAULT 1,
+            description     TEXT,
+            install_time  INTEGER
+          )
+      `)
 
-      const clipboardItemsInfo = await this.db?.select<
+      const pluginsInfo = await this.db?.select<
         [
           {
             cid: number
@@ -98,13 +100,21 @@ class ClipboardDBService {
             notnull: boolean
           },
         ]
-      >(`PRAGMA table_info(clipboard_items)`)
-      const clipboardItemsColumnExists = clipboardItemsInfo?.some(col => col.name === 'link_title')
-      if (!clipboardItemsColumnExists) {
-        // 增加链接标题字段
+      >(`PRAGMA table_info(plugins)`)
+      const pluginsColumnExists1 = pluginsInfo?.some(col => col.name === 'file_name')
+      if (!pluginsColumnExists1) {
+        // 增加插件安装包名称字段
         await this.db?.execute(`
-                    alter table clipboard_items
-                        add link_title TEXT;
+                    alter table plugins
+                        add file_name TEXT;
+                `)
+      }
+      const pluginsColumnExists2 = pluginsInfo?.some(col => col.name === 'release_url')
+      if (!pluginsColumnExists2) {
+        // 增加插件发布地址字段
+        await this.db?.execute(`
+                    alter table plugins
+                        add release_url TEXT;
                 `)
       }
     } catch (er) {

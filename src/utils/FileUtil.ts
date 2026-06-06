@@ -1,4 +1,4 @@
-import { copyFile, remove, stat } from '@tauri-apps/plugin-fs'
+import { copyFile, remove, rename, stat } from '@tauri-apps/plugin-fs'
 import { error, info } from '@tauri-apps/plugin-log'
 import { isMac } from '../data/SystemParams.ts'
 
@@ -60,6 +60,20 @@ export async function moveFile(sourcePath: string, targetPath: string): Promise<
         ',err:' +
         err
     )
+  }
+}
+
+/**
+ * 重命名文件夹
+ * @param oldPath 旧文件夹路径
+ * @param newPath 新文件夹路径
+ */
+export async function renameFolder(oldPath: string, newPath: string): Promise<void> {
+  try {
+    await rename(oldPath, newPath)
+    info('[文件系统] 重命名文件夹成功,oldPath:' + oldPath + ',newPath:' + newPath)
+  } catch (err) {
+    error('[文件系统] 重命名文件夹失败,oldPath:' + oldPath + ',newPath:' + newPath + ',err:' + err)
   }
 }
 
