@@ -14,6 +14,7 @@ declare module 'vue' {
     EmberBackground: typeof import('./../components/effect/EmberBackground.vue')['default']
     NavBar: typeof import('./../components/NavBar.vue')['default']
     NBackTop: typeof import('naive-ui')['NBackTop']
+    NButtn: typeof import('naive-ui')['NButtn']
     NButton: typeof import('naive-ui')['NButton']
     NCode: typeof import('naive-ui')['NCode']
     NCollapse: typeof import('naive-ui')['NCollapse']

@@ -25,7 +25,7 @@ declare interface LocalPlugin {
   use_location: string // 可用位置，list，settings，tags，preview
   platform: 'Windows' | 'MacOS' | 'General' // 可用平台
   fileName: string // 插件安装包名称
-  releaseUrl: string // 插件发布地址
+  release_url: string // 插件发布地址
   url: string // 插件下载地址
   enable: number // 插件是否启用
   description: string // 插件描述

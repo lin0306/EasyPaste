@@ -19,6 +19,8 @@ import ButtonGroup from '@/components/ButtonGroup.vue'
 import { computed, ref, watch } from 'vue'
 import { loadPluginManifest } from '@/services/PluginService.ts'
 import PluginSettings from './PluginSettings.vue'
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons'
+import { openLink } from '@/utils/LinkUtil.ts'
 
 const message = useMessage()
 
@@ -167,6 +169,15 @@ async function onUninstall(): Promise<void> {
             }}
           </span>
           <span v-else>{{ selectedPlugin.version }}</span>
+          <n-button
+            v-if="selectedPlugin.releaseUrl"
+            text
+            type="primary"
+            @click.stop="openLink(selectedPlugin.releaseUrl)"
+          >
+            {{ currentLanguage.pages.pluginStore.homepage }}
+            <font-awesome-icon :icon="faAnglesRight" />
+          </n-button>
         </div>
       </div>
       <div class="plugin-detail-main-right">

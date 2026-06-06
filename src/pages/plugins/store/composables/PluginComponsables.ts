@@ -216,7 +216,7 @@ export const onSelectLocal = (plugin: LocalPlugin): void => {
   selectedPlugin.version = plugin.version
   selectedPlugin.platform = plugin.platform
   selectedPlugin.fileName = plugin.fileName
-  selectedPlugin.releaseUrl = plugin.releaseUrl
+  selectedPlugin.releaseUrl = plugin.release_url
   selectedPlugin.url = plugin.url
   selectedPlugin.description = plugin.description
   selectedPlugin.enable = plugin.enable
