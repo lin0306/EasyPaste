@@ -709,7 +709,7 @@ class ClipboardDBService {
       let now = new Date()
       now.setDate(now.getDate() - days)
       let counts = (await this.db?.select(
-        'SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?',
+        'SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ? AND is_toped = 0',
         [now.getTime()]
       )) as [
         {
@@ -720,7 +720,7 @@ class ClipboardDBService {
         info('[数据库进程] 清理过期剪贴板条目')
         // 删除图片
         const imageItems = (await this.db?.select(
-          "SELECT * FROM clipboard_items WHERE copy_time < ? AND type = 'image'",
+          "SELECT * FROM clipboard_items WHERE copy_time < ? AND type = 'image' AND is_toped = 0",
           [now.getTime()]
         )) as ClipboardItem[]
         if (imageItems) {
@@ -730,7 +730,9 @@ class ClipboardDBService {
             }
           }
         }
-        await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [now.getTime()])
+        await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ? AND is_toped = 0', [
+          now.getTime(),
+        ])
         return counts[0].count
       }
     }
@@ -749,19 +751,43 @@ class ClipboardDBService {
         [maxCount - 1]
       )
       if (items && items.length > 0) {
-        let counts = (await this.db?.select(
-          'SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ?',
+        // 判断这个时间之前的数据，有没有固定的
+        let topCounts = (await this.db?.select(
+          'SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ? AND is_toped = 1',
           [items[0].copy_time]
         )) as [
           {
             count: number
           },
         ]
-        if (counts && counts.length > 0 && counts[0].count) {
+        if (topCounts && topCounts.length > 0 && topCounts[0].count > 0) {
+          info(
+            `[数据库进程] 需要清理的数据中有被固定的数据，需要往后多删[${topCounts[0].count}]条数据`
+          )
+          // 有固定数据，时间往后延，需要多删几条数据
+          items = await this.db?.select<ClipboardItem[]>(
+            'SELECT * FROM clipboard_items ORDER BY copy_time DESC LIMIT 1 OFFSET ?',
+            [maxCount - (1 + topCounts[0].count)]
+          )
+        }
+        if (!items) {
+          info('[数据库进程] 无数据可清理')
+          return 0
+        }
+
+        let counts = (await this.db?.select(
+          'SELECT COUNT(*) as count FROM clipboard_items WHERE copy_time < ? AND is_toped = 0',
+          [items[0].copy_time]
+        )) as [
+          {
+            count: number
+          },
+        ]
+        if (counts && counts.length > 0 && counts[0].count > 0) {
           info('[数据库进程] 清理超过保留时长的数据')
           // 删除图片
           const imageItems = (await this.db?.select(
-            "SELECT * FROM clipboard_items WHERE copy_time < ? AND type = 'image'",
+            "SELECT * FROM clipboard_items WHERE copy_time < ? AND type = 'image' AND is_toped = 0",
             [items[0].copy_time]
           )) as ClipboardItem[]
           if (imageItems) {
@@ -771,9 +797,10 @@ class ClipboardDBService {
               }
             }
           }
-          await this.db?.execute('DELETE FROM clipboard_items WHERE copy_time < ?', [
-            items[0].copy_time,
-          ])
+          await this.db?.execute(
+            'DELETE FROM clipboard_items WHERE copy_time < ? AND is_toped = 0',
+            [items[0].copy_time]
+          )
           return counts[0].count
         }
       }
