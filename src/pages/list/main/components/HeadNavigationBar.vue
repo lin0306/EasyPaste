@@ -3,6 +3,8 @@ import NavBar from '@/components/NavBar.vue'
 import { computed } from 'vue'
 import {
   openAboutWindow,
+  openDataExportWindow,
+  openDataImportWindow,
   openPluginStoreWindow,
   openSettingsWindow,
   openTagsWindow,
@@ -115,19 +117,24 @@ const MenuItems = computed((): NavBarItem[] => [
       {
         key: 'divider3',
         type: 'divider',
-        isHide: true,
       },
       {
         key: '数据导入',
         label: currentLanguage.value.pages.list.menu.dataImport,
         type: 'item',
-        isHide: true,
+        onClick: () => {
+          // 打开数据导入窗口
+          openDataImportWindow()
+        },
       },
       {
         key: '数据导出',
         label: currentLanguage.value.pages.list.menu.dataExport,
         type: 'item',
-        isHide: true,
+        onClick: () => {
+          // 打开数据导出窗口
+          openDataExportWindow()
+        },
       },
     ],
   },

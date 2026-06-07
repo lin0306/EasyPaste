@@ -26,6 +26,11 @@ pub struct Pages {
     pub item_editor: Value,
     #[serde(rename = "itemSearch")]
     pub item_search: Value,
+    #[serde(rename = "dataImport")]
+    pub data_import: Value,
+    #[serde(rename = "dataExport")]
+    pub data_export: Value,
+
     pub tags: Value,
     pub about: Value,
     pub updater: Value,
@@ -47,6 +52,8 @@ impl Pages {
             "list" => Some(&self.list),
             "itemEditor" => Some(&self.item_editor),
             "itemSearch" => Some(&self.item_search),
+            "dataImport" => Some(&self.data_import),
+            "dataExport" => Some(&self.data_export),
             "tags" => Some(&self.tags),
             "about" => Some(&self.about),
             "updater" => Some(&self.updater),

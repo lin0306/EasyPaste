@@ -370,6 +370,12 @@ declare interface PageConfig {
     typeImage: string
     typeLink: string
   }
+  dataImport: {
+    title: string
+  },
+  dataExport: {
+    title: string
+  }
   tags: {
     title: string
     bindDataHint: string

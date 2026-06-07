@@ -344,6 +344,12 @@
       "sortAsc": "Ascending",
       "sortDesc": "Descending"
     },
+    "dataImport": {
+      "title": "Data Import"
+    },
+    "dataExport": {
+      "title": "Data Export"
+    },
     "tags": {
       "title": "Tag Manager",
       "bindDataHint": "associated data: ",

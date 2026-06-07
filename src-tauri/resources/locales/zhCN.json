@@ -344,6 +344,12 @@
       "sortAsc": "升序",
       "sortDesc": "降序"
     },
+    "dataImport": {
+      "title": "数据导入"
+    },
+    "dataExport": {
+      "title": "数据导出"
+    },
     "tags": {
       "title": "标签管理",
       "bindDataHint": "关联数据：",

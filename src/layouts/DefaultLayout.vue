@@ -21,6 +21,7 @@ import TitleBar from '../components/TitleBar.vue'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { currentLanguage } from '@/services/LanguageService'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 
 // 根据路由配置动态获取 TitleBar 属性
 const route = useRoute()
@@ -43,21 +44,10 @@ const handleUpdateTitleConfig = (config: Partial<TitleBarConfig>) => {
 }
 
 // 根据路由路径获取标题
-const getTitleByPath = (path: string): string => {
-  const pathMap: Record<string, string> = {
-    list: currentLanguage.value.pages.list?.title || '剪贴板列表',
-    'item-editor': currentLanguage.value.pages.itemEditor?.title || '编辑项目',
-    'item-search': currentLanguage.value.pages.itemSearch?.title || '搜索',
-    settings: currentLanguage.value.pages.settings?.title || '设置',
-    'theme-editor': currentLanguage.value.pages.themeEditor?.title || '主题编辑器',
-    tags: currentLanguage.value.pages.tags?.title || '标签管理',
-    about: currentLanguage.value.pages.about?.title || '关于',
-    updater: currentLanguage.value.pages.updater?.title || '更新',
-    preview: currentLanguage.value.pages.preview?.title || '预览',
-    'plugin-view': currentLanguage.value.pages.pluginView?.title || '插件预览',
-    'plugin-store': currentLanguage.value.pages.pluginStore?.title || '插件商店',
-  }
-  return pathMap[path] || 'EasyPaste'
+const getTitleByPath = (): string => {
+  const window = getCurrentWindow()
+  const label = window.label
+  return currentLanguage.value.pages[label]?.title || 'EasyPaste'
 }
 
 // 合并路由配置和动态配置
@@ -67,9 +57,7 @@ const titleText = computed<string>(() => {
     return dynamicConfig.value.title
   }
 
-  // 根据路由路径获取标题
-  const path = route.path.replace('/', '')
-  return getTitleByPath(path)
+  return getTitleByPath()
 })
 
 const showCloseBtn = computed<boolean>(() => {

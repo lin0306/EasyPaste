@@ -78,6 +78,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/plugins/store/index.vue'),
         meta: {},
       },
+      {
+        path: 'data-import',
+        component: () => import('@/pages/data/import/index.vue'),
+        meta: {},
+      },
+      {
+        path: 'data-export',
+        component: () => import('@/pages/data/export/index.vue'),
+        meta: {},
+      },
     ],
   },
 ]

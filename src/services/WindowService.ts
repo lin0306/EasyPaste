@@ -235,3 +235,35 @@ export async function openSearchWindow(): Promise<void> {
     minHeight: 600,
   })
 }
+
+/**
+ * 打开数据导入窗口
+ */
+export async function openDataImportWindow(): Promise<void> {
+  await loadPageLanguage('dataImport')
+  await createWin({
+    label: 'dataImport',
+    title: currentLanguage.value.pages.dataImport.title,
+    url: '/data-import',
+    width: 400,
+    height: 400,
+    minWidth: 400,
+    minHeight: 400,
+  })
+}
+
+/**
+ * 打开数据导出窗口
+ */
+export async function openDataExportWindow(): Promise<void> {
+  await loadPageLanguage('dataExport')
+  await createWin({
+    label: 'dataExport',
+    title: currentLanguage.value.pages.dataExport.title,
+    url: '/data-export',
+    width: 400,
+    height: 400,
+    minWidth: 400,
+    minHeight: 400,
+  })
+}
