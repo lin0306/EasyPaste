@@ -14,6 +14,7 @@ import UpdaterService from '@/services/UpdaterService.ts'
 import { tagSettingState } from '../composables/TagDataComposable.ts'
 import { showClearDataModal, toggleSearchBox } from '../composables/ClipboardDataComposable.ts'
 import { currentLanguage } from '@/services/LanguageService.ts'
+import { enablePlugins } from '@/pages/list/main/composables/PluginComposable.ts'
 
 // Naive UI 框架的消息组件
 const message = useMessage()
@@ -42,6 +43,7 @@ const MenuItems = computed((): NavBarItem[] => [
           // 打开设置窗口
           openPluginStoreWindow()
         },
+        isHide: enablePlugins.value !== true,
       },
       {
         key: 'divider1',

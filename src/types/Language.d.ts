@@ -24,6 +24,7 @@ declare interface PageConfig {
     tagMenu: string
     // 设置页面右侧页面标题
     programTitle: string
+    pluginsTitle: string
     mainWindowTitle: string
     storageTitle: string
     imageStorageTitle: string
@@ -42,6 +43,7 @@ declare interface PageConfig {
     replaceGlobalHotkeyLinkHint: string
     replaceGlobalHotkeyHint: string
     languages: string
+    enablePlugin: string
     autoGoToLatestData: string
     autoGoToLatestDataHint: string
     displayThumbnailImage: string

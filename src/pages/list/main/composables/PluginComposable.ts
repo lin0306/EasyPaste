@@ -8,7 +8,12 @@ import { error, info } from '@tauri-apps/plugin-log'
 import ClipboardDBService from '@/services/ClipboardDBService.ts'
 import { invoke } from '@tauri-apps/api/core'
 import { copyToClipboard } from '@/services/ClipboardService.ts'
+import { getEnablePlugin } from '@/store/Settings.ts'
 
+// 插件功能是否启用
+export const enablePlugins = ref(false)
+
+// 已加载的插件列表
 const loadedPluginSet: Set<string> = new Set<string>()
 
 async function initPlugins(): Promise<void> {
@@ -247,6 +252,9 @@ function initUninstallPluginListener(): Promise<UnlistenFn> {
   })
 }
 
+/**
+ * 插件启用禁用监听器
+ */
 let togglePluginEnableListener: any = null
 function initTogglePluginEnableListener(): Promise<UnlistenFn> {
   return listen('toggle-plugin-enable', async (event: any) => {
@@ -261,26 +269,76 @@ function initTogglePluginEnableListener(): Promise<UnlistenFn> {
   })
 }
 
-export const initializePlugins = async (): Promise<void> => {
-  try {
-    await initPlugins()
-    // 添加插件安装事件监听
-    installPluginListener = await initInstallPluginListener()
-    // 添加插件卸载事件监听
-    uninstallPluginListener = await initUninstallPluginListener()
-    // 添加插件启用禁用事件监听
-    togglePluginEnableListener = await initTogglePluginEnableListener()
-    info('插件加载完成')
-  } catch (e) {
-    error('插件加载失败')
-  }
+/**
+ * 插件启用禁用监听器
+ */
+let toggleEnablePluginsListener: any = null
+function initToggleEnablePluginsListener(): Promise<UnlistenFn> {
+  return listen('update-enable-plugin', async (event: any) => {
+    console.log('监听插件功能是否启用', event)
+    const enable = event.payload.enable
+    enablePlugins.value = Boolean(enable)
+    console.log('插件功能是否启用', enablePlugins.value)
+    if (enable === true) {
+      await load()
+    } else {
+      await destroy()
+      // 卸载所有插件
+      for (let pluginId of loadedPluginSet) {
+        await removePlugin(pluginId)
+      }
+      loadedPluginSet.clear()
+    }
+  })
 }
 
-export const destroyPlugins = async (): Promise<void> => {
+/**
+ * 初始化插件配置
+ */
+async function load() {
+  await initPlugins()
+  // 添加插件安装事件监听
+  installPluginListener = await initInstallPluginListener()
+  // 添加插件卸载事件监听
+  uninstallPluginListener = await initUninstallPluginListener()
+  // 添加插件启用禁用事件监听
+  togglePluginEnableListener = await initTogglePluginEnableListener()
+}
+
+async function destroy() {
   // 移除插件安装事件监听
   await installPluginListener?.()
   // 移除插件卸载事件监听
   await uninstallPluginListener?.()
   // 移除插件启用禁用事件监听
   await togglePluginEnableListener?.()
+}
+
+
+/**
+ * 初始化插件配置
+ */
+export const initializePlugins = async (): Promise<void> => {
+  try {
+    const enable = await getEnablePlugin()
+    enablePlugins.value = enable
+    console.log('插件功能是否启用', enable)
+    // 添加插件启用禁用事件监听
+    toggleEnablePluginsListener = await initToggleEnablePluginsListener()
+    if (enable) {
+      await load()
+    }
+    info('插件初始化完成')
+  } catch (e) {
+    error('插件初始化失败' + e)
+  }
+}
+
+/**
+ * 销毁插件配置
+ */
+export const destroyPlugins = async (): Promise<void> => {
+  await destroy()
+  // 移除插件启用禁用事件监听
+  await toggleEnablePluginsListener?.()
 }

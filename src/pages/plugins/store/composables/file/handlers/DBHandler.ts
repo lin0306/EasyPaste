@@ -88,7 +88,7 @@ export class DBHandler extends BaseHandler {
       plugin_id: plugin.id,
       plugin_name: plugin.name,
       version: plugin.version,
-      use_location: JSON.stringify(useLocationSet),
+      use_location: JSON.stringify([...useLocationSet]),
       platform: plugin.platform,
       fileName: plugin.fileName,
       release_url: plugin.releaseUrl,

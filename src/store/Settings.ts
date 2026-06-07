@@ -34,6 +34,7 @@ const defaultSettings: Settings = {
   displayThumbnailImage: true,
   imageBasePath: '',
   enableImageSave: true,
+  enablePlugin: false,
   pluginPath: '',
   displayDetailTime: false,
   backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,
@@ -492,6 +493,25 @@ export async function getEnableImageSave(): Promise<boolean> {
 }
 
 /**
+ * 保存是否启用插件
+ * @param enablePlugin 是否启用插件
+ */
+export async function saveEnablePlugin(enablePlugin: boolean): Promise<void> {
+  info('保存是否启用插件: ' + enablePlugin)
+  const settings = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  await settings.set(SETTINGS_KEYS.ENABLE_PLUGIN, enablePlugin)
+}
+
+/**
+ * 获取是否启用插件
+ */
+export async function getEnablePlugin(): Promise<boolean> {
+  const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+  const value = await store.get<boolean>(SETTINGS_KEYS.ENABLE_PLUGIN)
+  return value !== undefined && value !== null ? value : defaultSettings.enablePlugin
+}
+
+/**
  * 保存插件路径
  * @param pluginPath 插件路径
  */
@@ -672,6 +692,9 @@ export async function initSettings(): Promise<void> {
     if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_IMAGE_SAVE)) {
       await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave)
     }
+    if (!userSettingsString.includes(SETTINGS_KEYS.ENABLE_PLUGIN)) {
+      await settings.set(SETTINGS_KEYS.ENABLE_PLUGIN, defaultSettings.enablePlugin)
+    }
     if (!userSettingsString.includes(SETTINGS_KEYS.PLUGIN_PATH)) {
       await settings.set(
         SETTINGS_KEYS.PLUGIN_PATH,
@@ -731,6 +754,7 @@ export async function initSettings(): Promise<void> {
       localDataDir + (isMac ? '/' : '\\') + 'images'
     )
     await settings.set(SETTINGS_KEYS.ENABLE_IMAGE_SAVE, defaultSettings.enableImageSave)
+    await settings.set(SETTINGS_KEYS.ENABLE_PLUGIN, defaultSettings.enablePlugin)
     await settings.set(SETTINGS_KEYS.PLUGIN_PATH, localDataDir + (isMac ? '/' : '\\') + 'plugins')
     await settings.set(SETTINGS_KEYS.DISPLAY_DETAIL_TIME, defaultSettings.displayDetailTime)
     await settings.set(

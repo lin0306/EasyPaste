@@ -26,6 +26,7 @@ export const SETTINGS_KEYS = {
   DISPLAY_THUMBNAIL_IMAGE: 'displayThumbnailImage',
   IMAGE_BASE_PATH: 'imageBasePath',
   ENABLE_IMAGE_SAVE: 'enableImageSave',
+  ENABLE_PLUGIN: 'enablePlugin',
   PLUGIN_PATH: 'pluginPath',
   DISPLAY_DETAIL_TIME: 'displayDetailTime',
   BACKGROUND_ANIMATION_EFFECT: 'backgroundAnimationEffect',

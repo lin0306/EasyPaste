@@ -31,6 +31,7 @@ export const originalConfig = reactive<Settings>({
   displayThumbnailImage: true,
   imageBasePath: '',
   enableImageSave: true,
+  enablePlugin: false,
   pluginPath: '',
   displayDetailTime: false,
   backgroundAnimationEffect: SETTINGS.THEME.BACKGROUND_ANIMATION.DEFAULT_EFFECT,

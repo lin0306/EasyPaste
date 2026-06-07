@@ -17,9 +17,11 @@ import {
 import { currentLanguage } from '@/services/LanguageService.ts'
 import { onMounted, ref } from 'vue'
 import {
+  getEnablePlugin,
   getLanguage,
   getPowerOnSelfStart,
   getReplaceGlobalHotkey,
+  saveEnablePlugin,
   saveLanguage,
   savePowerOnSelfStart,
   saveReplaceGlobalHotkey,
@@ -219,6 +221,26 @@ const onChangeLanguages = async (languages: string): Promise<void> => {
 }
 
 /**
+ * 修改是否启用插件
+ * @param enablePlugin 是否启用插件
+ */
+const onChangeEnablePlugin = async (enablePlugin: boolean): Promise<void> => {
+  onLoading.value = true
+  try {
+    await saveEnablePlugin(enablePlugin)
+    await emit('update-enable-plugin', { enable: enablePlugin })
+    originalConfig.enablePlugin = enablePlugin
+    currentConfig.enablePlugin = enablePlugin
+  } catch (e) {
+    error('修改是否启用插件设置出错:' + e)
+    message.error(currentLanguage.value.pages.settings.saveFailedMsg)
+    currentConfig.enablePlugin = originalConfig.enablePlugin
+  } finally {
+    onLoading.value = false
+  }
+}
+
+/**
  * 重启电脑
  */
 const handleRestart = async (): Promise<void> => {
@@ -292,6 +314,10 @@ onMounted(async () => {
     const languages = await getLanguage()
     originalConfig.languages = languages
     currentConfig.languages = languages
+
+    const enablePlugin = await getEnablePlugin()
+    originalConfig.enablePlugin = enablePlugin
+    currentConfig.enablePlugin = enablePlugin
 
     // 只加载一次
     if (!isMac && !replaceGlobalHotkeyLoaded.value) {
@@ -400,6 +426,17 @@ onMounted(async () => {
         :loading="onLoading"
         :disabled="onLoading"
         @update:value="onChangeLanguages"
+      />
+    </div>
+
+    <n-divider title-placement="left">{{ currentLanguage.pages.settings.pluginsTitle }}</n-divider>
+    <div class="form-item">
+      <span class="label">{{ currentLanguage.pages.settings.enablePlugin }}</span>
+      <n-switch
+        v-model:value="currentConfig.enablePlugin"
+        :loading="onLoading"
+        :disabled="onLoading"
+        @update:value="onChangeEnablePlugin"
       />
     </div>
 

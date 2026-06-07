@@ -33,6 +33,7 @@ declare interface Settings {
   enableImageSave: boolean // 启用图片保存
   imageBasePath: string // 图片保存路径
   // 插件设置
+  enablePlugin: boolean // 是否开启插件功能
   pluginPath: string // 插件安装路径
 }
 
