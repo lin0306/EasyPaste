@@ -9,16 +9,16 @@ export class DBHandler extends BaseHandler {
     console.log(`修改[${context.plugin.id}]插件数据库信息...`)
     switch (context.mode) {
       case 'install':
-        await this.savePlugin(context.plugin)
+        await this.savePlugin(context)
         break
       case 'update':
-        await this.updatePlugin(context.pluginId, context.plugin)
+        await this.updatePlugin(context)
         break
       case 'installLocal':
         if (context.pluginId) {
-          await this.updatePlugin(context.pluginId, context.plugin)
+          await this.updatePlugin(context)
         } else {
-          await this.savePlugin(context.plugin)
+          await this.savePlugin(context)
         }
         break
       case 'uninstall':
@@ -34,35 +34,36 @@ export class DBHandler extends BaseHandler {
 
   /**
    * 保存插件
-   * @param plugin 插件信息
+   * @param context 上下文
    */
-  async savePlugin(plugin: StorePlugin): Promise<void> {
-    console.log(`正在保存[${plugin.id}]插件...`)
-    const useLocationSet = await this.getUseLocations(plugin.id)
+  async savePlugin(context: PluginHandlerContext): Promise<void> {
+    console.log(`正在保存[${context.plugin.id}]插件...`)
+    const useLocationSet = await this.getUseLocations(context.plugin.id)
+    const source = this.getSource(context.mode)
     // 保存插件信息
     const db = await ClipboardDBService.getInstance()
-    const pluginInfo = this.packPlugin(plugin, useLocationSet) as LocalPlugin
+    const pluginInfo = this.packPlugin(context.plugin, useLocationSet, source) as LocalPlugin
     pluginInfo.install_time = Date.now()
     console.log('即将入库的插件信息', pluginInfo)
     await db.addPlugin(pluginInfo)
-    console.log(`[${plugin.id}]插件信息保存完成。`)
+    console.log(`[${context.plugin.id}]插件信息保存完成。`)
   }
 
   /**
    * 更新插件
-   * @param pluginId 插件id
-   * @param plugin 插件信息
+   * @param context 上下文
    */
-  async updatePlugin(pluginId: number, plugin: StorePlugin): Promise<void> {
-    console.log(`正在更新[${plugin.id}]插件...`)
-    const useLocationSet = await this.getUseLocations(plugin.id)
+  async updatePlugin(context: PluginHandlerContext): Promise<void> {
+    console.log(`正在更新[${context.plugin.id}]插件...`)
+    const useLocationSet = await this.getUseLocations(context.plugin.id)
+    const source = this.getSource(context.mode)
     // 保存插件信息
     const db = await ClipboardDBService.getInstance()
-    const pluginInfo = this.packPlugin(plugin, useLocationSet) as LocalPlugin
-    pluginInfo.id = pluginId
+    const pluginInfo = this.packPlugin(context.plugin, useLocationSet, source) as LocalPlugin
+    pluginInfo.id = context.pluginId
     console.log('即将入库的插件信息', pluginInfo)
     await db.updatePlugin(pluginInfo)
-    console.log(`[${plugin.id}]插件更新完成。`)
+    console.log(`[${context.plugin.id}]插件更新完成。`)
   }
 
   /**
@@ -82,8 +83,9 @@ export class DBHandler extends BaseHandler {
    * 封装插件信息
    * @param plugin 插件信息
    * @param useLocationSet 可加载页面
+   * @param source 插件来源
    */
-  packPlugin(plugin: StorePlugin, useLocationSet: Set<string>) {
+  packPlugin(plugin: StorePlugin, useLocationSet: Set<string>, source: string) {
     return {
       plugin_id: plugin.id,
       plugin_name: plugin.name,
@@ -95,6 +97,7 @@ export class DBHandler extends BaseHandler {
       url: plugin.downloadUrl,
       description: plugin.description,
       size: plugin.size,
+      source: source,
     }
   }
 
@@ -120,5 +123,21 @@ export class DBHandler extends BaseHandler {
     console.log(`[${pluginId}]插件可加载页面`, useLocationSet)
 
     return useLocationSet
+  }
+
+  /**
+   * 获取插件来源
+   * @param mode 执行模式
+   */
+  getSource(mode: string) {
+    switch (mode) {
+      case 'install':
+      case 'update':
+        return 'network'
+      case 'installLocal':
+        return 'local'
+      default:
+        return 'network'
+    }
   }
 }

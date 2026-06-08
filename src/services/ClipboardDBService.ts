@@ -89,6 +89,7 @@ class ClipboardDBService {
             enable          BOOLEAN DEFAULT 1,
             description     TEXT,
             size            INTEGER,
+            source          TEXT    NOT NULL default 'network',
             install_time    INTEGER
           )
       `)
@@ -124,6 +125,14 @@ class ClipboardDBService {
         await this.db?.execute(`
                     alter table plugins
                         add size INTEGER;
+                `)
+      }
+      const pluginsColumnExists4 = pluginsInfo?.some(col => col.name === 'source')
+      if (!pluginsColumnExists4) {
+        // 增加插件来源字段
+        await this.db?.execute(`
+                    alter table plugins
+                      add source TEXT NOT NULL default 'network';
                 `)
       }
     } catch (er) {

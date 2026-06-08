@@ -31,6 +31,7 @@ declare interface LocalPlugin {
   description: string // 插件描述
   install_time: number // 安装时间
   size: number // 插件安装包大小，单位：字节
+  source: 'network' | 'local' // 插件来源，network：网络，local：本地
 }
 
 /**
