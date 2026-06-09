@@ -2,10 +2,11 @@ use crate::models::file_model::TreeOption;
 use chrono::{NaiveDate, TimeZone, Utc};
 use flate2::read::GzDecoder;
 use std::fs::File;
-use std::io::{BufReader, Read};
+use std::io::{BufReader, Read, Write};
 use std::path::Path;
 use std::{fs, io};
 use unrar::Archive;
+use zip::write::FileOptions;
 use zip::ZipArchive;
 
 /**
@@ -159,4 +160,52 @@ pub(crate) fn read_zip_content(zip_path: &str, file_name: &str) -> String {
     target_file.read_to_string(&mut contents).expect("无法读取文件内容");
 
     contents
+}
+
+/**
+ * 将文件夹压缩为 zip 包
+ */
+pub fn compress_folder_to_zip(source_dir: &str, output_path: &str) -> Result<(), String> {
+    // 如果输出文件已存在，先删除
+    if Path::new(output_path).exists() {
+        fs::remove_file(output_path).map_err(|e| e.to_string())?;
+    }
+
+    let file = File::create(output_path).map_err(|e| e.to_string())?;
+    let mut zip = zip::ZipWriter::new(file);
+    let options = FileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+
+    let source_path = Path::new(source_dir);
+    let source_prefix = source_path.to_str().unwrap_or("");
+
+    fn add_dir_to_zip(
+        zip: &mut zip::ZipWriter<File>,
+        dir: &Path,
+        prefix: &str,
+        options: FileOptions<()>,
+    ) -> Result<(), String> {
+        for entry in fs::read_dir(dir).map_err(|e| e.to_string())? {
+            let entry = entry.map_err(|e| e.to_string())?;
+            let path = entry.path();
+            let relative_path = path.strip_prefix(prefix).map_err(|e| e.to_string())?;
+            let name_in_zip = relative_path.to_str().unwrap_or("").replace('\\', "/");
+
+            if path.is_file() {
+                let mut file = File::open(&path).map_err(|e| e.to_string())?;
+                zip.start_file(name_in_zip, options).map_err(|e| e.to_string())?;
+                io::copy(&mut file, zip).map_err(|e| e.to_string())?;
+            } else if path.is_dir() {
+                if !name_in_zip.is_empty() {
+                    zip.add_directory(name_in_zip + "/", options)
+                        .map_err(|e| e.to_string())?;
+                }
+                add_dir_to_zip(zip, &path, prefix, options)?;
+            }
+        }
+        Ok(())
+    }
+
+    add_dir_to_zip(&mut zip, source_path, source_prefix, options)?;
+    zip.finish().map_err(|e| e.to_string())?;
+    Ok(())
 }

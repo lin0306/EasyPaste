@@ -375,6 +375,74 @@ declare interface PageConfig {
   },
   dataExport: {
     title: string
+    sectionClipboard: string
+    sectionTags: string
+    sectionRelations: string
+    sectionSettings: string
+    sectionPlugins: string
+    textItems: string
+    textItemsHint: string
+    imageItems: string
+    imageFiles: string
+    imageFilesNoExportWarning: string
+    fileItems: string
+    fileItemsNoExportWarning: string
+    tags: string
+    itemTags: string
+    itemTagsDisabledHint: string
+    itemTagsNoRecords: string
+    settings: string
+    shortcutKeys: string
+    settingsModifiedCount: string
+    settingsShortcutCount: string
+    settingsOnlyModifiedHint: string
+    settingsNotModified: string
+    shortcutKeysNotModified: string
+    customTheme: string
+    customThemeHint: string
+    customThemeNotModified: string
+    pluginsStore: string
+    pluginsStoreHint: string
+    pluginsLocal: string
+    pluginsLocalHint: string
+    pluginConfig: string
+    exportPath: string
+    selectFolder: string
+    exportBtn: string
+    loading: string
+    exportSuccessTitle: string
+    exportSuccessMsg: string
+    openInFolder: string
+    doneBtn: string
+    noItemSelected: string
+    noExportPath: string
+    overwriteTitle: string
+    overwriteContent: string
+    overwriteConfirm: string
+    overwriteCancel: string
+    unitItems: string
+    unitTags: string
+    unitSettings: string
+    unitPlugins: string
+    stepTextItems: string
+    stepImageItems: string
+    stepImageFiles: string
+    stepFileItems: string
+    stepTags: string
+    stepItemTags: string
+    stepSettings: string
+    stepShortcutKeys: string
+    stepCustomTheme: string
+    stepPluginsStore: string
+    stepPluginsLocal: string
+    stepPluginsLocalFile: string
+    stepPluginConfig: string
+    stepCompress: string
+    stepDone: string
+    cancelBtn: string
+    exportCancelled: string
+    selectAll: string
+    deselectAll: string
   }
   tags: {
     title: string

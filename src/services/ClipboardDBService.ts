@@ -824,8 +824,8 @@ class ClipboardDBService {
   async addPlugin(plugin: LocalPlugin): Promise<void> {
     await this.db?.execute(
       `
-            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size, install_time )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            INSERT INTO plugins ( plugin_id, plugin_name, version, use_location, platform, file_name, release_url, url, description, size, source, install_time )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         plugin.plugin_id,
         plugin.plugin_name,
@@ -837,6 +837,7 @@ class ClipboardDBService {
         plugin.url,
         plugin.description,
         plugin.size,
+        plugin.source,
         Date.now(),
       ]
     )
@@ -858,6 +859,7 @@ class ClipboardDBService {
                         release_url = ?,
                         url = ?,
                         description = ?,
+                        source = ?,
                         size = ?
                     WHERE id = ?`,
       [
@@ -869,6 +871,7 @@ class ClipboardDBService {
         plugin.release_url,
         plugin.url,
         plugin.description,
+        plugin.source,
         plugin.size,
         plugin.id,
       ]
@@ -930,6 +933,122 @@ class ClipboardDBService {
         `,
       [id]
     )
+  }
+
+  /**
+   * 获取文本类记录数量（text + code + link）
+   */
+  async getTextItemCount(): Promise<number> {
+    const result = (await this.db?.select(
+      "SELECT COUNT(*) as count FROM clipboard_items WHERE type IN ('text', 'code', 'link')"
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取图片类记录数量
+   */
+  async getImageItemCount(): Promise<number> {
+    const result = (await this.db?.select(
+      "SELECT COUNT(*) as count FROM clipboard_items WHERE type = 'image'"
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取文件类记录数量
+   */
+  async getFileItemCount(): Promise<number> {
+    const result = (await this.db?.select(
+      "SELECT COUNT(*) as count FROM clipboard_items WHERE type = 'file'"
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取关联关系数量
+   */
+  async getItemTagCount(): Promise<number> {
+    const result = (await this.db?.select(
+      'SELECT COUNT(*) as count FROM item_tags'
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取所有关联关系
+   */
+  async getAllItemTags(): Promise<{ item_id: number; tag_id: number }[]> {
+    return (await this.db?.select('SELECT item_id, tag_id FROM item_tags')) as {
+      item_id: number
+      tag_id: number
+    }[]
+  }
+
+  /**
+   * 获取所有剪贴板记录（不含标签关联）
+   */
+  async getAllItems(): Promise<ClipboardItem[]> {
+    return (await this.db?.select('SELECT * FROM clipboard_items')) as ClipboardItem[]
+  }
+
+  /**
+   * 按类型获取所有剪贴板记录（不含标签关联）
+   */
+  async getAllItemsByType(type: string): Promise<ClipboardItem[]> {
+    return (await this.db?.select('SELECT * FROM clipboard_items WHERE type = ?', [
+      type,
+    ])) as ClipboardItem[]
+  }
+
+  /**
+   * 按多种类型获取所有剪贴板记录
+   */
+  async getAllItemsByTypes(types: string[]): Promise<ClipboardItem[]> {
+    if (types.length === 0) return []
+    const placeholders = types.map(() => '?').join(', ')
+    return (await this.db?.select(
+      `SELECT * FROM clipboard_items WHERE type IN (${placeholders})`,
+      types
+    )) as ClipboardItem[]
+  }
+
+  /**
+   * 获取商店安装的插件数量
+   */
+  async getStorePluginCount(): Promise<number> {
+    const result = (await this.db?.select(
+      "SELECT COUNT(*) as count FROM plugins WHERE source = 'network'"
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取本地安装的插件数量
+   */
+  async getLocalPluginCount(): Promise<number> {
+    const result = (await this.db?.select(
+      "SELECT COUNT(*) as count FROM plugins WHERE source = 'local'"
+    )) as [{ count: number }]
+    return result?.[0]?.count || 0
+  }
+
+  /**
+   * 获取商店安装的插件
+   */
+  async getStorePlugins(): Promise<LocalPlugin[]> {
+    return (await this.db?.select(
+      "SELECT * FROM plugins WHERE source = 'network'"
+    )) as LocalPlugin[]
+  }
+
+  /**
+   * 获取本地安装的插件
+   */
+  async getLocalPlugins(): Promise<LocalPlugin[]> {
+    return (await this.db?.select(
+      "SELECT * FROM plugins WHERE source = 'local'"
+    )) as LocalPlugin[]
   }
 }
 

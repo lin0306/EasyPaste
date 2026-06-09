@@ -71,6 +71,7 @@ pub fn run() {
             commands::file::read_zip_data,
             commands::file::unzip_file,
             commands::file::read_zip_content,
+            commands::file::compress_folder_to_zip,
             commands::file::download_file,
             windows::invoke_external_plugin,
             windows::init_main_window,

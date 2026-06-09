@@ -1,6 +1,7 @@
-import { copyFile, remove, rename, stat } from '@tauri-apps/plugin-fs'
+import { copyFile, exists, mkdir, readDir, remove, rename, stat } from '@tauri-apps/plugin-fs'
 import { error, info } from '@tauri-apps/plugin-log'
 import { isMac } from '../data/SystemParams.ts'
+import { join } from '@tauri-apps/api/path'
 
 /**
  * 获取文件大小，单位：字节
@@ -54,6 +55,48 @@ export async function moveFile(sourcePath: string, targetPath: string): Promise<
   } catch (err) {
     error(
       '[文件系统] 移动复制失败,sourcePath:' +
+        sourcePath +
+        ',targetPath:' +
+        targetPath +
+        ',err:' +
+        err
+    )
+  }
+}
+
+/**
+ * 复制文件
+ * @param sourcePath 源文件路径
+ * @param targetPath 目标文件路径
+ */
+export async function copyFolder(sourcePath: string, targetPath: string): Promise<void> {
+  try {
+    if (!(await exists(sourcePath))) {
+      info('[文件系统] 源文件不存在,sourcePath:' + sourcePath)
+      return
+    }
+    if (!(await exists(targetPath))) {
+      await mkdir(targetPath)
+    }
+    // 拷贝所有文件夹和文件
+    const entries = await readDir(sourcePath)
+    // 3. 遍历并处理
+    for (const entry of entries) {
+      const srcPath = await join(sourcePath, entry.name)
+      const destPath = await join(targetPath, entry.name)
+
+      if (entry.isDirectory) {
+        // 如果是文件夹，递归调用
+        await copyFolder(srcPath, destPath)
+      } else {
+        // 如果是文件，直接拷贝
+        await copyFile(srcPath, destPath)
+      }
+    }
+    info('[文件系统] 复制文件成功,sourcePath:' + sourcePath + ',targetPath:' + targetPath)
+  } catch (err) {
+    error(
+      '[文件系统] 复制文件失败,sourcePath:' +
         sourcePath +
         ',targetPath:' +
         targetPath +

@@ -245,10 +245,10 @@ export async function openDataImportWindow(): Promise<void> {
     label: 'dataImport',
     title: currentLanguage.value.pages.dataImport.title,
     url: '/data-import',
-    width: 400,
-    height: 400,
-    minWidth: 400,
-    minHeight: 400,
+    width: 500,
+    height: 500,
+    minWidth: 500,
+    minHeight: 500,
   })
 }
 
@@ -261,9 +261,9 @@ export async function openDataExportWindow(): Promise<void> {
     label: 'dataExport',
     title: currentLanguage.value.pages.dataExport.title,
     url: '/data-export',
-    width: 400,
-    height: 400,
-    minWidth: 400,
-    minHeight: 400,
+    width: 500,
+    height: 600,
+    minWidth: 500,
+    minHeight: 600,
   })
 }

@@ -1,9 +1,10 @@
 import { BaseDirectory, exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
+import { isEqual } from 'lodash-es'
 
 export const THEME_FILE_NAME = 'customTheme.json'
 
 // 自定义主题--默认为浅色主题
-const customThemeConfig: ThemeConfig = {
+export const defaultCustomThemeConfig: ThemeConfig = {
   id: 'custom',
   name: '自定义主题',
   colors: {
@@ -80,8 +81,8 @@ const customThemeConfig: ThemeConfig = {
  * 保存用户自定义主题配置
  */
 export async function saveCustomTheme(themeColors: ThemeColor): Promise<void> {
-  customThemeConfig.colors = themeColors
-  await writeTextFile(THEME_FILE_NAME, JSON.stringify(customThemeConfig), {
+  defaultCustomThemeConfig.colors = themeColors
+  await writeTextFile(THEME_FILE_NAME, JSON.stringify(defaultCustomThemeConfig), {
     baseDir: BaseDirectory.AppData,
   })
 }
@@ -114,15 +115,37 @@ export async function initCustomTheme(): Promise<void> {
       baseDir: BaseDirectory.AppData,
     })
     const theme = JSON.parse(userSettings)
-    const margeTheme = { ...customThemeConfig, ...theme }
+    const margeTheme = { ...defaultCustomThemeConfig, ...theme }
     await writeTextFile(THEME_FILE_NAME, JSON.stringify(margeTheme), {
       baseDir: BaseDirectory.AppData,
     })
     console.log('用户自定义主题配置初始化完成', margeTheme)
   } else {
     // 用户配置文件不存在
-    await writeTextFile(THEME_FILE_NAME, JSON.stringify(customThemeConfig), {
+    await writeTextFile(THEME_FILE_NAME, JSON.stringify(defaultCustomThemeConfig), {
       baseDir: BaseDirectory.AppData,
     })
+  }
+}
+
+/**
+ * 判断自定义主题配置是否已修改
+ * @returns {Promise<boolean>} 是否已修改
+ */
+export async function isCustomThemeModified(): Promise<boolean> {
+  const settingsExist = await exists(THEME_FILE_NAME, {
+    baseDir: BaseDirectory.AppData,
+  })
+  if (!settingsExist) {
+    return false
+  }
+  try {
+    const userSettings = await readTextFile(THEME_FILE_NAME, {
+      baseDir: BaseDirectory.AppData,
+    })
+    const userTheme = JSON.parse(userSettings)
+    return !isEqual(userTheme, defaultCustomThemeConfig)
+  } catch {
+    return false
   }
 }

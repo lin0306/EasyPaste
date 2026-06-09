@@ -40,6 +40,7 @@ export class DBHandler extends BaseHandler {
     console.log(`正在保存[${context.plugin.id}]插件...`)
     const useLocationSet = await this.getUseLocations(context.plugin.id)
     const source = this.getSource(context.mode)
+    console.log('插件来源', source)
     // 保存插件信息
     const db = await ClipboardDBService.getInstance()
     const pluginInfo = this.packPlugin(context.plugin, useLocationSet, source) as LocalPlugin

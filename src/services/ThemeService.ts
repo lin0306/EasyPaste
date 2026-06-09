@@ -488,5 +488,49 @@ export function getPluginThemeOverrides(): GlobalThemeOverrides {
       height: '40px',
       boxShadow: `0 0 5px 1px ${colors.universal.border}`,
     },
+    Checkbox: {
+      color: colors.button.normal.hoverBackgroundColor,
+      colorChecked: colors.button.primary.backgroundColor,
+      colorDisabled: colors.button.normal.disabledBackgroundColor,
+      textColor: colors.universal.text,
+      textColorDisabled: colors.universal.text,
+      border: '0px',
+      borderDisabled: `1px solid ${colors.universal.border}`,
+      borderDisabledChecked: '0px',
+      borderChecked: '0px',
+      borderFocus: '0px',
+    },
+    Steps: {
+      // 左侧圆点内的文字的颜色
+      indicatorTextColorProcess: colors.button.primary.textColor,
+      indicatorTextColorWait: colors.button.normal.textColor,
+      indicatorTextColorFinish: colors.button.primary.hoverTextColor,
+      indicatorTextColorError: colors.button.error.textColor,
+      // 边框设置
+      indicatorBorderColorProcess: '0px',
+      indicatorBorderColorWait: '0px',
+      indicatorBorderColorFinish: '0px',
+      indicatorBorderColorError: '0px',
+      // 左侧圆点的背景色
+      indicatorColorProcess: colors.button.primary.backgroundColor,
+      indicatorColorWait: colors.button.normal.backgroundColor,
+      indicatorColorFinish: colors.button.primary.hoverBackgroundColor,
+      indicatorColorError: colors.button.error.backgroundColor,
+      // 左侧竖线的颜色
+      splitorColorProcess: colors.button.primary.backgroundColor,
+      splitorColorWait: colors.button.normal.backgroundColor,
+      splitorColorFinish: colors.button.primary.hoverBackgroundColor,
+      splitorColorError: colors.button.error.backgroundColor,
+      // 右侧主要文字的颜色
+      headerTextColorProcess: colors.button.primary.backgroundColor,
+      headerTextColorWait: colors.button.primary.backgroundColor,
+      headerTextColorFinish: colors.button.primary.hoverBackgroundColor,
+      headerTextColorError: colors.button.error.backgroundColor,
+      // 右侧提示文字的颜色
+      descriptionTextColorProcess: colors.button.primary.disabledTextColor,
+      descriptionTextColorWait: colors.button.normal.disabledTextColor,
+      descriptionTextColorFinish: colors.button.primary.disabledTextColor,
+      descriptionTextColorError: colors.button.error.disabledTextColor,
+    },
   } as GlobalThemeOverrides
 }

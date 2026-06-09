@@ -7,9 +7,10 @@ import { utf8Decoder } from '../constants/PublicConstants.ts'
 import { appLocalDataDir } from '@tauri-apps/api/path'
 import { isMac } from '../data/SystemParams.ts'
 import { invoke } from '@tauri-apps/api/core'
+import { isEqual } from 'lodash-es'
 
 export const SETTINGS_FILE_NAME = 'settings.json'
-const defaultSettings: Settings = {
+export const defaultSettings: Settings = {
   theme: SETTINGS.THEME.DEFAULT_THEME,
   powerOnSelfStart: false,
   replaceGlobalHotkey: false,
@@ -764,5 +765,31 @@ export async function initSettings(): Promise<void> {
     await settings.set(SETTINGS_KEYS.SEARCH_MODEL, defaultSettings.searchModel)
 
     await settings.save()
+  }
+}
+
+/**
+ * 判断用户设置是否已修改
+ * @returns 是否已修改及修改项数量
+ */
+export async function isSettingsModified(): Promise<{ modified: boolean; count: number }> {
+  const settingsExist = await exists(SETTINGS_FILE_NAME, {
+    baseDir: BaseDirectory.AppData,
+  })
+  if (!settingsExist) {
+    return { modified: false, count: 0 }
+  }
+  try {
+    const store = await load(SETTINGS_FILE_NAME, { defaults: {}, autoSave: true })
+    let count = 0
+    for (const key of Object.keys(defaultSettings)) {
+      const value = await store.get<any>(key)
+      if (value !== undefined && value !== null && !isEqual(value, (defaultSettings as any)[key])) {
+        count++
+      }
+    }
+    return { modified: count > 0, count }
+  } catch {
+    return { modified: false, count: 0 }
   }
 }

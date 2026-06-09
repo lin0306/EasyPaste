@@ -3,9 +3,10 @@ import { info } from '@tauri-apps/plugin-log'
 import { SHORTCUT_KEYS_KEYS } from '../constants/KeysConstants.ts'
 import { BaseDirectory, exists, readFile } from '@tauri-apps/plugin-fs'
 import { utf8Decoder } from '../constants/PublicConstants.ts'
+import { isEqual } from 'lodash-es'
 
 export const SHORTCUT_KEYS_FILE_NAME = 'shortcutKeys.json'
-const defaultShortcutKeys: ShortcutKeys = {
+export const defaultShortcutKeys: ShortcutKeys = {
   search: {
     name: '搜索',
     key: ['ctrl', 'f'],
@@ -116,5 +117,31 @@ export async function initShortcutKeys(): Promise<void> {
     await settings.set(SHORTCUT_KEYS_KEYS.WAKE_UP_ROUTINE, defaultShortcutKeys.wakeUpRoutine)
     await settings.set(SHORTCUT_KEYS_KEYS.QUICK_PASTE, defaultShortcutKeys.quickPaste)
     await settings.save()
+  }
+}
+
+/**
+ * 判断快捷键配置是否已修改
+ * @returns 是否已修改及修改项数量
+ */
+export async function isShortcutKeysModified(): Promise<{ modified: boolean; count: number }> {
+  const fileExist = await exists(SHORTCUT_KEYS_FILE_NAME, {
+    baseDir: BaseDirectory.AppData,
+  })
+  if (!fileExist) {
+    return { modified: false, count: 0 }
+  }
+  try {
+    const store = await load(SHORTCUT_KEYS_FILE_NAME, { defaults: {}, autoSave: true })
+    let count = 0
+    for (const key of Object.keys(defaultShortcutKeys)) {
+      const value = await store.get<any>(key)
+      if (value !== undefined && value !== null && !isEqual(value, (defaultShortcutKeys as any)[key])) {
+        count++
+      }
+    }
+    return { modified: count > 0, count }
+  } catch {
+    return { modified: false, count: 0 }
   }
 }

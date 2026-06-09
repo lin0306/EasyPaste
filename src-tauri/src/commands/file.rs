@@ -114,6 +114,14 @@ pub fn read_zip_content(zip_path: &str, file_name: &str) -> Result<String, ()> {
 // }
 
 /**
+ * 将文件夹压缩为 zip 包
+ */
+#[tauri::command]
+pub fn compress_folder_to_zip(source_dir: String, output_path: String) -> Result<(), String> {
+    compress_utils::compress_folder_to_zip(&source_dir, &output_path)
+}
+
+/**
  * 下载网络文件
  */
 #[tauri::command]
