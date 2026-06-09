@@ -635,8 +635,8 @@ export function useDataExport() {
       resultZipPath.value = zipPath
 
       setTimeout(() => {
-        // exportModalVisible.value = false
-        // resultModalVisible.value = true
+        exportModalVisible.value = false
+        resultModalVisible.value = true
       }, 500)
     } catch (e) {
       // 清理临时目录
